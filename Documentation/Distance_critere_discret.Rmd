@@ -1,0 +1,172 @@
+--- 
+title: "tINTer"
+subtitle: "Modélisation d'une distance pour les critères discrets"
+output: pdf_document 
+header-includes:
+   - \usepackage{amsmath}
+   - \graphicspath{ {.} }
+---
+\setlength{\abovedisplayskip}{-15pt}
+\setlength{\belowdisplayskip}{0pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+
+
+# Problème
+Soit un ensemble d'étudiants, ayant à choisir parmis une liste les activitées qui les attire. \newline
+On souhaite trouver la distance entre chaque étudiants.
+
+
+# Formulation mathématique
+Soit un vecteurs $V=[v_{0}, ..., v_{n}]$. \newline
+On a \(\forall i \in [0, n] : 
+    v_{i} \in \{0, 1\}
+\) tq \(v_{i}=0\) si l'activité n'est pas selectionné et \(v_{i}=1\) sinon. \newline
+On peut alors représenter 2 étudiants par deux vecteurs V, W. \newline
+Il nous faut alors trouver une distance entre ces deux vecteurs.
+
+# Simplification du problème
+**On suppose chaque critères indépendant.** 
+On peut ainsi traiter chaque critères (ie chaque couple \(v_{i}, w_{i}\)) indépendamment. \newline
+Il suffit alors de trouver une fonction \(D: \mathbb{R}^2 \to \mathbb{R}\) qui nous donne la distance entre \(v_{i}\) et \(w_{i}\)
+puis de sommer \(\forall i \in [0, n]\).
+
+Dans la suite on notera $\forall (V=[v_{0}, ..., v_{n}], W=[w_{0}, ..., w_{n}]) \in (\mathbb{R}^n)^2 :$ \newline
+\begin{align*}
+D(V, W) = \sum\limits_{i=0}^{n}D(v_{i}, w_{i})
+\end{align*}
+
+# Solution classique
+Une implémentation classique de ce problème serait de prendre la distance de Manhatan ou la distance euclidienne. \newline
+
+\begin{center}
+\begin{tabular}{ |c|c| } 
+ \hline
+ Distance de Manhatan & Distance Euclidienne \\ 
+ \hline
+ $\sum_{i=0}^{n}|v_{i}-w_{i}|$ & $\sum_{i=0}^{n}(v_{i}-w_{i})^2$ \\ 
+  \includegraphics[width=8cm]{L1.png} & \includegraphics[width=8cm]{L2.png} \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+&nbsp;
+
+Ces deux distances seront dans notre cas les même puisque l'on 
+travaille dans l'ensemble $\{\{0, 0\}, \{0, 1\}, \{1, 0\}, \{1, 1\}\}$. \newline
+Prenons donc la distance de Marshal (notée $D$ pour la suite).
+
+Soit 3 étudiants ayant fait les choix représentés par les vecteurs suivants:
+
+* $E_{1}=[1, 0, 0]$
+* $E_{2}=[1, 1, 0]$
+* $E_{3}=[1, 1, 1]$
+
+On rappelle que cela signifie que :
+
+* l'étudiant $E_{1}$ est intéressé par le critère 1.
+* l'étudiant $E_{2}$ est intéressé par le critère 1 et 2.
+* l'étudiant $E_{3}$ est intéressé par le critère 1, 2 et 3.
+
+On s'intéresse alors a la distance entre les élèves $E_{1}$ et $E_{2}$ et la distance entre les élèves $E_{1}$ et $E_{3}$. \newline
+On obtient: $D(E_{1}, E_{2})=1$ et $D(E_{1}, E_{3})=1$ \newline
+On a alors $D(E_{1}, E_{2}) < D(E_{1}, E_{3})$ ce qui est logique puisque $E_{1}$ et $E_{2}$ ont 2 critères en commun 
+alors que $E_{1}$ et $E_{3}$ en ont 1 seul. 
+
+Cette approche est donc raisonnable, mais pas idéale. Nous allons expliquer pourquoi dans le prochain paragraphe.
+
+# Problèmes posés par la solution classique
+Bien qu'efficasse, les distances précédaments proposées ne sont pas idéales.
+
+Reprenons notre exemple avec:
+
+* $E_{1}=[1, 0, 0]$
+* $E_{2}=[1, 1, 0]$
+* $E_{3}=[1, 1, 1]$
+
+Et cette fois calculons la distance entre $E_{1}$ et $E_{2}$ et entre $E_{2}$ et $E_{3}$. 
+
+On obtient: $D(E_{1}, E_{2})=1$ et $D(E_{2}, E_{3})=1$. Donc $D(E_{1}, E_{2})=D(E_{2}, E_{3})$.
+
+Cela peut sembler logique puisque chaque couple possède seulement un critère de différence. \newline
+Cependant si on pense au sens de ces critères, ce qui importe n'est pas tant que il en ai un maximum en commun 
+que le fait qu'ils en ai un maximum **selectionné** en commun. 
+C'est à dire un maximum de critère que les deux étudiants apprécis. Aussi, deux personnes 
+s'apprecient pour les choses qu'elles partagent et pas pour l'infinité de non points commun qu'elles ont.
+
+Ainsi il nous faut prendre en compte cette dissymétrie qui n'est pas représentée par les distances classiques _par definition_. \newline
+En effet on rappelle que pour $D$ une distance on aura $D(a, a)=0$.
+
+Dans le paragraphe suivant nous tacherons donc de construire une distance entre deux personnes
+qui ne sera pas une distance suivant la définition classique mais qui répondra mieux
+à notre problème.
+
+
+# Solution au problème de symétrie
+Nous aurions pu limité le problème a notre exemple et contruire une fonction discrete
+(puisque nous travaillons dans l'ensemble  $\{\{0, 0\}, \{0, 1\}, \{1, 0\}, \{1, 1\}\}$). \newline
+Cependant dans un soucis de généralité nous proposons une foncion continue.
+
+Les propriétés de cette fonction (notée $D_{P}$) seront:
+
+* Continuité
+* Dérivabilité
+* $D_{P}(1, 1) < D_{P}(0, 0) < D_{P}(1, 0)$ et $D_{P}(1, 0)=D_{P}(0, 1)$
+
+On définit un paramêtre $P$ qui sera la pénalité appliquée au point $(0, 0)$.\newline
+On définit alors:
+\begin{align*}
+\begin{array}[t]{lccl}
+D_{P} : & \mathbb{R}^2 & \longrightarrow & \mathbb{R} \\
+    & (x,y) & \longmapsto & P* \left[1-0.5(x+y)+\frac{1}{P-0.5}*(x-y)^2 \right] 
+\end{array} 
+\end{align*}
+
+&nbsp;
+\begin{center}
+Différents graphiques représentants $D_{P}$ en faisant varier P.
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+ P=0.2 & P=0.4 & P=0.6 \\ 
+ \hline
+ \includegraphics[width=5cm]{Lp0.2.png} & \includegraphics[width=5cm]{Lp0.4.png} & \includegraphics[width=5cm]{Lp0.6.png} \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+\pagebreak
+
+Les propriétés de continuité et dérivabilité sont vérifiées de manière évidente.
+
+De plus on a:
+
+* $D_{P}(0, 0) = P$
+* $D_{P}(1, 1) = 0$
+* $D_{P}(1, 0) = D_{P}(0, 1) = 1$
+
+Il suffit donc de prendre $P \in ]0, 1[$ et on a bien $D_{P}(1, 1) < D_{P}(0, 0) < D_{P}(1, 0)$ et $D_{P}(1, 0)=D_{P}(0, 1)$.
+
+**Dans la suite on prendra donc $P \in ]0, 1[$.**
+
+# Mise en oeuvre de la solution sur notre problème
+Reprenons nos trois étudiants:
+
+* $E_{1}=[1, 0, 0]$
+* $E_{2}=[1, 1, 0]$
+* $E_{3}=[1, 1, 1]$
+
+Appliquons maintenant la nouvelle fonction $D_{P}$ au problème:
+
+* $D_{P}(E_{1}, E_{2}) = 1+P$ 
+* $D_{P}(E_{2}, E_{3}) = 1$ 
+
+Ainsi on a bien $D_{P}(E_{2}, E_{3}) < D_{P}(E_{1}, E_{2})$.
+
+La fonction $D_{P}$ répond bien a notre problème. 
+
+
+
+
