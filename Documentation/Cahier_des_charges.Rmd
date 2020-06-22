@@ -68,8 +68,8 @@ Les critères étaient les suivants:
 
 On s’intéresse alors à la moyenne des résultats. Plus le résultat est proche de 1, plus la catégorie est importante pour les étudiants.
 
-Résultats du sondage “raw” : https://docs.google.com/forms/d/1aWPi4nKY_tGc7IawBvqqoYyCzAbqIDzCa3jdBokr6cA/edit#responses \newline
-Résultats du sondage “traité”: https://docs.google.com/spreadsheets/d/1HpurMUUlV_KsP561ObW4qF1djskfsxWDlW2lZH0AjeM/edit#gid=38215090
+Résultats du sondage “raw” : [Résultats Gsheet](https://docs.google.com/forms/d/1aWPi4nKY_tGc7IawBvqqoYyCzAbqIDzCa3jdBokr6cA/edit#responses) \newline
+Résultats du sondage “traité”: [Résultats Gsheet Traité](https://docs.google.com/spreadsheets/d/1HpurMUUlV_KsP561ObW4qF1djskfsxWDlW2lZH0AjeM/edit#gid=38215090)
 
 On discerne donc 6 critères qui semblent particulièrement important pour les étudiants:
 
@@ -127,7 +127,7 @@ Et on donne alors la distance entre deux élèves représentée par les vecteurs
 D = \sum\limits_{i}^{}\frac{f(Vi, Wi)}{len(V)}
 \end{align*}
 
-Choix de la fonction distance: voir "_Distance_critere_discret.pdf_"
+Choix de la fonction distance: voir "[_Distance_critere_discret.pdf_](Distance_critere_discret.pdf)"
 
 
 # Critères continues
