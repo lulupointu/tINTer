@@ -1,0 +1,145 @@
+--- 
+title: "tINTer"
+subtitle: "Cahier des charges"
+output: pdf_document 
+header-includes:
+   - \usepackage{amsmath}
+   - \graphicspath{ {.} }
+---
+\setlength{\abovedisplayskip}{-5pt}
+\setlength{\belowdisplayskip}{10pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+
+Description globale
+-------------------
+
+Le but de cet application est de mettre en relation des 1A et des 2A+ ayant des centres d'intérêts que nous estimons proche.
+Nous utilisons les associations de l’INT pour estimer la distance entre les utilisateurs.
+
+
+Chaque utilisateur à un profil.
+Un profil comprend un nom, un prénom, un nombre d’année passées dans l’école, un mail, un identifiant, et une liste d’association triée.
+Une association est une entité définie par son nom, ayant également un champ description et logoURL. Les informations sur les associations ne peuvent être modifiées mais sont accessibles par tous.
+
+Un utilisateur a accès en lecture et en écriture à son nom, son prénom, son mail et sa liste d’association.
+Un utilisateur a un accès restreint au profit d’un autre utilisateur. Il peut lire les champ nom, prénom et liste d’association. Les autres champs ne peuvent être lus. Aucun champ de peut être modifié.
+
+Entre chaque profil existe une relation. 
+Une relation possède plusieurs champs: leur distance, un booléen isTreated qui est vrai si l’utilisateur aime A a déjà vu l’utilisateur B dans l’application, un booléen isLiked qui est vrai si l’utilisateur aime A aime l’utilisateur B, un booléen isMatch qui est vrai si les utilisateurs s’aime respectivement.
+
+Fonctionnalités de l’application:
+
+* Connexion avec le login et le mot de passe de l’INT
+* Création et modification de son profil
+* Voir les associations
+* Voir les personnes qui lui sont proches et décider si elles lui plaisent ou non*
+* Gérer les personnes qui lui plaisent: faire une demande de parrainage, accepter une demande de parrainage, supprimer cette personne, annuler sa demande de parrainage
+* Voir les parrains/marraines
+
+
+*Les primo-entrant voient les non primo-entrant et vise versa
+Sondage des élèves
+
+\pagebreak
+
+Sondage des élèves
+------------------
+
+Les élèves ont été sondés afin de savoir quels critères étaient les plus important pour eux.
+
+Il ont pu choisir parmis:
+
+* Une échelle d’importance de 1 (très important) à 5 (peu important) 
+* Inutile (associé à un score de 10)
+
+Les critères étaient les suivants:
+
+* Associations d'interêt
+* Goûts musicaux
+* Lieu de vie
+* Prépa d'origine
+* Appétence ou non à aller en soirée/sortir
+* Relation avec les événements
+* Préférence d'un parrain qui aide scolairement ou avec qui faire la fête
+* Couleur de SEI (2020)
+* Attirance pour la vie associative
+* Pour l’instant, 167 étudiants ont répondus à ce sondage. 
+
+On s’intéresse alors à la moyenne des résultats. Plus le résultat est proche de 1, plus la catégorie est importante pour les étudiants.
+
+Résultats du sondage “raw” : https://docs.google.com/forms/d/1aWPi4nKY_tGc7IawBvqqoYyCzAbqIDzCa3jdBokr6cA/edit#responses \newline
+Résultats du sondage “traité”: https://docs.google.com/spreadsheets/d/1HpurMUUlV_KsP561ObW4qF1djskfsxWDlW2lZH0AjeM/edit#gid=38215090
+
+On discerne donc 6 critères qui semblent particulièrement important pour les étudiants:
+
+* Associations d'interêt
+* Appétence ou non à aller en soirée/sortir
+* Préférence d'un parrain qui aide scolairement ou avec qui faire la fête
+* Relation avec les événements
+* Attirance pour la vie associative
+* Goûts musicaux
+
+
+\pagebreak
+
+Implémentation des critères
+---------------------------
+
+Pour chaque critère, on doit choisir une façon de l’implémenter qui soit:
+
+* Facile et rapide à utiliser pour les étudiant
+* Nous donne des données utilisables
+
+On distingue pour cela deux catégories: 
+
+* Valeurs discrètes
+* Valeurs continues
+
+
+# Valeurs discrètes:
+
+
+Cela correspond aux choix parmis une liste. Pour chaque item dans la liste on a une sélection (valeur 1) ou non (valeur 0).
+Cette méthode d’évaluations concerne les critères suivants:
+
+* Associations d'interêt
+* Goûts musicaux
+
+En effet, une liste d’associations et une liste de genre musicaux seront données, et les étudiants pourront les sélectionnés ou non.
+Cela nous donnera un vecteur décrivant la personne avec:
+* 0 si la personne n’est pas intéressée
+* 1 si la personne est intéressée
+
+
+Soit V un tel vecteur, B un réel.
+On définit alors:
+\begin{align*}
+\begin{array}[t]{lccl}
+D_{P} : & \mathbb{R}^2 & \longrightarrow & \mathbb{R} \\
+    & (x,y) & \longmapsto & P* \left[1-0.5(x+y)+\frac{1}{P-0.5}*(x-y)^2 \right] 
+\end{array} 
+\end{align*}
+
+Et on donne alors la distance entre deux élèves représentée par les vecteurs V, W:
+
+\begin{align*}
+D = \sum\limits_{i}^{}\frac{f(Vi, Wi)}{len(V)}
+\end{align*}
+
+Choix de la fonction distance: voir "_Distance_critere_discret.pdf_"
+
+
+# Critères continues
+
+Cela correspond à un choix sur un slider, prenant donc des valeurs continues.
+Cette situation correspond aux critères suivants:
+Appétence ou non à aller en soirée/sortir
+Préférence d'un parrain qui aide scolairement ou avec qui faire la fête
+Relation avec les événements
+Attirance pour la vie associative
+
+Soit deux étudiants représentés par les valeurs v et w. N est la valeur maximum du critère.
+On utilise cette fois une fonction de distance plus classique:
+$D = \left( \frac{v-w}{N} \right)^2$
+
