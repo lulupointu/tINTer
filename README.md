@@ -23,4 +23,4 @@ Le but de ce projet est de créer une application pour renforcer le système de 
 </div>
 
 # Cahier des charges
-Voir [PDF: Cahier des charges](Documentation/Cahier%20des%20charges.Rmd)
+Voir [PDF: Cahier des charges](Documentation/Cahier%20des%20charges.pdf)
