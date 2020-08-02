@@ -32,9 +32,19 @@ dependencies:
   web_socket_channel: ^1.1.0
   http: ^0.12.1
   shared_preferences: ^0.5.7+3
-  websafe_svg: ^1.1.0
+  # websafe_svg: ^1.1.0
   auto_size_text: ^2.1.0
   flare_flutter: ^2.0.5
+  scroll_snap_list: ^0.4.1
+  flutter_svg: ^0.18.0
+  separated_column: ^1.0.1+2
+  keyboard_visibility: ^0.5.6
+  property_change_notifier: ^0.2.0
+  sliding_up_panel: ^1.0.2
+  provider: ^4.3.1
+  flutter_bloc: ^6.0.1
+  equatable: ^1.2.3
+
 
 
 dev_dependencies:
@@ -54,6 +64,8 @@ flutter:
 
   assets:
     - assets/Icons/
+    - assets/Profile/
+    - assets/Discover/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
