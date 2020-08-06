@@ -11,7 +11,7 @@ import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/models/student.dart';
 import 'package:tinterapp/Logic/models/user.dart';
 import 'package:tinterapp/UI/slider_label.dart';
-import 'package:tinterapp/UI/const.dart';
+import 'package:tinterapp/UI/shared_element/const.dart';
 import 'package:tinterapp/Logic/models/match.dart';
 
 import 'snap_scroll_sheet_physics.dart';

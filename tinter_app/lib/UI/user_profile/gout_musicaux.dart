@@ -54,7 +54,7 @@ class GoutsMusicauxTab extends StatelessWidget {
                       Positioned.fill(
                         child: Container(
                           child: SvgPicture.asset(
-                            'assets/Profile/topProfile.svg',
+                            'assets/profile/topProfile.svg',
                             color: TinterColors.primaryLight,
                             fit: BoxFit.fill,
                           ),

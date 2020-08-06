@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 
 import 'slider_label.dart';
-import 'const.dart';
+import 'shared_element/const.dart';
 import '../Logic/interface.dart';
 
 main() => runApp(MaterialApp(
@@ -64,7 +64,7 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                   children: <Widget>[
                     Positioned.fill(
                       child: SvgPicture.asset(
-                        'assets/Profile/topProfile.svg',
+                        'assets/profile/topProfile.svg',
                         color: TinterColors.primaryLight,
                         fit: BoxFit.fill,
                       ),

@@ -242,7 +242,7 @@ class AllAssociationsAppBar extends PreferredSize {
         fit: StackFit.expand,
         children: <Widget>[
           SvgPicture.asset(
-            'assets/Profile/topProfile.svg',
+            'assets/profile/topProfile.svg',
             color: TinterColors.primaryLight,
             fit: BoxFit.fill,
           ),

@@ -6,7 +6,7 @@ import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/models/user.dart';
 import 'package:tinterapp/Logic/models/match.dart';
 
-import 'const.dart';
+import 'shared_element/const.dart';
 
 main() => runApp(MaterialApp(
       home: RechercheEtudiantTab(),
@@ -333,7 +333,7 @@ class _RechercheEtudiantTabState extends State<RechercheEtudiantTab> {
                   children: <Widget>[
                     Positioned.fill(
                       child: SvgPicture.asset(
-                        'assets/Profile/topProfile.svg',
+                        'assets/profile/topProfile.svg',
                         color: TinterColors.primaryLight,
                         fit: BoxFit.fill,
                       ),

@@ -70,22 +70,31 @@ class _TinterAuthenticationTabState extends State<TinterAuthenticationTab> {
                 // Top Part
                 Positioned(
                   child: AnimatedContainer(
-                    duration: duration,
+                    duration: Duration(milliseconds: 100),
                     height: constraints.maxHeight * TinterAuthenticationTab.fractions['top'],
                     child: Stack(
                       children: [
                         Positioned.fill(
                           child: SvgPicture.asset(
-                            'assets/Profile/topProfile.svg',
+                            'assets/profile/topProfile.svg',
                             color: TinterColors.primaryLight,
                             fit: BoxFit.fill,
                           ),
                         ),
                         Positioned.fill(
-                          child: Center(
-                            child: AutoSizeText(
-                              'tINTer',
-                              style: TinterTextStyle.headline1,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: Center(
+                              child: AutoSizeText(
+                                'tINTer',
+                                style: TextStyle(
+                                  fontFamily: 'Podkova',
+                                  fontSize: 75,
+                                  fontWeight: FontWeight.w600,
+                                  color: TinterColors.grey,
+                                  letterSpacing: 1,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -223,7 +232,9 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                             Expanded(
                               child: Text(
                                   hasError && displayError
-                                      ? (state as AuthenticationFailureState).error.getMessage()
+                                      ? (state as AuthenticationFailureState)
+                                          .error
+                                          .getMessage()
                                       : '',
                                   style: TinterTextStyle.loginError),
                             ),
@@ -397,7 +408,7 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                                             onPressed: _onAuthenticationTry,
                                             child: Text(
                                               'Se connecter',
-                                              style: TinterTextStyle.loginFormLabel,
+                                              style: TinterTextStyle.loginFormButton,
                                               textAlign: TextAlign.center,
                                             ),
                                           ),
@@ -449,8 +460,9 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
 
     // If one of the two field is empty, immediately return an error event
     if (_loginController.text == "" || _loginController.text == "") {
-        authenticationBloc.add(AuthenticationLoggedFailedEvent(error: AuthenticationEmptyCredentialError()));
-        return;
+      authenticationBloc
+          .add(AuthenticationLoggedFailedEvent(error: AuthenticationEmptyCredentialError()));
+      return;
     }
     authenticationBloc.add(
       AuthenticationLoggedRequestSentEvent(
@@ -458,6 +470,5 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
         password: _passwordController.text,
       ),
     );
-
   }
 }

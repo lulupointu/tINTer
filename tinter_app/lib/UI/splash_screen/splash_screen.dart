@@ -2,7 +2,7 @@ import 'package:flare_flutter/flare.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:tinterapp/UI/const.dart';
+import 'package:tinterapp/UI/shared_element/const.dart';
 
 
 class SplashScreen extends StatelessWidget {

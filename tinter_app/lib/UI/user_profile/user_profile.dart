@@ -6,14 +6,14 @@ import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/repository/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
-import 'package:tinterapp/UI/associations.dart';
-import 'package:tinterapp/UI/gout_musicaux.dart';
+import 'package:tinterapp/UI/user_profile/associations.dart';
+import 'package:tinterapp/UI/user_profile/gout_musicaux.dart';
 import 'package:tinterapp/UI/options.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
 import 'slider_label.dart';
-import 'const.dart';
+import 'shared_element/const.dart';
 
 main() {
   final http.Client httpClient = http.Client();
@@ -159,7 +159,7 @@ class _UserTabState extends State<UserTab> {
                     (0.19 - 0.07 * invisiblyScrollFraction1 - 0.04 * invisiblyScrollFraction2),
                 width: constraints.maxWidth,
                 child: SvgPicture.asset(
-                  'assets/Profile/topProfile.svg',
+                  'assets/profile/topProfile.svg',
                   color: TinterColors.primaryLight,
                   fit: BoxFit.fill,
                 ),

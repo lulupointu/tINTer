@@ -104,8 +104,17 @@ class TinterTextStyle {
 
   // Login element
   static const loginFormLabel = TextStyle(
-    fontSize: 20,
-    color: TinterColors.white,
+      fontSize: 19,
+      color: TinterColors.white,
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w400
+  );
+
+  static const loginFormButton = TextStyle(
+      fontSize: 19,
+      color: TinterColors.white,
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w300
   );
 
   static const loginError = TextStyle(
