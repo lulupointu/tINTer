@@ -16,7 +16,7 @@ class MatchedMatchesLoadSuccessState extends MatchedMatchesState {
   final List<Match> matches;
 
 
-  const MatchedMatchesLoadSuccessState({@required this.matches});
+  const MatchedMatchesLoadSuccessState({@required this.matches}):assert(matches != null);
 
   List<Match> withUpdatedMatch(Match oldMatch, Match updatedMatch) {
     List<Match> newMatches = List.from(matches);

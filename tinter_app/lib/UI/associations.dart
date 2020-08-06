@@ -6,7 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:tinterapp/Logic/blocs/user_profile/profile_bloc.dart';
+import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
+import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/UI/custom_flare_controller.dart';
 import 'const.dart';
@@ -103,7 +104,7 @@ class AssociationsTab extends StatefulWidget {
     'titlesSeparator': 0.01,
     'headerSpacing': 0.05,
   };
-  final duration = Duration(milliseconds: 150);
+  final duration = Duration(milliseconds: 300);
   final Curve curve = Curves.easeIn;
 
   @override
@@ -316,7 +317,7 @@ class LikedAssociationsWidgetWithTitle extends StatelessWidget {
 }
 
 class LikedAssociationsWidget extends StatefulWidget {
-  final duration = Duration(milliseconds: 150);
+  final duration = Duration(milliseconds: 300);
   final Curve curve = Curves.easeIn;
   final double height, width, margin; // TODO : use margin
 
@@ -358,28 +359,28 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.height,
-      child: BlocBuilder<ProfileBloc, ProfileState>(
-          buildWhen: (ProfileState previousState, ProfileState state) {
-            if (!(state is ProfileLoadSuccessState)) {
+      child: BlocBuilder<UserBloc, UserState>(
+          buildWhen: (UserState previousState, UserState state) {
+            if (!(state is UserLoadSuccessState)) {
               return false;
             }
-            if (!(previousState is ProfileLoadSuccessState)) {
+            if (!(previousState is UserLoadSuccessState)) {
               return true;
             }
-        if ((previousState as ProfileLoadSuccessState).profile.associations == (state as ProfileLoadSuccessState).profile.associations) {
+        if ((previousState as UserLoadSuccessState).user.associations == (state as UserLoadSuccessState).user.associations) {
           return false;
         }
-        checkForChanges((previousState as ProfileLoadSuccessState).profile.associations, (state as ProfileLoadSuccessState).profile.associations);
+        checkForChanges((previousState as UserLoadSuccessState).user.associations, (state as UserLoadSuccessState).user.associations);
         return true;
-      }, builder: (BuildContext context, ProfileState profileState) {
-            if (!(profileState is ProfileLoadSuccessState)) {
+      }, builder: (BuildContext context, UserState userState) {
+            if (!(userState is UserLoadSuccessState)) {
               return CircularProgressIndicator();
             }
         return AnimatedList(
           physics: (_selectedItem == null) ? null : NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
           key: _listKey,
-          initialItemCount: (profileState as ProfileLoadSuccessState).profile.associations.length,
+          initialItemCount: (userState as UserLoadSuccessState).user.associations.length,
           controller: controller,
           itemBuilder: (BuildContext context, int index, Animation<double> animation) {
             return LikedAssociationWidget(
@@ -387,15 +388,15 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
               maxWidth: widget.width,
               margin: widget.margin,
               addOrRemoveAnimation: animation,
-              association: (profileState as ProfileLoadSuccessState).profile.associations[index],
+              association: (userState as UserLoadSuccessState).user.associations[index],
               isFirst: index == 0,
-              selected: _selectedItem == (profileState as ProfileLoadSuccessState).profile.associations[index],
+              selected: _selectedItem == (userState as UserLoadSuccessState).user.associations[index],
               onSelect: (AnimationController controller) =>
-                  _onSelect(index, controller, (profileState as ProfileLoadSuccessState).profile.associations[index]),
-              onDislike: () => BlocProvider.of<ProfileBloc>(context).add(
+                  _onSelect(index, controller, (userState as UserLoadSuccessState).user.associations[index]),
+              onDislike: () => BlocProvider.of<UserBloc>(context).add(
                 AssociationEvent(
                   status: AssociationEventStatus.remove,
-                  association: (profileState as ProfileLoadSuccessState).profile.associations[index],
+                  association: (userState as UserLoadSuccessState).user.associations[index],
                 ),
               ),
             );
@@ -477,7 +478,7 @@ class LikedAssociationWidget extends StatefulWidget {
 
 class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
     with SingleTickerProviderStateMixin {
-  final Duration duration = Duration(milliseconds: 150);
+  final Duration duration = Duration(milliseconds: 300);
   AnimationController _animationController;
   FlareController flareController;
 
@@ -652,7 +653,7 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
 
 class TitleAndSearchBarAllAssociations extends StatelessWidget {
   final double height, width, margin;
-  final Duration duration = Duration(milliseconds: 150);
+  final Duration duration = Duration(milliseconds: 300);
   final bool isSearching;
   final String searchString;
   final dynamic onSearch;
@@ -765,8 +766,8 @@ class AllAssociationsSheetBody extends StatelessWidget {
           }
           return true;
         },
-        child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (BuildContext context, ProfileState profileState) {
+        child: BlocBuilder<UserBloc, UserState>(
+            builder: (BuildContext context, UserState userState) {
           return ListView.separated(
             controller: scrollController,
             itemCount: allAssociations.length,
@@ -776,10 +777,10 @@ class AllAssociationsSheetBody extends StatelessWidget {
               );
             },
             itemBuilder: (BuildContext context, int index) {
-              if (!(profileState is ProfileLoadSuccessState)) {
+              if (!(userState is UserLoadSuccessState)) {
                 return CircularProgressIndicator();
               }
-              final bool liked = (profileState as ProfileLoadSuccessState).profile.associations.contains(allAssociations[index]);
+              final bool liked = (userState as UserLoadSuccessState).user.associations.contains(allAssociations[index]);
               return Padding(
                 padding: EdgeInsets.only(
                   top: index == 0 ? headerSpacing : 0,
@@ -791,14 +792,14 @@ class AllAssociationsSheetBody extends StatelessWidget {
                   liked: liked,
                   onLike: () {
                     if (liked) {
-                      BlocProvider.of<ProfileBloc>(context).add(
+                      BlocProvider.of<UserBloc>(context).add(
                         AssociationEvent(
                           status: AssociationEventStatus.remove,
                           association: allAssociations[index],
                         ),
                       );
                     } else {
-                      BlocProvider.of<ProfileBloc>(context).add(
+                      BlocProvider.of<UserBloc>(context).add(
                         AssociationEvent(
                           status: AssociationEventStatus.add,
                           association: allAssociations[index],

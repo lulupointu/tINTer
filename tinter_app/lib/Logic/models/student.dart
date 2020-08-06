@@ -1,8 +1,12 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:tinterapp/Logic/models/association.dart';
 
-class Profile extends Equatable {
+part 'student.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+class Student extends Equatable {
   final String _name;
   final String _surname;
   final String _email;
@@ -14,9 +18,18 @@ class Profile extends Equatable {
   final double _organisationEvenements;
   final List<String> _goutsMusicaux;
 
-  Profile(name, surname, email, primoEntrant, associations, attiranceVieAsso, feteOuCours,
+  Student(name, surname, email, primoEntrant, associations, attiranceVieAsso, feteOuCours,
       aideOuSortir, organisationEvenements, goutsMusicaux)
-      : _name = name,
+      : assert(name != null),
+        assert(surname != null),
+        assert(primoEntrant != null),
+        assert(associations != null),
+        assert(attiranceVieAsso != null),
+        assert(feteOuCours != null),
+        assert(aideOuSortir != null),
+        assert(organisationEvenements != null),
+        assert(goutsMusicaux != null),
+        _name = name,
         _surname = surname,
         _email = email,
         _primoEntrant = primoEntrant,
@@ -27,17 +40,9 @@ class Profile extends Equatable {
         _organisationEvenements = organisationEvenements,
         _goutsMusicaux = goutsMusicaux;
 
-  Profile.fromJson(Map<String, dynamic> json)
-      : _name = json['name'],
-        _surname = json['surname'],
-        _email = json['email'],
-        _primoEntrant = json['primoEntrant'],
-        _associations = json['associations'],
-        _attiranceVieAsso = json['attiranceVieAsso'],
-        _feteOuCours = json['feteOuCours'],
-        _aideOuSortir = json['aideOuSortir'],
-        _organisationEvenements = json['organisationEvenements'],
-        _goutsMusicaux = json['goutsMusicaux'];
+  factory Student.fromJson(Map<String, dynamic> json) => _$StudentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StudentToJson(this);
 
   // Define all getter for the user info
   String get name => _name;

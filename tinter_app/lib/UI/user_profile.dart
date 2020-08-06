@@ -2,9 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tinterapp/Logic/blocs/user_profile/profile_bloc.dart';
+import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 import 'package:tinterapp/Logic/models/association.dart';
-import 'package:tinterapp/Logic/repository/profile_repository.dart';
+import 'package:tinterapp/Logic/repository/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:tinterapp/UI/associations.dart';
 import 'package:tinterapp/UI/gout_musicaux.dart';
@@ -21,23 +21,23 @@ main() {
     httpClient: httpClient,
   );
 
-  final ProfileRepository profileRepository =
-      ProfileRepository(tinterApiClient: tinterApiClient);
+  final UserRepository userRepository =
+      UserRepository(tinterApiClient: tinterApiClient);
 
   runApp(BlocProvider(
-    create: (BuildContext context) => ProfileBloc(profileRepository: profileRepository),
+    create: (BuildContext context) => UserBloc(userRepository: userRepository),
     child: MaterialApp(
-      home: SafeArea(child: ProfileTab()),
+      home: SafeArea(child: UserTab()),
     ),
   ));
 }
 
-class ProfileTab extends StatefulWidget {
+class UserTab extends StatefulWidget {
   @override
-  _ProfileTabState createState() => _ProfileTabState();
+  _UserTabState createState() => _UserTabState();
 }
 
-class _ProfileTabState extends State<ProfileTab> {
+class _UserTabState extends State<UserTab> {
   Widget separator = SizedBox(
     height: 40,
   );
@@ -47,7 +47,7 @@ class _ProfileTabState extends State<ProfileTab> {
   static final Map<String, double> fractions = {
     'invisibleRectangle1': 0.115,
     'invisibleRectangle2': 0.087,
-    'profilePicture': 0.135,
+    'userPicture': 0.135,
   };
 
   /// This two double are in ~[0, 1]
@@ -58,7 +58,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
   @override
   void initState() {
-    BlocProvider.of<ProfileBloc>(context).add(ProfileRequestEvent());
+    BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
     super.initState();
   }
 
@@ -167,7 +167,7 @@ class _ProfileTabState extends State<ProfileTab> {
               Positioned(
                 top: constraints.maxHeight * (0.095 - 0.1 * invisiblyScrollFraction1) -
                     100 * invisiblyScrollFraction2,
-                child: HoveringProfileInformation(
+                child: HoveringUserInformation(
                   width: 2 / 3 * constraints.maxWidth,
                   height: 0.24 * constraints.maxHeight,
                   invisiblyScrollFraction1: invisiblyScrollFraction1,
@@ -176,8 +176,8 @@ class _ProfileTabState extends State<ProfileTab> {
               ),
               Positioned(
                 top: constraints.maxHeight * (0.027 - 0.012 * invisiblyScrollFraction2),
-                child: HoveringProfilePicture(
-                  size: fractions['profilePicture'] * constraints.maxHeight,
+                child: HoveringUserPicture(
+                  size: fractions['userPicture'] * constraints.maxHeight,
                 ),
               ),
               Align(
@@ -225,11 +225,11 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 }
 
-class HoveringProfileInformation extends StatelessWidget {
+class HoveringUserInformation extends StatelessWidget {
   final double invisiblyScrollFraction1, invisiblyScrollFraction2;
   final double width, height;
 
-  HoveringProfileInformation({
+  HoveringUserInformation({
     @required this.width,
     @required this.height,
     @required this.invisiblyScrollFraction1,
@@ -261,11 +261,11 @@ class HoveringProfileInformation extends StatelessWidget {
                 opacity: 1 - invisiblyScrollFraction2,
                 child: Transform.translate(
                   offset: Offset(0, -20 * invisiblyScrollFraction2),
-                  child: BlocBuilder<ProfileBloc, ProfileState>(
-                      builder: (BuildContext context, ProfileState profileState) {
+                  child: BlocBuilder<UserBloc, UserState>(
+                      builder: (BuildContext context, UserState userState) {
                     return AutoSizeText(
-                      ((profileState is ProfileLoadSuccessState))
-                          ? profileState.profile.name + " " + profileState.profile.surname
+                      ((userState is UserLoadSuccessState))
+                          ? userState.user.name + " " + userState.user.surname
                           : 'Loading...',
                       style: TinterTextStyle.headline1,
                     );
@@ -279,11 +279,11 @@ class HoveringProfileInformation extends StatelessWidget {
                 opacity: 1 - invisiblyScrollFraction1,
                 child: Transform.translate(
                   offset: Offset(0, -20 * invisiblyScrollFraction1),
-                  child: BlocBuilder<ProfileBloc, ProfileState>(
-                      builder: (BuildContext context, ProfileState profileState) {
+                  child: BlocBuilder<UserBloc, UserState>(
+                      builder: (BuildContext context, UserState userState) {
                     return AutoSizeText(
-                      ((profileState is ProfileLoadSuccessState))
-                          ? profileState.profile.email
+                      ((userState is UserLoadSuccessState))
+                          ? userState.user.email
                           : 'Loading...',
                       style: TinterTextStyle.headline2,
                       maxLines: 1,
@@ -299,10 +299,10 @@ class HoveringProfileInformation extends StatelessWidget {
   }
 }
 
-class HoveringProfilePicture extends StatelessWidget {
+class HoveringUserPicture extends StatelessWidget {
   final double size;
 
-  HoveringProfilePicture({@required this.size});
+  HoveringUserPicture({@required this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -347,16 +347,16 @@ class AssociationsRectangle extends StatelessWidget {
               width: double.infinity,
               child: Container(
                 height: 60,
-                child: BlocBuilder<ProfileBloc, ProfileState>(
-                  builder: (BuildContext context, ProfileState profileState) {
-                    if (!(profileState is ProfileLoadSuccessState)) {
+                child: BlocBuilder<UserBloc, UserState>(
+                  builder: (BuildContext context, UserState userState) {
+                    if (!(userState is UserLoadSuccessState)) {
                       return CircularProgressIndicator();
                     }
                     return ListView.separated(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
-                      itemCount: (profileState as ProfileLoadSuccessState)
-                          .profile
+                      itemCount: (userState as UserLoadSuccessState)
+                          .user
                           .associations
                           .length,
                       separatorBuilder: (BuildContext context, int index) {
@@ -367,8 +367,8 @@ class AssociationsRectangle extends StatelessWidget {
                       itemBuilder: (BuildContext context, int index) {
                         return associationBubble(
                             context,
-                            (profileState as ProfileLoadSuccessState)
-                                .profile
+                            (userState as UserLoadSuccessState)
+                                .user
                                 .associations[index]);
                       },
                     );
@@ -428,14 +428,14 @@ class AttiranceVieAssoRectangle extends StatelessWidget {
         ),
         SliderTheme(
           data: TinterSliderTheme.enabled,
-          child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (BuildContext context, ProfileState profileState) {
-              if (!(profileState is ProfileLoadSuccessState)) {
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (BuildContext context, UserState userState) {
+              if (!(userState is UserLoadSuccessState)) {
                 return CircularProgressIndicator();
               }
               return Slider(
-                  value: (profileState as ProfileLoadSuccessState).profile.attiranceVieAsso,
-                  onChanged: (value) => BlocProvider.of<ProfileBloc>(context)
+                  value: (userState as UserLoadSuccessState).user.attiranceVieAsso,
+                  onChanged: (value) => BlocProvider.of<UserBloc>(context)
                       .add(AttiranceVieAssoChanged(newValue: value)));
             },
           ),
@@ -463,14 +463,14 @@ class FeteOuCoursRectangle extends StatelessWidget {
         SliderTheme(
           data: TinterSliderTheme.enabled,
           child: DiscoverSlider(
-              slider: BlocBuilder<ProfileBloc, ProfileState>(
-                builder: (BuildContext context, ProfileState profileState) {
-                  if (!(profileState is ProfileLoadSuccessState)) {
+              slider: BlocBuilder<UserBloc, UserState>(
+                builder: (BuildContext context, UserState userState) {
+                  if (!(userState is UserLoadSuccessState)) {
                     return CircularProgressIndicator();
                   }
                   return Slider(
-                      value: (profileState as ProfileLoadSuccessState).profile.feteOuCours,
-                      onChanged: (value) => BlocProvider.of<ProfileBloc>(context)
+                      value: (userState as UserLoadSuccessState).user.feteOuCours,
+                      onChanged: (value) => BlocProvider.of<UserBloc>(context)
                           .add(FeteOuCoursChanged(newValue: value)));
                 },
               ),
@@ -501,14 +501,14 @@ class AideOuSortirRectangle extends StatelessWidget {
         SliderTheme(
           data: TinterSliderTheme.enabled,
           child: DiscoverSlider(
-              slider: BlocBuilder<ProfileBloc, ProfileState>(
-                builder: (BuildContext context, ProfileState profileState) {
-                  if (!(profileState is ProfileLoadSuccessState)) {
+              slider: BlocBuilder<UserBloc, UserState>(
+                builder: (BuildContext context, UserState userState) {
+                  if (!(userState is UserLoadSuccessState)) {
                     return CircularProgressIndicator();
                   }
                   return Slider(
-                      value: (profileState as ProfileLoadSuccessState).profile.aideOuSortir,
-                      onChanged: (value) => BlocProvider.of<ProfileBloc>(context)
+                      value: (userState as UserLoadSuccessState).user.aideOuSortir,
+                      onChanged: (value) => BlocProvider.of<UserBloc>(context)
                           .add(AideOuSortirChanged(newValue: value)));
                 },
               ),
@@ -535,14 +535,14 @@ class OrganisationEvenementsRectangle extends StatelessWidget {
         ),
         SliderTheme(
           data: TinterSliderTheme.enabled,
-          child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (BuildContext context, ProfileState profileState) {
-              if (!(profileState is ProfileLoadSuccessState)) {
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (BuildContext context, UserState userState) {
+              if (!(userState is UserLoadSuccessState)) {
                 return CircularProgressIndicator();
               }
               return Slider(
-                  value: (profileState as ProfileLoadSuccessState).profile.organisationEvenements,
-                  onChanged: (value) => BlocProvider.of<ProfileBloc>(context)
+                  value: (userState as UserLoadSuccessState).user.organisationEvenements,
+                  onChanged: (value) => BlocProvider.of<UserBloc>(context)
                       .add(OrganisationEvenementsChanged(newValue: value)));
             },
           ),
@@ -573,15 +573,15 @@ class GoutsMusicauxRectangle extends StatelessWidget {
                   style: TinterTextStyle.headline2,
                 ),
               ),
-              BlocBuilder<ProfileBloc, ProfileState>(
-                builder: (BuildContext context, ProfileState profileState) {
-                  if (!(profileState is ProfileLoadSuccessState)) {
+              BlocBuilder<UserBloc, UserState>(
+                builder: (BuildContext context, UserState userState) {
+                  if (!(userState is UserLoadSuccessState)) {
                     return CircularProgressIndicator();
                   }
                   return Wrap(
                     spacing: 15,
                     children: <Widget>[
-                      for (String musicStyle in (profileState as ProfileLoadSuccessState).profile.goutsMusicaux)
+                      for (String musicStyle in (userState as UserLoadSuccessState).user.goutsMusicaux)
                         Chip(
                           label: Text(musicStyle),
                           labelStyle: TinterTextStyle.goutMusicaux,

@@ -8,7 +8,7 @@
 //import 'package:property_change_notifier/property_change_notifier.dart';
 //
 //
-///// Match is Profile with additional
+///// Match is User with additional
 ///// information describing the user relation
 ///// with the match.
 ///// A match can be in one of four states:
@@ -19,7 +19,7 @@
 /////    3: Parrain You Asked
 /////    4: Parrain He/She Asked
 /////    5: Parrain (Accepted both side)
-//class Match extends Profile {
+//class Match extends User {
 //  int score;
 //  int state;
 //
@@ -39,7 +39,7 @@
 ///// It is used to link he other different classes
 ///// use to describe the user.
 //class User extends PropertyChangeNotifier<String> {
-//  Profile profile;
+//  User user;
 //  List<Match> _discoverMatches;
 //  List<Match> _matchedMatches;
 //  List<Match> _parrainMatches;
@@ -53,7 +53,7 @@
 //
 //  // region Test methods
 //  User.createTestUser():
-//    profile=Profile.fromJson({
+//    user=User.fromJson({
 //      'name': 'Lucas',
 //      'surname': 'Delsol',
 //      'email': 'lucasdelsol@telecom-sudparis.eu',
@@ -581,14 +581,14 @@
 //
 //  // region Init methods used to initiate the attributes
 //  void init() async {
-//    initProfile();
+//    initUser();
 //    initDiscoverMatches();
 //    initMatchedMatches();
 //    initParrainMatches();
 //  }
 //
-//  void initProfile() async {
-//    profile = await Interface.getProfile();
+//  void initUser() async {
+//    user = await Interface.getUser();
 //  }
 //
 //  void initDiscoverMatches() async {
@@ -734,8 +734,8 @@
 //  }
 //
 //
-//  // region Getters used by the "Profile tab" to get the user profile information from the database.
-//  static Future<Profile> getProfile() async {
+//  // region Getters used by the "User tab" to get the user user information from the database.
+//  static Future<User> getUser() async {
 //    http.Response response = await http.get(
 //        SERVER_IP + "/User/Get",
 //        headers: {SESSION_COOKIE_NAME: SESSION_COOKIE}
@@ -747,9 +747,9 @@
 //      return null;
 //    }
 //
-//    Profile profile = Profile.fromJson(jsonDecode(response.body));
+//    User user = User.fromJson(jsonDecode(response.body));
 //
-//    return profile;
+//    return user;
 //  }
 //  // endregion
 //
@@ -821,7 +821,7 @@
 //  // endregion
 //
 //
-//  // region Setters used by the "Profile tab" to modify the user profile in the database.
+//  // region Setters used by the "User tab" to modify the user user in the database.
 //  static Future<void> setAssociations(Associations newAssociations) async {
 //    http.Response response = await http.post(
 //        SERVER_IP + "/User/Set",

@@ -93,6 +93,25 @@ class TinterTextStyle {
     fontSize: 18,
     color: Colors.black,
   );
+  static const dialogTitle = TextStyle(
+    fontSize: 25,
+    color: Colors.black,
+  );
+  static const dialogContent = TextStyle(
+    fontSize: 18,
+    color: Colors.black54,
+  );
+
+  // Login element
+  static const loginFormLabel = TextStyle(
+    fontSize: 20,
+    color: TinterColors.white,
+  );
+
+  static const loginError = TextStyle(
+    fontSize: 15,
+    color: TinterColors.white,
+  );
 }
 
 

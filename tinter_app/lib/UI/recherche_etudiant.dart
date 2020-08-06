@@ -2,18 +2,285 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:tinterapp/main.dart';
-import 'dart:math';
+import 'package:tinterapp/Logic/models/association.dart';
+import 'package:tinterapp/Logic/models/user.dart';
+import 'package:tinterapp/Logic/models/match.dart';
 
-import 'slider_label.dart';
 import 'const.dart';
-import '../Logic/interface.dart';
 
 main() => runApp(MaterialApp(
       home: RechercheEtudiantTab(),
-    ));
+));
 
-User user = User.createTestUser();
+List<Match> allUsers = [
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock']
+  }),
+  Match.fromJson({
+    'name': 'Name2',
+    'surname': 'Surname2',
+    'score': 65,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'AssociationX',
+        description: 'This is the X association',
+      ),
+      Association(
+        name: 'AssociationY',
+        description: 'This is the Y association',
+      ),
+    ],
+    'attiranceVieAsso': 0.21,
+    'feteOuCours': 0.94,
+    'aideOuSortir': 0.43,
+    'organisationEvenements': 0.45,
+    'goutsMusicaux': ['Pop', 'Rock', 'ok']
+  }),
+  Match.fromJson({
+    'name': 'Name3',
+    'surname': 'Surname3',
+    'score': 23,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'AssociationZ',
+        description: 'This is the Z association',
+      ),
+      Association(
+        name: 'AssociationZZ',
+        description: 'This is the ZZ association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop']
+  }),
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock']
+  }),
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock']
+  }),
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock']
+  }),
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock']
+  }),
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock', 'Mock']
+  }),
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock']
+  }),
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock']
+  }),
+  Match.fromJson({
+    'name': 'Valentine',
+    'surname': 'Coste',
+    'score': 99,
+    'state': 0,
+    'associations': [
+      Association(
+        name: 'Association1',
+        description: 'This is the first association',
+      ),
+      Association(
+        name: 'Association2',
+        description: 'This is the second association',
+      ),
+      Association(
+        name: 'Association3',
+        description: 'This is the third association',
+      ),
+    ],
+    'attiranceVieAsso': 0.56,
+    'feteOuCours': 0.24,
+    'aideOuSortir': 0.41,
+    'organisationEvenements': 0.12,
+    'goutsMusicaux': ['Pop', 'Rock']
+  }),
+];
 
 class RechercheEtudiantTab extends StatefulWidget {
   @override
@@ -144,8 +411,8 @@ class _RechercheEtudiantTabState extends State<RechercheEtudiantTab> {
                   child: Column(
                     // TODO: Change this to search
                     children: [
-                      for (Profile profile in user.discoverMatches)
-                        profileResume(profile)
+                      for (Match match in allUsers)
+                        userResume(match)
                     ],
                   ),
                 ),
@@ -157,7 +424,7 @@ class _RechercheEtudiantTabState extends State<RechercheEtudiantTab> {
     );
   }
 
-  Widget profileResume(Profile profile) {
+  Widget userResume(Match match) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -179,7 +446,7 @@ class _RechercheEtudiantTabState extends State<RechercheEtudiantTab> {
           color: TinterColors.primaryAccent,
         ),
         title: Text(
-          profile.name + ' ' + profile.surname,
+          match.name + ' ' + match.surname,
           style: TinterTextStyle.headline2,
         ),
       ),

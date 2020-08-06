@@ -28,3 +28,7 @@ class ChangeStatusDiscoverMatchesEvent extends DiscoverMatchesLoadInSuccessEvent
   @override
   List<Object> get props => [match, newStatus];
 }
+
+class DiscoverMatchLikeEvent extends DiscoverMatchesLoadInSuccessEvent {}
+
+class DiscoverMatchIgnoreEvent extends DiscoverMatchesLoadInSuccessEvent {}

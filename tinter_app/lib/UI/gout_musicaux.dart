@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tinterapp/Logic/blocs/user_profile/profile_bloc.dart';
+import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 
 import 'const.dart';
 
@@ -109,24 +109,24 @@ class GoutsMusicauxTab extends StatelessWidget {
   }
 
   Widget goutMusicalChip(String goutMusical) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (BuildContext context, ProfileState profileState) {
-        if (!(profileState is ProfileLoadSuccessState)) {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (BuildContext context, UserState userState) {
+        if (!(userState is UserLoadSuccessState)) {
           return CircularProgressIndicator();
         }
         return InkWell(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () {
-            if ((profileState as ProfileLoadSuccessState).profile.goutsMusicaux.contains(goutMusical)) {
-              BlocProvider.of<ProfileBloc>(context).add(
+            if ((userState as UserLoadSuccessState).user.goutsMusicaux.contains(goutMusical)) {
+              BlocProvider.of<UserBloc>(context).add(
                 GoutMusicauxEvent(
                   status: GoutMusicauxEventStatus.remove,
                   goutMusical: goutMusical,
                 ),
               );
             } else {
-              BlocProvider.of<ProfileBloc>(context).add(
+              BlocProvider.of<UserBloc>(context).add(
                 GoutMusicauxEvent(
                   status: GoutMusicauxEventStatus.add,
                   goutMusical: goutMusical,
@@ -139,7 +139,7 @@ class GoutsMusicauxTab extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(80.0)),
-              color: (profileState as ProfileLoadSuccessState).profile.goutsMusicaux.contains(goutMusical)
+              color: (userState as UserLoadSuccessState).user.goutsMusicaux.contains(goutMusical)
                   ? TinterColors.primaryAccent
                   : TinterColors.grey,
             ),

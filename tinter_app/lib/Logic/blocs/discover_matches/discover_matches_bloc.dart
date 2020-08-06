@@ -10,7 +10,7 @@ part 'discover_matches_event.dart';
 part 'discover_matches_state.dart';
 
 class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesState> {
-  DiscoverRepository discoverRepository;
+  final DiscoverRepository discoverRepository;
 
   DiscoverMatchesBloc({@required this.discoverRepository}) :
         assert(discoverRepository!=null),
@@ -28,6 +28,21 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
         } else {
           _addError('ChangeStatusDiscoverMatchesEvent was called while state is not DiscoverMatchesLoadSuccessState');
         }
+        return;
+      case DiscoverMatchLikeEvent:
+        if (state is DiscoverMatchesLoadSuccessState) {
+          _mapDiscoverMatchLikeEventToState();
+        } else {
+          _addError('DiscoverMatchLikeEvent was called while state is not DiscoverMatchesLoadSuccessState');
+        }
+        return;
+      case DiscoverMatchIgnoreEvent:
+        if (state is DiscoverMatchesLoadSuccessState) {
+          _mapDiscoverMatchIgnoreEventToState();
+        } else {
+          _addError('DiscoverMatchIgnoreEvent was called while state is not DiscoverMatchesLoadSuccessState');
+        }
+        return;
     }
 
     print('event: ' + event.toString() + ' no treated');
@@ -43,7 +58,10 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
     Match newMatch = Match(
         event.match.name,
         event.match.surname,
+        event.match.email,
         event.newStatus,
+        event.match.score,
+        event.match.primoEntrant,
         event.match.associations,
         event.match.attiranceVieAsso,
         event.match.feteOuCours,
@@ -53,6 +71,18 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
     discoverRepository.updateMatchStatus(newMatch);
     yield DiscoverMatchesLoadSuccessState(
         matches: (state as DiscoverMatchesLoadSuccessState).withUpdatedMatch(event.match, newMatch));
+  }
+
+  void _mapDiscoverMatchLikeEventToState() {
+    /// Grab the current displayed match, we know it's the first in the list
+    final Match displayedMatch = (state as DiscoverMatchesLoadSuccessState).matches[0];
+    add(ChangeStatusDiscoverMatchesEvent(match: displayedMatch, newStatus: MatchStatus.liked));
+  }
+
+  void _mapDiscoverMatchIgnoreEventToState() {
+    /// Grab the current displayed match, we know it's the first in the list
+    final Match displayedMatch = (state as DiscoverMatchesLoadSuccessState).matches[0];
+    add(ChangeStatusDiscoverMatchesEvent(match: displayedMatch, newStatus: MatchStatus.ignored));
   }
 
 

@@ -7,10 +7,11 @@ import 'const.dart';
 main() {
   runApp(MaterialApp(
     home: Material(
-      child: CustomBottomNavigationBar(onTap :(int value){}),
+      child: CustomBottomNavigationBar(onTap: (int value) {}),
     ),
   ));
 }
+
 // TODO: Add margin to button to make it more clickable
 class CustomBottomNavigationBar extends StatefulWidget {
   final ValueChanged<int> onTap;
@@ -22,9 +23,8 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-
   var selection = [1, 0, 0]; // Match, Discover, Profile
-  Duration duration = Duration(milliseconds: 200);
+  Duration duration = Duration(milliseconds: 300);
   Curve curve = Curves.easeIn;
 
   /// Fractions describe how much of a width space each element is taking.
@@ -44,12 +44,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    fractions['spacingBetweenIcons'] = (1 - (
-        (1-selection[0])*fractions['match'] +
-            (1-selection[1])*fractions['discover'] +
-            (1-selection[2])*fractions['profile'] +
-            fractions['selectedRectangle']
-    ))/4; // /4 because there are 4 spaces.
+    fractions['spacingBetweenIcons'] = (1 -
+            ((1 - selection[0]) * fractions['match'] +
+                (1 - selection[1]) * fractions['discover'] +
+                (1 - selection[2]) * fractions['profile'] +
+                fractions['selectedRectangle'])) /
+        4; // /4 because there are 4 spaces.
 
     return Container(
       height: 60,
@@ -79,7 +79,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*fractions['spacingBetweenIcons'],
+        left: parentWidth * fractions['spacingBetweenIcons'],
         height: selectedRectangleHeight,
         child: AnimatedOpacity(
           duration: duration,
@@ -92,7 +92,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               color: TinterColors.secondaryAccent,
               borderRadius: BorderRadius.all(Radius.circular(60.0)),
             ),
-            width: parentWidth*fractions['selectedRectangle']*selection[0],
+            width: parentWidth * fractions['selectedRectangle'] * selection[0],
           ),
         ),
       ),
@@ -101,13 +101,22 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*(fractions['spacingBetweenIcons'] + selection[0]*(fractions['spaceBeforeIconInRectangle'] + fractions['match'])) + 5, // 5 is for padding
+        left: parentWidth *
+                (fractions['spacingBetweenIcons'] +
+                    selection[0] *
+                        (fractions['spaceBeforeIconInRectangle'] + fractions['match'])) +
+            5,
+        // 5 is for padding
         height: selectedRectangleHeight,
         child: AnimatedContainer(
           duration: duration,
           curve: curve,
           color: Colors.transparent,
-          width: parentWidth*(fractions['selectedRectangle'] - (fractions['match'] + fractions['spaceBeforeIconInRectangle'])) - 10, // 10 is for padding
+          width: parentWidth *
+                  (fractions['selectedRectangle'] -
+                      (fractions['match'] + fractions['spaceBeforeIconInRectangle'])) -
+              10,
+          // 10 is for padding
           child: AnimatedOpacity(
             duration: duration,
             curve: curve,
@@ -129,8 +138,31 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*(fractions['spacingBetweenIcons'] + selection[0]*fractions['spaceBeforeIconInRectangle']),
+        left: parentWidth *
+            (fractions['spacingBetweenIcons'] +
+                selection[0] * fractions['spaceBeforeIconInRectangle']),
         height: selectedRectangleHeight,
+        child: Center(
+          child: Container(
+            child: SvgPicture.asset(
+              'assets/Icons/match.svg',
+              width: fractions['match'] * parentWidth,
+              color: selection[0] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
+            ),
+          ),
+        ),
+      ),
+
+      // match InkWell
+      AnimatedPositioned(
+        duration: duration,
+        curve: curve,
+        left: parentWidth *
+                (fractions['spacingBetweenIcons'] +
+                    selection[0] * fractions['spaceBeforeIconInRectangle']) -
+            20,
+        top: -10,
+        height: selectedRectangleHeight + 20,
         child: Center(
           child: InkWell(
             onTap: () {
@@ -141,10 +173,10 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 selection[2] = 0;
               });
             },
-            child: SvgPicture.asset(
-              'assets/Icons/match.svg',
-              width: fractions['match']*parentWidth,
-              color: selection[0]==0 ? TinterColors.secondaryAccent : TinterColors.white,
+            child: Container(
+              padding: EdgeInsets.all(100.0),
+              width: fractions['match'] * parentWidth + 40,
+              height: fractions['match'] * parentWidth + 20,
             ),
           ),
         ),
@@ -152,14 +184,16 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     ];
   }
 
-
   List<Widget> drawDiscover(double parentWidth) {
     return [
       // Background rectangle
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*(2*fractions['spacingBetweenIcons'] + selection[0]*fractions['selectedRectangle'] + (1-selection[0])*fractions['match']),
+        left: parentWidth *
+            (2 * fractions['spacingBetweenIcons'] +
+                selection[0] * fractions['selectedRectangle'] +
+                (1 - selection[0]) * fractions['match']),
         height: selectedRectangleHeight,
         child: AnimatedOpacity(
           duration: duration,
@@ -172,7 +206,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               color: TinterColors.secondaryAccent,
               borderRadius: BorderRadius.all(Radius.circular(60.0)),
             ),
-            width: parentWidth*fractions['selectedRectangle']*selection[1],
+            width: parentWidth * fractions['selectedRectangle'] * selection[1],
           ),
         ),
       ),
@@ -181,13 +215,24 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*(2*fractions['spacingBetweenIcons'] + selection[0]*fractions['selectedRectangle'] + (1-selection[0])*fractions['match'] + selection[1]*(fractions['spaceBeforeIconInRectangle']+fractions['discover'])) + 5, // 5 is for padding
+        left: parentWidth *
+                (2 * fractions['spacingBetweenIcons'] +
+                    selection[0] * fractions['selectedRectangle'] +
+                    (1 - selection[0]) * fractions['match'] +
+                    selection[1] *
+                        (fractions['spaceBeforeIconInRectangle'] + fractions['discover'])) +
+            5,
+        // 5 is for padding
         height: selectedRectangleHeight,
         child: AnimatedContainer(
           duration: duration,
           curve: curve,
           color: Colors.transparent,
-          width: parentWidth*(fractions['selectedRectangle'] - (fractions['discover'] + fractions['spaceBeforeIconInRectangle'])) - 10, // 10 is for padding
+          width: parentWidth *
+                  (fractions['selectedRectangle'] -
+                      (fractions['discover'] + fractions['spaceBeforeIconInRectangle'])) -
+              10,
+          // 10 is for padding
           child: AnimatedOpacity(
             duration: duration,
             curve: curve,
@@ -205,12 +250,37 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         ),
       ),
 
-      // match Icon
+      // discover Icon
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*(2*fractions['spacingBetweenIcons'] + selection[0]*fractions['selectedRectangle'] + (1-selection[0])*fractions['match'] + selection[1]*(fractions['spaceBeforeIconInRectangle'])),
+        left: parentWidth *
+            (2 * fractions['spacingBetweenIcons'] +
+                selection[0] * fractions['selectedRectangle'] +
+                (1 - selection[0]) * fractions['match'] +
+                selection[1] * (fractions['spaceBeforeIconInRectangle'])),
         height: selectedRectangleHeight,
+        child: Center(
+          child: SvgPicture.asset(
+            'assets/Icons/discover.svg',
+            width: fractions['discover'] * parentWidth,
+            color: selection[1] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
+          ),
+        ),
+      ),
+
+      // discover Inkwell
+      AnimatedPositioned(
+        duration: duration,
+        curve: curve,
+        left: parentWidth *
+                (2 * fractions['spacingBetweenIcons'] +
+                    selection[0] * fractions['selectedRectangle'] +
+                    (1 - selection[0]) * fractions['match'] +
+                    selection[1] * (fractions['spaceBeforeIconInRectangle'])) -
+            20,
+        top: -10,
+        height: selectedRectangleHeight + 20,
         child: Center(
           child: InkWell(
             onTap: () {
@@ -221,10 +291,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 selection[2] = 0;
               });
             },
-            child: SvgPicture.asset(
-              'assets/Icons/discover.svg',
-              width: fractions['discover']*parentWidth,
-              color: selection[1]==0 ? TinterColors.secondaryAccent : TinterColors.white,
+            child: Container(
+              width: fractions['discover'] * parentWidth + 40,
+              height: fractions['discover'] * parentWidth + 20,
             ),
           ),
         ),
@@ -232,14 +301,17 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     ];
   }
 
-
   List<Widget> drawProfile(double parentWidth) {
     return [
       // Background rectangle
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*(3*fractions['spacingBetweenIcons'] + (1-selection[0])*fractions['match'] + (1-selection[1])*fractions['discover'] + (1-selection[2])*fractions['selectedRectangle']),
+        left: parentWidth *
+            (3 * fractions['spacingBetweenIcons'] +
+                (1 - selection[0]) * fractions['match'] +
+                (1 - selection[1]) * fractions['discover'] +
+                (1 - selection[2]) * fractions['selectedRectangle']),
         height: selectedRectangleHeight,
         child: AnimatedOpacity(
           duration: duration,
@@ -252,7 +324,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               color: TinterColors.secondaryAccent,
               borderRadius: BorderRadius.all(Radius.circular(60.0)),
             ),
-            width: parentWidth*fractions['selectedRectangle']*selection[2],
+            width: parentWidth * fractions['selectedRectangle'] * selection[2],
           ),
         ),
       ),
@@ -261,13 +333,25 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*(3*fractions['spacingBetweenIcons'] + (1-selection[0])*fractions['match'] + (1-selection[1])*fractions['discover'] + (1-selection[2])*fractions['selectedRectangle'] + selection[2]*(fractions['spaceBeforeIconInRectangle'] + fractions['profile'])) + 5, // 5 is for padding
+        left: parentWidth *
+                (3 * fractions['spacingBetweenIcons'] +
+                    (1 - selection[0]) * fractions['match'] +
+                    (1 - selection[1]) * fractions['discover'] +
+                    (1 - selection[2]) * fractions['selectedRectangle'] +
+                    selection[2] *
+                        (fractions['spaceBeforeIconInRectangle'] + fractions['profile'])) +
+            5,
+        // 5 is for padding
         height: selectedRectangleHeight,
         child: AnimatedContainer(
           duration: duration,
           curve: curve,
           color: Colors.transparent,
-          width: parentWidth*(fractions['selectedRectangle'] - (fractions['profile'] + fractions['spaceBeforeIconInRectangle'])) - 10, // 10 is for padding
+          width: parentWidth *
+                  (fractions['selectedRectangle'] -
+                      (fractions['profile'] + fractions['spaceBeforeIconInRectangle'])) -
+              10,
+          // 10 is for padding
           child: AnimatedOpacity(
             duration: duration,
             curve: curve,
@@ -285,12 +369,39 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         ),
       ),
 
-      // match Icon
+      // profile Icon
       AnimatedPositioned(
         duration: duration,
         curve: curve,
-        left: parentWidth*(3*fractions['spacingBetweenIcons'] + (1-selection[0])*fractions['match'] + (1-selection[1])*fractions['discover'] + (1-selection[2])*fractions['selectedRectangle'] + selection[2]*(fractions['spaceBeforeIconInRectangle'])),
+        left: parentWidth *
+            (3 * fractions['spacingBetweenIcons'] +
+                (1 - selection[0]) * fractions['match'] +
+                (1 - selection[1]) * fractions['discover'] +
+                (1 - selection[2]) * fractions['selectedRectangle'] +
+                selection[2] * (fractions['spaceBeforeIconInRectangle'])),
         height: selectedRectangleHeight,
+        child: Center(
+          child: SvgPicture.asset(
+            'assets/Icons/profile.svg',
+            width: fractions['profile'] * parentWidth,
+            color: selection[2] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
+          ),
+        ),
+      ),
+
+      // profile Inkwell
+      AnimatedPositioned(
+        duration: duration,
+        curve: curve,
+        left: parentWidth *
+                (3 * fractions['spacingBetweenIcons'] +
+                    (1 - selection[0]) * fractions['match'] +
+                    (1 - selection[1]) * fractions['discover'] +
+                    (1 - selection[2]) * fractions['selectedRectangle'] +
+                    selection[2] * (fractions['spaceBeforeIconInRectangle'])) -
+            20,
+        top: -10,
+        height: selectedRectangleHeight + 20,
         child: Center(
           child: InkWell(
             onTap: () {
@@ -301,21 +412,16 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 selection[2] = 1;
               });
             },
-            child: SvgPicture.asset(
-              'assets/Icons/profile.svg',
-              width: fractions['profile']*parentWidth,
-              color: selection[2]==0 ? TinterColors.secondaryAccent : TinterColors.white,
+            child: Container(
+              width: fractions['profile'] * parentWidth + 40,
+              height: fractions['profile'] * parentWidth + 20,
             ),
           ),
         ),
       ),
     ];
   }
-
-
-
 }
-
 
 //WebsafeSvg.asset(
 //'assets/Icons/match.svg',

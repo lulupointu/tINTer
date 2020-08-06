@@ -8,8 +8,10 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="tinterapp"
-        android:icon="@mipmap/ic_launcher">
-        <activity
+        android:icon="@mipmap/ic_launcher"
+        android:fullBackupContent="@xml/my_backup_rules"
+        android:allowBackup="false">
+    <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

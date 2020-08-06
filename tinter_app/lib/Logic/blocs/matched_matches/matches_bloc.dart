@@ -44,7 +44,10 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
     Match newMatch = Match(
         event.match.name,
         event.match.surname,
+        event.match.email,
         event.newStatus,
+        event.match.score,
+        event.match.primoEntrant,
         event.match.associations,
         event.match.attiranceVieAsso,
         event.match.feteOuCours,

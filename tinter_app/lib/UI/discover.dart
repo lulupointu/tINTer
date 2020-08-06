@@ -4,119 +4,115 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
+import 'package:tinterapp/Logic/models/association.dart';
+import 'package:tinterapp/Logic/repository/discover_repository.dart';
+import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:tinterapp/UI/custom_flare_controller.dart';
 import 'package:tinterapp/UI/recherche_etudiant.dart';
 import 'package:tinterapp/UI/slider_label.dart';
 import 'package:tinterapp/UI/const.dart';
+import 'package:http/http.dart' as http;
+import 'package:tinterapp/Logic/models/match.dart';
 
 main() {
+  final http.Client httpClient = http.Client();
+  TinterApiClient tinterApiClient = TinterApiClient(
+    httpClient: httpClient,
+  );
+
+  final DiscoverRepository discoverRepository =
+      DiscoverRepository(tinterApiClient: tinterApiClient);
+
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIOverlays([]);
-  runApp(MaterialApp(
-    home: DiscoverTab(),
-  ));
+  runApp(
+    BlocProvider(
+      create: (BuildContext context) =>
+          DiscoverMatchesBloc(discoverRepository: discoverRepository),
+      child: MaterialApp(
+        home: SafeArea(
+          child: Scaffold(
+            backgroundColor: TinterColors.background,
+            body: DiscoverTab(),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
-User user = User.createTestUser();
-
-class DiscoverTab extends StatefulWidget {
-  @override
-  _DiscoverTabState createState() => _DiscoverTabState();
-}
-
-class _DiscoverTabState extends State<DiscoverTab> with SingleTickerProviderStateMixin {
-  Animation<double> animation;
-  AnimationController controller;
-  ScrollController informationController;
-
-  @override
-  void initState() {
-    super.initState();
-    informationController = ScrollController();
-    controller = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
-    animation = CurveTween(curve: Curves.easeOut).animate(controller)
-      ..addListener(() {
-        setState(() {});
-      });
-  }
-
+class DiscoverTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return Stack(
-          children: [
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 55,
-                  child: MatchInformation(animation, informationController),
+    // Update to last information
+    BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchesRequestedEvent());
+
+    return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+      buildWhen: (DiscoverMatchesState previousState, DiscoverMatchesState state) {
+        return previousState.runtimeType != state.runtimeType;
+      },
+      builder: (BuildContext context, DiscoverMatchesState state) {
+        if (!(state is DiscoverMatchesLoadSuccessState)) {
+          return CircularProgressIndicator();
+        }
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return Stack(
+              children: [
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 55,
+                      child: MatchInformation(),
+                    ),
+                    Expanded(
+                      flex: 45,
+                      child: DiscoverRight(constraints.maxHeight),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 45,
-                  child: DiscoverRight(
-                      animation, controller, animateNextMatch, constraints.maxHeight),
+                Positioned(
+                  left: constraints.maxWidth * 55 / 100,
+                  child: SvgPicture.asset(
+                    'assets/Discover/DiscoverBackground.svg',
+                    color: TinterColors.background,
+                    height: constraints.maxHeight,
+                  ),
+                ),
+                Positioned(
+                  left: constraints.maxWidth * 55 / 100,
+                  child: SvgPicture.asset(
+                    'assets/Discover/DiscoverTop.svg',
+                    color: TinterColors.primaryAccent,
+                    height: constraints.maxHeight / 2,
+                  ),
+                ),
+                Positioned(
+                  left: constraints.maxWidth * 55 / 100,
+                  bottom: 0,
+                  child: SvgPicture.asset(
+                    'assets/Discover/DiscoverBottom.svg',
+                    color: TinterColors.primaryAccent,
+                    height: constraints.maxHeight / 2,
+                  ),
                 ),
               ],
-            ),
-            Positioned(
-              left: constraints.maxWidth*55/100,
-              child: SvgPicture.asset(
-                'assets/Discover/DiscoverBackground.svg',
-                color: TinterColors.background,
-                height: constraints.maxHeight,
-              ),
-            ),
-            Positioned(
-              left: constraints.maxWidth*55/100,
-              child: SvgPicture.asset(
-                'assets/Discover/DiscoverTop.svg',
-                color: TinterColors.primaryAccent,
-                height: constraints.maxHeight / 2,
-              ),
-            ),
-            Positioned(
-              left: constraints.maxWidth*55/100,
-              bottom: 0,
-              child: SvgPicture.asset(
-                'assets/Discover/DiscoverBottom.svg',
-                color: TinterColors.primaryAccent,
-                height: constraints.maxHeight / 2,
-              ),
-            ),
-          ],
+            );
+          },
         );
       },
     );
-  }
-
-  void animateNextMatch() {
-    informationController.animateTo(0,
-        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    controller.forward().whenComplete(() {
-      setState(() {
-        controller.animateTo(0, duration: Duration(seconds: 0));
-        user.testDiscoverLike();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 }
 
 /// All the right side of the discover tab put together
 class DiscoverRight extends StatelessWidget {
-  final Animation<double> animation;
-  final AnimationController controller;
-  final VoidCallback animateNextMatch;
   final double appHeight;
 
-  DiscoverRight(this.animation, this.controller, this.animateNextMatch, this.appHeight);
+  DiscoverRight(this.appHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -137,17 +133,17 @@ class DiscoverRight extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Container(
-                height: ((this.appHeight - 8 * 2 - 50 - 15) - this.appHeight *1/2) /
+                height: ((this.appHeight - 8 * 2 - 50 - 15) - this.appHeight * 1 / 2) /
                     (1 -
                         (1 / 2 * MatchesFlock.fractions['bigHead'] +
                             MatchesFlock.fractions['nameAndSurname'])),
-                child: MatchesFlock(animation),
+                child: MatchesFlock(),
               ),
             ),
             SizedBox(
               height: 30,
             ),
-            LikeOrIgnore(animateNextMatch),
+            LikeOrIgnore(),
           ],
         ),
       ),
@@ -157,16 +153,16 @@ class DiscoverRight extends StatelessWidget {
   Widget studentSearch(BuildContext context, {@required double height}) {
     return Container(
       height: height,
-      child: Stack(
-        children: [
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RechercheEtudiantTab()),
-              );
-            },
-            child: Hero(
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RechercheEtudiantTab()),
+          );
+        },
+        child: Stack(
+          children: [
+            Hero(
               tag: 'studentSearchBar',
               child: Material(
                 color: Colors.transparent,
@@ -191,22 +187,11 @@ class DiscoverRight extends StatelessWidget {
                         ),
                       ),
                     ),
-                    onChanged: (String text) {
-                      print('CHANGED');
-                    },
                   ),
                 ),
               ),
             ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RechercheEtudiantTab()),
-              );
-            },
-            child: Align(
+            Align(
               alignment: Alignment(0.4, 0),
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: 500),
@@ -216,59 +201,56 @@ class DiscoverRight extends StatelessWidget {
                   maxLines: 2,
                 ),
               ),
-
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget likeOrIgnore(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Flexible(
-          child: IconButton(
-            padding: EdgeInsets.only(left: 6.0),
-            iconSize: 60,
-            color: TinterColors.secondaryAccent,
-            icon: FlareActor(
-              'assets/Icons/Heart.flr',
-              color: TinterColors.secondaryAccent,
-              animation: animation.value == 0 ? 'None' : 'Validate',
-              fit: BoxFit.fill,
-            ),
-            onPressed: () {
-              animateNextMatch(); // TODO: say it's liked
-            },
-          ),
-        ),
-        Flexible(
-          child: IconButton(
-            padding: EdgeInsets.all(0.0),
-            iconSize: 70,
-            color: TinterColors.secondaryAccent,
-            icon: FlareActor(
-              'assets/Icons/Clear.flr',
-              color: TinterColors.secondaryAccent,
-              animation: animation.value == 0 ? 'None' : 'Validate',
-              fit: BoxFit.fill,
-            ),
-            onPressed: () {
-              animateNextMatch(); // TODO: say it's ignored
-            },
-          ),
-        ),
-      ],
-    );
-  }
+//  Widget likeOrIgnore(BuildContext context) {
+//    return Row(
+//      mainAxisAlignment: MainAxisAlignment.center,
+//      children: <Widget>[
+//        Flexible(
+//          child: IconButton(
+//            padding: EdgeInsets.only(left: 6.0),
+//            iconSize: 60,
+//            color: TinterColors.secondaryAccent,
+//            icon: FlareActor(
+//              'assets/Icons/Heart.flr',
+//              color: TinterColors.secondaryAccent,
+//              animation: animation.value == 0 ? 'None' : 'Validate',
+//              fit: BoxFit.fill,
+//            ),
+//            onPressed: () {
+//              BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchLikeEvent());
+//            },
+//          ),
+//        ),
+//        Flexible(
+//          child: IconButton(
+//            padding: EdgeInsets.all(0.0),
+//            iconSize: 70,
+//            color: TinterColors.secondaryAccent,
+//            icon: FlareActor(
+//              'assets/Icons/Clear.flr',
+//              color: TinterColors.secondaryAccent,
+//              animation: animation.value == 0 ? 'None' : 'Validate',
+//              fit: BoxFit.fill,
+//            ),
+//            onPressed: () {
+//              animateNextMatch(); // TODO: say it's ignored
+//            },
+//          ),
+//        ),
+//      ],
+//    );
+//  }
 }
 
 class LikeOrIgnore extends StatefulWidget {
-  final VoidCallback animateNextMatch;
-
-  LikeOrIgnore(this.animateNextMatch);
+  LikeOrIgnore();
 
   @override
   _LikeOrIgnoreState createState() => _LikeOrIgnoreState();
@@ -318,12 +300,13 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
               'assets/Icons/Heart.flr',
               color: TinterColors.secondaryAccent,
               fit: BoxFit.contain,
-              controller: CustomFlareController(controller: likeController, forwardAnimationName: 'Validate'),
+              controller: CustomFlareController(
+                  controller: likeController, forwardAnimationName: 'Validate'),
             ),
             onPressed: () {
               likeController.forward().whenComplete(
                   () => likeController.animateTo(0, duration: Duration(seconds: 0)));
-              widget.animateNextMatch(); // TODO: say it's like
+              BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchLikeEvent());
             },
           ),
         ),
@@ -344,7 +327,7 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
             onPressed: () {
               ignoreController.forward().whenComplete(
                   () => ignoreController.animateTo(0, duration: Duration(seconds: 0)));
-              widget.animateNextMatch(); // TODO: say it's ignore
+              BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchIgnoreEvent());
             },
           ),
         ),
@@ -353,11 +336,227 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
   }
 }
 
-/// Displays the 3 stacked faces of the discover tab.
-class MatchesFlock extends StatelessWidget {
-  final Animation animation;
+///// Displays the 3 stacked faces of the discover tab.
+//class MatchesFlock extends StatelessWidget {
+//  static final Map<String, double> fractions = {
+//    'nameAndSurname': 14 / 100,
+//    'bigHead': 26 / 100,
+//    'smallHead': 15 / 100,
+//    'separator': 15 / 100,
+//  };
+//  final double height;
+//
+//  MatchesFlock({@required this.height});
+//
+//  // Handle the AnimatedList
+//  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+//
+//  void _nextDiscoverMatch(BuildContext context, Match match) {
+//    RenderBox renderBox = context.findRenderObject();
+//    var size = renderBox.size;
+//    var offset = renderBox.localToGlobal(Offset.zero);
+//
+//    _listKey.currentState.removeItem(
+//      0,
+//      (BuildContext context, Animation<double> animation) {
+//        // This is the height of the user picture, the name, and the separator
+//        final double containerHeight = height *
+//            (fractions['bigHead'] + fractions['nameAndSurname'] + fractions['separator']);
+//
+//        final MatchFlockPosition position = MatchFlockPosition.first;
+//
+//        // Creating an overlay to display the actual disappearing head.
+//        // This is useful so that it is not hided be the heart and the cross.
+//        final OverlayEntry overlayEntry = OverlayEntry(
+//          builder: (BuildContext context) {
+//            return TweenAnimationBuilder(
+//              tween: Tween<double>(begin: 0, end: 50),
+//              duration: Duration(milliseconds: 300),
+//              builder: (BuildContext context, value, Widget child) {
+//                return Positioned(
+//                  left: offset.dx,
+//                  top: offset.dy + height*(2*fractions['smallHead'] + fractions['separator']) + value ,
+//                  child: Material(
+//                    color: Colors.transparent,
+//                    child: DisplayedDiscoverMatch(
+//                      width: size.width,
+//                      pictureHeight: height * fractions['bigHead'],
+//                      match: match,
+//                      matchFlockPosition: position,
+//                      animation: animation,
+//                      nameAndSurnameHeight: height * fractions['nameAndSurname'],
+//                      separatorHeight: height * fractions['separator'],
+//                    ),
+//                  ),
+//                );
+//              },
+//            );
+//          },
+//        );
+//
+//        final overlay = Overlay.of(context);
+//        WidgetsBinding.instance.addPostFrameCallback(
+//          (_) {
+//        overlay.insert(overlayEntry);
+//
+//        // Remove the overlay once the animation ends
+//        Future.delayed(
+//          Duration(milliseconds: 300),
+//          () => overlayEntry.remove(),
+//        );
+//          },
+//        );
+//
+//        // Invisible Widget which height diminish to create a transition
+//        return SizeTransition(
+//          axis: Axis.vertical,
+//          sizeFactor: animation,
+//          child: Container(
+//            height: containerHeight,
+//          ),
+//        );
+//      },
+//      duration: Duration(milliseconds: 300),
+//    );
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return LayoutBuilder(
+//      builder: (BuildContext context, BoxConstraints constraints) {
+//        return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+//          buildWhen: (DiscoverMatchesState previousState, DiscoverMatchesState state) {
+//            if (previousState.runtimeType != state.runtimeType) {
+//              return true;
+//            }
+//            if (state is DiscoverMatchesLoadSuccessState) {
+//              _listKey.currentState.insertItem(3, duration: Duration(milliseconds: 300));
+//              _nextDiscoverMatch(
+//                  context, (previousState as DiscoverMatchesLoadSuccessState).matches.first);
+//              return true;
+//            }
+//            return false;
+//          },
+//          builder: (BuildContext context, DiscoverMatchesState state) {
+//            if (!(state is DiscoverMatchesLoadSuccessState)) {
+//              return CircularProgressIndicator();
+//            }
+//            return AnimatedList(
+//              key: _listKey,
+//              reverse: true,
+//              initialItemCount: 3,
+//              itemBuilder: (BuildContext context, int index, Animation<double> animation) {
+//                final MatchFlockPosition position = (index == 0)
+//                    ? MatchFlockPosition.first
+//                    : (index == (state as DiscoverMatchesLoadSuccessState).matches.length - 1)
+//                        ? MatchFlockPosition.last
+//                        : MatchFlockPosition.middle;
+//                return DisplayedDiscoverMatch(
+//                  width: constraints.maxWidth,
+//                  pictureHeight: height *
+//                      ((position == MatchFlockPosition.first)
+//                          ? fractions['bigHead']
+//                          : fractions['smallHead']),
+//                  match: (state as DiscoverMatchesLoadSuccessState).matches[index],
+//                  matchFlockPosition: position,
+//                  animation: animation,
+//                  nameAndSurnameHeight: (position == MatchFlockPosition.first)
+//                      ? height * fractions['nameAndSurname']
+//                      : 0,
+//                  separatorHeight: (position == MatchFlockPosition.last)
+//                      ? 0
+//                      : height * fractions['separator'],
+//                );
+//              },
+//            );
+//          },
+//        );
+//      },
+//    );
+//  }
+//}
+//
+//enum MatchFlockPosition { first, middle, last }
+//
+//class DisplayedDiscoverMatch extends StatelessWidget {
+//  final Match match;
+//  final double pictureHeight;
+//  final double nameAndSurnameHeight;
+//  final MatchFlockPosition matchFlockPosition;
+//  final Animation<double> animation;
+//  final double separatorHeight;
+//  final double width;
+//
+//  // Auto size the name and surname
+//  final AutoSizeGroup nameAndSurnameAutoSizeGroup = AutoSizeGroup();
+//
+//  DisplayedDiscoverMatch({
+//    @required this.pictureHeight,
+//    @required this.match,
+//    @required this.matchFlockPosition,
+//    @required this.animation,
+//    @required this.separatorHeight,
+//    @required this.width,
+//    @required this.nameAndSurnameHeight,
+//  });
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return FadeTransition(
+//      opacity: animation,
+//      child: Container(
+//        width: width,
+//        child: Column(
+//          children: [
+//            // Separator
+//            AnimatedContainer(
+//              duration: Duration(milliseconds: 300),
+//              height: separatorHeight,
+//              width: 1,
+//              color: TinterColors.primaryAccent,
+//            ),
+//
+//            // Picture
+//            AnimatedContainer(
+//              duration: Duration(milliseconds: 300),
+//              height: pictureHeight,
+//              width: pictureHeight,
+//              // TODO: change this to user picture
+//              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+//            ),
+//
+//            // Name and surname
+//            AnimatedContainer(
+//              duration: Duration(milliseconds: 300),
+//              height: nameAndSurnameHeight,
+//              child: Column(
+//                children: <Widget>[
+//                  Expanded(
+//                    child: AutoSizeText(
+//                      match.name,
+//                      group: nameAndSurnameAutoSizeGroup,
+//                      style: TinterTextStyle.headline2,
+//                    ),
+//                  ),
+//                  Expanded(
+//                    child: AutoSizeText(
+//                      match.surname,
+//                      group: nameAndSurnameAutoSizeGroup,
+//                      style: TinterTextStyle.headline2,
+//                    ),
+//                  ),
+//                ],
+//              ),
+//            ),
+//          ],
+//        ),
+//      ),
+//    );
+//  }
+//}
 
-  MatchesFlock(this.animation);
+class MatchesFlock extends StatefulWidget {
+  MatchesFlock();
 
   // fraction describes the proportions
   // of each part of the widget
@@ -368,26 +567,108 @@ class MatchesFlock extends StatelessWidget {
     'separator': 15 / 100,
   };
 
-  // Auto size the name and surname
+  @override
+  _MatchesFlockState createState() => _MatchesFlockState();
+}
+
+class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderStateMixin {
   final AutoSizeGroup nameAndSurnameAutoSizeGroup = AutoSizeGroup();
+  AnimationController animationController;
+  Match previousFirstMatch;
+
+  @override
+  void initState() {
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+      lowerBound: 0,
+      upperBound: 1,
+    );
+    animationController.animateTo(1, duration: Duration.zero);
+    animationController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('Animation value: ' + animation.value.toString());
-
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        return Container(
-          height: constraints.maxHeight,
-          child: Stack(
-            overflow: Overflow.visible,
-            alignment: AlignmentDirectional.topCenter,
-            children: <Widget>[
-              // Invisible head
-              Positioned(
-                top: -50 * (1 - animation.value),
-                child: Opacity(
-                  opacity: animation.value,
+        return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+            buildWhen: (DiscoverMatchesState previousState, DiscoverMatchesState state) {
+          if (previousState.runtimeType != state.runtimeType) {
+            return true;
+          }
+          if (state is DiscoverMatchesLoadSuccessState) {
+            previousFirstMatch =
+                (previousState as DiscoverMatchesLoadSuccessState).matches.first;
+            animationController
+                .animateTo(0, duration: Duration(milliseconds: 0))
+                .whenComplete(() => animationController.forward());
+            return true;
+          }
+          return false;
+        }, builder: (BuildContext context, DiscoverMatchesState state) {
+          if (!(state is DiscoverMatchesLoadSuccessState)) {
+            return CircularProgressIndicator();
+          }
+          return Container(
+            height: constraints.maxHeight,
+            child: Stack(
+              overflow: Overflow.visible,
+              alignment: AlignmentDirectional.topCenter,
+              children: <Widget>[
+                // Invisible head
+                Positioned(
+                  top: -50 * (1 - animationController.value),
+                  child: Opacity(
+                    opacity: animationController.value,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          width: 2,
+                          color: TinterColors.primaryAccent,
+                        ),
+                      ),
+                      height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                      width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                      child: Center(
+                          child: Text(
+                              (state as DiscoverMatchesLoadSuccessState).matches[2].name)),
+                    ),
+                  ),
+                ),
+
+                // Invisible separator
+                Positioned(
+                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      10 -
+                      50 * (1 - animationController.value),
+                  child: Opacity(
+                    opacity: animationController.value,
+                    child: Container(
+                      height: constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
+                      width: 1.5,
+                      color: TinterColors.primaryAccent,
+                    ),
+                  ),
+                ),
+
+                // First head
+                Positioned(
+                  top: 0 +
+                      constraints.maxHeight *
+                          (MatchesFlock.fractions['smallHead'] +
+                              MatchesFlock.fractions['separator']) *
+                          animationController.value,
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -396,192 +677,206 @@ class MatchesFlock extends StatelessWidget {
                         color: TinterColors.primaryAccent,
                       ),
                     ),
-                    height: constraints.maxHeight * fractions['smallHead'],
-                    width: constraints.maxHeight * fractions['smallHead'],
-                    child: Center(child: Text(user.discoverMatches[3].name)),
+                    height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                    width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                    child: Center(
+                        child:
+                            Text((state as DiscoverMatchesLoadSuccessState).matches[1].name)),
                   ),
                 ),
-              ),
 
-              // Invisible separator
-              Positioned(
-                top: constraints.maxHeight * fractions['smallHead'] +
-                    10 -
-                    50 * (1 - animation.value),
-                child: Opacity(
-                  opacity: animation.value,
+                // First separator
+                Positioned(
+                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      10 +
+                      constraints.maxHeight *
+                          (MatchesFlock.fractions['smallHead'] +
+                              MatchesFlock.fractions['separator']) *
+                          animationController.value,
                   child: Container(
-                    height: constraints.maxHeight * fractions['separator'] - 20,
+                    height: constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
                     width: 1.5,
                     color: TinterColors.primaryAccent,
                   ),
                 ),
-              ),
 
-              // First head
-              Positioned(
-                top: 0 +
-                    constraints.maxHeight *
-                        (fractions['smallHead'] + fractions['separator']) *
-                        animation.value,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      width: 2,
-                      color: TinterColors.primaryAccent,
-                    ),
-                  ),
-                  height: constraints.maxHeight * fractions['smallHead'],
-                  width: constraints.maxHeight * fractions['smallHead'],
-                  child: Center(child: Text(user.discoverMatches[2].name)),
-                ),
-              ),
-
-              // First separator
-              Positioned(
-                top: constraints.maxHeight * fractions['smallHead'] +
-                    10 +
-                    constraints.maxHeight *
-                        (fractions['smallHead'] + fractions['separator']) *
-                        animation.value,
-                child: Container(
-                  height: constraints.maxHeight * fractions['separator'] - 20,
-                  width: 1.5,
-                  color: TinterColors.primaryAccent,
-                ),
-              ),
-
-              // Second head
-              Positioned(
-                top: constraints.maxHeight * fractions['smallHead'] +
-                    constraints.maxHeight * fractions['separator'] +
-                    constraints.maxHeight *
-                        (fractions['smallHead'] + fractions['separator']) *
-                        animation.value,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      width: 2 + 2 * animation.value,
-                      color: TinterColors.primaryAccent,
-                    ),
-                  ),
-                  height: constraints.maxHeight * fractions['smallHead'] +
+                // Second head
+                Positioned(
+                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      constraints.maxHeight * MatchesFlock.fractions['separator'] +
                       constraints.maxHeight *
-                          (fractions['bigHead'] - fractions['smallHead']) *
-                          animation.value,
-                  width: constraints.maxHeight * fractions['smallHead'] +
-                      constraints.maxHeight *
-                          (fractions['bigHead'] - fractions['smallHead']) *
-                          animation.value,
-                  child: Center(child: Text(user.discoverMatches[1].name)),
-                ),
-              ),
-
-              // Second separator
-              Positioned(
-                top: constraints.maxHeight * fractions['smallHead'] +
-                    constraints.maxHeight * fractions['separator'] +
-                    constraints.maxHeight * fractions['smallHead'] +
-                    10 +
-                    50 * animation.value,
-                child: Opacity(
-                  opacity: 1 - animation.value,
-                  child: Container(
-                    height: constraints.maxHeight * fractions['separator'] - 20,
-                    width: 1.5,
-                    color: TinterColors.primaryAccent,
-                  ),
-                ),
-              ),
-
-              // Third head
-              Positioned(
-                top: constraints.maxHeight * fractions['smallHead'] +
-                    constraints.maxHeight * fractions['separator'] +
-                    constraints.maxHeight * fractions['smallHead'] +
-                    constraints.maxHeight * fractions['separator'] +
-                    50 * animation.value,
-                child: Opacity(
-                  opacity: 1 - animation.value,
+                          (MatchesFlock.fractions['smallHead'] +
+                              MatchesFlock.fractions['separator']) *
+                          animationController.value,
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        width: 4,
+                        width: 2 + 2 * animationController.value,
                         color: TinterColors.primaryAccent,
                       ),
                     ),
-                    height: constraints.maxHeight * fractions['bigHead'],
-                    width: constraints.maxHeight * fractions['bigHead'],
-                    child: Center(child: Text(user.discoverMatches[0].name)),
+                    height: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight *
+                            (MatchesFlock.fractions['bigHead'] -
+                                MatchesFlock.fractions['smallHead']) *
+                            animationController.value,
+                    width: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight *
+                            (MatchesFlock.fractions['bigHead'] -
+                                MatchesFlock.fractions['smallHead']) *
+                            animationController.value,
+                    child: Center(
+                        child:
+                            Text((state as DiscoverMatchesLoadSuccessState).matches[0].name)),
                   ),
                 ),
-              ),
 
-              // Name and surname of the third head
-              Positioned(
-                top: constraints.maxHeight * fractions['smallHead'] +
-                    constraints.maxHeight * fractions['separator'] +
-                    constraints.maxHeight * fractions['smallHead'] +
-                    constraints.maxHeight * fractions['separator'] +
-                    constraints.maxHeight * fractions['bigHead'] +
-                    50 * animation.value,
-                child: Opacity(
-                  opacity: 1 - animation.value,
-                  child: Container(
-                    height: constraints.maxHeight * fractions['nameAndSurname'],
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: AutoSizeText(
-                            user.discoverMatches[0].name,
-                            group: nameAndSurnameAutoSizeGroup,
-                            style: TinterTextStyle.headline2,
-                          ),
-                        ),
-                        Expanded(
-                          child: AutoSizeText(
-                            user.discoverMatches[0].surname,
-                            group: nameAndSurnameAutoSizeGroup,
-                            style: TinterTextStyle.headline2,
-                          ),
-                        ),
-                      ],
+                // Second separator
+                Positioned(
+                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                      constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      10 +
+                      50 * animationController.value,
+                  child: Opacity(
+                    opacity: 1 - animationController.value,
+                    child: Container(
+                      height: constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
+                      width: 1.5,
+                      color: TinterColors.primaryAccent,
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
-        );
+
+                Positioned(
+                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                      constraints.maxHeight * MatchesFlock.fractions['bigHead'] +
+                      animationController.value *
+                          (constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                              constraints.maxHeight * MatchesFlock.fractions['separator']),
+                  child: Opacity(
+                    opacity: animationController.value,
+                    child: Container(
+                      height: constraints.maxHeight * MatchesFlock.fractions['nameAndSurname'],
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: AutoSizeText(
+                              (state as DiscoverMatchesLoadSuccessState).matches[0].name,
+                              group: nameAndSurnameAutoSizeGroup,
+                              style: TinterTextStyle.headline2,
+                            ),
+                          ),
+                          Expanded(
+                            child: AutoSizeText(
+                              (state as DiscoverMatchesLoadSuccessState).matches[0].surname,
+                              group: nameAndSurnameAutoSizeGroup,
+                              style: TinterTextStyle.headline2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                ...(previousFirstMatch != null)
+                    ? [
+                        // Third head
+                        Positioned(
+                          top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                              constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                              constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                              constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                              50 * animationController.value,
+                          child: Opacity(
+                            opacity: 1 - animationController.value,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  width: 4,
+                                  color: TinterColors.primaryAccent,
+                                ),
+                              ),
+                              height:
+                                  constraints.maxHeight * MatchesFlock.fractions['bigHead'],
+                              width: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
+                              child: Center(child: Text(previousFirstMatch.name)),
+                            ),
+                          ),
+                        ),
+
+                        // Name and surname of the third head
+                        Positioned(
+                          top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                              constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                              constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                              constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                              constraints.maxHeight * MatchesFlock.fractions['bigHead'] +
+                              50 * animationController.value,
+                          child: Opacity(
+                            opacity: 1 - animationController.value,
+                            child: Container(
+                              height: constraints.maxHeight *
+                                  MatchesFlock.fractions['nameAndSurname'],
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: AutoSizeText(
+                                      previousFirstMatch.name,
+                                      group: nameAndSurnameAutoSizeGroup,
+                                      style: TinterTextStyle.headline2,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: AutoSizeText(
+                                      previousFirstMatch.surname,
+                                      group: nameAndSurnameAutoSizeGroup,
+                                      style: TinterTextStyle.headline2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ]
+                    : [Container()],
+              ],
+            ),
+          );
+        });
       },
     );
   }
-//
-//  Transform.translate(
-//  offset: Offset(0, 50)*animation.value,
-//  child: Opacity(
-//  opacity: 1-animation.value,
-//  child: Column(
-//  children: <Widget>[
-//  Text(user.discoverMatches[0].name, style: TinterTextStyle.headline2,),
-//  Text(user.discoverMatches[0].surname, style: TinterTextStyle.headline2,),
-//  ],
-//  ),
-//  ),
-//  )
-
 }
 
-/// matchInformation displays a match information
+/// MatchInformation displays a match information
 /// in a column.
-class MatchInformation extends StatelessWidget {
-  final Animation<double> animation;
-  final ScrollController informationController;
+class MatchInformation extends StatefulWidget {
+  MatchInformation();
 
-  MatchInformation(this.animation, this.informationController);
+  @override
+  _MatchInformationState createState() => _MatchInformationState();
+}
+
+class _MatchInformationState extends State<MatchInformation> {
+  ScrollController informationController;
+
+  @override
+  void initState() {
+    informationController = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    informationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -589,295 +884,371 @@ class MatchInformation extends StatelessWidget {
       padding: const EdgeInsets.symmetric(
         horizontal: 15.0,
       ),
-      child: ListView.separated(
-        controller: informationController,
-        itemCount: 7,
-        separatorBuilder: (BuildContext context, int index) {
-          return Container(
-            height: 50,
-          );
+      child: BlocListener<DiscoverMatchesBloc, DiscoverMatchesState>(
+        listener: (BuildContext context, state) {
+          informationController.animateTo(0,
+              duration: Duration(milliseconds: 300), curve: Curves.easeIn);
         },
-        itemBuilder: (BuildContext context, int index) {
-          if (index == 0) {
-            return informationRectangle(
-              context: context,
-              height: 150,
-              width: 150,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: AlignmentDirectional.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            'Score',
-                            style: TinterTextStyle.headline1,
-                          ),
-                          Stack(
-                            children: <Widget>[
-                              Opacity(
-                                opacity: 1 - animation.value,
-                                child: Text(
-                                  user.discoverMatches[0].score.toString(),
-                                  style: TextStyle(
-                                    fontSize: 50,
-                                    fontWeight: FontWeight.bold,
-                                    color: TinterTextStyle.headline1.color,
-                                  ),
-                                ),
-                              ),
-                              Opacity(
-                                opacity: animation.value,
-                                child: Text(
-                                  user.discoverMatches[1].score.toString(),
-                                  style: TextStyle(
-                                    fontSize: 50,
-                                    fontWeight: FontWeight.bold,
-                                    color: TinterTextStyle.headline1.color,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional.bottomEnd,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: Theme.of(context).textTheme.bodyText1.color, width: 2),
-                        ),
-                        height: 20,
-                        width: 20,
-                        child: Center(
-                          child: Text(
-                            '?',
-                            style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyText1.color,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+        child: ListView.separated(
+          controller: informationController,
+          itemCount: 7,
+          separatorBuilder: (BuildContext context, int index) {
+            return Container(
+              height: 50,
             );
-          } else if (index == 1) {
-            return informationRectangle(
-              context: context,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Associations',
-                      style: TinterTextStyle.headline2,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 10.0),
-                      width: double.infinity,
-                      child: Stack(
-                        alignment: AlignmentDirectional.centerStart,
-                        children: <Widget>[
-                          Opacity(
-                            opacity: 1 - animation.value,
-                            child: Container(
-                              height: 60,
-                              child: ListView.separated(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: user.discoverMatches[0].associations.length,
-                                separatorBuilder: (BuildContext context, int index) {
-                                  return SizedBox(
-                                    width: 5,
-                                  );
-                                },
-                                itemBuilder: (BuildContext context, int index) {
-                                  return associationBubble(
-                                      context, user.discoverMatches[0].associations[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                          Opacity(
-                            opacity: animation.value,
-                            child: Container(
-                              height: 60,
-                              child: ListView.separated(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: user.discoverMatches[1].associations.length,
-                                separatorBuilder: (BuildContext context, int index) {
-                                  return SizedBox(
-                                    width: 5,
-                                  );
-                                },
-                                itemBuilder: (BuildContext context, int index) {
-                                  return associationBubble(
-                                      context, user.discoverMatches[1].associations[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          } else if (index == 2) {
-            return informationRectangle(
-              context: context,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Attirance pour la vie associative',
-                      textAlign: TextAlign.center,
-                      style: TinterTextStyle.headline2,
-                    ),
-                    SliderTheme(
-                      data: TinterSliderTheme.disabled,
-                      child: Slider(
-                        value:
-                            user.discoverMatches[0].attiranceVieAsso * (1 - animation.value) +
-                                user.discoverMatches[1].attiranceVieAsso * animation.value,
-                        onChanged: null,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          } else if (index == 3) {
-            return informationRectangle(
-              context: context,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Cours ou soirée?',
-                      style: TinterTextStyle.headline2,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    discoverSlider(
-                        context,
-                        SliderTheme(
-                          data: TinterSliderTheme.disabled,
-                          child: Slider(
-                            value:
-                                user.discoverMatches[0].feteOuCours * (1 - animation.value) +
-                                    user.discoverMatches[1].feteOuCours * animation.value,
-                            onChanged: null,
-                          ),
-                        ),
-                        leftLabel: 'Cours',
-                        rightLabel: 'Soirée'),
-                  ],
-                ),
-              ),
-            );
-          } else if (index == 4) {
-            return informationRectangle(
-              context: context,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Parrain qui aide ou avec qui sortir?',
-                      style: TinterTextStyle.headline2,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    discoverSlider(
-                        context,
-                        SliderTheme(
-                          data: TinterSliderTheme.disabled,
-                          child: Slider(
-                            value:
-                                user.discoverMatches[0].aideOuSortir * (1 - animation.value) +
-                                    user.discoverMatches[1].aideOuSortir * animation.value,
-                            onChanged: null,
-                          ),
-                        ),
-                        leftLabel: 'Aide',
-                        rightLabel: 'Sortir'),
-                  ],
-                ),
-              ),
-            );
-          } else if (index == 5) {
-            return informationRectangle(
-              context: context,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Aime organiser les événements?',
-                      style: TinterTextStyle.headline2,
-                      textAlign: TextAlign.center,
-                    ),
-                    SliderTheme(
-                      data: TinterSliderTheme.disabled,
-                      child: Slider(
-                        value: user.discoverMatches[0].organisationEvenements *
-                                (1 - animation.value) +
-                            user.discoverMatches[1].organisationEvenements * animation.value,
-                        onChanged: null,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          } else if (index == 6) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 15.0),
-              child: informationRectangle(
+          },
+          itemBuilder: (BuildContext context, int index) {
+            if (index == 0) {
+              return informationRectangle(
                 context: context,
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Goûts musicaux',
-                      style: TinterTextStyle.headline2,
-                    ),
-                    Wrap(
-                      spacing: 15,
-                      children: <Widget>[
-                        for (String musicStyle in user.discoverMatches[0].goutsMusicaux.get)
-                          Chip(
-                            label: Text(musicStyle),
-                            labelStyle: TinterTextStyle.goutMusicaux,
-                            backgroundColor: TinterColors.primaryAccent,
-                          )
-                      ],
-                    )
-                  ],
+                height: 150,
+                width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Stack(
+                    children: <Widget>[
+                      Align(
+                        alignment: AlignmentDirectional.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              'Score',
+                              style: TinterTextStyle.headline1,
+                            ),
+                            BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+                                builder: (BuildContext context, DiscoverMatchesState state) {
+                              if (!(state is DiscoverMatchesLoadSuccessState)) {
+                                return CircularProgressIndicator();
+                              }
+                              return AnimatedSwitcher(
+                                duration: Duration(milliseconds: 300),
+                                transitionBuilder:
+                                    (Widget child, Animation<double> animation) {
+                                  return ScaleTransition(
+                                    child: child,
+                                    scale: animation,
+                                  );
+                                },
+                                child: Text(
+                                  (state as DiscoverMatchesLoadSuccessState)
+                                      .matches[0]
+                                      .score
+                                      .toString(),
+                                  key: GlobalKey(),
+                                  style: TextStyle(
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.bold,
+                                    color: TinterTextStyle.headline1.color,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: AlignmentDirectional.bottomEnd,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: Theme.of(context).textTheme.bodyText1.color, width: 2),
+                          ),
+                          height: 20,
+                          width: 20,
+                          child: Center(
+                            child: Text(
+                              '?',
+                              style: TextStyle(
+                                color: Theme.of(context).textTheme.bodyText1.color,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-          return ErrorWidget('This list should not contain more than 7 items.');
-        },
+              );
+            } else if (index == 1) {
+              return informationRectangle(
+                context: context,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Associations',
+                        style: TinterTextStyle.headline2,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0),
+                        width: double.infinity,
+                        child: Stack(
+                          alignment: AlignmentDirectional.centerStart,
+                          children: <Widget>[
+                            Container(
+                              height: 60,
+                              child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+                                builder: (BuildContext context, DiscoverMatchesState state) {
+                                  if (!(state is DiscoverMatchesLoadSuccessState)) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  return AnimatedSwitcher(
+                                    duration: Duration(milliseconds: 300),
+                                    child: ListView.separated(
+                                      key: GlobalKey(),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: (state as DiscoverMatchesLoadSuccessState)
+                                          .matches[0]
+                                          .associations
+                                          .length,
+                                      separatorBuilder: (BuildContext context, int index) {
+                                        return SizedBox(
+                                          width: 5,
+                                        );
+                                      },
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return associationBubble(
+                                            context,
+                                            (state as DiscoverMatchesLoadSuccessState)
+                                                .matches[0]
+                                                .associations[index]);
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else if (index == 2) {
+              return informationRectangle(
+                context: context,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Attirance pour la vie associative',
+                        textAlign: TextAlign.center,
+                        style: TinterTextStyle.headline2,
+                      ),
+                      SliderTheme(
+                        data: TinterSliderTheme.disabled,
+                        child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+                          builder: (BuildContext context, DiscoverMatchesState state) {
+                            if (!(state is DiscoverMatchesLoadSuccessState)) {
+                              return CircularProgressIndicator();
+                            }
+                            return TweenAnimationBuilder(
+                              tween: Tween<double>(
+                                  begin: 0.5,
+                                  end: (state as DiscoverMatchesLoadSuccessState)
+                                      .matches[0]
+                                      .attiranceVieAsso),
+                              duration: Duration(milliseconds: 300),
+                              builder: (BuildContext context, value, Widget child) {
+                                return Slider(
+                                  value: value,
+                                  onChanged: null,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else if (index == 3) {
+              return informationRectangle(
+                context: context,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Cours ou soirée?',
+                        style: TinterTextStyle.headline2,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      discoverSlider(
+                          context,
+                          SliderTheme(
+                            data: TinterSliderTheme.disabled,
+                            child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+                              builder: (BuildContext context, DiscoverMatchesState state) {
+                                if (!(state is DiscoverMatchesLoadSuccessState)) {
+                                  return CircularProgressIndicator();
+                                }
+                                return TweenAnimationBuilder(
+                                  tween: Tween<double>(
+                                      begin: 0.5,
+                                      end: (state as DiscoverMatchesLoadSuccessState)
+                                          .matches[0]
+                                          .feteOuCours),
+                                  duration: Duration(milliseconds: 300),
+                                  builder: (BuildContext context, value, Widget child) {
+                                    return Slider(
+                                      value: value,
+                                      onChanged: null,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          leftLabel: 'Cours',
+                          rightLabel: 'Soirée'),
+                    ],
+                  ),
+                ),
+              );
+            } else if (index == 4) {
+              return informationRectangle(
+                context: context,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Parrain qui aide ou avec qui sortir?',
+                        style: TinterTextStyle.headline2,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      discoverSlider(
+                          context,
+                          SliderTheme(
+                            data: TinterSliderTheme.disabled,
+                            child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+                              builder: (BuildContext context, DiscoverMatchesState state) {
+                                if (!(state is DiscoverMatchesLoadSuccessState)) {
+                                  return CircularProgressIndicator();
+                                }
+                                return TweenAnimationBuilder(
+                                  tween: Tween<double>(
+                                      begin: 0.5,
+                                      end: (state as DiscoverMatchesLoadSuccessState)
+                                          .matches[0]
+                                          .aideOuSortir),
+                                  duration: Duration(milliseconds: 300),
+                                  builder: (BuildContext context, value, Widget child) {
+                                    return Slider(
+                                      value: value,
+                                      onChanged: null,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          leftLabel: 'Aide',
+                          rightLabel: 'Sortir'),
+                    ],
+                  ),
+                ),
+              );
+            } else if (index == 5) {
+              return informationRectangle(
+                context: context,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Aime organiser les événements?',
+                        style: TinterTextStyle.headline2,
+                        textAlign: TextAlign.center,
+                      ),
+                      SliderTheme(
+                        data: TinterSliderTheme.disabled,
+                        child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+                          builder: (BuildContext context, DiscoverMatchesState state) {
+                            if (!(state is DiscoverMatchesLoadSuccessState)) {
+                              return CircularProgressIndicator();
+                            }
+                            return TweenAnimationBuilder(
+                              tween: Tween<double>(
+                                  begin: 0.5,
+                                  end: (state as DiscoverMatchesLoadSuccessState)
+                                      .matches[0]
+                                      .organisationEvenements),
+                              duration: Duration(milliseconds: 300),
+                              builder: (BuildContext context, value, Widget child) {
+                                return Slider(
+                                  value: value,
+                                  onChanged: null,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else if (index == 6) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: informationRectangle(
+                  context: context,
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Goûts musicaux',
+                        style: TinterTextStyle.headline2,
+                      ),
+                      BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+                        builder: (BuildContext context, DiscoverMatchesState state) {
+                          if (!(state is DiscoverMatchesLoadSuccessState)) {
+                            return CircularProgressIndicator();
+                          }
+                          return AnimatedSwitcher(
+                            duration: Duration(milliseconds: 300),
+                            child: Wrap(
+                              key: GlobalKey(),
+                              spacing: 15,
+                              children: <Widget>[
+                                for (String musicStyle
+                                    in (state as DiscoverMatchesLoadSuccessState)
+                                        .matches[0]
+                                        .goutsMusicaux)
+                                  Chip(
+                                    label: Text(musicStyle),
+                                    labelStyle: TinterTextStyle.goutMusicaux,
+                                    backgroundColor: TinterColors.primaryAccent,
+                                  )
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+            return ErrorWidget('This list should not contain more than 7 items.');
+          },
+        ),
       ),
     );
   }
@@ -909,18 +1280,6 @@ class MatchInformation extends StatelessWidget {
       child: Text(association.name), // TODO: change this to logo
     );
   }
-
-//  Widget inactiveSlider(BuildContext context, double value, {String labelRight, String labelLeft}) {
-//    return SliderTheme(
-//      data: Theme.of(context).sliderTheme.copyWith(
-//        trackShape: NoPaddingTrackShape()
-//      ),
-//      child: Slider(
-//        value: value,
-//        onChanged: null,
-//      ),
-//    );
-//  }
 
   Widget discoverSlider(BuildContext context, Widget slider,
       {String leftLabel, String rightLabel}) {
