@@ -9,8 +9,8 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 import 'package:tinterapp/Logic/models/association.dart';
-import 'package:tinterapp/UI/custom_flare_controller.dart';
-import 'const.dart';
+import 'package:tinterapp/UI/shared_element/custom_flare_controller.dart';
+import '../shared_element/const.dart';
 
 main() => runApp(MaterialApp(
   home: AssociationsTab(),

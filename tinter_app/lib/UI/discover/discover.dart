@@ -10,10 +10,10 @@ import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dar
 import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/repository/discover_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
-import 'package:tinterapp/UI/custom_flare_controller.dart';
-import 'package:tinterapp/UI/recherche_etudiant.dart';
-import 'package:tinterapp/UI/slider_label.dart';
-import 'package:tinterapp/UI/const.dart';
+import 'package:tinterapp/UI/shared_element/custom_flare_controller.dart';
+import 'package:tinterapp/UI/discover/recherche_etudiant.dart';
+import 'package:tinterapp/UI/shared_element/slider_label.dart';
+import 'package:tinterapp/UI/shared_element/const.dart';
 import 'package:http/http.dart' as http;
 import 'package:tinterapp/Logic/models/match.dart';
 

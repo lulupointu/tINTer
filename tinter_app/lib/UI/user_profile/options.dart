@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 
-import 'slider_label.dart';
-import 'shared_element/const.dart';
-import '../Logic/interface.dart';
+import '../shared_element/slider_label.dart';
+import '../shared_element/const.dart';
+import '../../Logic/interface.dart';
 
 main() => runApp(MaterialApp(
   home: OptionsTab(),

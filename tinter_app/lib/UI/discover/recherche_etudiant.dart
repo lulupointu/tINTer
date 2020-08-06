@@ -6,7 +6,7 @@ import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/models/user.dart';
 import 'package:tinterapp/Logic/models/match.dart';
 
-import 'shared_element/const.dart';
+import '../shared_element/const.dart';
 
 main() => runApp(MaterialApp(
       home: RechercheEtudiantTab(),

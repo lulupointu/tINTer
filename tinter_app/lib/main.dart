@@ -13,16 +13,15 @@ import 'package:tinterapp/Logic/repository/discover_repository.dart';
 import 'package:tinterapp/Logic/repository/matched_repository.dart';
 import 'package:tinterapp/Logic/repository/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
-import 'package:tinterapp/UI/login.dart';
-import 'package:tinterapp/UI/my_bubble_navigation_bar.dart';
-import 'package:tinterapp/UI/splash_screen.dart';
-import 'package:tinterapp/UI/tinter_bottom_navigation_bar.dart';
-import 'package:tinterapp/UI/matches.dart';
-import 'package:tinterapp/UI/user_profile.dart';
+import 'package:tinterapp/UI/login/login.dart';
+import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
+import 'package:tinterapp/UI/shared_element/tinter_bottom_navigation_bar.dart';
+import 'package:tinterapp/UI/matches/matches.dart';
+import 'package:tinterapp/UI/user_profile/user_profile.dart';
 import 'package:http/http.dart' as http;
 
-import 'UI/discover.dart';
-import 'UI/const.dart';
+import 'UI/discover/discover.dart';
+import 'UI/shared_element/const.dart';
 
 main() {
   Bloc.observer = AllBlocObserver();
@@ -83,7 +82,7 @@ class Tinter extends StatelessWidget {
         if (state is AuthenticationSuccessfulState) {
           return TinterHome();
         } else if (state is AuthenticationInitialState) {
-          return SplashScreen();
+          return TinterAuthenticationTab(); // TODO: Change this to splash screen
         } else {
           return TinterAuthenticationTab();
         }

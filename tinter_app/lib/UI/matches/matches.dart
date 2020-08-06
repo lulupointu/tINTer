@@ -10,7 +10,7 @@ import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/models/student.dart';
 import 'package:tinterapp/Logic/models/user.dart';
-import 'package:tinterapp/UI/slider_label.dart';
+import 'package:tinterapp/UI/shared_element/slider_label.dart';
 import 'package:tinterapp/UI/shared_element/const.dart';
 import 'package:tinterapp/Logic/models/match.dart';
 

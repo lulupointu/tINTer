@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 
-import 'const.dart';
+import '../shared_element/const.dart';
 
 main() => runApp(MaterialApp(
       home: GoutsMusicauxTab(),
