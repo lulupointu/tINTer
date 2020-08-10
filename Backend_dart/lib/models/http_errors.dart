@@ -1,0 +1,1 @@
+class UnknownRequestError implements Exception {}
