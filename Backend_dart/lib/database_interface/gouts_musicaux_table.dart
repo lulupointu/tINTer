@@ -34,7 +34,7 @@ class GoutsMusicauxTable {
 
   Future<void> delete() {
     final String query = """
-      DROP TABLE $name;
+      DROP TABLE IF EXISTS $name;
     """;
 
     return database.query(query);

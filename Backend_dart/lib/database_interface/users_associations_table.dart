@@ -1,6 +1,6 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/associations_table.dart';
-import 'package:tinter_backend/database_interface/database_interface.dart';
+import 'package:tinter_backend/database_interface/static_profile_table.dart';
 import 'package:tinter_backend/models/association.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/student.dart';
@@ -16,9 +16,9 @@ class UsersAssociationsTable {
   Future<void> create() {
     final String query = """
     CREATE TABLE $name (
-      user_login Text NOT NULL REFERENCES users (login),
+      user_login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
       association_id int NOT NULL REFERENCES associations (id),
-      PRIMARY KEY (user_id, association_id)
+      PRIMARY KEY (user_login, association_id)
     );
     """;
 
@@ -27,7 +27,7 @@ class UsersAssociationsTable {
 
   Future<void> delete() {
     final String query = """
-      DROP TABLE $name;
+      DROP TABLE IF EXISTS $name;
     """;
 
     return database.query(query);
@@ -75,17 +75,45 @@ class UsersAssociationsTable {
 
   Future<List<Association>> getFromLogin({@required String login}) async {
     final String query = "SELECT * "
-        "FROM (SELECT $name WHERE login=@login)"
-        "JOIN ${AssociationsTable.name} "
-        "ON ${AssociationsTable.name}.id=$name.id;";
+        "FROM ("
+        "SELECT * FROM $name WHERE user_login = @login "
+            ") AS $name JOIN ${AssociationsTable.name} "
+            "ON (${AssociationsTable.name}.id = $name.association_id);";
 
     return database.mappedResultsQuery(query, substitutionValues: {
       'login': login,
     }).then((sqlResults) {
       return [
         for (int index = 0; index < sqlResults.length; index++)
-          Association.fromJson(sqlResults[index][name])
+          Association.fromJson(sqlResults[index][AssociationsTable.name])
       ];
+    });
+  }
+
+  Future<Map<String, List<Association>>> getMultipleFromLogins(
+      {@required List<String> logins}) async {
+    final String query = "SELECT * "
+            "FROM ("
+            "SELECT * FROM $name WHERE user_login IN (" +
+        [for (int index = 0; index < logins.length; index++) "@login$index"].join(',') +
+        ")"
+            ") AS $name JOIN ${AssociationsTable.name} "
+            "ON (${AssociationsTable.name}.id = $name.association_id);";
+
+
+    return database.mappedResultsQuery(query, substitutionValues: {
+      for (int index = 0; index < logins.length; index++) "login$index": logins[index]
+    }).then((sqlResults) {
+      Map<String, List<Association>> mapListAssociationToUsers = {
+        for (String login in logins) login: []
+      };
+
+      for (Map<String, Map<String, dynamic>> result in sqlResults) {
+        mapListAssociationToUsers[result[name]['user_login']]
+            .add(Association.fromJson(result[AssociationsTable.name]));
+      }
+
+      return mapListAssociationToUsers;
     });
   }
 
@@ -103,5 +131,3 @@ class UsersAssociationsTable {
     return database.query(query);
   }
 }
-
-

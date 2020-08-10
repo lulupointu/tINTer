@@ -1,6 +1,7 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/gouts_musicaux_table.dart';
 import 'package:meta/meta.dart';
+import 'package:tinter_backend/database_interface/static_profile_table.dart';
 import 'package:tinter_backend/models/student.dart';
 
 class UsersGoutsMusicauxTable {
@@ -14,9 +15,9 @@ class UsersGoutsMusicauxTable {
   Future<void> create() {
     final String query = """
     CREATE TABLE $name (
-      user_login Text NOT NULL REFERENCES users (login),
+      user_login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
       gout_musical_id int NOT NULL REFERENCES gouts_musicaux (id),
-      PRIMARY KEY (user_id, gout_musical_id)
+      PRIMARY KEY (user_login, gout_musical_id)
     );
     """;
 
@@ -25,7 +26,7 @@ class UsersGoutsMusicauxTable {
 
   Future<void> delete() {
     final String query = """
-      DROP TABLE $name;
+      DROP TABLE IF EXISTS $name;
     """;
 
     return database.query(query);
@@ -73,19 +74,48 @@ class UsersGoutsMusicauxTable {
 
   Future<List<String>> getFromLogin({@required String login}) async {
     final String query = "SELECT * "
-        "FROM (SELECT $name WHERE login=@login)"
-        "JOIN ${GoutsMusicauxTable.name} "
-        "ON ${GoutsMusicauxTable.name}.id=$name.id;";
+        "FROM ("
+        "SELECT * FROM $name WHERE user_login = @login "
+        ") AS $name JOIN ${GoutsMusicauxTable.name} "
+        "ON (${GoutsMusicauxTable.name}.id = $name.gout_musical_id);";
 
     return database.mappedResultsQuery(query, substitutionValues: {
       'login': login,
     }).then((sqlResults) {
       return [
         for (int index = 0; index < sqlResults.length; index++)
-          sqlResults[index][name]['name']
+          sqlResults[index][GoutsMusicauxTable.name]['name']
       ];
     });
   }
+
+  Future<Map<String, List<String>>> getMultipleFromLogins(
+      {@required List<String> logins}) async {
+    final String query = "SELECT * "
+        "FROM ("
+        "SELECT * FROM $name WHERE user_login IN (" +
+        [for (int index = 0; index < logins.length; index++) "@login$index"].join(',') +
+        ")"
+            ") AS $name JOIN ${GoutsMusicauxTable.name} "
+            "ON (${GoutsMusicauxTable.name}.id = $name.gout_musical_id);";
+
+
+    return database.mappedResultsQuery(query, substitutionValues: {
+      for (int index = 0; index < logins.length; index++) "login$index": logins[index]
+    }).then((sqlResults) {
+      Map<String, List<String>> mapListAssociationToUsers = {
+        for (String login in logins) login: []
+      };
+
+      for (Map<String, Map<String, dynamic>> result in sqlResults) {
+        mapListAssociationToUsers[result[name]['user_login']]
+            .add(result[GoutsMusicauxTable.name]['name']);
+      }
+
+      return mapListAssociationToUsers;
+    });
+  }
+
 
   Future<void> removeAllFromLogin({@required String login}) {
     final String query = "DELETE FROM $name WHERE login=@login;";
