@@ -5,14 +5,15 @@ import 'package:tinter_backend/models/student.dart';
 part 'match.g.dart';
 
 enum MatchStatus {
+  heIgnoredYou,
   ignored,
   none,
   liked,
   matched,
   youAskedParrain,
   heAskedParrain,
-  ParrainAccepted,
-  ParrainRefused
+  parrainAccepted,
+  parrainRefused
 }
 
 @JsonSerializable(explicitToJson: true)

@@ -21,7 +21,7 @@ class Student extends StaticStudent {
     @required String surname,
     @required String email,
     @required bool primoEntrant,
-    @required List<Association> associations,
+    @required List<dynamic> associations,
     @required double attiranceVieAsso,
     @required double feteOuCours,
     @required double aideOuSortir,
@@ -33,7 +33,10 @@ class Student extends StaticStudent {
         assert(aideOuSortir != null),
         assert(organisationEvenements != null),
         assert(goutsMusicaux != null),
-        _associations = associations,
+        _associations = associations
+            .map((var association) =>
+                (association is Association) ? association : Association.fromJson(association))
+            .toList(),
         _attiranceVieAsso = attiranceVieAsso,
         _feteOuCours = feteOuCours,
         _aideOuSortir = aideOuSortir,

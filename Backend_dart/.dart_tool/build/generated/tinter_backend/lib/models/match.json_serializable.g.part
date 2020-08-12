@@ -37,12 +37,13 @@ Map<String, dynamic> _$MatchToJson(Match instance) => <String, dynamic>{
     };
 
 const _$MatchStatusEnumMap = {
+  MatchStatus.heIgnoredYou: 'heIgnoredYou',
   MatchStatus.ignored: 'ignored',
   MatchStatus.none: 'none',
   MatchStatus.liked: 'liked',
   MatchStatus.matched: 'matched',
   MatchStatus.youAskedParrain: 'youAskedParrain',
   MatchStatus.heAskedParrain: 'heAskedParrain',
-  MatchStatus.ParrainAccepted: 'ParrainAccepted',
-  MatchStatus.ParrainRefused: 'ParrainRefused',
+  MatchStatus.parrainAccepted: 'parrainAccepted',
+  MatchStatus.parrainRefused: 'parrainRefused',
 };

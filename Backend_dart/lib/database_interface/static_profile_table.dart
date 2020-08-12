@@ -163,7 +163,7 @@ class StaticProfileTable {
                 "FROM (VALUES " +
             [
               for (int index = 0; index < staticProfiles.length; index++)
-                "(@login$index, @name$index, @surname$index, @email$index, @primoEntrant$index)"
+                "(@login$index, @name$index, @surname$index, @email$index, @primoEntrant$index :: boolean)"
             ].join(',') +
             ") AS new(login, name, surname, email, \"newPrimoEntrant\")"
                 "WHERE old.name=new.name;";
@@ -184,20 +184,17 @@ class StaticProfileTable {
     }).then((sqlResults) {
       if (sqlResults.length > 1) {
         throw InvalidResponseToDatabaseQuery(
-            error:
-                'One staticProfile requested (${name} but got ${sqlResults.length}');
+            error: 'One staticProfile requested (${name} but got ${sqlResults.length}');
       } else if (sqlResults.length == 0) {
         throw EmptyResponseToDatabaseQuery(
-            error:
-                'One staticProfile requested (${name} but got ${sqlResults.length}');
+            error: 'One staticProfile requested (${name} but got ${sqlResults.length}');
       }
 
       return StaticStudent.fromJson(sqlResults[0][name]);
     });
   }
 
-  Future<List<StaticStudent>> getMultipleFromLogin(
-      {@required List<String> logins}) async {
+  Future<List<StaticStudent>> getMultipleFromLogin({@required List<String> logins}) async {
     final String query = """
     SELECT * FROM $name WHERE login IN (
     """ +
@@ -207,8 +204,8 @@ class StaticProfileTable {
     return database
         .mappedResultsQuery(
       query,
-      substitutionValues: logins.asMap().map((int key, String login) =>
-          MapEntry(key.toString(), login)),
+      substitutionValues:
+          logins.asMap().map((int key, String login) => MapEntry(key.toString(), login)),
     )
         .then((sqlResults) {
       if (sqlResults.length == 0) {
@@ -272,8 +269,8 @@ Future<void> main() async {
   // Test getters
   print(await staticProfileTable.getAll());
   print(await staticProfileTable.getFromLogin(login: fakeStaticStudents[0].login));
-  print(await staticProfileTable
-      .getMultipleFromLogin(logins: [fakeStaticStudents[1].login, fakeStaticStudents[2].login]));
+  print(await staticProfileTable.getMultipleFromLogin(
+      logins: [fakeStaticStudents[1].login, fakeStaticStudents[2].login]));
 
   // Test removers
   await staticProfileTable.remove(staticProfile: fakeStaticStudents[0]);
@@ -292,13 +289,43 @@ Future<void> main() async {
   print(await staticProfileTable.getAll());
 
   // Test update
-  await staticProfileTable.update(staticProfile: StaticStudent(
-    login: fakeStaticStudents[0].login,
-    name: fakeStaticStudents[0].name,
-    surname: fakeStaticStudents[0].surname,
-    email: fakeStaticStudents[0].email,
-    primoEntrant: true,
-  ));
+  await staticProfileTable.updateMultiple(staticProfiles: [
+    StaticStudent(
+      login: fakeStaticStudents[0].login,
+      name: fakeStaticStudents[0].name,
+      surname: fakeStaticStudents[0].surname,
+      email: fakeStaticStudents[0].email,
+      primoEntrant: true,
+    ),
+    StaticStudent(
+      login: fakeStaticStudents[1].login,
+      name: fakeStaticStudents[1].name,
+      surname: fakeStaticStudents[1].surname,
+      email: fakeStaticStudents[1].email,
+      primoEntrant: true,
+    ),
+    StaticStudent(
+      login: fakeStaticStudents[2].login,
+      name: fakeStaticStudents[2].name,
+      surname: fakeStaticStudents[2].surname,
+      email: fakeStaticStudents[2].email,
+      primoEntrant: true,
+    ),
+    StaticStudent(
+      login: fakeStaticStudents[3].login,
+      name: fakeStaticStudents[3].name,
+      surname: fakeStaticStudents[3].surname,
+      email: fakeStaticStudents[3].email,
+      primoEntrant: true,
+    ),
+    StaticStudent(
+      login: fakeStaticStudents[4].login,
+      name: fakeStaticStudents[4].name,
+      surname: fakeStaticStudents[4].surname,
+      email: fakeStaticStudents[4].email,
+      primoEntrant: true,
+    )
+  ]);
 
   await tinterDatabase.close();
 }

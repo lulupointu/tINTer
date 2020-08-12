@@ -16,7 +16,7 @@ class UsersGoutsMusicauxTable {
     final String query = """
     CREATE TABLE $name (
       user_login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
-      gout_musical_id int NOT NULL REFERENCES gouts_musicaux (id),
+      gout_musical_id int NOT NULL REFERENCES ${GoutsMusicauxTable.name} (id),
       PRIMARY KEY (user_login, gout_musical_id)
     );
     """;

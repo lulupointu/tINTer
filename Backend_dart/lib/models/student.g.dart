@@ -13,14 +13,13 @@ Student _$StudentFromJson(Map<String, dynamic> json) {
     surname: json['surname'] as String,
     email: json['email'] as String,
     primoEntrant: json['primoEntrant'] as bool,
-    associations: (json['associations'] as List)
-        ?.map((e) => e == null ? null : Association.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    associations: json['associations'] as List,
     attiranceVieAsso: (json['attiranceVieAsso'] as num)?.toDouble(),
     feteOuCours: (json['feteOuCours'] as num)?.toDouble(),
     aideOuSortir: (json['aideOuSortir'] as num)?.toDouble(),
     organisationEvenements: (json['organisationEvenements'] as num)?.toDouble(),
-    goutsMusicaux: (json['goutsMusicaux'] as List)?.map((e) => e as String)?.toList(),
+    goutsMusicaux:
+        (json['goutsMusicaux'] as List)?.map((e) => e as String)?.toList(),
   );
 }
 

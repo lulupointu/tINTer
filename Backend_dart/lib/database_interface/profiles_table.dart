@@ -227,7 +227,7 @@ class UsersTable {
     });
   }
 
-  Future<List<User>> getMultipleFromLogin({@required List<String> logins}) async {
+  Future<Map<String, User>> getMultipleFromLogin({@required List<String> logins}) async {
     final List<Future> queries = [
       database.mappedResultsQuery(
           "SELECT * FROM $name JOIN ${StaticProfileTable.name} "
@@ -243,9 +243,9 @@ class UsersTable {
     ];
 
     return Future.wait(queries).then((queriesResults) {
-      return [
+      return {
         for (int index = 0; index < logins.length; index++)
-          User.fromJson({
+          queriesResults[0][index][name]['login']: User.fromJson({
             ...queriesResults[0][index][name],
             ...queriesResults[0][index][StaticProfileTable.name],
             ...{
@@ -253,7 +253,7 @@ class UsersTable {
               'goutsMusicaux': queriesResults[2][queriesResults[0][index][name]['login']]
             }
           })
-      ];
+      };
     });
   }
 
