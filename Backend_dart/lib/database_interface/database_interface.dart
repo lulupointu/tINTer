@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/associations_table.dart';
@@ -13,8 +11,8 @@ import 'package:tinter_backend/database_interface/static_profile_table.dart';
 import 'package:tinter_backend/database_interface/users_associations_table.dart';
 import 'package:tinter_backend/database_interface/users_gouts_musicaux_table.dart';
 import 'package:tinter_backend/models/relation_status.dart';
-import 'package:tinter_backend/models/school_name.dart';
 import 'package:tinter_backend/models/static_student.dart';
+import 'package:tinter_backend/models/user.dart';
 import 'package:tinter_backend/secret.dart';
 import 'package:tinter_backend/models/match.dart';
 
@@ -33,45 +31,6 @@ class TinterDatabase {
 
   Future<void> close() {
     return connection.close();
-  }
-}
-
-class ProfilesTable {
-  final String name = 'profiles';
-  final PostgreSQLConnection database;
-
-  ProfilesTable({@required this.database});
-
-  Future<void> createTable() async {
-    final String query = """
-    CREATE TABLE Employees (
-      login Text PRIMARY KEY,
-      name VARCHAR (100) NOT NULL,
-      surname VARCHAR (100) NOT NULL,
-      email VARCHAR (100) NOT NULL,
-      school SCHOOL NOT NULL,
-      primoEntrant BOOLEAN NOT NULL,
-      associations ASSOCIATION [] NOT NULL,
-    );
-    """;
-
-    await createTypes();
-
-    return database
-        .query(query, substitutionValues: {"TSP": SchoolName.TSP, "IMTBS": SchoolName.IMTBS});
-  }
-
-  Future<void> createTypes() async {
-    String createSchoolTypeQuery = """
-        CREATE TYPE SCHOOL AS ENUM (@TSP, @IMTBS);
-    """;
-
-    var futures = <Future>[
-      database.query(createSchoolTypeQuery,
-          substitutionValues: {"TSP": SchoolName.TSP, "IMTBS": SchoolName.IMTBS}),
-    ];
-
-    return Future.wait(futures);
   }
 }
 
@@ -112,26 +71,16 @@ main() async {
       AssociationsTable(database: tinterDatabase.connection);
   final GoutsMusicauxTable goutsMusicauxTable =
       GoutsMusicauxTable(database: tinterDatabase.connection);
-  final UsersAssociationsTable usersAssociationsTable = UsersAssociationsTable(
-      database: tinterDatabase.connection, associationsTable: associationsTable);
-  final UsersGoutsMusicauxTable usersGoutsMusicauxTable = UsersGoutsMusicauxTable(
-      database: tinterDatabase.connection, goutsMusicauxTable: goutsMusicauxTable);
-  final UsersTable usersTable = UsersTable(
-      database: tinterDatabase.connection,
-      staticProfileTable: staticProfileTable,
-      usersGoutsMusicauxTable: usersGoutsMusicauxTable,
-      usersAssociationsTable: usersAssociationsTable);
+  final UsersAssociationsTable usersAssociationsTable =
+      UsersAssociationsTable(database: tinterDatabase.connection);
+  final UsersGoutsMusicauxTable usersGoutsMusicauxTable =
+      UsersGoutsMusicauxTable(database: tinterDatabase.connection);
+  final UsersTable usersTable = UsersTable(database: tinterDatabase.connection);
   final RelationsScoreTable relationsScoreTable =
       RelationsScoreTable(database: tinterDatabase.connection);
   final RelationsStatusTable relationsStatusTable =
       RelationsStatusTable(database: tinterDatabase.connection);
-  final MatchesTable matchesTable = MatchesTable(
-    login: fakeStaticStudents[0].login,
-    database: tinterDatabase.connection,
-    usersTable: usersTable,
-    relationsScoreTable: relationsScoreTable,
-    relationsStatusTable: relationsStatusTable,
-  );
+  final MatchesTable matchesTable = MatchesTable(database: tinterDatabase.connection);
   final SessionsTable sessionsTable = SessionsTable(database: tinterDatabase.connection);
 
   // Delete
@@ -166,84 +115,93 @@ main() async {
   await sessionsTable.populate();
 
   // Tests
-  await relationsStatusTable.updateMultiple(listRelationStatus: [
-    RelationStatus(
-      login: fakeStaticStudents[0].login,
-      otherLogin: fakeStaticStudents[1].login,
-      status: EnumRelationStatus.none,
-    ),
-    RelationStatus(
-      login: fakeStaticStudents[0].login,
-      otherLogin: fakeStaticStudents[2].login,
-      status: EnumRelationStatus.none,
-    ),
-    RelationStatus(
-      login: fakeStaticStudents[0].login,
-      otherLogin: fakeStaticStudents[3].login,
-      status: EnumRelationStatus.none,
-    ),
-    RelationStatus(
-      login: fakeStaticStudents[0].login,
-      otherLogin: fakeStaticStudents[4].login,
-      status: EnumRelationStatus.none,
-    ),
-  ]);
-  await staticProfileTable.updateMultiple(staticProfiles: [
-    StaticStudent(
-      login: fakeStaticStudents[0].login,
-      name: fakeStaticStudents[0].name,
-      surname: fakeStaticStudents[0].surname,
-      email: fakeStaticStudents[0].email,
-      primoEntrant: true,
-    ),
-    StaticStudent(
-      login: fakeStaticStudents[1].login,
-      name: fakeStaticStudents[1].name,
-      surname: fakeStaticStudents[1].surname,
-      email: fakeStaticStudents[1].email,
-      primoEntrant: false,
-    ),
-    StaticStudent(
-      login: fakeStaticStudents[2].login,
-      name: fakeStaticStudents[2].name,
-      surname: fakeStaticStudents[2].surname,
-      email: fakeStaticStudents[2].email,
-      primoEntrant: true,
-    ),
-    StaticStudent(
-      login: fakeStaticStudents[3].login,
-      name: fakeStaticStudents[3].name,
-      surname: fakeStaticStudents[3].surname,
-      email: fakeStaticStudents[3].email,
-      primoEntrant: false,
-    ),
-    StaticStudent(
-      login: fakeStaticStudents[4].login,
-      name: fakeStaticStudents[4].name,
-      surname: fakeStaticStudents[4].surname,
-      email: fakeStaticStudents[4].email,
-      primoEntrant: true,
-    )
-  ]);
+//  await relationsStatusTable.update(
+//    relationStatus: RelationStatus(
+//      login: fakeListRelationStatus[0].login,
+//      otherLogin: fakeListRelationStatus[0].otherLogin,
+//      status: EnumRelationStatus.ignored,
+//    ),
+//  );
 
-  final List<Match> matches = (await matchesTable.getXDiscoverMatchesFromLogin(
-  login: fakeStaticStudents[0].login, limit: 2));
-
-  for (Match match in matches){
-    print('match login: ${match.login}');
-    print('match name: ${match.name}');
-    print('match surname: ${match.surname}');
-    print('match email: ${match.email}');
-    print('match score: ${match.score}');
-    print('match status: ${match.status}');
-    print('match primoEntrant: ${match.primoEntrant}');
-    print('match associations: ${match.associations}');
-    print('match attiranceVieAsso: ${match.attiranceVieAsso}');
-    print('match feteOuCours: ${match.feteOuCours}');
-    print('match aideOuSortir: ${match.aideOuSortir}');
-    print('match organisationEvenements: ${match.organisationEvenements}');
-    print('match goutsMusicaux: ${match.goutsMusicaux}');
-  }
+//  try {
+//    await relationsStatusTable.updateMultiple(listRelationStatus: [
+//      RelationStatus(
+//        login: fakeStaticStudents[0].login,
+//        otherLogin: fakeStaticStudents[1].login,
+//        status: EnumRelationStatus.askedParrain,
+//      ),
+//    RelationStatus(
+//      login: fakeStaticStudents[0].login,
+//      otherLogin: fakeStaticStudents[2].login,
+//      status: EnumRelationStatus.none,
+//    ),
+//    RelationStatus(
+//      login: fakeStaticStudents[0].login,
+//      otherLogin: fakeStaticStudents[3].login,
+//      status: EnumRelationStatus.none,
+//    ),
+//    RelationStatus(
+//      login: fakeStaticStudents[0].login,
+//      otherLogin: fakeStaticStudents[4].login,
+//      status: EnumRelationStatus.none,
+//    ),
+//    ]);
+//  await staticProfileTable.updateMultiple(staticProfiles: [
+//    StaticStudent(
+//      login: fakeStaticStudents[0].login,
+//      name: fakeStaticStudents[0].name,
+//      surname: fakeStaticStudents[0].surname,
+//      email: fakeStaticStudents[0].email,
+//      primoEntrant: true,
+//    ),
+//    StaticStudent(
+//      login: fakeStaticStudents[1].login,
+//      name: fakeStaticStudents[1].name,
+//      surname: fakeStaticStudents[1].surname,
+//      email: fakeStaticStudents[1].email,
+//      primoEntrant: false,
+//    ),
+//    StaticStudent(
+//      login: fakeStaticStudents[2].login,
+//      name: fakeStaticStudents[2].name,
+//      surname: fakeStaticStudents[2].surname,
+//      email: fakeStaticStudents[2].email,
+//      primoEntrant: true,
+//    ),
+//    StaticStudent(
+//      login: fakeStaticStudents[3].login,
+//      name: fakeStaticStudents[3].name,
+//      surname: fakeStaticStudents[3].surname,
+//      email: fakeStaticStudents[3].email,
+//      primoEntrant: false,
+//    ),
+//    StaticStudent(
+//      login: fakeStaticStudents[4].login,
+//      name: fakeStaticStudents[4].name,
+//      surname: fakeStaticStudents[4].surname,
+//      email: fakeStaticStudents[4].email,
+//      primoEntrant: true,
+//    )
+//  ]);
+//
+//  final List<Match> matches = (await matchesTable.getXDiscoverMatchesFromLogin(
+//  login: fakeStaticStudents[0].login, limit: 2));
+//
+//  for (Match match in matches){
+//    print('match login: ${match.login}');
+//    print('match name: ${match.name}');
+//    print('match surname: ${match.surname}');
+//    print('match email: ${match.email}');
+//    print('match score: ${match.score}');
+//    print('match status: ${match.status}');
+//    print('match primoEntrant: ${match.primoEntrant}');
+//    print('match associations: ${match.associations}');
+//    print('match attiranceVieAsso: ${match.attiranceVieAsso}');
+//    print('match feteOuCours: ${match.feteOuCours}');
+//    print('match aideOuSortir: ${match.aideOuSortir}');
+//    print('match organisationEvenements: ${match.organisationEvenements}');
+//    print('match goutsMusicaux: ${match.goutsMusicaux}');
+//  }
 
   tinterDatabase.close();
 }

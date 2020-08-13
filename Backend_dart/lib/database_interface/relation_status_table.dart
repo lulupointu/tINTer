@@ -55,11 +55,11 @@ class RelationsStatusTable {
   RelationsStatusTable({@required this.database});
 
   Future<void> create() async {
-    final String statusTypeCreationQuery = """
+    final String statusTypeCreateQuery = """
     CREATE TYPE status 
     AS ENUM ('none', 'ignored', 'liked', 'askedParrain', 'acceptedParrain', 'refusedParrain')
     """;
-    final String creationQuery = """
+    final String createTableQuery = """
     CREATE TABLE $name (
       login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
       \"otherLogin\" Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
@@ -69,8 +69,69 @@ class RelationsStatusTable {
     );
     """;
 
-    await database.query(statusTypeCreationQuery);
-    return database.query(creationQuery);
+    // This functions prevent anyone from modifying any field except
+    // isValid which can only be changed from true to false.
+    final String createConstraintFunctionQuery = """
+    CREATE FUNCTION relation_status_check() RETURNS trigger AS \$relation_status_check\$
+    DECLARE
+      \"otherStatus\" Text;
+    BEGIN
+    
+        SELECT status INTO \"otherStatus\" FROM ${RelationsStatusTable.name} 
+            WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
+            
+            
+        IF NEW.status = 'ignored' THEN
+          
+          IF \"otherStatus\" = 'askedParrain' 
+            OR \"otherStatus\" = 'acceptedParrain' 
+            OR \"otherStatus\" = 'refusedParrain' 
+            THEN
+            UPDATE ${RelationsStatusTable.name} SET status='liked' WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
+          END IF;
+          
+          RETURN NEW;
+        END IF;
+            
+        IF OLD.status = 'none' AND NEW.status = 'liked' THEN
+          RETURN NEW;
+        END IF;
+            
+        IF OLD.status = 'ignored' AND NEW.status = 'liked' THEN
+          RETURN NEW;
+        END IF;
+        
+        IF OLD.status = 'liked' AND \"otherStatus\" = 'liked' AND NEW.status = 'askedParrain' THEN
+          RETURN NEW;
+        END IF;
+        
+        IF OLD.status = 'liked' AND \"otherStatus\" = 'askedParrain' AND
+          (NEW.status = 'acceptedParrain' OR NEW.status = 'refusedParrain') THEN
+          RETURN NEW;
+        END IF;
+        
+        IF OLD.status = 'askParrain' AND \"otherStatus\" = 'liked' AND NEW.status = 'liked' THEN
+          RETURN NEW;
+        END IF;
+        
+        RAISE EXCEPTION 'Status % cannot be changed to % (the other status is %).', 
+          OLD.status, NEW.status, \"otherStatus\"
+          USING errcode='invalid_parameter_value';
+    END;
+    \$relation_status_check\$ LANGUAGE plpgsql;
+    """;
+
+    final String applyTableConstraintQuery = """
+    CREATE TRIGGER relation_status_check BEFORE UPDATE ON $name
+    FOR EACH ROW
+    WHEN (pg_trigger_depth() < 1)
+    EXECUTE FUNCTION relation_status_check();
+    """;
+
+    await database.query(statusTypeCreateQuery);
+    await database.query(createTableQuery);
+    await database.query(createConstraintFunctionQuery);
+    return database.query(applyTableConstraintQuery);
   }
 
   Future<void> populate() {
@@ -87,6 +148,7 @@ class RelationsStatusTable {
     final List<Future> queries = [
       database.query("DROP TABLE IF EXISTS $name;"),
       database.query("DROP TYPE IF EXISTS status;"),
+      database.query("DROP FUNCTION IF EXISTS relation_status_check;")
     ];
 
     return Future.wait(queries);
@@ -139,7 +201,8 @@ class RelationsStatusTable {
     });
   }
 
-  Future<RelationStatus> getFromLogins({@required String login, @required String otherLogin}) async {
+  Future<RelationStatus> getFromLogins(
+      {@required String login, @required String otherLogin}) async {
     final String query =
         "SELECT * FROM $name WHERE login=@login AND \"otherLogin\"=@otherLogin;";
 
@@ -170,7 +233,8 @@ class RelationsStatusTable {
       'login': login,
     }).then((sqlResults) {
       if (sqlResults.length == 0) {
-        throw EmptyResponseToDatabaseQuery(error: 'No relationStatus were found for this user');
+        throw EmptyResponseToDatabaseQuery(
+            error: 'No relationStatus were found for this user');
       }
 
       return {
@@ -185,7 +249,8 @@ class RelationsStatusTable {
 
     return database.mappedResultsQuery(query).then((sqlResults) {
       return sqlResults
-          .map((Map<String, Map<String, dynamic>> result) => RelationStatus.fromJson(result[name]))
+          .map((Map<String, Map<String, dynamic>> result) =>
+              RelationStatus.fromJson(result[name]))
           .toList();
     });
   }
@@ -244,7 +309,8 @@ Future<void> main() async {
   // Test removers
   await relationStatusTable.remove(relationStatus: fakeListRelationStatus[0]);
   print(await relationStatusTable.getAll());
-  await relationStatusTable.removeMultiple(listRelationStatus: [fakeListRelationStatus[1], fakeListRelationStatus[2]]);
+  await relationStatusTable.removeMultiple(
+      listRelationStatus: [fakeListRelationStatus[1], fakeListRelationStatus[2]]);
   print(await relationStatusTable.getAll());
   await relationStatusTable.removeAll();
   print(await relationStatusTable.getAll());
@@ -252,7 +318,8 @@ Future<void> main() async {
   // Test adders
   await relationStatusTable.add(relationStatus: fakeListRelationStatus[0]);
   print(await relationStatusTable.getAll());
-  await relationStatusTable.addMultiple(listRelationStatus: [fakeListRelationStatus[1], fakeListRelationStatus[2]]);
+  await relationStatusTable
+      .addMultiple(listRelationStatus: [fakeListRelationStatus[1], fakeListRelationStatus[2]]);
   print(await relationStatusTable.getAll());
 
   // Test update

@@ -10,7 +10,8 @@ class UsersGoutsMusicauxTable {
   final PostgreSQLConnection database;
   final GoutsMusicauxTable goutsMusicauxTable;
 
-  UsersGoutsMusicauxTable({@required this.database, @required this.goutsMusicauxTable});
+  UsersGoutsMusicauxTable({@required this.database})
+      : goutsMusicauxTable = GoutsMusicauxTable(database: database);
 
   Future<void> create() {
     final String query = """
@@ -32,8 +33,7 @@ class UsersGoutsMusicauxTable {
     return database.query(query);
   }
 
-  Future<void> addFromLogin(
-      {@required String login, @required String goutMusical}) async {
+  Future<void> addFromLogin({@required String login, @required String goutMusical}) async {
     // get the goutMusical id from the goutMusical name
     int goutMusicalId = await goutsMusicauxTable.getIdFromName(goutMusical: goutMusical);
 
@@ -49,7 +49,7 @@ class UsersGoutsMusicauxTable {
       {@required String login, @required List<String> goutsMusicaux}) async {
     // get the goutsMusicaux ids from the goutsMusicaux names
     List<int> goutsMusicauxIds =
-    await goutsMusicauxTable.getMultipleIdFromName(goutsMusicaux: goutsMusicaux);
+        await goutsMusicauxTable.getMultipleIdFromName(goutsMusicaux: goutsMusicaux);
 
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -92,30 +92,52 @@ class UsersGoutsMusicauxTable {
   Future<Map<String, List<String>>> getMultipleFromLogins(
       {@required List<String> logins}) async {
     final String query = "SELECT * "
-        "FROM ("
-        "SELECT * FROM $name WHERE user_login IN (" +
+            "FROM ("
+            "SELECT * FROM $name WHERE user_login IN (" +
         [for (int index = 0; index < logins.length; index++) "@login$index"].join(',') +
         ")"
             ") AS $name JOIN ${GoutsMusicauxTable.name} "
             "ON (${GoutsMusicauxTable.name}.id = $name.gout_musical_id);";
 
-
     return database.mappedResultsQuery(query, substitutionValues: {
       for (int index = 0; index < logins.length; index++) "login$index": logins[index]
     }).then((sqlResults) {
-      Map<String, List<String>> mapListAssociationToUsers = {
+      Map<String, List<String>> mapGoutMusicauxToUsers = {
         for (String login in logins) login: []
       };
 
       for (Map<String, Map<String, dynamic>> result in sqlResults) {
-        mapListAssociationToUsers[result[name]['user_login']]
+        mapGoutMusicauxToUsers[result[name]['user_login']]
             .add(result[GoutsMusicauxTable.name]['name']);
       }
 
-      return mapListAssociationToUsers;
+      return mapGoutMusicauxToUsers;
     });
   }
 
+  Future<Map<String, List<String>>> getAllExceptOneFromLogin({@required String login}) async {
+    final String query = "SELECT * "
+        "FROM ("
+        "SELECT * FROM $name WHERE user_login != @login "
+        ") AS $name JOIN ${GoutsMusicauxTable.name} "
+        "ON (${GoutsMusicauxTable.name}.id = $name.gout_musical_id);";
+
+    return database.mappedResultsQuery(query, substitutionValues: {
+      'login': login,
+    }).then((sqlResults) {
+      Map<String, List<String>> mapGoutMusicauxToUsers = {};
+
+      for (Map<String, Map<String, dynamic>> result in sqlResults) {
+        if (!mapGoutMusicauxToUsers.keys.contains(result[name]['user_login'])) {
+          mapGoutMusicauxToUsers[result[name]['user_login']] = [];
+        }
+        mapGoutMusicauxToUsers[result[name]['user_login']]
+            .add(result[GoutsMusicauxTable.name]['name']);
+      }
+
+      return mapGoutMusicauxToUsers;
+    });
+  }
 
   Future<void> removeAllFromLogin({@required String login}) {
     final String query = "DELETE FROM $name WHERE login=@login;";
@@ -131,5 +153,3 @@ class UsersGoutsMusicauxTable {
     return database.query(query);
   }
 }
-
-

@@ -15,15 +15,12 @@ class MatchesTable {
   final RelationsScoreTable relationsScoreTable;
   final RelationsStatusTable relationsStatusTable;
   final PostgreSQLConnection database;
-  final String login;
 
   MatchesTable({
-    @required this.login,
     @required this.database,
-    @required this.usersTable,
-    @required this.relationsScoreTable,
-    @required this.relationsStatusTable,
-  });
+  })  : usersTable = UsersTable(database: database),
+        relationsScoreTable = RelationsScoreTable(database: database),
+        relationsStatusTable = RelationsStatusTable(database: database);
 
   Future<List<Match>> getXDiscoverMatchesFromLogin(
       {@required String login, @required int limit, int offset = 0}) async {
@@ -96,8 +93,10 @@ class MatchesTable {
               ...otherUsers[result[RelationsStatusTable.name]['otherLogin']].toJson(),
               'score': result[RelationsScoreTable.name]['score'],
               'status': getMatchStatusFromRelationStatus(
-                  status: getEnumRelationStatusFromString(result[RelationsStatusTable.name]['status']),
-                  otherStatus: getEnumRelationStatusFromString(result[RelationsStatusTable.name]['otherStatus'])),
+                  status: getEnumRelationStatusFromString(
+                      result[RelationsStatusTable.name]['status']),
+                  otherStatus: getEnumRelationStatusFromString(
+                      result[RelationsStatusTable.name]['otherStatus'])),
             })
         ];
       });

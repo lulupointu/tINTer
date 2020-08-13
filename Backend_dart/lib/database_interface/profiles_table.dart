@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:postgres/postgres.dart';
+import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/static_profile_table.dart';
 import 'package:tinter_backend/database_interface/users_associations_table.dart';
 import 'package:tinter_backend/database_interface/users_gouts_musicaux_table.dart';
@@ -89,10 +90,9 @@ class UsersTable {
 
   UsersTable({
     @required this.database,
-    @required this.staticProfileTable,
-    @required this.usersAssociationsTable,
-    @required this.usersGoutsMusicauxTable,
-  });
+  })  : staticProfileTable = StaticProfileTable(database: database),
+        usersAssociationsTable = UsersAssociationsTable(database: database),
+        usersGoutsMusicauxTable = UsersGoutsMusicauxTable(database: database);
 
   Future<void> create() {
     final String query = """
@@ -219,6 +219,11 @@ class UsersTable {
     ];
 
     return Future.wait(queries).then((queriesResults) {
+      if (queriesResults.length == 0) {
+        throw EmptyResponseToDatabaseQuery(
+            error: 'One staticProfile requested (${name} but got 0');
+      }
+
       return User.fromJson({
         ...queriesResults[0][0][name],
         ...queriesResults[0][0][StaticProfileTable.name],
@@ -231,8 +236,8 @@ class UsersTable {
     final List<Future> queries = [
       database.mappedResultsQuery(
           "SELECT * FROM $name JOIN ${StaticProfileTable.name} "
-              "ON $name.login=${StaticProfileTable.name}.login "
-              "WHERE $name.login IN (" +
+                  "ON $name.login=${StaticProfileTable.name}.login "
+                  "WHERE $name.login IN (" +
               [for (int index = 0; index < logins.length; index++) "@login$index"].join(',') +
               ");",
           substitutionValues: {
@@ -257,16 +262,33 @@ class UsersTable {
     });
   }
 
-//  Future<List<Student>> getAll() async {
-//    final String query = "SELECT * FROM $name";
-//
-//    return database.mappedResultsQuery(query).then((sqlResults) {
-//      return sqlResults
-//          .map(
-//              (Map<String, Map<String, dynamic>> result) => Association.fromJson(result[name]))
-//          .toList();
-//    });
-//  }
+  Future<Map<String, User>> getAllExceptOneFromLogin({@required String login}) async {
+    final List<Future> queries = [
+      database.mappedResultsQuery(
+          "SELECT * FROM $name JOIN ${StaticProfileTable.name} "
+              "ON $name.login=${StaticProfileTable.name}.login "
+              "WHERE $name.login!=@login;",
+          substitutionValues: {
+            'login': login,
+          }),
+      usersAssociationsTable.getAllExceptOneFromLogin(login: login),
+      usersGoutsMusicauxTable.getAllExceptOneFromLogin(login: login),
+    ];
+
+    return Future.wait(queries).then((queriesResults) {
+      return {
+        for (int index = 0; index < queriesResults.length; index++)
+          queriesResults[0][index][name]['login']: User.fromJson({
+            ...queriesResults[0][index][name],
+            ...queriesResults[0][index][StaticProfileTable.name],
+            ...{
+              'associations': queriesResults[1][queriesResults[0][index][name]['login']],
+              'goutsMusicaux': queriesResults[2][queriesResults[0][index][name]['login']]
+            }
+          })
+      };
+    });
+  }
 
   Future<void> remove({@required Association association}) async {
     final String query = "DELETE FROM $name WHERE name=@name;";

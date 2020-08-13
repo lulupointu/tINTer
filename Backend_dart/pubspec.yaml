@@ -5,6 +5,7 @@ dependencies:
   meta: ^1.2.2
   json_annotation:
   equatable: ^1.2.3
+  dartdap: ^0.4.5
 
 
 

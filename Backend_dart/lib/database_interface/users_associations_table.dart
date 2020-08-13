@@ -11,7 +11,8 @@ class UsersAssociationsTable {
   final PostgreSQLConnection database;
   final AssociationsTable associationsTable;
 
-  UsersAssociationsTable({@required this.database, @required this.associationsTable});
+  UsersAssociationsTable({@required this.database})
+      : associationsTable = AssociationsTable(database: database);
 
   Future<void> create() {
     final String query = """
@@ -77,8 +78,8 @@ class UsersAssociationsTable {
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE user_login = @login "
-            ") AS $name JOIN ${AssociationsTable.name} "
-            "ON (${AssociationsTable.name}.id = $name.association_id);";
+        ") AS $name JOIN ${AssociationsTable.name} "
+        "ON (${AssociationsTable.name}.id = $name.association_id);";
 
     return database.mappedResultsQuery(query, substitutionValues: {
       'login': login,
@@ -100,7 +101,6 @@ class UsersAssociationsTable {
             ") AS $name JOIN ${AssociationsTable.name} "
             "ON (${AssociationsTable.name}.id = $name.association_id);";
 
-
     return database.mappedResultsQuery(query, substitutionValues: {
       for (int index = 0; index < logins.length; index++) "login$index": logins[index]
     }).then((sqlResults) {
@@ -109,6 +109,31 @@ class UsersAssociationsTable {
       };
 
       for (Map<String, Map<String, dynamic>> result in sqlResults) {
+        mapListAssociationToUsers[result[name]['user_login']]
+            .add(Association.fromJson(result[AssociationsTable.name]));
+      }
+
+      return mapListAssociationToUsers;
+    });
+  }
+
+  Future<Map<String, List<Association>>> getAllExceptOneFromLogin(
+      {@required String login}) async {
+    final String query = "SELECT * "
+        "FROM ("
+        "SELECT * FROM $name WHERE user_login != @login "
+        ") AS $name JOIN ${AssociationsTable.name} "
+        "ON (${AssociationsTable.name}.id = $name.association_id);";
+
+    return database.mappedResultsQuery(query, substitutionValues: {
+      'login': login,
+    }).then((sqlResults) {
+      Map<String, List<Association>> mapListAssociationToUsers = {};
+
+      for (Map<String, Map<String, dynamic>> result in sqlResults) {
+        if (!mapListAssociationToUsers.keys.contains(result[name]['user_login'])) {
+          mapListAssociationToUsers[result[name]['user_login']] = [];
+        }
         mapListAssociationToUsers[result[name]['user_login']]
             .add(Association.fromJson(result[AssociationsTable.name]));
       }
