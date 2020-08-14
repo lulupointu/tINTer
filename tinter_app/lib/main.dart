@@ -1,9 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/matched_matches/matches_bloc.dart';
@@ -14,6 +11,7 @@ import 'package:tinterapp/Logic/repository/matched_repository.dart';
 import 'package:tinterapp/Logic/repository/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:tinterapp/UI/login/login.dart';
+import 'package:tinterapp/UI/profile_creation/create_profile.dart';
 import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
 import 'package:tinterapp/UI/shared_element/tinter_bottom_navigation_bar.dart';
 import 'package:tinterapp/UI/matches/matches.dart';
@@ -34,13 +32,13 @@ main() {
   final AuthenticationRepository authenticationRepository =
       AuthenticationRepository(tinterApiClient: tinterApiClient);
 
-  final UserRepository userRepository = UserRepository(tinterApiClient: tinterApiClient);
+  final UserRepository userRepository = UserRepository(tinterApiClient: tinterApiClient, authenticationRepository: authenticationRepository);
 
   final MatchedRepository matchedRepository =
-      MatchedRepository(tinterApiClient: tinterApiClient);
+      MatchedRepository(tinterApiClient: tinterApiClient, authenticationRepository: authenticationRepository);
 
   final DiscoverRepository discoverRepository =
-      DiscoverRepository(tinterApiClient: tinterApiClient);
+      DiscoverRepository(tinterApiClient: tinterApiClient, authenticationRepository: authenticationRepository);
 
   runApp(
     KeyboardVisibilityProvider(
@@ -51,15 +49,22 @@ main() {
           child: MultiBlocProvider(
             providers: [
               BlocProvider<UserBloc>(
-                create: (BuildContext context) => UserBloc(userRepository: userRepository),
+                create: (BuildContext context) => UserBloc(
+                  userRepository: userRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
               ),
               BlocProvider<MatchedMatchesBloc>(
-                create: (BuildContext context) =>
-                    MatchedMatchesBloc(matchedRepository: matchedRepository),
+                create: (BuildContext context) => MatchedMatchesBloc(
+                  matchedRepository: matchedRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
               ),
               BlocProvider(
-                create: (BuildContext context) =>
-                    DiscoverMatchesBloc(discoverRepository: discoverRepository),
+                create: (BuildContext context) => DiscoverMatchesBloc(
+                  discoverRepository: discoverRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
               ),
             ],
             child: MaterialApp(
@@ -77,15 +82,38 @@ main() {
 class Tinter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // First check the authentication state
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      builder: (BuildContext context, AuthenticationState state) {
-        if (state is AuthenticationSuccessfulState) {
-          return TinterHome();
-        } else if (state is AuthenticationInitialState) {
-          return TinterAuthenticationTab(); // TODO: Change this to splash screen
-        } else {
+      builder: (BuildContext context, AuthenticationState authenticationState) {
+        if (authenticationState is AuthenticationInitialState ||
+            authenticationState is AuthenticationInitializingState) {
+          if (authenticationState is AuthenticationInitialState) {
+            // Try to authenticate with a token, if fail present the login screen
+            BlocProvider.of<AuthenticationBloc>(context)
+                .add(AuthenticationLogWithTokenRequestSentEvent());
+          }
+          return SplashScreen();
+        } else if (!(authenticationState is AuthenticationSuccessfulState)) {
           return TinterAuthenticationTab();
         }
+
+        // next check on the user state
+        return BlocBuilder<UserBloc, UserState>(
+          builder: (BuildContext context, UserState userState) {
+            if (userState is UserInitialState) {
+              BlocProvider.of<UserBloc>(context).add(UserInitEvent());
+            }
+            if (userState is UserInitialState || userState is UserInitializingState) {
+              return CircularProgressIndicator();
+            }
+
+            if (userState is NewUserState) {
+              return UserCreationTab();
+            }
+
+            return TinterHome();
+          },
+        );
       },
     );
   }
@@ -99,7 +127,7 @@ class TinterHome extends StatefulWidget {
 }
 
 class _TinterHomeState extends State<TinterHome> {
-  int _selectedTab = 0;
+  int _selectedTab = 2;
 
   @override
   Widget build(BuildContext context) {

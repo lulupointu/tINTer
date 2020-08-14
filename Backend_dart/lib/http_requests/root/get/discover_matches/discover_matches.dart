@@ -20,7 +20,7 @@ Future<void> discoverMatchesGet(HttpRequest req, List<String> segments, String l
   // This segment should follow the form
   // {'offset': X, 'limit': Y} where X and Y are int
   try {
-    Map<String, dynamic> offsetAndLimit = jsonDecode(await utf8.decodeStream(req));
+    Map<String, dynamic> offsetAndLimit = json.decode(segments[0]);
 
     if (!(offsetAndLimit.containsKey('limit') && offsetAndLimit.containsKey('offset'))) {
       throw WrongFormatError(
@@ -47,7 +47,7 @@ Future<void> discoverMatchesGet(HttpRequest req, List<String> segments, String l
     await req.response
       ..encoding = utf8
       ..statusCode = HttpStatus.ok
-      ..write(utf8.encode(matchedMatches.map((Match match) => match.toJson()).toString()))
+      ..write(matchedMatches.map((Match match) => match.toJson()).toString())
       ..close();
 
     await tinterDatabase.close();

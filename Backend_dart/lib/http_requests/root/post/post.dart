@@ -14,10 +14,10 @@ Future<void> postToNextSegment(HttpRequest req, List<String> segments, String lo
   switch (segments.removeAt(0)) {
     case 'createUser':
       return userCreate(req, segments, login);
-    case 'user':
+    case 'userUpdate':
       return userUpdate(req, segments, login);
-    case 'match':
-      return matchUpdate(req, segments, login);
+    case 'matchUpdateRelationStatus':
+      return matchUpdateRelationStatus(req, segments, login);
     default:
       throw UnknownRequestedPathError(req.uri.path);
   }

@@ -27,7 +27,7 @@ Future<void> matchedMatchesGet(HttpRequest req, List<String> segments, String lo
   req.response
     ..encoding = utf8
     ..statusCode = HttpStatus.ok
-    ..write(matchedMatches.map((Match match) => match.toJson()))
+    ..write(matchedMatches.map((Match match) => json.encode(match.toJson())))
     ..close();
 
   await tinterDatabase.close();

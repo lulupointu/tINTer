@@ -23,7 +23,7 @@ Future<void> userUpdate(HttpRequest req, List<String> segments, String login) as
 
   User user;
   try {
-    user = User.fromJson(jsonDecode(await utf8.decodeStream(req)));
+    user = User.fromJson(json.decode(await utf8.decodeStream(req)));
   } catch (error) {
     throw error;
   }

@@ -31,28 +31,32 @@ class AuthenticationEmptyCredentialError extends AuthenticationError {
   String getMessage() => 'Le login et le mot de passe ne doivent pas être vides';
 }
 
+class NotAuthenticatedError extends AuthenticationError {
+  @override
+  String getMessage() => 'Tried to use server while not in authenticated state.';
+
+}
+
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthenticationRepository authenticationRepository;
   final storage = new FlutterSecureStorage();
 
   AuthenticationBloc({@required this.authenticationRepository})
-      : super(AuthenticationInitialState());
+      : super(AuthenticationInitialState()) {
+    authenticationRepository.init(authenticationBloc: this);
+  }
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
     switch (event.runtimeType) {
-      case AuthenticationNeverLoggedInEvent:
-        yield AuthenticationNotAuthenticatedState();
-        return;
       case AuthenticationLoggedRequestSentEvent:
         yield* _mapAuthenticationLoggedRequestSentEventToState(event);
         return;
       case AuthenticationLogWithTokenRequestSentEvent:
         yield* _mapAuthenticationLoggedRequestWithTokenSentEventToState(event);
         return;
-      case AuthenticationLoggedSuccessfulEvent:
-        yield AuthenticationSuccessfulState(
-            token: (event as AuthenticationLoggedSuccessfulEvent).token);
+      case AuthenticationSuccessfulEvent:
+        yield* _mapAuthenticationSuccessfulEventToState(event);
         return;
       case AuthenticationLoggedFailedEvent:
         print('yield error state');
@@ -67,51 +71,43 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   Stream<AuthenticationState> _mapAuthenticationLoggedRequestSentEventToState(
       AuthenticationLoggedRequestSentEvent event) async* {
     yield AuthenticationLoadingState();
-    await Future.delayed(const Duration(seconds: 2), () {}); // TODO: remove this
-    print('FakeWait');
-
 
     // Try to authenticate
     Token token;
     try {
-      token = authenticationRepository.logIn(event.login, event.password);
+      token = await authenticationRepository.logIn(event.login, event.password);
     } on AuthenticationError catch (error) {
       print('CatchError');
       add(AuthenticationLoggedFailedEvent(error: error));
       return;
     }
 
-    yield AuthenticationSuccessfulState(token: token);
+    add(AuthenticationSuccessfulEvent(token: token));
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedRequestWithTokenSentEventToState(
-      AuthenticationLoggedRequestSentEvent event) async* {
-    yield AuthenticationLoadingState();
-    await Future.delayed(const Duration(seconds: 2), () {}); // TODO: remove this
+      AuthenticationLogWithTokenRequestSentEvent event) async* {
+    yield AuthenticationInitializingState();
 
-    Token token;
-    if (state is AuthenticationSuccessfulState) {
-      token = (state as AuthenticationSuccessfulState).token;
-    } else {
-      token = Token.fromJson(jsonDecode(await storage.read(key: 'authenticationToken')));
-    }
-
-    // If the token is null, it's because we never authenticated in this app.
-    if (token == null) {
+    String encodedToken = await storage.read(key: 'authenticationToken');
+    // If the encodedToken is null, it's because we never authenticated in this app.
+    if (encodedToken == null) {
       yield AuthenticationNotAuthenticatedState();
       return;
     }
 
+    Token token = Token.fromJson(jsonDecode(encodedToken));
+
     // Try to authenticate
     Token newToken;
     try {
-      newToken = authenticationRepository.logInWithToken(token);
+      newToken = await authenticationRepository.authenticateWithToken(token);
     } on AuthenticationError catch (error) {
       add(AuthenticationLoggedFailedEvent(error: error));
       return;
     }
 
-    yield AuthenticationSuccessfulState(token: newToken);
+    add(AuthenticationSuccessfulEvent(token: newToken));
   }
 
   String get token {
@@ -123,7 +119,19 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   Stream<AuthenticationState> _mapAuthenticationLoggedOutEventToState(
       AuthenticationEvent event) async* {
+
+    // Delete the current token
+    await storage.delete(key: 'authenticationToken');
+
     yield AuthenticationNotAuthenticatedState();
-    storage.delete(key: 'authenticationToken');
+  }
+
+  Stream<AuthenticationState> _mapAuthenticationSuccessfulEventToState(
+      AuthenticationSuccessfulEvent event) async* {
+
+    // Save the token that was used or gotten when authenticating;
+    await storage.write(key: 'authenticationToken', value: jsonEncode(event.token));
+
+    yield AuthenticationSuccessfulState(token: event.token);
   }
 }

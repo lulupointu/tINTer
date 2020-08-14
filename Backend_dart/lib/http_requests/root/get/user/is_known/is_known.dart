@@ -25,13 +25,13 @@ Future<void> isUserKnownGet(HttpRequest req, List<String> segments, String login
     await req.response
       ..encoding = utf8
       ..statusCode = HttpStatus.ok
-      ..write({'isKnown': true})
+      ..write(json.encode({'isKnown': true}))
       ..close();
   } on EmptyResponseToDatabaseQuery {
     await req.response
       ..encoding = utf8
       ..statusCode = HttpStatus.ok
-      ..write({'isKnown': false})
+      ..write(json.encode({'isKnown': false}))
       ..close();
   } finally {
     await tinterDatabase.close();

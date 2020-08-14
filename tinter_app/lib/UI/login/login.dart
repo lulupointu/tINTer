@@ -38,9 +38,6 @@ class _TinterAuthenticationTabState extends State<TinterAuthenticationTab> {
   @override
   void initState() {
     KeyboardVisibility.onChange.listen((bool visible) {
-      if (!visible) {
-        FocusScope.of(context).unfocus();
-      }
     });
     super.initState();
   }
@@ -383,35 +380,36 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                             final bool isLoading = (state is AuthenticationLoadingState);
                             return LayoutBuilder(
                               builder: (BuildContext context, BoxConstraints constraints) {
-                                return AnimatedContainer(
-                                  duration: Duration(milliseconds: 150),
-                                  decoration: BoxDecoration(
-                                    color: TinterColors.secondaryAccent,
-                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                  ),
-                                  height: 40,
-                                  width: isLoading ? 40 : constraints.maxWidth,
-                                  child: AnimatedSwitcher(
+                                return FlatButton(
+                                  onPressed: isLoading ? null : _onAuthenticationTry,
+                                  padding: EdgeInsets.all(0.0),
+                                  child: AnimatedContainer(
                                     duration: Duration(milliseconds: 150),
-                                    child: isLoading
-                                        ? SizedBox(
-                                            height: 23,
-                                            width: 23,
-                                            child: CircularProgressIndicator(
-                                              valueColor: AlwaysStoppedAnimation<Color>(
-                                                TinterColors.white,
+                                    decoration: BoxDecoration(
+                                      color: TinterColors.secondaryAccent,
+                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    ),
+                                    height: 40,
+                                    width: isLoading ? 40 : constraints.maxWidth,
+                                    child: AnimatedSwitcher(
+                                      duration: Duration(milliseconds: 150),
+                                      child: isLoading
+                                          ? SizedBox(
+                                              height: 23,
+                                              width: 23,
+                                              child: CircularProgressIndicator(
+                                                valueColor: AlwaysStoppedAnimation<Color>(
+                                                  TinterColors.white,
+                                                ),
+                                                strokeWidth: 3,
                                               ),
-                                              strokeWidth: 3,
-                                            ),
-                                          )
-                                        : FlatButton(
-                                            onPressed: _onAuthenticationTry,
-                                            child: Text(
-                                              'Se connecter',
-                                              style: TinterTextStyle.loginFormButton,
-                                              textAlign: TextAlign.center,
-                                            ),
+                                            )
+                                          : Text(
+                                            'Se connecter',
+                                            style: TinterTextStyle.loginFormButton,
+                                            textAlign: TextAlign.center,
                                           ),
+                                    ),
                                   ),
                                 );
                               },
@@ -459,15 +457,21 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
     final AuthenticationBloc authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
 
     // If one of the two field is empty, immediately return an error event
-    if (_loginController.text == "" || _loginController.text == "") {
+    if (_loginController.text == "" || _passwordController.text == "") {
       authenticationBloc
           .add(AuthenticationLoggedFailedEvent(error: AuthenticationEmptyCredentialError()));
       return;
     }
+
+    print('Send request with login: ' +
+        _loginController.text +
+        ' | password: ' +
+        _passwordController.text);
+
     authenticationBloc.add(
       AuthenticationLoggedRequestSentEvent(
-        login: _loginController.text,
-        password: _passwordController.text,
+        login: _loginController.text.replaceAll(' ', ''),
+        password: _passwordController.text.replaceAll(' ', ''),
       ),
     );
   }

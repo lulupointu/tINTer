@@ -265,7 +265,7 @@ class HoveringUserInformation extends StatelessWidget {
                   child: BlocBuilder<UserBloc, UserState>(
                       builder: (BuildContext context, UserState userState) {
                     return AutoSizeText(
-                      ((userState is UserLoadSuccessState))
+                      ((userState is KnownUserState))
                           ? userState.user.name + " " + userState.user.surname
                           : 'Loading...',
                       style: TinterTextStyle.headline1,
@@ -283,7 +283,7 @@ class HoveringUserInformation extends StatelessWidget {
                   child: BlocBuilder<UserBloc, UserState>(
                       builder: (BuildContext context, UserState userState) {
                     return AutoSizeText(
-                      ((userState is UserLoadSuccessState))
+                      ((userState is KnownUserState))
                           ? userState.user.email
                           : 'Loading...',
                       style: TinterTextStyle.headline2,
@@ -350,13 +350,13 @@ class AssociationsRectangle extends StatelessWidget {
                 height: 60,
                 child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
-                    if (!(userState is UserLoadSuccessState)) {
+                    if (!(userState is KnownUserState)) {
                       return CircularProgressIndicator();
                     }
                     return ListView.separated(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
-                      itemCount: (userState as UserLoadSuccessState)
+                      itemCount: (userState as KnownUserState)
                           .user
                           .associations
                           .length,
@@ -368,7 +368,7 @@ class AssociationsRectangle extends StatelessWidget {
                       itemBuilder: (BuildContext context, int index) {
                         return associationBubble(
                             context,
-                            (userState as UserLoadSuccessState)
+                            (userState as KnownUserState)
                                 .user
                                 .associations[index]);
                       },
@@ -431,11 +431,11 @@ class AttiranceVieAssoRectangle extends StatelessWidget {
           data: TinterSliderTheme.enabled,
           child: BlocBuilder<UserBloc, UserState>(
             builder: (BuildContext context, UserState userState) {
-              if (!(userState is UserLoadSuccessState)) {
+              if (!(userState is KnownUserState)) {
                 return CircularProgressIndicator();
               }
               return Slider(
-                  value: (userState as UserLoadSuccessState).user.attiranceVieAsso,
+                  value: (userState as KnownUserState).user.attiranceVieAsso,
                   onChanged: (value) => BlocProvider.of<UserBloc>(context)
                       .add(AttiranceVieAssoChanged(newValue: value)));
             },
@@ -466,11 +466,11 @@ class FeteOuCoursRectangle extends StatelessWidget {
           child: DiscoverSlider(
               slider: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
+                  if (!(userState is KnownUserState)) {
                     return CircularProgressIndicator();
                   }
                   return Slider(
-                      value: (userState as UserLoadSuccessState).user.feteOuCours,
+                      value: (userState as KnownUserState).user.feteOuCours,
                       onChanged: (value) => BlocProvider.of<UserBloc>(context)
                           .add(FeteOuCoursChanged(newValue: value)));
                 },
@@ -504,11 +504,11 @@ class AideOuSortirRectangle extends StatelessWidget {
           child: DiscoverSlider(
               slider: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
+                  if (!(userState is KnownUserState)) {
                     return CircularProgressIndicator();
                   }
                   return Slider(
-                      value: (userState as UserLoadSuccessState).user.aideOuSortir,
+                      value: (userState as KnownUserState).user.aideOuSortir,
                       onChanged: (value) => BlocProvider.of<UserBloc>(context)
                           .add(AideOuSortirChanged(newValue: value)));
                 },
@@ -538,11 +538,11 @@ class OrganisationEvenementsRectangle extends StatelessWidget {
           data: TinterSliderTheme.enabled,
           child: BlocBuilder<UserBloc, UserState>(
             builder: (BuildContext context, UserState userState) {
-              if (!(userState is UserLoadSuccessState)) {
+              if (!(userState is KnownUserState)) {
                 return CircularProgressIndicator();
               }
               return Slider(
-                  value: (userState as UserLoadSuccessState).user.organisationEvenements,
+                  value: (userState as KnownUserState).user.organisationEvenements,
                   onChanged: (value) => BlocProvider.of<UserBloc>(context)
                       .add(OrganisationEvenementsChanged(newValue: value)));
             },
@@ -576,13 +576,13 @@ class GoutsMusicauxRectangle extends StatelessWidget {
               ),
               BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
+                  if (!(userState is KnownUserState)) {
                     return CircularProgressIndicator();
                   }
                   return Wrap(
                     spacing: 15,
                     children: <Widget>[
-                      for (String musicStyle in (userState as UserLoadSuccessState).user.goutsMusicaux)
+                      for (String musicStyle in (userState as KnownUserState).user.goutsMusicaux)
                         Chip(
                           label: Text(musicStyle),
                           labelStyle: TinterTextStyle.goutMusicaux,

@@ -8,22 +8,24 @@ part of 'match.dart';
 
 Match _$MatchFromJson(Map<String, dynamic> json) {
   return Match(
-    json['name'],
-    json['surname'],
-    json['email'],
-    json['score'],
-    json['status'],
-    json['primoEntrant'],
-    json['associations'],
-    json['attiranceVieAsso'],
-    json['feteOuCours'],
-    json['aideOuSortir'],
-    json['organisationEvenements'],
-    json['goutsMusicaux'],
+    login: json['login'],
+    name: json['name'],
+    surname: json['surname'],
+    email: json['email'],
+    score: json['score'],
+    status: json['status'],
+    primoEntrant: json['primoEntrant'],
+    associations: json['associations'],
+    attiranceVieAsso: json['attiranceVieAsso'],
+    feteOuCours: json['feteOuCours'],
+    aideOuSortir: json['aideOuSortir'],
+    organisationEvenements: json['organisationEvenements'],
+    goutsMusicaux: json['goutsMusicaux'],
   );
 }
 
 Map<String, dynamic> _$MatchToJson(Match instance) => <String, dynamic>{
+      'login': instance.login,
       'name': instance.name,
       'surname': instance.surname,
       'email': instance.email,
@@ -39,12 +41,13 @@ Map<String, dynamic> _$MatchToJson(Match instance) => <String, dynamic>{
     };
 
 const _$MatchStatusEnumMap = {
+  MatchStatus.heIgnoredYou: 'heIgnoredYou',
   MatchStatus.ignored: 'ignored',
   MatchStatus.none: 'none',
   MatchStatus.liked: 'liked',
   MatchStatus.matched: 'matched',
   MatchStatus.youAskedParrain: 'youAskedParrain',
   MatchStatus.heAskedParrain: 'heAskedParrain',
-  MatchStatus.ParrainAccepted: 'ParrainAccepted',
-  MatchStatus.ParrainRefused: 'ParrainRefused',
+  MatchStatus.parrainAccepted: 'parrainAccepted',
+  MatchStatus.parrainRefused: 'parrainRefused',
 };

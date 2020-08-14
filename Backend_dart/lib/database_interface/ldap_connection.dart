@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dartdap/dartdap.dart';
+import 'package:tinter_backend/models/http_errors.dart';
 import 'package:tinter_backend/models/static_student.dart';
 import 'package:meta/meta.dart';
 
@@ -25,30 +26,21 @@ Future<StaticStudent> getStaticStudent({@required login, @required password}) as
     var filter = Filter.present("objectClass");
     var attrs = ["uid", "givenName", "sn", "mail"];
 
-    var count = 0;
-
     var searchResult = await connection.search(base, filter, attrs);
     await for (SearchEntry entry in searchResult.stream) {
-      print(entry.attributes['uid']);
-      print(entry.attributes['uid']);
-      print(entry.attributes['uid']);
-      print(entry.attributes['uid']);
-
       staticStudent = StaticStudent(
-        login: entry.attributes['uid'],
-        name: entry.attributes['givenName'],
-        surname: entry.attributes['sn'],
-        email: entry.attributes['mail'],
+        login: entry.attributes['uid'].values.first,
+        name: entry.attributes['givenName'].values.first,
+        surname: entry.attributes['sn'].values.first,
+        email: entry.attributes['mail'].values.first,
         primoEntrant: null,
       );
     }
-
-    print("# Number of entries: ${count}");
   } on LdapResultInvalidCredentialsException {
     await connection.close();
-    throw InvalidCredentialsException;
+    throw InvalidCredentialsException('Login or password incorrect.', true);
   } catch (e) {
-    print(e.runtimeType);
+    print(e);
   } finally {
     // Close the connection when finished with it
     await connection.close();
@@ -56,5 +48,3 @@ Future<StaticStudent> getStaticStudent({@required login, @required password}) as
 
   return staticStudent;
 }
-
-class InvalidCredentialsException implements Exception {}

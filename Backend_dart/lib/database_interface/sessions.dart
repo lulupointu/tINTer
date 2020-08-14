@@ -291,10 +291,6 @@ class SessionsTable {
   }
 }
 
-class UnknownTokenError implements Exception {}
-class InvalidTokenError implements Exception {}
-class ExpiredTokenError implements Exception {}
-
 Future<void> main() async {
   final tinterDatabase = TinterDatabase();
   await tinterDatabase.open();

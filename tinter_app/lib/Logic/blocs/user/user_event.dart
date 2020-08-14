@@ -1,15 +1,22 @@
 part of 'user_bloc.dart';
 
-abstract class UserEvent{
+abstract class UserEvent {
   const UserEvent();
+}
+
+class UserInitEvent extends UserEvent {}
+
+class UserNewProfileEvent extends UserEvent {
+  final StaticStudent staticStudent;
+
+  const UserNewProfileEvent({
+    @required this.staticStudent,
+  });
 }
 
 class UserRequestEvent extends UserEvent {}
 
-enum AssociationEventStatus {
-  add,
-  remove
-}
+enum AssociationEventStatus { add, remove }
 
 class AssociationEvent extends UserEvent {
   final Association association;
@@ -18,10 +25,7 @@ class AssociationEvent extends UserEvent {
   const AssociationEvent({@required this.association, @required this.status});
 }
 
-enum GoutMusicauxEventStatus {
-  add,
-  remove
-}
+enum GoutMusicauxEventStatus { add, remove }
 
 class GoutMusicauxEvent extends UserEvent {
   final String goutMusical;
@@ -40,8 +44,7 @@ class AttiranceVieAssoChanged extends UserEvent {
 class FeteOuCoursChanged extends UserEvent {
   final double newValue;
 
-  const FeteOuCoursChanged({@required this.newValue})
-      : assert(0 <= newValue && newValue <= 1);
+  const FeteOuCoursChanged({@required this.newValue}) : assert(0 <= newValue && newValue <= 1);
 }
 
 class AideOuSortirChanged extends UserEvent {
@@ -56,10 +59,7 @@ class OrganisationEvenementsChanged extends UserEvent {
 
   const OrganisationEvenementsChanged({@required this.newValue})
       : assert(0 <= newValue && newValue <= 1),
-  super();
+        super();
 }
 
 class UserSaveEvent extends UserEvent {}
-
-
-

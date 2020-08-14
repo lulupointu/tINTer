@@ -1,16 +1,13 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/models/association.dart';
+import 'package:tinterapp/Logic/models/static_student.dart';
 
 part 'student.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Student extends Equatable {
-  final String _name;
-  final String _surname;
-  final String _email;
-  final bool _primoEntrant;
+class Student extends StaticStudent {
   final List<Association> _associations;
   final double _attiranceVieAsso;
   final double _feteOuCours;
@@ -18,41 +15,46 @@ class Student extends Equatable {
   final double _organisationEvenements;
   final List<String> _goutsMusicaux;
 
-  Student(name, surname, email, primoEntrant, associations, attiranceVieAsso, feteOuCours,
-      aideOuSortir, organisationEvenements, goutsMusicaux)
-      : assert(name != null),
-        assert(surname != null),
-        assert(primoEntrant != null),
-        assert(associations != null),
+  Student({
+    @required String login,
+    @required String name,
+    @required String surname,
+    @required String email,
+    @required bool primoEntrant,
+    @required List<dynamic> associations,
+    @required double attiranceVieAsso,
+    @required double feteOuCours,
+    @required double aideOuSortir,
+    @required double organisationEvenements,
+    @required List<String> goutsMusicaux,
+  })  : assert(associations != null),
         assert(attiranceVieAsso != null),
         assert(feteOuCours != null),
         assert(aideOuSortir != null),
         assert(organisationEvenements != null),
         assert(goutsMusicaux != null),
-        _name = name,
-        _surname = surname,
-        _email = email,
-        _primoEntrant = primoEntrant,
-        _associations = associations,
+        _associations = associations
+            .map((var association) =>
+                (association is Association) ? association : Association.fromJson(association))
+            .toList(),
         _attiranceVieAsso = attiranceVieAsso,
         _feteOuCours = feteOuCours,
         _aideOuSortir = aideOuSortir,
         _organisationEvenements = organisationEvenements,
-        _goutsMusicaux = goutsMusicaux;
+        _goutsMusicaux = goutsMusicaux,
+        super(
+          login: login,
+          name: name,
+          surname: surname,
+          email: email,
+          primoEntrant: primoEntrant,
+        );
 
   factory Student.fromJson(Map<String, dynamic> json) => _$StudentFromJson(json);
 
   Map<String, dynamic> toJson() => _$StudentToJson(this);
 
   // Define all getter for the user info
-  String get name => _name;
-
-  String get surname => _surname;
-
-  String get email => _email;
-
-  bool get primoEntrant => _primoEntrant;
-
   List<Association> get associations => _associations;
 
   double get attiranceVieAsso => _attiranceVieAsso;
@@ -64,8 +66,6 @@ class Student extends Equatable {
   double get organisationEvenements => _organisationEvenements;
 
   List<String> get goutsMusicaux => _goutsMusicaux;
-
-
 
   // Define all setter for the user info (expect name and surname
   // which can't be changed)
@@ -98,15 +98,15 @@ class Student extends Equatable {
 
   @override
   List<Object> get props => [
-    name,
-    surname,
-    email,
-    primoEntrant,
-    associations,
-    attiranceVieAsso,
-    feteOuCours,
-    aideOuSortir,
-    organisationEvenements,
-    goutsMusicaux
-  ];
+        name,
+        surname,
+        email,
+        primoEntrant,
+        associations,
+        attiranceVieAsso,
+        feteOuCours,
+        aideOuSortir,
+        organisationEvenements,
+        goutsMusicaux
+      ];
 }

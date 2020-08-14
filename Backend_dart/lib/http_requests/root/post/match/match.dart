@@ -9,8 +9,8 @@ import 'package:postgres/src/connection.dart';
 import 'package:tinter_backend/models/internal_errors.dart';
 import 'package:tinter_backend/models/relation_status.dart';
 
-Future<void> matchUpdate(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('matchUpdate', segments);
+Future<void> matchUpdateRelationStatus(HttpRequest req, List<String> segments, String login) async {
+  printReceivedSegments('matchUpdateRelationStatus', segments);
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);
@@ -18,15 +18,11 @@ Future<void> matchUpdate(HttpRequest req, List<String> segments, String login) a
 
   RelationStatus relationStatus;
   try {
-    relationStatus = RelationStatus.fromJson(jsonDecode(await utf8.decodeStream(req)));
+    Map<String, dynamic> relationStatusJson = jsonDecode(await utf8.decodeStream(req));
+    relationStatusJson['login'] = login;
+    relationStatus = RelationStatus.fromJson(relationStatusJson);
   } catch(error) {
     throw error;
-  }
-
-  if (relationStatus.login != login) {
-    throw InvalidQueryParameterError(
-        'The given relationStatus has a different login than the one associated with the given token.',
-        true);
   }
 
   TinterDatabase tinterDatabase = TinterDatabase();

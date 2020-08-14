@@ -25,9 +25,8 @@ Future<void> staticUserInfoGet(HttpRequest req, List<String> segments, String lo
     StaticStudent staticStudent = await staticProfileTable.getFromLogin(login: login);
 
     await req.response
-      ..encoding = utf8
       ..statusCode = HttpStatus.ok
-      ..write(staticStudent.toJson())
+      ..write(json.encode(staticStudent.toJson()))
       ..close();
   } on EmptyResponseToDatabaseQuery {
     await tinterDatabase.close();

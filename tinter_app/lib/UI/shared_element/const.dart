@@ -69,7 +69,6 @@ class TinterTextStyle {
   );
   static const headline2 = TextStyle(
     fontSize: 20,
-    fontWeight: FontWeight.bold,
     color: TinterColors.white,
   );
   static const hint = TextStyle(

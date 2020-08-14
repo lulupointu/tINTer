@@ -77,7 +77,7 @@ class DiscoverTab extends StatelessWidget {
                 Positioned(
                   left: constraints.maxWidth * 55 / 100,
                   child: SvgPicture.asset(
-                    'assets/Discover/DiscoverBackground.svg',
+                    'assets/discover/DiscoverBackground.svg',
                     color: TinterColors.background,
                     height: constraints.maxHeight,
                   ),
@@ -85,7 +85,7 @@ class DiscoverTab extends StatelessWidget {
                 Positioned(
                   left: constraints.maxWidth * 55 / 100,
                   child: SvgPicture.asset(
-                    'assets/Discover/DiscoverTop.svg',
+                    'assets/discover/DiscoverTop.svg',
                     color: TinterColors.primaryAccent,
                     height: constraints.maxHeight / 2,
                   ),
@@ -94,7 +94,7 @@ class DiscoverTab extends StatelessWidget {
                   left: constraints.maxWidth * 55 / 100,
                   bottom: 0,
                   child: SvgPicture.asset(
-                    'assets/Discover/DiscoverBottom.svg',
+                    'assets/discover/DiscoverBottom.svg',
                     color: TinterColors.primaryAccent,
                     height: constraints.maxHeight / 2,
                   ),
@@ -218,7 +218,7 @@ class DiscoverRight extends StatelessWidget {
 //            iconSize: 60,
 //            color: TinterColors.secondaryAccent,
 //            icon: FlareActor(
-//              'assets/Icons/Heart.flr',
+//              'assets/icons/Heart.flr',
 //              color: TinterColors.secondaryAccent,
 //              animation: animation.value == 0 ? 'None' : 'Validate',
 //              fit: BoxFit.fill,
@@ -234,7 +234,7 @@ class DiscoverRight extends StatelessWidget {
 //            iconSize: 70,
 //            color: TinterColors.secondaryAccent,
 //            icon: FlareActor(
-//              'assets/Icons/Clear.flr',
+//              'assets/icons/Clear.flr',
 //              color: TinterColors.secondaryAccent,
 //              animation: animation.value == 0 ? 'None' : 'Validate',
 //              fit: BoxFit.fill,
@@ -297,7 +297,7 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
             iconSize: 60,
             color: TinterColors.secondaryAccent,
             icon: FlareActor(
-              'assets/Icons/Heart.flr',
+              'assets/icons/Heart.flr',
               color: TinterColors.secondaryAccent,
               fit: BoxFit.contain,
               controller: CustomFlareController(
@@ -316,7 +316,7 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
             iconSize: 60,
             color: TinterColors.secondaryAccent,
             icon: FlareActor(
-              'assets/Icons/Clear.flr',
+              'assets/icons/Clear.flr',
               color: TinterColors.secondaryAccent,
               fit: BoxFit.contain,
               controller: CustomFlareController(

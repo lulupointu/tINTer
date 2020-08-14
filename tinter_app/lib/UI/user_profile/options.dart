@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
 import 'dart:math';
 
 import '../shared_element/slider_label.dart';
@@ -116,13 +118,18 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                     ),
                     Align(
                       alignment: Alignment(0, 0.8),
-                      child: informationRectangle(
-                        width: constraints.maxWidth * 0.4,
-                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                        child: Text(
-                          'Déconnexion',
-                          textAlign: TextAlign.center,
-                          style: TinterTextStyle.options,
+                      child: InkWell(
+                        onTap: () {
+                          BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationLoggedOutEvent());
+                        },
+                        child: informationRectangle(
+                          width: constraints.maxWidth * 0.4,
+                          padding: EdgeInsets.symmetric(vertical: 15.0),
+                          child: Text(
+                            'Déconnexion',
+                            textAlign: TextAlign.center,
+                            style: TinterTextStyle.options,
+                          ),
                         ),
                       ),
                     ),
@@ -233,7 +240,7 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                 height: fractions['logo'] * constraints.maxHeight,
                 width: double.maxFinite,
                 child: SvgPicture.asset(
-                  'assets/Icons/match.svg',
+                  'assets/icons/match.svg',
                   fit: BoxFit.fitHeight,
                 ),
               )

@@ -11,15 +11,29 @@ import 'package:tinter_backend/models/session.dart';
 import 'package:tinter_backend/models/static_student.dart';
 import 'package:meta/meta.dart';
 
-Future<void> authenticationCheckThenRoute(HttpRequest req) async {
+Future<void>  authenticationCheckThenRoute(HttpRequest req) async {
   // The segment are the different part of the uri
-  List<String> segments = utf8.decode(base64Decode(req.uri.path)).split('/');
+  List<String> segments = req.uri.path.split('/');
   // The first element is an empty string, remove it
   segments.removeAt(0);
 
+  print(segments);
+
   // if login then use ldap to check for credentials
   if (segments[0] == 'login') {
-    await tryLogin(httpRequest: req);
+    try {
+      await tryLogin(httpRequest: req);
+    } on HttpError catch (error) {
+      if (error.shouldSend)
+        await req.response
+          ..statusCode = error.errorCode ?? HttpStatus.badRequest
+          ..write(error)
+          ..close();
+      return;
+    } catch (error) {
+      print('Error caught: $error');
+      return;
+    }
     return;
   }
 
@@ -28,29 +42,35 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
   String login;
   try {
     login = await checkSessionTokenAndGetLogin(httpRequest: req);
+  } on HttpError catch (error) {
+    if (error.shouldSend)
+      await req.response
+        ..statusCode = error.errorCode ?? HttpStatus.badRequest
+        ..write(error)
+        ..close();
+    return;
   } catch (error) {
     print('Error caught: $error');
     return;
   }
 
+  if (segments[0] == 'authenticate') {
+    await req.response.close();
+    return;
+  }
+
   try {
     await rootToGetOrPost(req, segments, login);
-  } on UnknownRequestedPathError {
-    await req.response
-      ..statusCode = HttpStatus.badRequest
-      ..write('Request method should be GET or POST, not ${req.method}')
-      ..close();
-    return;
   } on HttpError catch (error) {
     if (error.shouldSend)
       await req.response
-        ..statusCode = HttpStatus.badRequest
+        ..statusCode = error.errorCode ?? HttpStatus.badRequest
         ..write(error)
         ..close();
     return;
   } catch (error) {
     print('An unexpected error happened: $error');
-    req.response.close();
+    await req.response.close();
     return;
   }
 }
@@ -64,6 +84,7 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
   try {
     // Check if the token is in the session table, if not a EmptyResponseToDatabaseQuery is raised
     final String _token = httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader);
+
     final Session session = await sessionsTable.getFromToken(token: _token);
     final String login = session.login;
 
@@ -71,12 +92,12 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
     // So we invalid all token from the given login and throw an InvalidTokenError
     if (!session.isValid) {
       await sessionsTable.invalidAllFromLogin(login: session.login);
-      throw InvalidTokenError();
+      throw InvalidTokenError(error: 'The given token is invalid', shouldSend: true);
     }
 
     // If the token is more than Session.MaximumLifeTime old, the token is expired and should not be used
     // So we set isValid to false and throw an ExpiredTokenError.
-    if (session.creationDate.add(Session.MaximumLifeTime).compareTo(DateTime.now()) > 0) {
+    if (session.creationDate.add(Session.MaximumLifeTime).compareTo(DateTime.now()) < 0) {
       await sessionsTable.update(
           session: Session(
         token: session.token,
@@ -90,7 +111,7 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
     // If the token is more than Session.MaximumTimeBeforeRefresh old,
     // we accept the authentication and give a new refreshed token.
     // Else we accept and send back the same token.
-    if (session.creationDate.add(Session.MaximumTimeBeforeRefresh).compareTo(DateTime.now()) >
+    if (session.creationDate.add(Session.MaximumTimeBeforeRefresh).compareTo(DateTime.now()) <
         0) {
       final String _newToken = generateNewToken();
       await sessionsTable.update(
@@ -113,26 +134,14 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
     }
     return login;
   } on EmptyResponseToDatabaseQuery {
-    await httpRequest.response
-      ..statusCode = HttpStatus.forbidden
-      ..write('The given token is unknown.')
-      ..close();
     await tinterDatabase.close();
-    throw UnknownTokenError();
+    throw UnknownTokenError(error: 'The given token is unknown.', shouldSend: true);
   } on InvalidTokenError {
-    await httpRequest.response
-      ..statusCode = HttpStatus.forbidden
-      ..write('The given token is invalid.')
-      ..close();
     await tinterDatabase.close();
-    throw InvalidTokenError();
+    throw InvalidTokenError(error: 'The given token is invalid.', shouldSend: true);
   } on ExpiredTokenError {
-    await httpRequest.response
-      ..statusCode = HttpStatus.forbidden
-      ..write('The given token is expired.')
-      ..close();
     await tinterDatabase.close();
-    throw ExpiredTokenError;
+    throw ExpiredTokenError(error: 'The given token is expired.', shouldSend: true);
   } finally {
     await tinterDatabase.close();
   }
@@ -152,13 +161,16 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
 
   // Get login and password from request header
   final String _loginPassword =
-      utf8.decode(base64Decode(httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader)));
+  utf8.decode(base64Url.decode(httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader)));
+
   final int splitIndex = _loginPassword.indexOf(':');
   if (splitIndex == -1) {
-    throw InvalidCredentialsFormatException('Login or password format is incorrect.\nPlease write in the form login:password', true);
+    throw InvalidCredentialsFormatException(
+        'Login or password format is incorrect.\nPlease write in the form login:password',
+        true);
   }
   final String _login = _loginPassword.substring(0, splitIndex);
-  final String _password = _loginPassword.substring(splitIndex);
+  final String _password = _loginPassword.substring(splitIndex+1);
 
   try {
     // Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised
@@ -177,14 +189,11 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
       isValid: true,
     ));
     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
-  } on ldap.InvalidCredentialsException {
-    httpRequest.response
-      ..statusCode = HttpStatus.forbidden
-      ..write('Login or password incorrect.')
-      ..close();
+  } on InvalidCredentialsException catch(error) {
+    throw error;
   } on EmptyResponseToDatabaseQuery {
     // This means that it is the first authentication, therefore we save the static profile
-    staticProfileTable.add(staticProfile: ldapStaticStudent);
+    await staticProfileTable.add(staticProfile: ldapStaticStudent);
 
     // Generate a new token, store it, and send it in the header
     String _newToken = generateNewToken();
@@ -201,9 +210,6 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   }
 }
 
-
 void printReceivedSegments(String functionName, List<String> segments) {
   print('($functionName) Recieved segment: $segments');
 }
-
-

@@ -115,7 +115,7 @@ class StaticProfileTable {
     return Future.wait(queries);
   }
 
-  Future<void> add({@required StaticStudent staticProfile}) async {
+  Future<void> add({@required StaticStudent staticProfile}) {
     final String query =
         "INSERT INTO $name VALUES (@login, @name, @surname, @email, @primoEntrant);";
 

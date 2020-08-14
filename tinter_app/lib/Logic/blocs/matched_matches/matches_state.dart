@@ -29,4 +29,6 @@ class MatchedMatchesLoadSuccessState extends MatchedMatchesState {
   List<Object> get props => [matches];
 }
 
+class MatchedMatchesSavingNewStatusState extends MatchedMatchesState {}
+
 class MatchedMatchesLoadFailureState extends MatchedMatchesState {}

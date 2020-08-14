@@ -8,20 +8,23 @@ part of 'student.dart';
 
 Student _$StudentFromJson(Map<String, dynamic> json) {
   return Student(
-    json['name'],
-    json['surname'],
-    json['email'],
-    json['primoEntrant'],
-    json['associations'],
-    json['attiranceVieAsso'],
-    json['feteOuCours'],
-    json['aideOuSortir'],
-    json['organisationEvenements'],
-    json['goutsMusicaux'],
+    login: json['login'] as String,
+    name: json['name'] as String,
+    surname: json['surname'] as String,
+    email: json['email'] as String,
+    primoEntrant: json['primoEntrant'] as bool,
+    associations: json['associations'] as List,
+    attiranceVieAsso: (json['attiranceVieAsso'] as num)?.toDouble(),
+    feteOuCours: (json['feteOuCours'] as num)?.toDouble(),
+    aideOuSortir: (json['aideOuSortir'] as num)?.toDouble(),
+    organisationEvenements: (json['organisationEvenements'] as num)?.toDouble(),
+    goutsMusicaux:
+        (json['goutsMusicaux'] as List)?.map((e) => e as String)?.toList(),
   );
 }
 
 Map<String, dynamic> _$StudentToJson(Student instance) => <String, dynamic>{
+      'login': instance.login,
       'name': instance.name,
       'surname': instance.surname,
       'email': instance.email,

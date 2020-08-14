@@ -26,7 +26,6 @@ class StaticStudent extends Equatable {
       : assert(login != null),
         assert(name != null),
         assert(surname != null),
-        assert(primoEntrant != null),
         _login = login,
         _name = name,
         _surname = surname,

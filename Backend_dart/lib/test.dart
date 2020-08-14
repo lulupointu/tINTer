@@ -1,8 +1,5 @@
 import 'dart:io';
-import 'package:postgres/postgres.dart';
-import 'package:meta/meta.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
-import 'package:tinter_backend/http_requests/root/root.dart';
 
 Future<void> main() async {
   Stream<HttpRequest> server;

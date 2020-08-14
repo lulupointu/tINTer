@@ -340,11 +340,11 @@ class CompareView extends StatelessWidget {
                                   ? (_match.primoEntrant)
                                       ? "Cette personne veut te parrainer"
                                       : "Cette personne veut que tu la parraine"
-                                  : (_match.status == MatchStatus.ParrainAccepted)
+                                  : (_match.status == MatchStatus.parrainAccepted)
                                       ? (_match.primoEntrant)
                                           ? "Cette personne te parraine!"
                                           : 'Tu parraine cette personne!'
-                                      : (_match.status == MatchStatus.ParrainRefused)
+                                      : (_match.status == MatchStatus.parrainRefused)
                                           ? 'Cette personne à refusée votre demande'
                                           : 'ERROR: the status should not be ' +
                                               _match.status.toString(),
@@ -490,11 +490,11 @@ class CompareView extends StatelessWidget {
           Expanded(
             child: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState state) {
-              if (!(state is UserLoadSuccessState)) {
+              if (!(state is KnownUserState)) {
                 BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
                 return CircularProgressIndicator();
               }
-              return ProfileInformation(student: (state as UserLoadSuccessState).user);
+              return ProfileInformation(student: (state as KnownUserState).user);
             }),
           ),
           verticalSeparator(),
@@ -784,11 +784,11 @@ class MatchSelectionMenu extends StatelessWidget {
       }
       final List<Match> _matchesNotParrains = (state as MatchedMatchesLoadSuccessState)
           .matches
-          .where((match) => match.status != MatchStatus.ParrainAccepted)
+          .where((match) => match.status != MatchStatus.parrainAccepted)
           .toList();
       final List<Match> _parrains = (state as MatchedMatchesLoadSuccessState)
           .matches
-          .where((match) => match.status == MatchStatus.ParrainAccepted)
+          .where((match) => match.status == MatchStatus.parrainAccepted)
           .toList();
       return Column(
         children: [

@@ -145,7 +145,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         child: Center(
           child: Container(
             child: SvgPicture.asset(
-              'assets/Icons/match.svg',
+              'assets/icons/match.svg',
               width: fractions['match'] * parentWidth,
               color: selection[0] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
             ),
@@ -262,7 +262,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         height: selectedRectangleHeight,
         child: Center(
           child: SvgPicture.asset(
-            'assets/Icons/discover.svg',
+            'assets/icons/discover.svg',
             width: fractions['discover'] * parentWidth,
             color: selection[1] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
           ),
@@ -382,7 +382,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         height: selectedRectangleHeight,
         child: Center(
           child: SvgPicture.asset(
-            'assets/Icons/profile.svg',
+            'assets/icons/profile.svg',
             width: fractions['profile'] * parentWidth,
             color: selection[2] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
           ),
@@ -424,7 +424,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 }
 
 //WebsafeSvg.asset(
-//'assets/Icons/match.svg',
+//'assets/icons/match.svg',
 //width: 30,
 //height: 30,
 //color: ColorTween(

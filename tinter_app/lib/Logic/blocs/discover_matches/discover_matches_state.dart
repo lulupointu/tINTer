@@ -29,4 +29,6 @@ class DiscoverMatchesLoadSuccessState extends DiscoverMatchesState {
   List<Object> get props => [matches];
 }
 
+class DiscoverMatchesSavingNewStatusState extends DiscoverMatchesState {}
+
 class DiscoverMatchesLoadFailureState extends DiscoverMatchesState {}

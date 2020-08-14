@@ -478,7 +478,7 @@ class LikedAssociationWidget extends StatefulWidget {
 
 class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
     with SingleTickerProviderStateMixin {
-  final Duration duration = Duration(milliseconds: 300);
+  final Duration duration = Duration(milliseconds: 200);
   AnimationController _animationController;
   FlareController flareController;
 
@@ -546,7 +546,7 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                           height: 20,
                           width: 20,
                           child: FlareActor(
-                            'assets/Icons/AnimatedExpand.flr',
+                            'assets/icons/AnimatedExpand.flr',
                             color: TinterColors.white,
                             fit: BoxFit.contain,
                             controller: flareController,

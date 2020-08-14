@@ -22,8 +22,9 @@ abstract class DiscoverMatchesLoadInSuccessEvent extends DiscoverMatchesEvent {
 
 class ChangeStatusDiscoverMatchesEvent extends DiscoverMatchesLoadInSuccessEvent {
   final MatchStatus newStatus;
+  final EnumRelationStatus enumRelationStatus;
 
-  const ChangeStatusDiscoverMatchesEvent({@required match, @required this.newStatus}):super(match: match);
+  const ChangeStatusDiscoverMatchesEvent({@required match, @required this.newStatus, @required this.enumRelationStatus}):super(match: match);
 
   @override
   List<Object> get props => [match, newStatus];

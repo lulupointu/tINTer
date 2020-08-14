@@ -219,7 +219,7 @@ class UsersTable {
     ];
 
     return Future.wait(queries).then((queriesResults) {
-      if (queriesResults.length == 0) {
+      if (queriesResults[0].length == 0) {
         throw EmptyResponseToDatabaseQuery(
             error: 'One staticProfile requested (${name} but got 0');
       }

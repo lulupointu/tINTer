@@ -26,7 +26,7 @@ Future<void> userInfoGet(HttpRequest req, List<String> segments, String login) a
     await req.response
     ..encoding = utf8
     ..statusCode = HttpStatus.ok
-    ..write(user.toJson())
+    ..write(json.encode(user.toJson()))
     ..close();
   } on EmptyResponseToDatabaseQuery {
     await tinterDatabase.close();

@@ -2,14 +2,11 @@ part of 'authentication_bloc.dart';
 
 @immutable
 abstract class AuthenticationEvent extends Equatable {
-
   const AuthenticationEvent();
 
   @override
   List<Object> get props => [];
 }
-
-class AuthenticationNeverLoggedInEvent extends AuthenticationEvent {}
 
 class AuthenticationLoggedRequestSentEvent extends AuthenticationEvent {
   final String login;
@@ -23,10 +20,10 @@ class AuthenticationLoggedRequestSentEvent extends AuthenticationEvent {
 
 class AuthenticationLogWithTokenRequestSentEvent extends AuthenticationEvent {}
 
-class AuthenticationLoggedSuccessfulEvent extends AuthenticationEvent {
+class AuthenticationSuccessfulEvent extends AuthenticationEvent {
   final Token token;
 
-  const AuthenticationLoggedSuccessfulEvent({@required this.token});
+  const AuthenticationSuccessfulEvent({@required this.token});
 
   @override
   List<Object> get props => [token];
