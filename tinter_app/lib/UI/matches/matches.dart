@@ -25,7 +25,7 @@ main() => runApp(MaterialApp(
 
 class MatchsTab extends StatefulWidget {
   final Map<String, double> fractions = {
-    'matchSelectionMenu': 0.4,
+    'matchSelectionMenu': null,
   };
 
   @override
@@ -54,51 +54,71 @@ class _MatchsTabState extends State<MatchsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        // ignore: invalid_use_of_protected_member
-        if (!_controller.hasListeners) {
-          _controller.addListener(() {
-            setState(() {
-              topMenuScrolledFraction = min(
-                  1,
-                  _controller.position.pixels /
-                      (widget.fractions['matchSelectionMenu'] * constraints.maxHeight));
+    return BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
+        builder: (BuildContext context, MatchedMatchesState state) {
+      if (!(state is MatchedMatchesLoadSuccessState)) {
+        return CircularProgressIndicator();
+      }
+      final List<Match> _matchesNotParrains = (state as MatchedMatchesLoadSuccessState)
+          .matches
+          .where((match) => match.status != MatchStatus.parrainAccepted)
+          .toList();
+      final List<Match> _parrains = (state as MatchedMatchesLoadSuccessState)
+          .matches
+          .where((match) => match.status == MatchStatus.parrainAccepted)
+          .toList();
+      widget.fractions['matchSelectionMenu'] =
+          ((_matchesNotParrains.length == 0) ? 0.0 : 0.2) +
+              ((_parrains.length == 0) ? 0.0 : 0.2);
+      return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          // ignore: invalid_use_of_protected_member
+          if (!_controller.hasListeners) {
+            _controller.addListener(() {
+              setState(() {
+                topMenuScrolledFraction = min(
+                    1,
+                    _controller.position.pixels /
+                        (widget.fractions['matchSelectionMenu'] * constraints.maxHeight));
+              });
             });
-          });
-        }
+          }
 
-        return NotificationListener<ScrollEndNotification>(
-          onNotification: (ScrollEndNotification scrollEndNotification) {
-            _scrollPhysics = scrollEndNotification.metrics.pixels == 0
-                ? NeverScrollableScrollPhysics()
-                : SnapScrollSheetPhysics(
-                    topChildrenHeight: [
-                      widget.fractions['matchSelectionMenu'] * constraints.maxHeight,
-                    ],
-                  );
-            return true;
-          },
-          child: ListView(
-            physics: _scrollPhysics,
-            controller: _controller,
-            children: [
-              MatchSelectionMenu(
-                  onTap: matchSelected,
-                  height: constraints.maxHeight * widget.fractions['matchSelectionMenu']),
-              (_selectedMatch == null)
-                  ? noMatchSelected(constraints.maxHeight)
-                  : CompareView(
-                      match: _selectedMatch,
-                      appHeight: constraints.maxHeight,
-                      topMenuScrolledFraction: topMenuScrolledFraction,
-                      onCompareTapped: onCompareTapped,
-                    ),
-            ],
-          ),
-        );
-      },
-    );
+          return NotificationListener<ScrollEndNotification>(
+            onNotification: (ScrollEndNotification scrollEndNotification) {
+              _scrollPhysics = scrollEndNotification.metrics.pixels == 0
+                  ? NeverScrollableScrollPhysics()
+                  : SnapScrollSheetPhysics(
+                      topChildrenHeight: [
+                        widget.fractions['matchSelectionMenu'] * constraints.maxHeight,
+                      ],
+                    );
+              return true;
+            },
+            child: ListView(
+              physics: _scrollPhysics,
+              controller: _controller,
+              children: [
+                MatchSelectionMenu(
+                    onTap: matchSelected,
+                    height: constraints.maxHeight * widget.fractions['matchSelectionMenu'],
+                    matchesNotParrains: _matchesNotParrains,
+                    parrains: _parrains,
+                ),
+                (_selectedMatch == null)
+                    ? noMatchSelected(constraints.maxHeight)
+                    : CompareView(
+                        match: _selectedMatch,
+                        appHeight: constraints.maxHeight,
+                        topMenuScrolledFraction: topMenuScrolledFraction,
+                        onCompareTapped: onCompareTapped,
+                      ),
+              ],
+            ),
+          );
+        },
+      );
+    });
   }
 
   void onCompareTapped(appHeight) {
@@ -187,12 +207,10 @@ class CompareView extends StatelessWidget {
         SizedBox(height: 50),
         statusRectangle(),
         SizedBox(height: 50),
-        (topMenuScrolledFraction == 0)
-            ? Container()
-            : Opacity(
-                opacity: topMenuScrolledFraction,
-                child: informationComparison(),
-              ),
+        Opacity(
+          opacity: topMenuScrolledFraction,
+          child: informationComparison(),
+        ),
       ],
     );
   }
@@ -713,7 +731,15 @@ class ProfileInformation extends StatelessWidget {
       ),
       height: 60,
       width: 60,
-      child: Text(association.name), // TODO: change this to logo
+      child: ClipOval(
+        child: Container(
+          alignment: AlignmentDirectional.centerStart,
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: association.getLogo(),
+        ),
+      ),
     );
   }
 
@@ -772,79 +798,75 @@ class ProfileInformation extends StatelessWidget {
 class MatchSelectionMenu extends StatelessWidget {
   final _onTap;
   final double height;
+  final List<Match> matchesNotParrains;
+  final List<Match> parrains;
 
-  MatchSelectionMenu({@required onTap, @required this.height}) : _onTap = onTap;
+  MatchSelectionMenu(
+      {@required onTap,
+      @required this.height,
+      @required this.matchesNotParrains,
+      @required this.parrains})
+      : _onTap = onTap;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
-        builder: (BuildContext context, MatchedMatchesState state) {
-      if (!(state is MatchedMatchesLoadSuccessState)) {
-        return CircularProgressIndicator();
-      }
-      final List<Match> _matchesNotParrains = (state as MatchedMatchesLoadSuccessState)
-          .matches
-          .where((match) => match.status != MatchStatus.parrainAccepted)
-          .toList();
-      final List<Match> _parrains = (state as MatchedMatchesLoadSuccessState)
-          .matches
-          .where((match) => match.status == MatchStatus.parrainAccepted)
-          .toList();
-      return Column(
+    return Container(
+      height: height,
+      child: Column(
         children: [
-          (_matchesNotParrains.length != 0)
-              ? topMenu(matches: _matchesNotParrains, title: 'Mes parrains et marraines')
+          (matchesNotParrains.length != 0)
+              ? Expanded(
+                  child:
+                      topMenu(matches: matchesNotParrains, title: 'Mes parrains et marraines'))
               : Container(),
-          (_parrains.length != 0)
-              ? topMenu(matches: _parrains, title: 'Mes matchs')
+          (parrains.length != 0)
+              ? Expanded(child: topMenu(matches: parrains, title: 'Mes matchs'))
               : Container(),
         ],
-      );
-    });
+      ),
+    );
   }
 
   /// Either displays the parrain top menu or the match top menu
   Widget topMenu({@required List<Match> matches, @required String title}) {
-    return Container(
-      height: height / 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-            child: Text(
-              title,
-              style: TinterTextStyle.headline2,
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+          child: Text(
+            title,
+            style: TinterTextStyle.headline2,
           ),
-          Flexible(
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                for (Match match in matches)
-                  InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () => _onTap(match),
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        right: 30.0,
-                        left: match == matches[0] ? 20.0 : 0.0,
-                      ),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.amber,
-                      ),
-                      height: 40,
-                      width: 40,
+        ),
+        Flexible(
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (Match match in matches)
+                InkWell(
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  onTap: () => _onTap(match),
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      right: 30.0,
+                      left: match == matches[0] ? 20.0 : 0.0,
                     ),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.amber,
+                    ),
+                    height: 40,
+                    width: 40,
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
-          separator(),
-        ],
-      ),
+        ),
+        separator(),
+      ],
     );
   }
 

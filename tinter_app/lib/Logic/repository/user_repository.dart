@@ -15,16 +15,16 @@ import 'package:tinterapp/Network/tinter_api_client.dart';
 class UnknownUserError implements Exception {}
 
 class UserRepository {
-  final TinterApiClient tinterApiClient;
+  final TinterAPIClient tinterAPIClient;
   final AuthenticationRepository authenticationRepository;
 
-  UserRepository({@required this.tinterApiClient, @required this.authenticationRepository})
-      : assert(tinterApiClient != null);
+  UserRepository({@required this.tinterAPIClient, @required this.authenticationRepository})
+      : assert(tinterAPIClient != null);
 
-  Future<User> getUser() async {
+  Future<User>  getUser() async {
     Token token;
     try {
-      token = await authenticationRepository.getAuthenticationToken();
+      token = await AuthenticationRepository.getAuthenticationToken();
     } catch (error) {
       throw error;
     }
@@ -32,7 +32,7 @@ class UserRepository {
 
     TinterApiResponse<User> tinterApiResponse;
     try {
-      tinterApiResponse = await tinterApiClient.getUser(token: token);
+      tinterApiResponse = await tinterAPIClient.getUser(token: token);
     } on TinterAPIError catch (error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);
@@ -48,14 +48,14 @@ class UserRepository {
   Future<bool> updateUser({@required User user}) async {
     Token token;
     try {
-      token = await authenticationRepository.getAuthenticationToken();
+      token = await AuthenticationRepository.getAuthenticationToken();
     } catch (error) {
       throw error;
     }
 
     Token newToken;
     try {
-      newToken = (await tinterApiClient.updateUser(user: user, token: token)).token;
+      newToken = (await tinterAPIClient.updateUser(user: user, token: token)).token;
     } on TinterAPIError catch (error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);
@@ -68,10 +68,31 @@ class UserRepository {
     return true;
   }
 
+  Future<void> createUser({@required User user}) async {
+    Token token;
+    try {
+      token = await AuthenticationRepository.getAuthenticationToken();
+    } catch (error) {
+      throw error;
+    }
+
+    Token newToken;
+    try {
+      newToken = (await tinterAPIClient.createUser(user: user, token: token)).token;
+    } on TinterAPIError catch (error) {
+      await authenticationRepository.checkIfNewToken(
+          oldToken: token, newToken: error.token);
+      throw error;
+    }
+
+    await authenticationRepository.checkIfNewToken(oldToken: token, newToken: newToken);
+
+  }
+
   Future<StaticStudent> getBasicUserInfo() async {
     Token token;
     try {
-      token = await authenticationRepository.getAuthenticationToken();
+      token = await AuthenticationRepository.getAuthenticationToken();
     } catch (error) {
       throw error;
     }
@@ -79,7 +100,7 @@ class UserRepository {
 
     TinterApiResponse<StaticStudent> tinterApiResponse;
     try {
-      tinterApiResponse = await tinterApiClient.getStaticStudent(token: token);
+      tinterApiResponse = await tinterAPIClient.getStaticStudent(token: token);
     } on TinterAPIError catch (error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);

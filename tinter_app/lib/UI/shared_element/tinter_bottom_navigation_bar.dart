@@ -12,7 +12,7 @@ main() {
   ));
 }
 
-// TODO: Add margin to button to make it more clickable
+
 class CustomBottomNavigationBar extends StatefulWidget {
   final ValueChanged<int> onTap;
 
@@ -23,7 +23,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  var selection = [1, 0, 0]; // Match, Discover, Profile
+  var selection = [0, 0, 1]; // Match, Discover, Profile
   Duration duration = Duration(milliseconds: 300);
   Curve curve = Curves.easeIn;
 

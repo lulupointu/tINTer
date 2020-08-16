@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:tinterapp/Logic/blocs/associations/associations_bloc.dart';
 import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/matched_matches/matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
+import 'package:tinterapp/Logic/repository/associations_repository.dart';
 import 'package:tinterapp/Logic/repository/authentication_repository.dart';
 import 'package:tinterapp/Logic/repository/discover_repository.dart';
 import 'package:tinterapp/Logic/repository/matched_repository.dart';
@@ -25,20 +27,24 @@ main() {
   Bloc.observer = AllBlocObserver();
 
   final http.Client httpClient = http.Client();
-  TinterApiClient tinterApiClient = TinterApiClient(
+  TinterAPIClient tinterAPIClient = TinterAPIClient(
     httpClient: httpClient,
   );
 
   final AuthenticationRepository authenticationRepository =
-      AuthenticationRepository(tinterApiClient: tinterApiClient);
+      AuthenticationRepository(tinterAPIClient: tinterAPIClient);
 
-  final UserRepository userRepository = UserRepository(tinterApiClient: tinterApiClient, authenticationRepository: authenticationRepository);
+  final UserRepository userRepository = UserRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  final MatchedRepository matchedRepository =
-      MatchedRepository(tinterApiClient: tinterApiClient, authenticationRepository: authenticationRepository);
+  final MatchedRepository matchedRepository = MatchedRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  final DiscoverRepository discoverRepository =
-      DiscoverRepository(tinterApiClient: tinterApiClient, authenticationRepository: authenticationRepository);
+  final DiscoverRepository discoverRepository = DiscoverRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
+
+  final AssociationsRepository associationsRepository = AssociationsRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   runApp(
     KeyboardVisibilityProvider(
@@ -63,6 +69,12 @@ main() {
               BlocProvider(
                 create: (BuildContext context) => DiscoverMatchesBloc(
                   discoverRepository: discoverRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
+              ),
+              BlocProvider(
+                create: (BuildContext context) => AssociationsBloc(
+                  associationsRepository: associationsRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
@@ -102,16 +114,17 @@ class Tinter extends StatelessWidget {
           builder: (BuildContext context, UserState userState) {
             if (userState is UserInitialState) {
               BlocProvider.of<UserBloc>(context).add(UserInitEvent());
-            }
-            if (userState is UserInitialState || userState is UserInitializingState) {
               return CircularProgressIndicator();
-            }
-
-            if (userState is NewUserState) {
+            } else if (userState is UserInitializingState) {
+              return CircularProgressIndicator();
+            } else if (userState is NewUserSavingState) {
+              return SplashScreen();
+            } else if (userState is NewUserState) {
               return UserCreationTab();
+            } else if (userState is KnownUserState) {
+              return TinterHome();
             }
-
-            return TinterHome();
+            return Center(child: Text('Error, Unknown state: ${userState.runtimeType}'));
           },
         );
       },

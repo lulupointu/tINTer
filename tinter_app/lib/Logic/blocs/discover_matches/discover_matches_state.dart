@@ -15,10 +15,9 @@ class DiscoverMatchesLoadInProgressState extends DiscoverMatchesState {}
 class DiscoverMatchesLoadSuccessState extends DiscoverMatchesState {
   final List<Match> matches;
 
-
   const DiscoverMatchesLoadSuccessState({@required this.matches});
 
-  List<Match> withUpdatedMatch(Match oldMatch, Match updatedMatch) {
+  List<Match> getUpdatedMatches(Match oldMatch, Match updatedMatch) {
     List<Match> newMatches = List.from(matches);
     newMatches.remove(oldMatch);
     newMatches.add(updatedMatch);
@@ -29,6 +28,14 @@ class DiscoverMatchesLoadSuccessState extends DiscoverMatchesState {
   List<Object> get props => [matches];
 }
 
-class DiscoverMatchesSavingNewStatusState extends DiscoverMatchesState {}
+class DiscoverMatchesWaitingStatusChangeState extends DiscoverMatchesLoadSuccessState {
+  const DiscoverMatchesWaitingStatusChangeState({@required List<Match> matches})
+      : super(matches: matches);
+}
+
+class DiscoverMatchesSavingNewStatusState extends DiscoverMatchesLoadSuccessState {
+  const DiscoverMatchesSavingNewStatusState({@required List<Match> matches})
+      : super(matches: matches);
+}
 
 class DiscoverMatchesLoadFailureState extends DiscoverMatchesState {}

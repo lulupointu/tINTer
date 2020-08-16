@@ -26,7 +26,7 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
         yield* _mapDiscoverMatchesRequestedEventToState();
         return;
       case ChangeStatusDiscoverMatchesEvent:
-        if (state is DiscoverMatchesLoadSuccessState) {
+        if (state is DiscoverMatchesWaitingStatusChangeState) {
           yield* _mapChangeStatusDiscoverMatchesEventToState(event);
         } else {
           _addError(
@@ -34,7 +34,7 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
         }
         return;
       case DiscoverMatchLikeEvent:
-        if (state is DiscoverMatchesLoadSuccessState) {
+        if (state is DiscoverMatchesWaitingStatusChangeState) {
           _mapDiscoverMatchLikeEventToState();
         } else {
           _addError(
@@ -42,7 +42,7 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
         }
         return;
       case DiscoverMatchIgnoreEvent:
-        if (state is DiscoverMatchesLoadSuccessState) {
+        if (state is DiscoverMatchesWaitingStatusChangeState) {
           _mapDiscoverMatchIgnoreEventToState();
         } else {
           _addError(
@@ -68,14 +68,14 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
     } catch (error) {
       print(error);
       yield DiscoverMatchesLoadFailureState();
+      return;
     }
-    yield DiscoverMatchesLoadSuccessState(matches: matches);
+    yield DiscoverMatchesWaitingStatusChangeState(matches: matches);
   }
 
   Stream<DiscoverMatchesState> _mapChangeStatusDiscoverMatchesEventToState(
       ChangeStatusDiscoverMatchesEvent event) async* {
-    List<Match> oldMatches = (state as DiscoverMatchesLoadSuccessState).matches;
-    yield DiscoverMatchesSavingNewStatusState();
+    List<Match> oldMatches = (state as DiscoverMatchesWaitingStatusChangeState).matches;
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield DiscoverMatchesInitialState();
@@ -98,6 +98,12 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
       goutsMusicaux: event.match.goutsMusicaux,
     );
 
+    List<Match> newMatches = List<Match>.from(oldMatches);
+    newMatches.remove(event.match);
+
+
+    yield DiscoverMatchesSavingNewStatusState(matches: newMatches);
+
     try {
       discoverRepository.updateMatchStatus(
         relationStatus: RelationStatus(
@@ -108,16 +114,14 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
       );
     } catch (error) {
       print(error);
-      yield DiscoverMatchesLoadSuccessState(matches: oldMatches);
+      yield DiscoverMatchesWaitingStatusChangeState(matches: oldMatches);
     }
-    yield DiscoverMatchesLoadSuccessState(
-        matches: (state as DiscoverMatchesLoadSuccessState)
-            .withUpdatedMatch(event.match, newMatch));
+    yield DiscoverMatchesWaitingStatusChangeState(matches: newMatches);
   }
 
   void _mapDiscoverMatchLikeEventToState() {
     /// Grab the current displayed match, we know it's the first in the list
-    final Match displayedMatch = (state as DiscoverMatchesLoadSuccessState).matches[0];
+    final Match displayedMatch = (state as DiscoverMatchesWaitingStatusChangeState).matches[0];
     add(ChangeStatusDiscoverMatchesEvent(
         match: displayedMatch,
         newStatus: MatchStatus.liked,
@@ -126,7 +130,7 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
 
   void _mapDiscoverMatchIgnoreEventToState() {
     /// Grab the current displayed match, we know it's the first in the list
-    final Match displayedMatch = (state as DiscoverMatchesLoadSuccessState).matches[0];
+    final Match displayedMatch = (state as DiscoverMatchesWaitingStatusChangeState).matches[0];
     add(ChangeStatusDiscoverMatchesEvent(
         match: displayedMatch,
         newStatus: MatchStatus.ignored,

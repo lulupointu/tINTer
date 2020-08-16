@@ -18,8 +18,7 @@ Student _$StudentFromJson(Map<String, dynamic> json) {
     feteOuCours: (json['feteOuCours'] as num)?.toDouble(),
     aideOuSortir: (json['aideOuSortir'] as num)?.toDouble(),
     organisationEvenements: (json['organisationEvenements'] as num)?.toDouble(),
-    goutsMusicaux:
-        (json['goutsMusicaux'] as List)?.map((e) => e as String)?.toList(),
+    goutsMusicaux: json['goutsMusicaux'] as List,
   );
 }
 

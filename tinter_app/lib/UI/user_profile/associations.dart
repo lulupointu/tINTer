@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:tinterapp/Logic/blocs/associations/associations_bloc.dart';
 import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 import 'package:tinterapp/Logic/models/association.dart';
@@ -13,87 +14,8 @@ import 'package:tinterapp/UI/shared_element/custom_flare_controller.dart';
 import '../shared_element/const.dart';
 
 main() => runApp(MaterialApp(
-  home: AssociationsTab(),
-));
-
-List<Association> allAssociations = [
-  Association(
-      name: 'Association 1',
-      description:
-          "C'est la description de la 1 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 2',
-      description:
-          "C'est la description de la 2 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 3',
-      description:
-          "C'est la description de la 3 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 4',
-      description:
-          "C'est la description de la 4 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 5',
-      description:
-          "C'est la description de la 5 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 6',
-      description:
-          "C'est la description de la 6 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 7',
-      description:
-          "C'est la description de la 7 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 8',
-      description:
-          "C'est la description de la 8 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 9',
-      description:
-          "C'est la description de la 9 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 10',
-      description:
-          "C'est la description de la 10 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 11',
-      description:
-          "C'est la description de la 11 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 12',
-      description:
-          "C'est la description de la 12 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 13',
-      description:
-          "C'est la description de la 13 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 14',
-      description:
-          "C'est la description de la 14 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 15',
-      description:
-          "C'est la description de la 15 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 16',
-      description:
-          "C'est la description de la 16 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 17',
-      description:
-          "C'est la description de la 17 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 18',
-      description:
-          "C'est la description de la 18 association. Elle est vraiment nice, venez tous et toutes."),
-  Association(
-      name: 'Association 19',
-      description:
-          "C'est la description de la 19 association. Elle est vraiment nice, venez tous et toutes."),
-];
+      home: AssociationsTab(),
+    ));
 
 class AssociationsTab extends StatefulWidget {
   static final Map<String, double> fractions = {
@@ -183,7 +105,8 @@ class _AssociationsTabState extends State<AssociationsTab> {
                   scrollController: scrollController,
                   keyboardMargin: isSearching ? 200 : 0,
                   width: constraints.maxWidth,
-                  margin: constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
+                  margin:
+                      constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
                   headerHeight: constraints.maxHeight * AssociationsTab.fractions['titles'],
                   headerSpacing:
                       constraints.maxHeight * AssociationsTab.fractions['headerSpacing'],
@@ -361,21 +284,23 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
       height: widget.height,
       child: BlocBuilder<UserBloc, UserState>(
           buildWhen: (UserState previousState, UserState state) {
-            if (!(state is UserLoadSuccessState)) {
-              return false;
-            }
-            if (!(previousState is UserLoadSuccessState)) {
-              return true;
-            }
-        if ((previousState as UserLoadSuccessState).user.associations == (state as UserLoadSuccessState).user.associations) {
+        if (!(state is UserLoadSuccessState)) {
           return false;
         }
-        checkForChanges((previousState as UserLoadSuccessState).user.associations, (state as UserLoadSuccessState).user.associations);
+        if (!(previousState is UserLoadSuccessState)) {
+          return true;
+        }
+        if ((previousState as UserLoadSuccessState).user.associations ==
+            (state as UserLoadSuccessState).user.associations) {
+          return false;
+        }
+        checkForChanges((previousState as UserLoadSuccessState).user.associations,
+            (state as UserLoadSuccessState).user.associations);
         return true;
       }, builder: (BuildContext context, UserState userState) {
-            if (!(userState is UserLoadSuccessState)) {
-              return CircularProgressIndicator();
-            }
+        if (!(userState is UserLoadSuccessState)) {
+          return CircularProgressIndicator();
+        }
         return AnimatedList(
           physics: (_selectedItem == null) ? null : NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
@@ -390,9 +315,10 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
               addOrRemoveAnimation: animation,
               association: (userState as UserLoadSuccessState).user.associations[index],
               isFirst: index == 0,
-              selected: _selectedItem == (userState as UserLoadSuccessState).user.associations[index],
-              onSelect: (AnimationController controller) =>
-                  _onSelect(index, controller, (userState as UserLoadSuccessState).user.associations[index]),
+              selected: _selectedItem ==
+                  (userState as UserLoadSuccessState).user.associations[index],
+              onSelect: (AnimationController controller) => _onSelect(index, controller,
+                  (userState as UserLoadSuccessState).user.associations[index]),
               onDislike: () => BlocProvider.of<UserBloc>(context).add(
                 AssociationEvent(
                   status: AssociationEventStatus.remove,
@@ -407,16 +333,20 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
   }
 
   _onSelect(int index, AnimationController animationController, Association association) {
-    // The controller goes to the selected association.
-    // Note that an unselected association width is the same as it's height
-    controller.animateTo(index * (widget.height + widget.margin),
-        duration: widget.duration, curve: widget.curve);
     setState(() {
       _selectedItem = _selectedItem == association ? null : association;
     });
     _selectedItem == association
         ? animationController.forward()
         : animationController.reverse();
+
+    // Delay by a small amount in order to wait for the association card to grow
+    Future.delayed(const Duration(milliseconds: 10), () {}).then((_) {
+      // The controller goes to the selected association.
+      // Note that an unselected association width is the same as it's height
+      controller.animateTo(index * (widget.height + widget.margin),
+          duration: widget.duration, curve: widget.curve);
+    });
   }
 
   @override
@@ -573,12 +503,13 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                                       flex: 500,
                                       child: AspectRatio(
                                         aspectRatio: 1,
-                                        child: Container(
-                                          // TODO: replace with logo + align left
-                                          alignment: AlignmentDirectional.centerStart,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white,
+                                        child: ClipOval(
+                                          child: Container(
+                                            alignment: AlignmentDirectional.centerStart,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                            ),
+                                            child: widget.association.getLogo(),
                                           ),
                                         ),
                                       ),
@@ -768,49 +699,71 @@ class AllAssociationsSheetBody extends StatelessWidget {
         },
         child: BlocBuilder<UserBloc, UserState>(
             builder: (BuildContext context, UserState userState) {
-          return ListView.separated(
-            controller: scrollController,
-            itemCount: allAssociations.length,
-            separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: 20,
-              );
-            },
-            itemBuilder: (BuildContext context, int index) {
-              if (!(userState is UserLoadSuccessState)) {
-                return CircularProgressIndicator();
+          return BlocBuilder<AssociationsBloc, AssociationsState>(
+              builder: (BuildContext context, AssociationsState associationsState) {
+            if (!(associationsState is AssociationsLoadSuccessfulState)) {
+              if (associationsState is AssociationsInitialState) {
+                BlocProvider.of<AssociationsBloc>(context).add(AssociationsLoadEvent());
               }
-              final bool liked = (userState as UserLoadSuccessState).user.associations.contains(allAssociations[index]);
-              return Padding(
-                padding: EdgeInsets.only(
-                  top: index == 0 ? headerSpacing : 0,
-                  bottom:
-                      index == allAssociations.length - 1 ? headerSpacing + keyboardMargin : 0,
-                ),
-                child: AssociationCard(
-                  association: allAssociations[index],
-                  liked: liked,
-                  onLike: () {
-                    if (liked) {
-                      BlocProvider.of<UserBloc>(context).add(
-                        AssociationEvent(
-                          status: AssociationEventStatus.remove,
-                          association: allAssociations[index],
-                        ),
-                      );
-                    } else {
-                      BlocProvider.of<UserBloc>(context).add(
-                        AssociationEvent(
-                          status: AssociationEventStatus.add,
-                          association: allAssociations[index],
-                        ),
-                      );
-                    }
-                  },
-                ),
-              );
-            },
-          );
+              return CircularProgressIndicator();
+            }
+            return ListView.separated(
+              controller: scrollController,
+              itemCount:
+                  (associationsState as AssociationsLoadSuccessfulState).associations.length,
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: 20,
+                );
+              },
+              itemBuilder: (BuildContext context, int index) {
+                if (!(userState is UserLoadSuccessState)) {
+                  return CircularProgressIndicator();
+                }
+                final bool liked = (userState as UserLoadSuccessState)
+                    .user
+                    .associations
+                    .contains((associationsState as AssociationsLoadSuccessfulState)
+                        .associations[index]);
+                return Padding(
+                  padding: EdgeInsets.only(
+                    top: index == 0 ? headerSpacing : 0,
+                    bottom: index ==
+                            (associationsState as AssociationsLoadSuccessfulState)
+                                    .associations
+                                    .length -
+                                1
+                        ? headerSpacing + keyboardMargin
+                        : 0,
+                  ),
+                  child: AssociationCard(
+                    association: (associationsState as AssociationsLoadSuccessfulState)
+                        .associations[index],
+                    liked: liked,
+                    onLike: () {
+                      if (liked) {
+                        BlocProvider.of<UserBloc>(context).add(
+                          AssociationEvent(
+                            status: AssociationEventStatus.remove,
+                            association: (associationsState as AssociationsLoadSuccessfulState)
+                                .associations[index],
+                          ),
+                        );
+                      } else {
+                        BlocProvider.of<UserBloc>(context).add(
+                          AssociationEvent(
+                            status: AssociationEventStatus.add,
+                            association: (associationsState as AssociationsLoadSuccessfulState)
+                                .associations[index],
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                );
+              },
+            );
+          });
         }),
       ),
     );
@@ -834,12 +787,22 @@ class AssociationCard extends StatelessWidget {
         color: TinterColors.primary,
       ),
       child: ListTile(
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3.0),
+        leading: Container(
+          height: double.maxFinite,
           child: Container(
-            // TODO: replace with icon
-            decoration: BoxDecoration(shape: BoxShape.circle),
-            width: 30,
+            alignment: Alignment.centerLeft,
+            width: 50,
+            height: 50,
+            child: ClipOval(
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: association.getLogo(),
+              ),
+            ),
           ),
         ),
         title: Text(

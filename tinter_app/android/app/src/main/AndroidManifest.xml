@@ -10,7 +10,8 @@
         android:label="tinterapp"
         android:icon="@mipmap/ic_launcher"
         android:fullBackupContent="@xml/my_backup_rules"
-        android:allowBackup="false">
+        android:allowBackup="false"
+        android:requestLegacyExternalStorage="true">
     <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -40,6 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

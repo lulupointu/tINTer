@@ -3,17 +3,18 @@ import 'dart:io';
 
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
+import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/models/match.dart';
 import 'package:tinterapp/Logic/models/relation_status.dart';
 import 'package:tinterapp/Logic/models/static_student.dart';
 import 'package:tinterapp/Logic/models/token.dart';
 import 'package:tinterapp/Logic/models/user.dart';
 
-class TinterApiClient {
+  class TinterAPIClient {
   static const baseUrl = '10.0.2.2:4044';
   final http.Client httpClient;
 
-  TinterApiClient({@required this.httpClient}) : assert(httpClient != null);
+  TinterAPIClient({@required this.httpClient}) : assert(httpClient != null);
 
   Future<TinterApiResponse<void>> logIn({@required String login, @required String password}) async {
     http.Response response = await httpClient.post(Uri.http(baseUrl, '/login'), headers: {
@@ -41,7 +42,7 @@ class TinterApiClient {
   }
 
   Future<TinterApiResponse<void>> authenticateWithToken({@required Token token}) async {
-    http.Response response = await httpClient.post(Uri.http(baseUrl, '/authenticate'),
+    http.Response response = await httpClient.post(Uri.http(baseUrl, '/authenticate', {'shouldRefresh': 'true'}),
         headers: {HttpHeaders.wwwAuthenticateHeader: token.token});
 
     Token newToken;
@@ -64,7 +65,7 @@ class TinterApiClient {
 
   Future<TinterApiResponse<void>> createUser({@required User user, @required Token token}) async {
     http.Response response = await httpClient.post(
-      '$baseUrl/createUser',
+      Uri.http(baseUrl, '/createUser', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(user.toJson()),
     );
@@ -87,7 +88,7 @@ class TinterApiClient {
 
   Future<TinterApiResponse<void>> updateUser({@required User user, @required Token token}) async {
     http.Response response = await httpClient.post(
-      '$baseUrl/userUpdate',
+      Uri.http(baseUrl, '/userUpdate', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(user.toJson()),
     );
@@ -111,7 +112,7 @@ class TinterApiClient {
   Future<TinterApiResponse<void>> updateMatchRelationStatus(
       {@required RelationStatus relationStatus, @required Token token}) async {
     http.Response response = await httpClient.post(
-      '$baseUrl/matchUpdateRelationStatus',
+      Uri.http(baseUrl, '/matchUpdateRelationStatus', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(relationStatus.toJson()),
     );
@@ -134,7 +135,7 @@ class TinterApiClient {
 
   Future<TinterApiResponse<StaticStudent>> getStaticStudent({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/user/staticInfo'),
+      Uri.http(baseUrl, '/user/staticInfo', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -165,7 +166,7 @@ class TinterApiClient {
 
   Future<TinterApiResponse<User>> getUser({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/user/info'),
+      Uri.http(baseUrl, '/user/info', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -194,7 +195,7 @@ class TinterApiClient {
 
   Future<TinterApiResponse<bool>> isKnownUser({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/user/isKnown'),
+      Uri.http(baseUrl, '/user/isKnown', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -223,7 +224,7 @@ class TinterApiClient {
 
   Future<TinterApiResponse<List<Match>>> getMatchedMatches({@required Token token}) async {
     http.Response response = await httpClient.get(
-      '$baseUrl/matchedMatches',
+      Uri.http(baseUrl, '/matchedMatches', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -242,7 +243,8 @@ class TinterApiClient {
 
     List<Match> matchedMatches;
     try {
-      matchedMatches = json.decode(response.body).map((Map<String, dynamic> jsonMatch) => Match.fromJson(jsonMatch));
+      print(json.decode(response.body));
+      matchedMatches = json.decode(response.body).map<Match>((dynamic jsonMatch) => Match.fromJson(jsonMatch)).toList();
     } catch (error) {
       throw error;
     }
@@ -253,7 +255,7 @@ class TinterApiClient {
   Future<TinterApiResponse<List<Match>>> getDiscoverMatches(
       {@required Token token, @required int limit, @required int offset}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/discoverMatches', {'limit': limit.toString(), 'offset': offset.toString()}),
+      Uri.http(baseUrl, '/discoverMatches', {'limit': limit.toString(), 'offset': offset.toString(), 'shouldRefresh': 'true'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
       },
@@ -274,13 +276,47 @@ class TinterApiClient {
 
     List<Match> discoverMatches;
     try {
-      discoverMatches = json.decode(response.body).map((Map<String, dynamic> jsonMatch) => Match.fromJson(jsonMatch));
+      discoverMatches = json.decode(response.body).map<Match>((dynamic jsonMatch) => Match.fromJson(jsonMatch)).toList();
     } catch (error) {
       throw error;
     }
 
     return TinterApiResponse(value: discoverMatches, token: newToken);
   }
+
+
+  Future<TinterApiResponse<List<Association>>> getAllAssociations(
+      {@required Token token}) async {
+    http.Response response = await httpClient.get(
+      Uri.http(baseUrl, '/associations/allAssociations', {'shouldRefresh': 'true'}),
+      headers: {
+        HttpHeaders.wwwAuthenticateHeader: token.token,
+      },
+    );
+
+    Token newToken;
+    try {
+      newToken = Token(
+        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+      );
+    } catch (error) {
+      throw error;
+    }
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
+    }
+
+    List<Association> allAssociations;
+    try {
+      allAssociations = json.decode(response.body).map<Association>((dynamic jsonAssociation) => Association.fromJson(jsonAssociation)).toList();
+    } catch (error) {
+      throw error;
+    }
+
+    return TinterApiResponse(value: allAssociations, token: newToken);
+  }
+
 }
 
 class TinterAPIError implements Exception {

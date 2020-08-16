@@ -23,12 +23,31 @@ abstract class UserLoadSuccessState extends UserState {
 
   UserLoadSuccessState createNewState({User user});
 
+  UserLoadSuccessState withPrimoEntrantChanged(bool newValue) {
+    return createNewState(
+      user: User(
+        login: user.login,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        primoEntrant: newValue,
+        associations: user.associations,
+        attiranceVieAsso: user.attiranceVieAsso,
+        feteOuCours: user.feteOuCours,
+        aideOuSortir: user.aideOuSortir,
+        organisationEvenements: user.organisationEvenements,
+        goutsMusicaux: user.goutsMusicaux,
+      ),
+    );
+  }
+
   UserLoadSuccessState withAttiranceVieAssoChanged(
     double newValue,
   ) {
     assert(0 <= newValue && newValue <= 1);
     return createNewState(
       user: User(
+        login: user.login,
         name: user.name,
         surname: user.surname,
         email: user.email,
@@ -47,6 +66,7 @@ abstract class UserLoadSuccessState extends UserState {
     assert(0 <= newValue && newValue <= 1);
     return createNewState(
       user: User(
+        login: user.login,
         name: user.name,
         surname: user.surname,
         email: user.email,
@@ -65,6 +85,7 @@ abstract class UserLoadSuccessState extends UserState {
     assert(0 <= newValue && newValue <= 1);
     return createNewState(
       user: User(
+        login: user.login,
         name: user.name,
         surname: user.surname,
         email: user.email,
@@ -83,6 +104,7 @@ abstract class UserLoadSuccessState extends UserState {
     assert(0 <= newValue && newValue <= 1);
     return createNewState(
       user: User(
+        login: user.login,
         name: user.name,
         surname: user.surname,
         email: user.email,
@@ -97,11 +119,31 @@ abstract class UserLoadSuccessState extends UserState {
     );
   }
 
+  UserLoadSuccessState withInitAssociation() {
+    return createNewState(
+      user: User(
+        login: user.login,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        primoEntrant: user.primoEntrant,
+        associations: List<Association>(),
+        attiranceVieAsso: user.attiranceVieAsso,
+        feteOuCours: user.feteOuCours,
+        aideOuSortir: user.aideOuSortir,
+        organisationEvenements: user.organisationEvenements,
+        goutsMusicaux: user.goutsMusicaux,
+      ),
+    );
+  }
+
+
   UserLoadSuccessState withAddedAssociation(Association newAssociation) {
     final List<Association> newAssociations = List.from(user.associations);
     newAssociations.add(newAssociation);
     return createNewState(
       user: User(
+        login: user.login,
         name: user.name,
         surname: user.surname,
         email: user.email,
@@ -121,6 +163,7 @@ abstract class UserLoadSuccessState extends UserState {
     newAssociations.remove(associationToRemove);
     return createNewState(
       user: User(
+        login: user.login,
         name: user.name,
         surname: user.surname,
         email: user.email,
@@ -135,11 +178,31 @@ abstract class UserLoadSuccessState extends UserState {
     );
   }
 
+  UserLoadSuccessState withInitGoutsMusicaux() {
+    return createNewState(
+      user: User(
+        login: user.login,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        primoEntrant: user.primoEntrant,
+        associations: user.associations,
+        attiranceVieAsso: user.attiranceVieAsso,
+        feteOuCours: user.feteOuCours,
+        aideOuSortir: user.aideOuSortir,
+        organisationEvenements: user.organisationEvenements,
+        goutsMusicaux: List<String>(),
+      ),
+    );
+  }
+
+
   UserLoadSuccessState withAddedGoutMusical(String newGoutMusical) {
     final List<String> newGoutMusicaux = List.from(user.goutsMusicaux);
     newGoutMusicaux.add(newGoutMusical);
     return createNewState(
       user: User(
+        login: user.login,
         name: user.name,
         surname: user.surname,
         email: user.email,
@@ -159,6 +222,7 @@ abstract class UserLoadSuccessState extends UserState {
     newGoutMusicaux.remove(goutMusicalToRemove);
     return createNewState(
       user: User(
+        login: user.login,
         name: user.name,
         surname: user.surname,
         email: user.email,
@@ -193,8 +257,26 @@ class NewUserLoadingState extends NewUserState {
   }
 }
 
+class NewUserSavingState extends NewUserState {
+  NewUserSavingState({@required user}) : super(user: user);
+
+  @override
+  UserLoadSuccessState createNewState({User user}) {
+    throw UnimplementedError();
+  }
+}
+
 abstract class KnownUserState extends UserLoadSuccessState {
   KnownUserState({@required user}) : super(user: user);
+}
+
+class KnownUserRefreshingState extends KnownUserState {
+  KnownUserRefreshingState({@required user}) : super(user: user);
+
+  @override
+  KnownUserUnsavedState createNewState({User user}) {
+    return KnownUserUnsavedState(user: user);
+  }
 }
 
 class KnownUserSavedState extends KnownUserState {
@@ -232,5 +314,14 @@ class KnownUserSavingFailedState extends KnownUserState {
   @override
   UserLoadSuccessState createNewState({User user}) {
     throw UnimplementedError();
+  }
+}
+
+class KnownUserRefreshingFailedState extends KnownUserState {
+  KnownUserRefreshingFailedState({@required user}) : super(user: user);
+
+  @override
+  UserLoadSuccessState createNewState({User user}) {
+    return KnownUserUnsavedState(user: user);
   }
 }

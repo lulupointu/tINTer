@@ -19,12 +19,12 @@ import 'package:tinterapp/Logic/models/match.dart';
 
 main() {
   final http.Client httpClient = http.Client();
-  TinterApiClient tinterApiClient = TinterApiClient(
+  TinterAPIClient tinterAPIClient = TinterAPIClient(
     httpClient: httpClient,
   );
 
   final DiscoverRepository discoverRepository =
-      DiscoverRepository(tinterApiClient: tinterApiClient);
+      DiscoverRepository(tinterAPIClient: tinterAPIClient);
 
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIOverlays([]);
@@ -51,9 +51,6 @@ class DiscoverTab extends StatelessWidget {
     BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchesRequestedEvent());
 
     return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-      buildWhen: (DiscoverMatchesState previousState, DiscoverMatchesState state) {
-        return previousState.runtimeType != state.runtimeType;
-      },
       builder: (BuildContext context, DiscoverMatchesState state) {
         if (!(state is DiscoverMatchesLoadSuccessState)) {
           return CircularProgressIndicator();
@@ -603,18 +600,14 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
       builder: (BuildContext context, BoxConstraints constraints) {
         return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
             buildWhen: (DiscoverMatchesState previousState, DiscoverMatchesState state) {
-          if (previousState.runtimeType != state.runtimeType) {
-            return true;
-          }
-          if (state is DiscoverMatchesLoadSuccessState) {
+          if (state is DiscoverMatchesSavingNewStatusState) {
             previousFirstMatch =
                 (previousState as DiscoverMatchesLoadSuccessState).matches.first;
             animationController
                 .animateTo(0, duration: Duration(milliseconds: 0))
                 .whenComplete(() => animationController.forward());
-            return true;
           }
-          return false;
+          return true;
         }, builder: (BuildContext context, DiscoverMatchesState state) {
           if (!(state is DiscoverMatchesLoadSuccessState)) {
             return CircularProgressIndicator();
@@ -1277,7 +1270,15 @@ class _MatchInformationState extends State<MatchInformation> {
       ),
       height: 60,
       width: 60,
-      child: Text(association.name), // TODO: change this to logo
+      child: ClipOval(
+        child: Container(
+          alignment: AlignmentDirectional.centerStart,
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: association.getLogo(),
+        ),
+      ),
     );
   }
 

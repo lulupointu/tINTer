@@ -9,23 +9,23 @@ import 'package:tinterapp/Logic/repository/authentication_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 
 class DiscoverRepository {
-  final TinterApiClient tinterApiClient;
+  final TinterAPIClient tinterAPIClient;
   final AuthenticationRepository authenticationRepository;
 
-  DiscoverRepository({@required this.tinterApiClient, @required this.authenticationRepository}) :
-        assert(tinterApiClient != null);
+  DiscoverRepository({@required this.tinterAPIClient, @required this.authenticationRepository}) :
+        assert(tinterAPIClient != null);
 
   Future<List<Match>> getMatches() async {
     Token token;
     try {
-      token = await authenticationRepository.getAuthenticationToken();
+      token = await AuthenticationRepository.getAuthenticationToken();
     } catch (error) {
       throw error;
     }
 
     TinterApiResponse<List<Match>> tinterApiResponse;
     try {
-      tinterApiResponse = await tinterApiClient.getDiscoverMatches(token: token, limit: 4, offset: 0);
+      tinterApiResponse = await tinterAPIClient.getDiscoverMatches(token: token, limit: 4, offset: 0);
     } on TinterAPIError catch(error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);
@@ -41,7 +41,7 @@ class DiscoverRepository {
   Future<void> updateMatchStatus({@required RelationStatus relationStatus}) async {
     Token token;
     try {
-      token = await authenticationRepository.getAuthenticationToken();
+      token = await AuthenticationRepository.getAuthenticationToken();
     } on TinterAPIError catch (error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);
@@ -50,7 +50,7 @@ class DiscoverRepository {
 
     Token newToken;
     try {
-      newToken = (await tinterApiClient.updateMatchRelationStatus(relationStatus: relationStatus, token: token)).token;
+      newToken = (await tinterAPIClient.updateMatchRelationStatus(relationStatus: relationStatus, token: token)).token;
     } catch(error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);

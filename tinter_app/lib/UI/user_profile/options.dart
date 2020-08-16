@@ -120,6 +120,7 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                       alignment: Alignment(0, 0.8),
                       child: InkWell(
                         onTap: () {
+                          Navigator.pop(context);
                           BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationLoggedOutEvent());
                         },
                         child: informationRectangle(

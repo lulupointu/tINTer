@@ -31,11 +31,25 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       case UserRequestEvent:
         yield* _mapUserRequestEventToState();
         return;
+      case UserRefreshEvent:
+        yield* _mapUserRefreshEventToState();
+        return;
       case UserSaveEvent:
         if (state is KnownUserUnsavedState) {
           yield* _mapUserSaveEventToState((state as KnownUserUnsavedState).user);
-        } else {
+        } else if (state is NewUserCreatingProfileState) {
+          yield* _mapNewUserSaveEventToState((state as NewUserCreatingProfileState).user);
+        }else
+        {
           _addError('Saved was call while state is not UnsavedUserState');
+        }
+        return;
+      case PrimoEntrantChanged:
+        if (state is UserLoadSuccessState) {
+          yield (state as UserLoadSuccessState)
+              .withPrimoEntrantChanged((event as PrimoEntrantChanged).newValue);
+        } else {
+          _addError('PrimoEntrantChanged received while state is not UserLoadSuccessState');
         }
         return;
       case AssociationEvent:
@@ -106,13 +120,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
             name: staticUser.name,
             surname: staticUser.surname,
             email: staticUser.email,
-            primoEntrant: staticUser.primoEntrant,
-            associations: List<Association>(),
-            attiranceVieAsso: 0.5,
-            feteOuCours: 0.5,
-            aideOuSortir: 0.5,
-            organisationEvenements: 0.5,
-            goutsMusicaux: List<String>(),
           ),
         );
       } catch (error) {
@@ -154,7 +161,38 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     yield KnownUserSavedState(user: user);
   }
 
+  Stream<UserState> _mapUserRefreshEventToState() async* {
+    if (!(state is KnownUserState)) {
+      print("Trying to refresh while the user wasn't known");
+      yield UserInitialState();
+      return;
+    }
+    yield KnownUserRefreshingState(user: (state as KnownUserState).user);
+
+    User user;
+    try {
+      user = await userRepository.getUser();
+    } catch (error) {
+      yield KnownUserRefreshingFailedState(user: (state as KnownUserState).user);
+    }
+    yield KnownUserSavedState(user: user);
+  }
+
+
+  Stream<UserState> _mapNewUserSaveEventToState(user) async* {
+    yield NewUserSavingState(user: user);
+    try {
+      await userRepository.createUser(user: user);
+    } catch (error) {
+      yield NewUserCreatingProfileState(user: user);
+      return;
+    }
+
+    yield KnownUserSavedState(user: user);
+  }
+
   Stream<UserState> _mapUserSaveEventToState(user) async* {
+    yield KnownUserSavingState(user: user);
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield UserInitialState();
@@ -164,26 +202,37 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       userRepository.updateUser(user: user);
     } catch (error) {
       yield KnownUserSavingFailedState(user: user);
+      return;
     }
 
     yield KnownUserSavedState(user: user);
   }
 
   Stream<UserState> _mapAssociationEventToState(AssociationEvent event) async* {
-    if (event.status == AssociationEventStatus.add) {
-      yield (state as UserLoadSuccessState).withAddedAssociation(event.association);
-    } else {
-      assert(event.status == AssociationEventStatus.remove);
-      yield (state as UserLoadSuccessState).withRemovedAssociation(event.association);
+    switch (event.status) {
+      case AssociationEventStatus.init:
+        yield (state as UserLoadSuccessState).withInitAssociation();
+        break;
+      case AssociationEventStatus.add:
+        yield (state as UserLoadSuccessState).withAddedAssociation(event.association);
+        break;
+      case AssociationEventStatus.remove:
+        yield (state as UserLoadSuccessState).withRemovedAssociation(event.association);
+        break;
     }
   }
 
   Stream<UserState> _mapGoutMusicauxEventToState(GoutMusicauxEvent event) async* {
-    if (event.status == GoutMusicauxEventStatus.add) {
-      yield (state as UserLoadSuccessState).withAddedGoutMusical(event.goutMusical);
-    } else {
-      assert(event.status == GoutMusicauxEventStatus.remove);
-      yield (state as UserLoadSuccessState).withRemovedGoutMusical(event.goutMusical);
+    switch (event.status) {
+      case GoutMusicauxEventStatus.init:
+        yield (state as UserLoadSuccessState).withInitGoutsMusicaux();
+        break;
+      case GoutMusicauxEventStatus.add:
+        yield (state as UserLoadSuccessState).withAddedGoutMusical(event.goutMusical);
+        break;
+      case GoutMusicauxEventStatus.remove:
+        yield (state as UserLoadSuccessState).withRemovedGoutMusical(event.goutMusical);
+        break;
     }
   }
 

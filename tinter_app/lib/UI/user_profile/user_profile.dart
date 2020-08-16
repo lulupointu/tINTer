@@ -18,12 +18,12 @@ import '../shared_element/const.dart';
 
 main() {
   final http.Client httpClient = http.Client();
-  TinterApiClient tinterApiClient = TinterApiClient(
+  TinterAPIClient tinterAPIClient = TinterAPIClient(
     httpClient: httpClient,
   );
 
   final UserRepository userRepository =
-      UserRepository(tinterApiClient: tinterApiClient);
+      UserRepository(tinterAPIClient: tinterAPIClient);
 
   runApp(BlocProvider(
     create: (BuildContext context) => UserBloc(userRepository: userRepository),
@@ -59,7 +59,7 @@ class _UserTabState extends State<UserTab> {
 
   @override
   void initState() {
-    BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
+    BlocProvider.of<UserBloc>(context).add(UserRefreshEvent());
     super.initState();
   }
 
@@ -322,6 +322,7 @@ class HoveringUserPicture extends StatelessWidget {
       ),
       height: size,
       width: size,
+      child: BlocProvider.of<UserBloc>(),
     );
   }
 }
@@ -409,7 +410,15 @@ class AssociationsRectangle extends StatelessWidget {
       ),
       height: 60,
       width: 60,
-      child: Text(association.name), //TODO: change to logo
+      child: ClipOval(
+        child: Container(
+          alignment: AlignmentDirectional.centerStart,
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: association.getLogo(),
+        ),
+      ),
     );
   }
 }

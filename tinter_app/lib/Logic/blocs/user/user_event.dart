@@ -14,9 +14,16 @@ class UserNewProfileEvent extends UserEvent {
   });
 }
 
+class PrimoEntrantChanged extends UserEvent {
+  final bool newValue;
+
+  const PrimoEntrantChanged({@required this.newValue})
+      : assert(newValue != null);
+}
+
 class UserRequestEvent extends UserEvent {}
 
-enum AssociationEventStatus { add, remove }
+enum AssociationEventStatus { init, add, remove }
 
 class AssociationEvent extends UserEvent {
   final Association association;
@@ -25,7 +32,7 @@ class AssociationEvent extends UserEvent {
   const AssociationEvent({@required this.association, @required this.status});
 }
 
-enum GoutMusicauxEventStatus { add, remove }
+enum GoutMusicauxEventStatus { init, add, remove }
 
 class GoutMusicauxEvent extends UserEvent {
   final String goutMusical;
@@ -63,3 +70,5 @@ class OrganisationEvenementsChanged extends UserEvent {
 }
 
 class UserSaveEvent extends UserEvent {}
+
+class UserRefreshEvent extends UserEvent {}

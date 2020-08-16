@@ -18,11 +18,11 @@ import '../shared_element/const.dart';
 
 main() {
   final http.Client httpClient = http.Client();
-  TinterApiClient tinterApiClient = TinterApiClient(
+  TinterAPIClient tinterAPIClient = TinterAPIClient(
     httpClient: httpClient,
   );
 
-  final UserRepository userRepository = UserRepository(tinterApiClient: tinterApiClient);
+  final UserRepository userRepository = UserRepository(tinterAPIClient: tinterAPIClient);
 
   runApp(BlocProvider(
     create: (BuildContext context) => UserBloc(userRepository: userRepository),
@@ -106,7 +106,8 @@ class _UserCreationTabState extends State<UserCreationTab> {
             alignment: AlignmentDirectional.topCenter,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 30.0, bottom: fractions['nextButton'] * constraints.maxHeight),
+                padding: EdgeInsets.only(
+                    top: 30.0, bottom: fractions['nextButton'] * constraints.maxHeight),
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 28.0),
                   controller: _controller,
@@ -132,19 +133,30 @@ class _UserCreationTabState extends State<UserCreationTab> {
                       children: <Widget>[
                         informationRectangle(
                           context: context,
+                          child: PrimoEntrantRectangle(),
+                        ),
+                        separator,
+                        informationRectangle(
+                          context: context,
                           child: HidingRectangle(
                             child: AssociationsRectangle(),
                             text: 'Clique pour choisir tes associations.',
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => AssociationsTab()),
-                            ),
+                            onTap: () {
+                              BlocProvider.of<UserBloc>(context).add(AssociationEvent(
+                                  association: null, status: AssociationEventStatus.init));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => AssociationsTab()),
+                              );
+                            },
                           ),
                         ),
                         separator,
                         informationRectangle(
                           context: context,
                           child: HidingRectangle(
+                            onTap: () => BlocProvider.of<UserBloc>(context)
+                                .add(AttiranceVieAssoChanged(newValue: 0.5)),
                             child: AttiranceVieAssoRectangle(),
                             text: 'Clique pour dire à quel point te plait la vie associative.',
                           ),
@@ -153,6 +165,8 @@ class _UserCreationTabState extends State<UserCreationTab> {
                         informationRectangle(
                           context: context,
                           child: HidingRectangle(
+                            onTap: () => BlocProvider.of<UserBloc>(context)
+                                .add(FeteOuCoursChanged(newValue: 0.5)),
                             child: FeteOuCoursRectangle(),
                             text: 'Clique pour dire si tu es plutôt fête ou cours.',
                           ),
@@ -161,6 +175,8 @@ class _UserCreationTabState extends State<UserCreationTab> {
                         informationRectangle(
                           context: context,
                           child: HidingRectangle(
+                            onTap: () => BlocProvider.of<UserBloc>(context)
+                                .add(AideOuSortirChanged(newValue: 0.5)),
                             child: AideOuSortirRectangle(),
                             text:
                                 "Clique pour dire si tu préfére un parrain qui t'aide scolairement ou avec qui sortir.",
@@ -170,6 +186,8 @@ class _UserCreationTabState extends State<UserCreationTab> {
                         informationRectangle(
                           context: context,
                           child: HidingRectangle(
+                            onTap: () => BlocProvider.of<UserBloc>(context)
+                                .add(OrganisationEvenementsChanged(newValue: 0.5)),
                             child: OrganisationEvenementsRectangle(),
                             text: 'Clique pour dire si tu aimes organiser des événements.',
                           ),
@@ -180,15 +198,21 @@ class _UserCreationTabState extends State<UserCreationTab> {
                           child: HidingRectangle(
                             child: GoutsMusicauxRectangle(),
                             text: 'Clique pour choisir tes goûts musicaux.',
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
-                            ),
+                            onTap: () {
+                              BlocProvider.of<UserBloc>(context).add(GoutMusicauxEvent(
+                                  goutMusical: null, status: GoutMusicauxEventStatus.init));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
+                              );
+                            },
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
               ),
@@ -218,7 +242,6 @@ class _UserCreationTabState extends State<UserCreationTab> {
                   size: fractions['userPicture'] * constraints.maxHeight,
                 ),
               ),
-
               Align(
                 alignment: Alignment.bottomCenter,
                 child: NextButton(
@@ -261,14 +284,24 @@ class NextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: double.maxFinite,
-      color: TinterColors.secondaryAccent,
-      child: Center(child: Text('Next')),
+    return InkWell(
+      splashColor: Colors.transparent,
+      onTap: () {
+        UserState userState = BlocProvider.of<UserBloc>(context).state;
+        if (userState is NewUserState) {
+          if (!userState.user.isAnyAttributeNull()) {
+            BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+          }
+        }
+      },
+      child: Container(
+        height: height,
+        width: double.maxFinite,
+        color: TinterColors.secondaryAccent,
+        child: Center(child: Text('Next')),
+      ),
     );
   }
-
 }
 
 class HoveringUserInformation extends StatelessWidget {
@@ -369,6 +402,101 @@ class HoveringUserPicture extends StatelessWidget {
   }
 }
 
+class PrimoEntrantRectangle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Column(
+          children: <Widget>[
+            Align(
+              alignment: AlignmentDirectional.topStart,
+              child: Text(
+                'Est-tu primo-entrant?',
+                style: TinterTextStyle.headline2,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 10.0),
+              width: double.infinity,
+              child: Container(
+                height: 60,
+                child: BlocBuilder<UserBloc, UserState>(
+                  builder: (BuildContext context, UserState userState) {
+                    if (!(userState is NewUserState)) {
+                      return CircularProgressIndicator();
+                    }
+                    if (((userState as NewUserState).user.primoEntrant) == null) {
+                      BlocProvider.of<UserBloc>(context)
+                          .add(PrimoEntrantChanged(newValue: true));
+                      return CircularProgressIndicator();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            splashColor: Colors.transparent,
+                            onTap: () => BlocProvider.of<UserBloc>(context)
+                                .add(PrimoEntrantChanged(newValue: true)),
+                            child: AnimatedOpacity(
+                              opacity: (userState as NewUserState).user.primoEntrant ? 1 : 0.5,
+                              duration: Duration(milliseconds: 300),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(5.0),
+                                    bottomLeft: Radius.circular(5.0),
+                                  ),
+                                  color: TinterColors.primaryAccent,
+                                ),
+                                width: 50,
+                                child: Center(
+                                  child: AutoSizeText('Oui'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            splashColor: Colors.transparent,
+                            onTap: () => BlocProvider.of<UserBloc>(context)
+                                .add(PrimoEntrantChanged(newValue: false)),
+                            child: AnimatedOpacity(
+                              opacity: (userState as NewUserState).user.primoEntrant ? 0.5 : 1,
+                              duration: Duration(milliseconds: 300),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(5.0),
+                                    bottomRight: Radius.circular(5.0),
+                                  ),
+                                  color: TinterColors.primaryAccent,
+                                ),
+                                width: 50,
+                                child: Center(
+                                  child: AutoSizeText('Non'),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class AssociationsRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -393,25 +521,25 @@ class AssociationsRectangle extends StatelessWidget {
                 height: 60,
                 child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
-                    if (!(userState is NewUserState)) {
-                      return CircularProgressIndicator();
+                    if (!(userState is NewUserState) || (userState as NewUserState).user.associations == null) {
+                      return Text('Loading');
                     }
                     return (userState as NewUserState).user.associations.length == 0
-                    ? Text('Aucune association sélectionnée.')
-                    : ListView.separated(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: (userState as NewUserState).user.associations.length,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          width: 5,
-                        );
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        return associationBubble(
-                            context, (userState as NewUserState).user.associations[index]);
-                      },
-                    );
+                        ? Text('Aucune association sélectionnée.')
+                        : ListView.separated(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: (userState as NewUserState).user.associations.length,
+                            separatorBuilder: (BuildContext context, int index) {
+                              return SizedBox(
+                                width: 5,
+                              );
+                            },
+                            itemBuilder: (BuildContext context, int index) {
+                              return associationBubble(context,
+                                  (userState as NewUserState).user.associations[index]);
+                            },
+                          );
                   },
                 ),
               ),
@@ -448,7 +576,15 @@ class AssociationsRectangle extends StatelessWidget {
       ),
       height: 60,
       width: 60,
-      child: Text(association.name), //TODO: change to logo
+      child: ClipOval(
+        child: Container(
+          alignment: AlignmentDirectional.centerStart,
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: association.getLogo(),
+        ),
+      ),
     );
   }
 }
@@ -474,9 +610,10 @@ class AttiranceVieAssoRectangle extends StatelessWidget {
                 return CircularProgressIndicator();
               }
               return Slider(
-                  value: (userState as NewUserState).user.attiranceVieAsso,
-                  onChanged: (value) => BlocProvider.of<UserBloc>(context)
-                      .add(AttiranceVieAssoChanged(newValue: value)));
+                value: (userState as NewUserState).user.attiranceVieAsso ?? 0.5,
+                onChanged: (value) => BlocProvider.of<UserBloc>(context)
+                    .add(AttiranceVieAssoChanged(newValue: value)),
+              );
             },
           ),
         ),
@@ -509,7 +646,7 @@ class FeteOuCoursRectangle extends StatelessWidget {
                     return CircularProgressIndicator();
                   }
                   return Slider(
-                      value: (userState as NewUserState).user.feteOuCours,
+                      value: (userState as NewUserState).user.feteOuCours ?? 0.5,
                       onChanged: (value) => BlocProvider.of<UserBloc>(context)
                           .add(FeteOuCoursChanged(newValue: value)));
                 },
@@ -547,7 +684,7 @@ class AideOuSortirRectangle extends StatelessWidget {
                     return CircularProgressIndicator();
                   }
                   return Slider(
-                      value: (userState as NewUserState).user.aideOuSortir,
+                      value: (userState as NewUserState).user.aideOuSortir ?? 0.5,
                       onChanged: (value) => BlocProvider.of<UserBloc>(context)
                           .add(AideOuSortirChanged(newValue: value)));
                 },
@@ -581,7 +718,7 @@ class OrganisationEvenementsRectangle extends StatelessWidget {
                 return CircularProgressIndicator();
               }
               return Slider(
-                  value: (userState as NewUserState).user.organisationEvenements,
+                  value: (userState as NewUserState).user.organisationEvenements ?? 0.5,
                   onChanged: (value) => BlocProvider.of<UserBloc>(context)
                       .add(OrganisationEvenementsChanged(newValue: value)));
             },
@@ -608,8 +745,8 @@ class GoutsMusicauxRectangle extends StatelessWidget {
             ),
             BlocBuilder<UserBloc, UserState>(
               builder: (BuildContext context, UserState userState) {
-                if (!(userState is NewUserState)) {
-                  return CircularProgressIndicator();
+                if (!(userState is NewUserState) || (userState as NewUserState).user.goutsMusicaux == null) {
+                  return Text('Loading');
                 }
                 return Wrap(
                   spacing: 15,
@@ -747,7 +884,10 @@ class _HidingRectangleState extends State<HidingRectangle> {
                         color: TinterColors.primary,
                       ),
                       child: Center(
-                        child: Text(widget.text, textAlign: TextAlign.center,),
+                        child: Text(
+                          widget.text,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),

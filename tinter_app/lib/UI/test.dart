@@ -1,134 +1,83 @@
-// Flutter code sample for TweenAnimationBuilder
-
-// This example shows an [IconButton] that "zooms" in when the widget first
-// builds (its size smoothly increases from 0 to 24) and whenever the button
-// is pressed, it smoothly changes its size to the new target value of either
-// 48 or 24.
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tinterapp/UI/shared_element/const.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MaterialApp(home: MyHomePage()));
 
-/// This Widget is the main application widget.
-class MyApp extends StatefulWidget {
-  static const String _title = 'Flutter Code Sample';
-
+class MyHomePage extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyAppState extends State<MyApp> {
-  double value = 100;
-  bool buildOverlay = false;
+class _MyHomePageState extends State<MyHomePage> {
+  File _image;
+  final picker = ImagePicker();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: MyApp._title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(MyApp._title)),
-        body: Center(
-          child: InkWell(onTap: onTap, child: MyStatelessWidget(value, buildOverlay)),
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      File croppedFile = await ImageCropper.cropImage(
+        sourcePath: pickedFile.path,
+        cropStyle: CropStyle.circle,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        androidUiSettings: AndroidUiSettings(
+          toolbarTitle: '',
+          toolbarColor: TinterColors.background,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: true,
+          showCropGrid: false,
         ),
-      ),
-    );
-  }
-
-  onTap() {
-    setState(() {
-      buildOverlay = !buildOverlay;
-    });
-  }
-}
-
-class MyStatelessWidget extends StatelessWidget {
-  final double value;
-  final bool buildOverlay;
-
-  MyStatelessWidget(this.value, this.buildOverlay);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TweenAnimationBuilder(
-          tween: Tween<double>(begin: 100, end: value),
-          duration: Duration(milliseconds: 300),
-          builder: (BuildContext context, value, Widget child) {
-            return Container(
-              height: value,
-              color: Colors.yellow,
-            );
-          },
+        iosUiSettings: IOSUiSettings(
+          aspectRatioLockEnabled: true,
+          minimumAspectRatio: 1.0,
         ),
-        OverLayingWidget(100, buildOverlay),
-        Container(
-          height: 100,
-          color: Colors.yellow,
-        ),
-      ],
-    );
-  }
-}
-
-class OverLayingWidget extends StatefulWidget {
-  final double height;
-  final bool buildOverlay;
-
-  OverLayingWidget(this.height, this.buildOverlay);
-
-  @override
-  _OverLayingWidgetState createState() => _OverLayingWidgetState();
-}
-
-class _OverLayingWidgetState extends State<OverLayingWidget> {
-  OverlayEntry _overlayEntry;
-
-  OverlayEntry createOverlayEntry(context) {
-    RenderBox renderBox = context.findRenderObject();
-    var size = renderBox.size;
-    var offset = renderBox.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-      builder: (context) => TweenAnimationBuilder(
-        tween: Tween<double>(begin: 0, end: 0),
-        duration: Duration(milliseconds: 300),
-        builder: (BuildContext context, value, Widget child) {
-          return Positioned(
-            left: offset.dx,
-            top: offset.dy + value,
-            width: 500,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                height: 100,
-                color: Colors.green,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.buildOverlay) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) {
-          if (_overlayEntry != null) {
-            _overlayEntry.remove();
-          }
-          _overlayEntry = createOverlayEntry(context);
-          Overlay.of(context).insert(_overlayEntry);
-        },
       );
-    } else {
-      _overlayEntry?.remove();
+
+      if (croppedFile != null) {
+        setState(() {
+          _image = File(croppedFile.path);
+        });
+      }
     }
-    return Container(
-      height: widget.height,
-      color: (widget.buildOverlay) ? Colors.white : Colors.red,
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Image Picker Example'),
+      ),
+      body: Center(
+        child: _image == null
+            ? Text('No image selected.')
+            : ClipOval(
+                child: Image.file(
+                  _image,
+                  height: 200,
+                  width: 200,
+                ),
+              ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: getImage,
+        tooltip: 'Pick Image',
+        child: Icon(Icons.add_a_photo),
+      ),
     );
   }
 }
+
+//FutureBuilder(
+//future: AuthenticationRepository.getAuthenticationToken(),
+//builder: (BuildContext context, AsyncSnapshot<Token> snapshot) {
+//return (!snapshot.hasData) ? CircularProgressIndicator() : Image.network(
+//Uri.http('10.0.2.2:4044', '/picture.png').toString(),
+//headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
+//);
+//},
+//)

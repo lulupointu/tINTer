@@ -52,13 +52,14 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
     } catch (error) {
       print(error);
       yield MatchedMatchesLoadFailureState();
+      return;
     }
     yield MatchedMatchesLoadSuccessState(matches: matches);
   }
 
   Stream<MatchedMatchesState> _mapChangeStatusMatchedMatchesEventToState(
       ChangeStatusMatchedMatchesEvent event) async* {
-    List<Match> oldMatches = (state as DiscoverMatchesLoadSuccessState).matches;
+    List<Match> oldMatches = (state as DiscoverMatchesWaitingStatusChangeState).matches;
     yield MatchedMatchesSavingNewStatusState();
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());

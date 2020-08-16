@@ -11,11 +11,11 @@ import 'package:tinterapp/Logic/models/token.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 
 class AuthenticationRepository {
-  final TinterApiClient tinterApiClient;
+  final TinterAPIClient tinterAPIClient;
   AuthenticationBloc authenticationBloc;
   final storage = new FlutterSecureStorage();
 
-  AuthenticationRepository({@required this.tinterApiClient}) : assert(tinterApiClient != null);
+  AuthenticationRepository({@required this.tinterAPIClient}) : assert(tinterAPIClient != null);
 
   void init({@required authenticationBloc}) {
     this.authenticationBloc = authenticationBloc;
@@ -24,7 +24,7 @@ class AuthenticationRepository {
   Future<Token> logIn(String login, String password) async {
     Token token;
     try {
-      token = (await tinterApiClient.logIn(login: login, password: password)).token;
+      token = (await tinterAPIClient.logIn(login: login, password: password)).token;
     } catch (error) {
       print(error);
       throw AuthenticationWrongCredentialError();
@@ -41,7 +41,7 @@ class AuthenticationRepository {
   Future<Token> authenticateWithToken(Token token) async {
     Token newToken;
     try {
-      newToken = (await tinterApiClient.authenticateWithToken(token: token)).token;
+      newToken = (await tinterAPIClient.authenticateWithToken(token: token)).token;
     } catch (error) {
       print(error);
       throw AuthenticationBadTokenError();
@@ -55,7 +55,8 @@ class AuthenticationRepository {
     return newToken;
   }
 
-  Future<Token> getAuthenticationToken() async {
+  static Future<Token> getAuthenticationToken() async {
+    final storage = new FlutterSecureStorage();
     return Token.fromJson(jsonDecode(await storage.read(key: 'authenticationToken')));
   }
 
