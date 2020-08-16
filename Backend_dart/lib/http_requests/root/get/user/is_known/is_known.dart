@@ -23,13 +23,11 @@ Future<void> isUserKnownGet(HttpRequest req, List<String> segments, String login
     User user = await usersTable.getFromLogin(login: login);
 
     await req.response
-      ..encoding = utf8
       ..statusCode = HttpStatus.ok
       ..write(json.encode({'isKnown': true}))
       ..close();
   } on EmptyResponseToDatabaseQuery {
     await req.response
-      ..encoding = utf8
       ..statusCode = HttpStatus.ok
       ..write(json.encode({'isKnown': false}))
       ..close();

@@ -13,24 +13,30 @@ Future<void> discoverMatchesGet(HttpRequest req, List<String> segments, String l
   printReceivedSegments('DiscoverMatchesGet', segments);
 
   // There should be only one segment left
-  if (segments.length != 1) {
+  if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  // This segment should follow the form
+  // This queryParameters should follow the form
   // {'offset': X, 'limit': Y} where X and Y are int
   try {
-    Map<String, dynamic> offsetAndLimit = json.decode(segments[0]);
-
-    if (!(offsetAndLimit.containsKey('limit') && offsetAndLimit.containsKey('offset'))) {
+    if (!(req.uri.queryParameters.containsKey('limit') && req.uri.queryParameters.containsKey('offset'))) {
       throw WrongFormatError(
           error: "The format should be {'offset': X, 'limit': Y}, not ${segments[0]}",
           shouldSend: true);
-    } else if (!(offsetAndLimit['limit'] is int && offsetAndLimit['limit'] is int)) {
+    } else if (!(req.uri.queryParameters['limit'] is int && req.uri.queryParameters['limit'] is int)) {
+
+    }
+
+    int limit, offset;
+    try {
+      limit = int.parse(req.uri.queryParameters['limit']);
+      offset = int.parse(req.uri.queryParameters['offset']);
+    } on FormatException {
       throw WrongFormatError(
-          error: "Limit and offset should be int. Here"
-              "    - Limit is ${offsetAndLimit['limit'].runtimeType}"
-              "    - Offset is ${offsetAndLimit['offset'].runtimeType}",
+          error: "Limit and offset should be parsable to int. Here"
+              "    - Limit is ${req.uri.queryParameters['limit']}"
+              "    - Offset is ${req.uri.queryParameters['offset']}",
           shouldSend: true);
     }
 
@@ -40,14 +46,13 @@ Future<void> discoverMatchesGet(HttpRequest req, List<String> segments, String l
     MatchesTable matchesTable = MatchesTable(database: tinterDatabase.connection);
     List<Match> matchedMatches = await matchesTable.getXDiscoverMatchesFromLogin(
       login: login,
-      limit: offsetAndLimit['limit'],
-      offset: offsetAndLimit['offset'],
+      limit: limit,
+      offset: offset,
     );
 
     await req.response
-      ..encoding = utf8
       ..statusCode = HttpStatus.ok
-      ..write(matchedMatches.map((Match match) => match.toJson()).toString())
+      ..write(json.encode(matchedMatches.map((Match match) => match.toJson()).toList()))
       ..close();
 
     await tinterDatabase.close();

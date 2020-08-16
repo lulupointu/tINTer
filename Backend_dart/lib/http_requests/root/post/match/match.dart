@@ -32,7 +32,7 @@ Future<void> matchUpdateRelationStatus(HttpRequest req, List<String> segments, S
       RelationsStatusTable(database: tinterDatabase.connection);
 
   try {
-    relationsStatusTable.update(relationStatus: relationStatus);
+    await relationsStatusTable.update(relationStatus: relationStatus);
   } on PostgreSQLException catch (error) {
     // Error 22023 is the error intentionally emitted when a
     // change from one status to another is not possible.
@@ -43,8 +43,7 @@ Future<void> matchUpdateRelationStatus(HttpRequest req, List<String> segments, S
     }
   }
 
-  req.response
-    ..encoding = utf8
+  await req.response
     ..statusCode = HttpStatus.ok
     ..close();
 

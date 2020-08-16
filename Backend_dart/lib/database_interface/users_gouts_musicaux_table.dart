@@ -16,7 +16,7 @@ class UsersGoutsMusicauxTable {
   Future<void> create() {
     final String query = """
     CREATE TABLE $name (
-      user_login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
+      user_login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login) ON DELETE CASCADE,
       gout_musical_id int NOT NULL REFERENCES ${GoutsMusicauxTable.name} (id),
       PRIMARY KEY (user_login, gout_musical_id)
     );
@@ -140,7 +140,7 @@ class UsersGoutsMusicauxTable {
   }
 
   Future<void> removeAllFromLogin({@required String login}) {
-    final String query = "DELETE FROM $name WHERE login=@login;";
+    final String query = "DELETE FROM $name WHERE user_login=@login;";
 
     return database.query(query, substitutionValues: {
       'login': login,

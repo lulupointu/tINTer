@@ -14,6 +14,7 @@ class Student extends StaticStudent {
   final double _aideOuSortir;
   final double _organisationEvenements;
   final List<String> _goutsMusicaux;
+  final String _profilePictureUrl;
 
   Student({
     @required String login,
@@ -26,13 +27,15 @@ class Student extends StaticStudent {
     @required double feteOuCours,
     @required double aideOuSortir,
     @required double organisationEvenements,
-    @required List<String> goutsMusicaux,
+    @required List<dynamic> goutsMusicaux,
+    @required profilePictureUrl,
   })  : assert(associations != null),
         assert(attiranceVieAsso != null),
         assert(feteOuCours != null),
         assert(aideOuSortir != null),
         assert(organisationEvenements != null),
         assert(goutsMusicaux != null),
+        assert(profilePictureUrl != null),
         _associations = associations
             .map((var association) =>
                 (association is Association) ? association : Association.fromJson(association))
@@ -41,7 +44,9 @@ class Student extends StaticStudent {
         _feteOuCours = feteOuCours,
         _aideOuSortir = aideOuSortir,
         _organisationEvenements = organisationEvenements,
-        _goutsMusicaux = goutsMusicaux,
+        _goutsMusicaux =
+            goutsMusicaux.map((dynamic goutMusical) => goutMusical.toString()).toList(),
+        _profilePictureUrl=profilePictureUrl,
         super(
           login: login,
           name: name,
@@ -67,34 +72,12 @@ class Student extends StaticStudent {
 
   List<String> get goutsMusicaux => _goutsMusicaux;
 
-  // Define all setter for the user info (expect name and surname
-  // which can't be changed)
-  // All information should be changed and saved to the server
-  // via the interface.
-//  set associations(Associations newAssociations) {
-//    Interface.setAssociations(newAssociations);
-//    _associations = newAssociations;
-//  }
-//  set attiranceVieAsso(double newAttiranceVieAsso) {
-//    Interface.setAttiranceVieAsso(newAttiranceVieAsso);
-//    _attiranceVieAsso = newAttiranceVieAsso;
-//  }
-//  set feteOuCours(double newFeteOuCours) {
-//    Interface.setFeteOuCours(newFeteOuCours);
-//    _feteOuCours = newFeteOuCours;
-//  }
-//  set aideOuSortir(double newAideOuSortir) {
-//    Interface.setAideOuSortir(newAideOuSortir);
-//    _aideOuSortir = newAideOuSortir;
-//  }
-//  set organisationEvenements(double newOrganisationEvenements) {
-//    Interface.setOrganisationEvenements(newOrganisationEvenements);
-//    _organisationEvenements = newOrganisationEvenements;
-//  }
-//  set goutsMusicaux(GoutsMusicaux newGoutsMusicaux) {
-//    Interface.setGoutsMusicaux(newGoutsMusicaux.get);
-//    _goutsMusicaux = newGoutsMusicaux;
-//  }
+  String get profilePictureUrl => _profilePictureUrl;
+
+
+  bool isAnyAttributeNull() {
+    return props.map((Object prop) => prop == null).contains(true);
+  }
 
   @override
   List<Object> get props => [

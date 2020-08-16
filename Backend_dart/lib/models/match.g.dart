@@ -21,6 +21,7 @@ Match _$MatchFromJson(Map<String, dynamic> json) {
     aideOuSortir: json['aideOuSortir'],
     organisationEvenements: json['organisationEvenements'],
     goutsMusicaux: json['goutsMusicaux'],
+    profilePictureUrl: json['profilePictureUrl'],
   );
 }
 
@@ -36,6 +37,7 @@ Map<String, dynamic> _$MatchToJson(Match instance) => <String, dynamic>{
       'aideOuSortir': instance.aideOuSortir,
       'organisationEvenements': instance.organisationEvenements,
       'goutsMusicaux': instance.goutsMusicaux,
+      'profilePictureUrl': instance.profilePictureUrl,
       'status': _$MatchStatusEnumMap[instance.status],
       'score': instance.score,
     };

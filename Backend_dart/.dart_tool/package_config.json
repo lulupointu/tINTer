@@ -14,6 +14,12 @@
       "languageVersion": "2.7"
     },
     {
+      "name": "archive",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/archive-2.0.13",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "args",
       "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/args-1.6.0",
       "packageUri": "lib/",
@@ -186,6 +192,12 @@
       "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/http_parser-3.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.3"
+    },
+    {
+      "name": "image",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/image-2.1.13",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
     },
     {
       "name": "io",
@@ -386,6 +398,12 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "xml",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/xml-3.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.6"
+    },
+    {
       "name": "yaml",
       "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/yaml-2.2.1",
       "packageUri": "lib/",
@@ -398,7 +416,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-08-12T09:40:38.490847Z",
+  "generated": "2020-08-15T11:54:57.143473Z",
   "generator": "pub",
   "generatorVersion": "2.7.2"
 }

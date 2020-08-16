@@ -17,7 +17,7 @@ class UsersAssociationsTable {
   Future<void> create() {
     final String query = """
     CREATE TABLE $name (
-      user_login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
+      user_login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login) ON DELETE CASCADE,
       association_id int NOT NULL REFERENCES associations (id),
       PRIMARY KEY (user_login, association_id)
     );
@@ -37,7 +37,7 @@ class UsersAssociationsTable {
   Future<void> addFromLogin(
       {@required String login, @required Association association}) async {
     // get the association id from the association name
-    int associationId = await associationsTable.getIdFromName(association: association);
+    int associationId = await associationsTable.getIdFromName(associationName: association.name);
 
     final String query = "INSERT INTO $name VALUES (@login, @associationId);";
 
@@ -143,7 +143,7 @@ class UsersAssociationsTable {
   }
 
   Future<void> removeAllFromLogin({@required String login}) {
-    final String query = "DELETE FROM $name WHERE login=@login;";
+    final String query = "DELETE FROM $name WHERE user_login=@login;";
 
     return database.query(query, substitutionValues: {
       'login': login,

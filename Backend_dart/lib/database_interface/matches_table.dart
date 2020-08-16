@@ -65,11 +65,11 @@ class MatchesTable {
 
   Future<List<Match>> getMatchedMatchesFromLogin({@required String login}) async {
     String getDiscoverMatchesQuery =
-        "SELECT ${RelationsStatusTable.name}.\"otherLogin\", score, status FROM ${RelationsScoreTable.name} JOIN "
+        "SELECT ${RelationsStatusTable.name}.\"otherLogin\", score, status, \"otherStatus\" FROM ${RelationsScoreTable.name} JOIN "
         "(SELECT \"myRelationStatus\".login, \"myRelationStatus\".\"otherLogin\", \"myRelationStatus\".status, \"otherRelationStatus\".status AS \"otherStatus\" "
         "FROM "
         "(SELECT * FROM ${RelationsStatusTable.name} "
-        "WHERE login=@login AND status<>'none' "
+        "WHERE login=@login AND status<>'none' AND status<>'ignored' "
         ") AS \"myRelationStatus\" "
         "JOIN ${RelationsStatusTable.name} AS \"otherRelationStatus\" "
         "ON \"myRelationStatus\".login = \"otherRelationStatus\".\"otherLogin\" AND \"myRelationStatus\".\"otherLogin\" = \"otherRelationStatus\".login "
@@ -80,6 +80,7 @@ class MatchesTable {
     return database.mappedResultsQuery(getDiscoverMatchesQuery, substitutionValues: {
       'login': login,
     }).then((sqlResults) {
+      print(sqlResults);
       return usersTable
           .getMultipleFromLogin(
               logins: sqlResults

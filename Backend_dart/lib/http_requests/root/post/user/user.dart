@@ -69,7 +69,6 @@ Future<void> userUpdate(HttpRequest req, List<String> segments, String login) as
   ]);
 
   await req.response
-    ..encoding = utf8
     ..statusCode = HttpStatus.ok
     ..close();
 
@@ -106,11 +105,15 @@ Future<void> userCreate(HttpRequest req, List<String> segments, String login) as
       statusAdd(user, tinterDatabase),
     ]);
   } catch (error) {
+    await Future.wait([
+      userRemove(user.login, tinterDatabase),
+      scoresRemove(user.login, tinterDatabase),
+      statusRemove(user.login, tinterDatabase),
+    ]);
     throw error;
   }
 
   await req.response
-    ..encoding = utf8
     ..statusCode = HttpStatus.ok
     ..close();
 
@@ -169,4 +172,22 @@ Future<void> statusAdd(User user, TinterDatabase tinterDatabase) async {
           login: otherLogin, otherLogin: user.login, status: EnumRelationStatus.none)
     ]
   ]);
+}
+
+Future<void> userRemove(String login, TinterDatabase tinterDatabase) {
+  UsersTable usersTable = UsersTable(database: tinterDatabase.connection);
+
+  return usersTable.remove(login: login);
+}
+
+Future<void> scoresRemove(String login, TinterDatabase tinterDatabase) async {
+  RelationsScoreTable relationsScoreTable =
+      RelationsScoreTable(database: tinterDatabase.connection);
+  return relationsScoreTable.removeAllFromLogin(login: login);
+}
+
+Future<void> statusRemove(String login, TinterDatabase tinterDatabase) async {
+  RelationsStatusTable relationsStatusTable =
+      RelationsStatusTable(database: tinterDatabase.connection);
+  return relationsStatusTable.removeLogin(login: login);
 }

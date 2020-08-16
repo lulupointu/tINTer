@@ -24,7 +24,6 @@ Future<void> userInfoGet(HttpRequest req, List<String> segments, String login) a
     User user = await usersTable.getFromLogin(login: login);
 
     await req.response
-    ..encoding = utf8
     ..statusCode = HttpStatus.ok
     ..write(json.encode(user.toJson()))
     ..close();

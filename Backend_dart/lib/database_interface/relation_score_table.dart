@@ -52,8 +52,8 @@ class RelationsScoreTable {
   Future<void> create() {
     final String query = """
     CREATE TABLE $name (
-      loginA Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
-      loginB Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
+      loginA Text NOT NULL REFERENCES ${StaticProfileTable.name} (login) ON DELETE CASCADE,
+      loginB Text NOT NULL REFERENCES ${StaticProfileTable.name} (login) ON DELETE CASCADE,
       score INTEGER NOT NULL CHECK (score >= 0 AND score <= 100),
       PRIMARY KEY (loginA, loginB),
       CHECK (loginA < loginB)

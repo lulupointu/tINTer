@@ -17,6 +17,8 @@ Future<void> userGet(HttpRequest req, List<String> segments, String login) async
       return staticUserInfoGet(req, segments, login);
     case 'info':
       return userInfoGet(req, segments, login);
+//    case 'profilePicture':
+//      return userProfilePictureGet(req, segments, login);
     default:
       throw UnknownRequestedPathError(req.uri.path);
   }

@@ -6,66 +6,248 @@ part 'association.g.dart';
 class Association {
   final String name;
   final String description;
-  final String logoUrl;
 
-  Association({this.name, this.description, this.logoUrl});
+  Association({this.name, this.description});
 
   factory Association.fromJson(Map<String, dynamic> json) => _$AssociationFromJson(json);
 
   Map<String, dynamic> toJson() => _$AssociationToJson(this);
 
-  String toString() => '(Association) name: $name, description: $description, logoUrl: $logoUrl';
+  String toString() =>
+      '(Association) name: $name, description: $description';
 }
 
-final List<Association> allAssociations = [
+List<Association> allAssociations = [
   Association(
-    name: 'test1',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/1',
+      name:"AbsINThe",
+      description:"C'est l'association AbsINThe venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test2',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/2',
+      name:"AfricanIT",
+      description:"C'est l'association AfricanIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test3',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/3',
+      name:"Agora",
+      description:"C'est l'association Agora venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test4',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/4',
+      name:"AIESEC",
+      description:"C'est l'association AIESEC venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test5',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/5',
+      name:"AnimINT",
+      description:"C'est l'association AnimINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test6',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/6',
+      name:"Aparte",
+      description:"C'est l'association Aparte venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test7',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/7',
+      name:"ASINT",
+      description:"C'est l'association ASINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test8',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/8',
+      name:"Asphalte",
+      description:"C'est l'association Asphalte venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test9',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/9',
+      name:"Band'a michel",
+      description:"C'est l'association michel venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
   Association(
-    name: 'test10',
-    description: 'Ceci est la première association, elle est vraiment nice viendez tous ici, on s\'amuse comme des fous.',
-    logoUrl: 'none/10',
+      name:"BDA",
+      description:"C'est l'association BDA venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Belly Dance",
+      description:"C'est l'association Dance venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"BollyINT",
+      description:"C'est l'association BollyINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"BPM",
+      description:"C'est l'association BPM venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"BricolINT",
+      description:"C'est l'association BricolINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Bstyle",
+      description:"C'est l'association Bstyle venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"CELL",
+      description:"C'est l'association CELL venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Cine",
+      description:"C'est l'association Cine venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Club Zik",
+      description:"C'est l'association Zik venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"CookIT",
+      description:"C'est l'association CookIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Déclic",
+      description:"C'est l'association Déclic venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"DolphINT",
+      description:"C'est l'association DolphINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Emotys",
+      description:"C'est l'association Emotys venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Epicurieux",
+      description:"C'est l'association Epicurieux venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"EquIT",
+      description:"C'est l'association EquIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Evryone",
+      description:"C'est l'association Evryone venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"FIMTech",
+      description:"C'est l'association FIMTech venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Forum",
+      description:"C'est l'association Forum venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"GameINT",
+      description:"C'est l'association GameINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Golf",
+      description:"C'est l'association Golf venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"HackademINT",
+      description:"C'est l'association HackademINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Heforshe",
+      description:"C'est l'association Heforshe venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"INacT",
+      description:"C'est l'association INacT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"INTech",
+      description:"C'est l'association INTech venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Interlude",
+      description:"C'est l'association Interlude venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Intervenir",
+      description:"C'est l'association Intervenir venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"INTimes",
+      description:"C'est l'association INTimes venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"INTv",
+      description:"C'est l'association INTv venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"KpopIT",
+      description:"C'est l'association KpopIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"KryptoSphère",
+      description:"C'est l'association KryptoSphère venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"LPE",
+      description:"C'est l'association LPE venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"MINeT",
+      description:"C'est l'association MINeT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Moov'INT",
+      description:"C'est l'association Moov'INT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"MuslimINT",
+      description:"C'est l'association MuslimINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Nihao",
+      description:"C'est l'association Nihao venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"PaintIT",
+      description:"C'est l'association PaintIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Pomp'int",
+      description:"C'est l'association Pomp'int venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Promo2Tel",
+      description:"C'est l'association Promo2Tel venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Rock'INT",
+      description:"C'est l'association Rock'INT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Saint Espr'IT",
+      description:"C'est l'association Espr'IT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"SalsaINT",
+      description:"C'est l'association SalsaINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Shalom",
+      description:"C'est l'association Shalom venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Sing'INT",
+      description:"C'est l'association Sing'INT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Spades",
+      description:"C'est l'association Spades venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Sprint",
+      description:"C'est l'association Sprint venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"TrendINT",
+      description:"C'est l'association TrendINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Univert",
+      description:"C'est l'association Univert venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Welcom",
+      description:"C'est l'association Welcom venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
+  ),
+  Association(
+      name:"Xtreme",
+      description:"C'est l'association Xtreme venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"
   ),
 ];

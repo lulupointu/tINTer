@@ -80,7 +80,7 @@ class SessionsTable {
     final String createTableQuery = """
     CREATE TABLE $name (
       token Text PRIMARY KEY,
-      login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
+      login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login) ON DELETE CASCADE,
       \"creationDate\" Text NOT NULL,
       \"isValid\" Boolean NOT NULL
     );

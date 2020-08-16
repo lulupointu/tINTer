@@ -61,8 +61,8 @@ class RelationsStatusTable {
     """;
     final String createTableQuery = """
     CREATE TABLE $name (
-      login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
-      \"otherLogin\" Text NOT NULL REFERENCES ${StaticProfileTable.name} (login),
+      login Text NOT NULL REFERENCES ${StaticProfileTable.name} (login) ON DELETE CASCADE,
+      \"otherLogin\" Text NOT NULL REFERENCES ${StaticProfileTable.name} (login) ON DELETE CASCADE,
       status Text NOT NULL,
       PRIMARY KEY (login, \"otherLogin\"),
       CHECK (login <> \"otherLogin\")

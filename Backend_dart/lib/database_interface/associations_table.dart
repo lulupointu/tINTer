@@ -15,8 +15,7 @@ class AssociationsTable {
     CREATE TABLE $name (
       id SERIAL PRIMARY KEY,
       name Text UNIQUE NOT NULL,
-      description Text NOT NULL,
-      \"logoUrl\" Text UNIQUE NOT NULL
+      description Text NOT NULL
     );
     """;
 
@@ -26,11 +25,10 @@ class AssociationsTable {
   Future<void> populate() {
     var queries = <Future>[
       for (Association association in allAssociations)
-        database.query("INSERT INTO $name VALUES (DEFAULT, @name, @description, @logoUrl);",
+        database.query("INSERT INTO $name VALUES (DEFAULT, @name, @description);",
             substitutionValues: {
               'name': association.name,
               'description': association.description,
-              'logoUrl': association.logoUrl
             })
     ];
 
@@ -46,12 +44,11 @@ class AssociationsTable {
   }
 
   Future<void> add({@required Association association}) async {
-    final String query = "INSERT INTO $name VALUES (DEFAULT, @name, @description, @logoUrl);";
+    final String query = "INSERT INTO $name VALUES (DEFAULT, @name, @description);";
 
     return database.query(query, substitutionValues: {
       'name': association.name,
       'description': association.description,
-      'logoUrl': association.logoUrl
     });
   }
 
@@ -74,25 +71,24 @@ class AssociationsTable {
   Future<void> update(
       {@required Association oldAssociation, @required Association association}) async {
     final String query =
-        "UPDATE $name SET name=@name, description=@description, \"logoUrl\"=@logoUrl WHERE name=@old_name;";
+        "UPDATE $name SET name=@name, description=@description WHERE name=@old_name;";
 
     return database.query(query, substitutionValues: {
       'name': association.name,
       'description': association.description,
-      'logoUrl': association.logoUrl,
       'old_name': oldAssociation.name,
     });
   }
 
   Future<void> updateMultiple({@required List<Association> associations}) async {
     final String query =
-        "UPDATE $name AS old SET name=new.name, description=new.description, \"logoUrl\"=\"newLogoUrl\" "
+        "UPDATE $name AS old SET name=new.name, description=new.description "
             "FROM (VALUES " +
             [
               for (int index = 0; index < associations.length; index++)
                 "(@name$index, @description$index, @logoUrl$index)"
             ].join(',') +
-            ") AS new(name, description, \"newLogoUrl\")"
+            ") AS new(name, description)"
                 "WHERE old.name=new.name;";
 
     return database.query(query, substitutionValues: {
@@ -149,20 +145,20 @@ class AssociationsTable {
     });
   }
 
-  Future<int> getIdFromName({@required Association association}) async {
+  Future<int> getIdFromName({@required String associationName}) async {
     final String query = "SELECT id FROM $name WHERE name=@name;";
 
     return database.mappedResultsQuery(query, substitutionValues: {
-      'name': association.name,
+      'name': associationName,
     }).then((sqlResults) {
       if (sqlResults.length > 1) {
         throw InvalidResponseToDatabaseQuery(
             error:
-            'One association requested (${association.name} but got ${sqlResults.length}');
+            'One association requested (${associationName} but got ${sqlResults.length}');
       } else if (sqlResults.length == 0) {
         throw EmptyResponseToDatabaseQuery(
             error:
-            'One association requested (${association.name} but got ${sqlResults.length}');
+            'One association requested (${associationName} but got ${sqlResults.length}');
       }
 
       return sqlResults[0][name]['id'];
@@ -268,7 +264,6 @@ Future<void> main() async {
   final newAssociation = Association.fromJson({
     'name': allAssociations[0].name,
     'description': 'brand new DESCRIPTION !',
-    'logoUrl': allAssociations[0].logoUrl,
   });
   await associationTable.update(
       oldAssociation: allAssociations[0], association: newAssociation);
@@ -276,12 +271,10 @@ Future<void> main() async {
   final newAssociation1 = Association.fromJson({
     'name': allAssociations[1].name,
     'description': 'brand new DESCRIPTION 1 !',
-    'logoUrl': allAssociations[1].logoUrl,
   });
   final newAssociation2 = Association.fromJson({
     'name': allAssociations[2].name,
-    'description': 'brand new DESCRIPTION 2 !',
-    'logoUrl': allAssociations[2].logoUrl,
+    'description': 'brand new DESCRIPTION 2 !'
   });
   await associationTable.updateMultiple(associations: [newAssociation1, newAssociation2]);
   print(await associationTable.getFromName(association: allAssociations[0]));

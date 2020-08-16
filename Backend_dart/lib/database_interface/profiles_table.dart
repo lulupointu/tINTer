@@ -97,7 +97,7 @@ class UsersTable {
   Future<void> create() {
     final String query = """
     CREATE TABLE $name (
-      login Text PRIMARY KEY REFERENCES ${StaticProfileTable.name} (login),
+      login Text PRIMARY KEY REFERENCES ${StaticProfileTable.name} (login) ON DELETE CASCADE,
       \"attiranceVieAsso\" DOUBLE PRECISION NOT NULL CHECK (\"attiranceVieAsso\" >= 0 AND \"attiranceVieAsso\" <= 1),
       \"feteOuCours\" DOUBLE PRECISION NOT NULL CHECK (\"feteOuCours\" >= 0 AND \"feteOuCours\" <= 1),
       \"aideOuSortir\" DOUBLE PRECISION NOT NULL CHECK (\"aideOuSortir\" >= 0 AND \"aideOuSortir\" <= 1),
@@ -266,8 +266,8 @@ class UsersTable {
     final List<Future> queries = [
       database.mappedResultsQuery(
           "SELECT * FROM $name JOIN ${StaticProfileTable.name} "
-              "ON $name.login=${StaticProfileTable.name}.login "
-              "WHERE $name.login!=@login;",
+          "ON $name.login=${StaticProfileTable.name}.login "
+          "WHERE $name.login!=@login;",
           substitutionValues: {
             'login': login,
           }),
@@ -277,7 +277,7 @@ class UsersTable {
 
     return Future.wait(queries).then((queriesResults) {
       return {
-        for (int index = 0; index < queriesResults.length; index++)
+        for (int index = 0; index < queriesResults[0].length; index++)
           queriesResults[0][index][name]['login']: User.fromJson({
             ...queriesResults[0][index][name],
             ...queriesResults[0][index][StaticProfileTable.name],
@@ -290,12 +290,16 @@ class UsersTable {
     });
   }
 
-  Future<void> remove({@required Association association}) async {
-    final String query = "DELETE FROM $name WHERE name=@name;";
+  Future<void> remove({@required String login}) async {
+    final String query = "DELETE FROM $name WHERE login=@login;";
 
-    return database.query(query, substitutionValues: {
-      'name': association.name,
-    });
+    return Future.wait([
+      usersGoutsMusicauxTable.removeAllFromLogin(login: login),
+      usersAssociationsTable.removeAllFromLogin(login: login),
+      database.query(query, substitutionValues: {
+        'login': login,
+      }),
+    ]);
   }
 
   Future<void> removeMultiple({@required List<Association> associations}) async {

@@ -6,6 +6,7 @@ dependencies:
   json_annotation:
   equatable: ^1.2.3
   dartdap: ^0.4.5
+  image:
 
 
 
