@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
 import 'package:tinterapp/UI/shared_element/const.dart';
+import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
 
 main() {
   runApp(
@@ -434,9 +436,23 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Icon(Icons.favorite_border),
+                      child: Container(
+                        padding: EdgeInsets.only(bottom: 10),
+                        width: double.maxFinite,
+                        child: FlareActor(
+                          'assets/splash_screen/tinter_logo_splash_screen.flr',
+                          controller: SplashScreenFlareController(),
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
                     ),
-                    Text('Developpé par Lucas Delsol.'),
+                    Container(
+                      padding: EdgeInsets.only(bottom: 5),
+                      child: AutoSizeText(
+                        'Developpé par Lucas Delsol',
+                        style: TinterTextStyle.developedBy,
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -464,14 +480,14 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
     }
 
     print('Send request with login: ' +
-        _loginController.text +
+        _loginController.text.toLowerCase().replaceAll(' ', '').replaceAll(' ', '') +
         ' | password: ' +
-        _passwordController.text);
+        _passwordController.text.replaceAll(' ', '').replaceAll(' ', ''));
 
     authenticationBloc.add(
       AuthenticationLoggedRequestSentEvent(
-        login: _loginController.text.replaceAll(' ', ''),
-        password: _passwordController.text.replaceAll(' ', ''),
+        login: _loginController.text.toLowerCase().replaceAll(' ', '').replaceAll(' ', ''),
+        password: _passwordController.text.replaceAll(' ', '').replaceAll(' ', ''),
       ),
     );
   }

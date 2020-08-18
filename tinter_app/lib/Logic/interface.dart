@@ -681,7 +681,7 @@
 //class Interface {
 //  static const SESSION_COOKIE_NAME = "Session_cookie";
 //  static String SESSION_COOKIE;
-//  static const SERVER_IP = 'ws://10.0.2.2:8080';
+//  static const SERVER_IP = 'ws://86.193.242.149:8080';
 //  static IOWebSocketChannel webSocketChannel;
 //  static Stream webSocketStream = webSocketChannel.stream;
 //  // Don't forget to close : webSocketChannel.sink.close();

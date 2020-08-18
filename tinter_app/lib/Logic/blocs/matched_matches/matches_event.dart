@@ -10,22 +10,52 @@ abstract class MatchedMatchesEvent extends Equatable {
 
 class MatchedMatchesRequestedEvent extends MatchedMatchesEvent {}
 
-abstract class MatchedMatchesLoadInSuccessEvent extends MatchedMatchesEvent {
-  final Match match;
+//abstract class MatchedMatchesLoadInSuccessEvent extends MatchedMatchesEvent {
+//
+//  const MatchedMatchesLoadInSuccessEvent({@required this.match});
+//
+//  @override
+//  List<Object> get props => [match];
+//}
 
-  const MatchedMatchesLoadInSuccessEvent({@required this.match});
+abstract class ChangeStatusMatchedMatchesEvent extends MatchedMatchesEvent {
+  final Match match;
+  final EnumRelationStatus enumRelationStatus;
+  final MatchStatus matchStatus;
+
+  const ChangeStatusMatchedMatchesEvent({
+    @required this.match,
+    @required this.enumRelationStatus,
+    @required this.matchStatus,
+  });
 
   @override
-  List<Object> get props => [match];
-
+  List<Object> get props => [match, enumRelationStatus];
 }
 
-class ChangeStatusMatchedMatchesEvent extends MatchedMatchesLoadInSuccessEvent {
-  final MatchStatus newStatus;
-  final EnumRelationStatus enumRelationStatus;
+class AskParrainEvent extends ChangeStatusMatchedMatchesEvent {
+  const AskParrainEvent({@required Match match})
+      : super(
+          match: match,
+          enumRelationStatus: EnumRelationStatus.askedParrain,
+          matchStatus: MatchStatus.youAskedParrain,
+        );
+}
 
-  const ChangeStatusMatchedMatchesEvent({@required match, @required this.newStatus, @required this.enumRelationStatus}):super(match: match);
+class AcceptParrainEvent extends ChangeStatusMatchedMatchesEvent {
+  const AcceptParrainEvent({@required Match match})
+      : super(
+          match: match,
+          enumRelationStatus: EnumRelationStatus.acceptedParrain,
+          matchStatus: MatchStatus.parrainAccepted,
+        );
+}
 
-  @override
-  List<Object> get props => [match, newStatus];
+class RefuseParrainEvent extends ChangeStatusMatchedMatchesEvent {
+  const RefuseParrainEvent({@required Match match})
+      : super(
+          match: match,
+          enumRelationStatus: EnumRelationStatus.refusedParrain,
+          matchStatus: MatchStatus.parrainYouRefused,
+        );
 }

@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //future: AuthenticationRepository.getAuthenticationToken(),
 //builder: (BuildContext context, AsyncSnapshot<Token> snapshot) {
 //return (!snapshot.hasData) ? CircularProgressIndicator() : Image.network(
-//Uri.http('10.0.2.2:4044', '/picture.png').toString(),
+//Uri.http('86.193.242.149:4044', '/picture.png').toString(),
 //headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
 //);
 //},

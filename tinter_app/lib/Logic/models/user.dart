@@ -18,7 +18,7 @@ class User extends Student {
     @required aideOuSortir,
     @required organisationEvenements,
     @required goutsMusicaux,
-    profilePictureUrl,
+    profilePicturePath,
   }) : super(
           login: login,
           name: name,
@@ -31,7 +31,7 @@ class User extends Student {
           aideOuSortir: aideOuSortir,
           organisationEvenements: organisationEvenements,
           goutsMusicaux: goutsMusicaux,
-          profilePictureUrl: profilePictureUrl,
+          profilePicturePath: profilePicturePath,
         );
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

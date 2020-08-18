@@ -16,6 +16,11 @@ abstract class AuthenticationError implements Exception {
   String getMessage();
 }
 
+class AuthenticationBadConnexionError extends AuthenticationError {
+  @override
+  String getMessage() => 'Impossible de se connecter au serveur. Es-tu bien connecté?';
+}
+
 class AuthenticationWrongCredentialError extends AuthenticationError {
   @override
   String getMessage() => 'Login ou mot de passe incorrect.';
@@ -77,7 +82,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     try {
       token = await authenticationRepository.logIn(event.login, event.password);
     } on AuthenticationError catch (error) {
-      print('CatchError');
       add(AuthenticationLoggedFailedEvent(error: error));
       return;
     }

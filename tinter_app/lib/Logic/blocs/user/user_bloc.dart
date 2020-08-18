@@ -25,9 +25,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       case UserInitEvent:
         yield* _mapUserInitEventToState();
         return;
-      case UserNewProfileEvent:
-        yield* _mapUserNewProfileEventToState(event);
-        return;
+//      case UserNewProfileEvent:
+//        yield* _mapUserNewProfileEventToState(event);
+//        return;
       case UserRequestEvent:
         yield* _mapUserRequestEventToState();
         return;
@@ -39,10 +39,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           yield* _mapUserSaveEventToState((state as KnownUserUnsavedState).user);
         } else if (state is NewUserCreatingProfileState) {
           yield* _mapNewUserSaveEventToState((state as NewUserCreatingProfileState).user);
-        }else
-        {
-          _addError('Saved was call while state is not UnsavedUserState');
+        } else {
+          _addError(
+              'Saved was call while state was ${state.runtimeType}. Whereas it should be either KnownUserUnsavedState or NewUserCreatingProfileState');
         }
+        return;
+      case UserUndoUnsavedChangesEvent:
+        if (state is KnownUserUnsavedState) {
+          yield* _mapUserUndoUnsavedChangesEventToState();
+        } else {
+          _addError(
+              'Saved was call while state was ${state.runtimeType}. Whereas it should be KnownUserUnsavedState');
+        }
+
         return;
       case PrimoEntrantChanged:
         if (state is UserLoadSuccessState) {
@@ -100,6 +109,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           _addError('GoutMusicauxEvent received while state is not UserLoadSuccessState');
         }
         return;
+      case ProfilePicturePathChangedEvent:
+        if (state is UserLoadSuccessState) {
+          yield (state as UserLoadSuccessState)
+              .withPictureProfileChanged((event as ProfilePicturePathChangedEvent).newPath);
+        } else {
+          _addError(
+              'ProfilePicturePathChangedEvent received while state is not UserLoadSuccessState');
+        }
+        return;
     }
 
     print('event: ' + event.toString() + ' no treated');
@@ -111,7 +129,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     User user;
     try {
       user = await userRepository.getUser();
-    } on UnknownUserError catch (error) {
+    } on UnknownUserError catch (_) {
       try {
         StaticStudent staticUser = await userRepository.getBasicUserInfo();
         yield NewUserCreatingProfileState(
@@ -131,23 +149,23 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     yield KnownUserSavedState(user: user);
   }
 
-  // TODO: REMOVE THIS
-  Stream<UserState> _mapUserNewProfileEventToState(UserNewProfileEvent event) async* {
-    final User user = User(
-      login: event.staticStudent.login,
-      name: event.staticStudent.name,
-      surname: event.staticStudent.surname,
-      email: event.staticStudent.email,
-      primoEntrant: event.staticStudent.primoEntrant,
-      associations: [],
-      attiranceVieAsso: 0.5,
-      feteOuCours: 0.5,
-      aideOuSortir: 0.5,
-      organisationEvenements: 0.5,
-      goutsMusicaux: [],
-    );
-    yield KnownUserUnsavedState(user: user);
-  }
+//  // TODO: REMOVE THIS
+//  Stream<UserState> _mapUserNewProfileEventToState(UserNewProfileEvent event) async* {
+//    final User user = User(
+//      login: event.staticStudent.login,
+//      name: event.staticStudent.name,
+//      surname: event.staticStudent.surname,
+//      email: event.staticStudent.email,
+//      primoEntrant: event.staticStudent.primoEntrant,
+//      associations: [],
+//      attiranceVieAsso: 0.5,
+//      feteOuCours: 0.5,
+//      aideOuSortir: 0.5,
+//      organisationEvenements: 0.5,
+//      goutsMusicaux: [],
+//    );
+//    yield KnownUserUnsavedState(user: user);
+//  }
 
   Stream<UserState> _mapUserRequestEventToState() async* {
     yield UserInitializingState();
@@ -178,7 +196,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     yield KnownUserSavedState(user: user);
   }
 
-
   Stream<UserState> _mapNewUserSaveEventToState(user) async* {
     yield NewUserSavingState(user: user);
     try {
@@ -188,24 +205,65 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       return;
     }
 
-    yield KnownUserSavedState(user: user);
+    imageCache.clear();
+
+    // We create a new user manually in order to put the profilePicturePath to null
+    yield KnownUserSavedState(
+      user: User(
+        login: (state as NewUserState).user.login,
+        name: (state as NewUserState).user.name,
+        surname: (state as NewUserState).user.surname,
+        email: (state as NewUserState).user.email,
+        primoEntrant: (state as NewUserState).user.primoEntrant,
+        associations: (state as NewUserState).user.associations,
+        attiranceVieAsso: (state as NewUserState).user.attiranceVieAsso,
+        feteOuCours: (state as NewUserState).user.feteOuCours,
+        aideOuSortir: (state as NewUserState).user.aideOuSortir,
+        organisationEvenements: (state as NewUserState).user.organisationEvenements,
+        goutsMusicaux: (state as NewUserState).user.goutsMusicaux,
+      ),
+    );
   }
 
-  Stream<UserState> _mapUserSaveEventToState(user) async* {
-    yield KnownUserSavingState(user: user);
+  Stream<UserState> _mapUserSaveEventToState(User user) async* {
+
+    yield KnownUserSavingState(user: user, oldSavedUser: (state as KnownUserUnsavedState).oldSavedUser);
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield UserInitialState();
       return;
     }
+
     try {
-      userRepository.updateUser(user: user);
+      await userRepository.updateUser(user: user);
     } catch (error) {
-      yield KnownUserSavingFailedState(user: user);
+      yield KnownUserSavingFailedState(user: user, oldSavedUser: (state as KnownUserUnsavedState).oldSavedUser);
       return;
     }
 
-    yield KnownUserSavedState(user: user);
+    imageCache.clear();
+
+    // We create a new user manually in order to put the profilePicturePath to null
+    yield KnownUserSavedState(
+      user: User(
+        login: (state as KnownUserUnsavedState).user.login,
+        name: (state as KnownUserUnsavedState).user.name,
+        surname: (state as KnownUserUnsavedState).user.surname,
+        email: (state as KnownUserUnsavedState).user.email,
+        primoEntrant: (state as KnownUserUnsavedState).user.primoEntrant,
+        associations: (state as KnownUserUnsavedState).user.associations,
+        attiranceVieAsso: (state as KnownUserUnsavedState).user.attiranceVieAsso,
+        feteOuCours: (state as KnownUserUnsavedState).user.feteOuCours,
+        aideOuSortir: (state as KnownUserUnsavedState).user.aideOuSortir,
+        organisationEvenements: (state as KnownUserUnsavedState).user.organisationEvenements,
+        goutsMusicaux: (state as KnownUserUnsavedState).user.goutsMusicaux,
+      ),
+    );
+  }
+
+
+  Stream<UserState> _mapUserUndoUnsavedChangesEventToState() async* {
+    yield KnownUserSavedState(user: (state as KnownUserUnsavedState).oldSavedUser);
   }
 
   Stream<UserState> _mapAssociationEventToState(AssociationEvent event) async* {

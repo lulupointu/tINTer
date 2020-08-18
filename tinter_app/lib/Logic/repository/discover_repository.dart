@@ -20,6 +20,8 @@ class DiscoverRepository {
     try {
       token = await AuthenticationRepository.getAuthenticationToken();
     } catch (error) {
+      await authenticationRepository.checkIfNewToken(
+          oldToken: token, newToken: error.token);
       throw error;
     }
 

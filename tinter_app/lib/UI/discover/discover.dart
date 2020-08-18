@@ -50,55 +50,48 @@ class DiscoverTab extends StatelessWidget {
     // Update to last information
     BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchesRequestedEvent());
 
-    return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-      builder: (BuildContext context, DiscoverMatchesState state) {
-        if (!(state is DiscoverMatchesLoadSuccessState)) {
-          return CircularProgressIndicator();
-        }
-        return LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return Stack(
-              children: [
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 55,
-                      child: MatchInformation(),
-                    ),
-                    Expanded(
-                      flex: 45,
-                      child: DiscoverRight(constraints.maxHeight),
-                    ),
-                  ],
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Stack(
+          children: [
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 55,
+                  child: MatchInformation(),
                 ),
-                Positioned(
-                  left: constraints.maxWidth * 55 / 100,
-                  child: SvgPicture.asset(
-                    'assets/discover/DiscoverBackground.svg',
-                    color: TinterColors.background,
-                    height: constraints.maxHeight,
-                  ),
-                ),
-                Positioned(
-                  left: constraints.maxWidth * 55 / 100,
-                  child: SvgPicture.asset(
-                    'assets/discover/DiscoverTop.svg',
-                    color: TinterColors.primaryAccent,
-                    height: constraints.maxHeight / 2,
-                  ),
-                ),
-                Positioned(
-                  left: constraints.maxWidth * 55 / 100,
-                  bottom: 0,
-                  child: SvgPicture.asset(
-                    'assets/discover/DiscoverBottom.svg',
-                    color: TinterColors.primaryAccent,
-                    height: constraints.maxHeight / 2,
-                  ),
+                Expanded(
+                  flex: 45,
+                  child: DiscoverRight(constraints.maxHeight),
                 ),
               ],
-            );
-          },
+            ),
+            Positioned(
+              left: constraints.maxWidth * 55 / 100,
+              child: SvgPicture.asset(
+                'assets/discover/DiscoverBackground.svg',
+                color: TinterColors.background,
+                height: constraints.maxHeight,
+              ),
+            ),
+            Positioned(
+              left: constraints.maxWidth * 55 / 100,
+              child: SvgPicture.asset(
+                'assets/discover/DiscoverTop.svg',
+                color: TinterColors.primaryAccent,
+                height: constraints.maxHeight / 2,
+              ),
+            ),
+            Positioned(
+              left: constraints.maxWidth * 55 / 100,
+              bottom: 0,
+              child: SvgPicture.asset(
+                'assets/discover/DiscoverBottom.svg',
+                color: TinterColors.primaryAccent,
+                height: constraints.maxHeight / 2,
+              ),
+            ),
+          ],
         );
       },
     );
@@ -148,58 +141,69 @@ class DiscoverRight extends StatelessWidget {
   }
 
   Widget studentSearch(BuildContext context, {@required double height}) {
-    return Container(
-      height: height,
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RechercheEtudiantTab()),
-          );
-        },
-        child: Stack(
-          children: [
-            Hero(
-              tag: 'studentSearchBar',
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5.0),
-                    ),
-                    color: TinterColors.primaryAccent,
-                  ),
-                  child: TextField(
-                    enabled: false,
-                    textInputAction: TextInputAction.search,
-                    decoration: InputDecoration(
-                      focusedBorder: InputBorder.none,
-                      icon: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Icon(
-                          Icons.search,
-                          color: TinterColors.hint,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
+      child: Container(
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(5.0),
+          ),
+          color: TinterColors.primaryAccent,
+        ),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RechercheEtudiantTab()),
+            );
+          },
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 30,
+                  child: Hero(
+                    tag: 'studentSearchBar',
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          color: TinterColors.primaryAccent,
+                        ),
+                        child: TextField(
+                          enabled: false,
+                          textInputAction: TextInputAction.search,
+                          decoration: InputDecoration(
+                            focusedBorder: InputBorder.none,
+                            icon: Padding(
+                              padding: const EdgeInsets.only(left: 0),
+                              child: Icon(
+                                Icons.search,
+                                color: TinterColors.hint,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Align(
-              alignment: Alignment(0.4, 0),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 500),
-                child: AutoSizeText(
-                  'Rechercher\nun.e étudiant.e',
-                  style: TinterTextStyle.hint,
-                  maxLines: 2,
+                Flexible(
+                  child: AutoSizeText(
+                    'Rechercher\nun.e étudiant.e',
+                    style: TinterTextStyle.hint,
+                    maxLines: 2,
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -634,8 +638,14 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                       height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
                       width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
                       child: Center(
-                          child: Text(
-                              (state as DiscoverMatchesLoadSuccessState).matches[2].name)),
+                        child: (state as DiscoverMatchesLoadSuccessState)
+                            .matches[2]
+                            .getProfilePicture(
+                                height: constraints.maxHeight *
+                                    MatchesFlock.fractions['smallHead'],
+                                width: constraints.maxHeight *
+                                    MatchesFlock.fractions['smallHead']),
+                      ),
                     ),
                   ),
                 ),
@@ -673,8 +683,14 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                     height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
                     width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
                     child: Center(
-                        child:
-                            Text((state as DiscoverMatchesLoadSuccessState).matches[1].name)),
+                      child: (state as DiscoverMatchesLoadSuccessState)
+                          .matches[1]
+                          .getProfilePicture(
+                              height:
+                                  constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                              width:
+                                  constraints.maxHeight * MatchesFlock.fractions['smallHead']),
+                    ),
                   ),
                 ),
 
@@ -720,8 +736,22 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                                 MatchesFlock.fractions['smallHead']) *
                             animationController.value,
                     child: Center(
-                        child:
-                            Text((state as DiscoverMatchesLoadSuccessState).matches[0].name)),
+                      child: (state as DiscoverMatchesLoadSuccessState)
+                          .matches[0]
+                          .getProfilePicture(
+                              height: constraints.maxHeight *
+                                      MatchesFlock.fractions['smallHead'] +
+                                  constraints.maxHeight *
+                                      (MatchesFlock.fractions['bigHead'] -
+                                          MatchesFlock.fractions['smallHead']) *
+                                      animationController.value,
+                              width:
+                                  constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                                      constraints.maxHeight *
+                                          (MatchesFlock.fractions['bigHead'] -
+                                              MatchesFlock.fractions['smallHead']) *
+                                          animationController.value),
+                    ),
                   ),
                 ),
 
@@ -797,7 +827,14 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                               height:
                                   constraints.maxHeight * MatchesFlock.fractions['bigHead'],
                               width: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
-                              child: Center(child: Text(previousFirstMatch.name)),
+                              child: Center(
+                                child: previousFirstMatch.getProfilePicture(
+                                  height: constraints.maxHeight *
+                                      MatchesFlock.fractions['bigHead'],
+                                  width: constraints.maxHeight *
+                                      MatchesFlock.fractions['bigHead'],
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -1226,7 +1263,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                         .goutsMusicaux)
                                   Chip(
                                     label: Text(musicStyle),
-                                    labelStyle: TinterTextStyle.goutMusicaux,
+                                    labelStyle: TinterTextStyle.goutMusicauxLiked,
                                     backgroundColor: TinterColors.primaryAccent,
                                   )
                               ],

@@ -6,13 +6,13 @@ abstract class UserEvent {
 
 class UserInitEvent extends UserEvent {}
 
-class UserNewProfileEvent extends UserEvent {
-  final StaticStudent staticStudent;
-
-  const UserNewProfileEvent({
-    @required this.staticStudent,
-  });
-}
+//class UserNewProfileEvent extends UserEvent {
+//  final StaticStudent staticStudent;
+//
+//  const UserNewProfileEvent({
+//    @required this.staticStudent,
+//  });
+//}
 
 class PrimoEntrantChanged extends UserEvent {
   final bool newValue;
@@ -69,6 +69,16 @@ class OrganisationEvenementsChanged extends UserEvent {
         super();
 }
 
+class ProfilePicturePathChangedEvent extends UserEvent {
+  final String newPath;
+
+  const ProfilePicturePathChangedEvent({@required this.newPath})
+      : assert(newPath != null),
+        super();
+}
+
 class UserSaveEvent extends UserEvent {}
 
 class UserRefreshEvent extends UserEvent {}
+
+class UserUndoUnsavedChangesEvent extends UserEvent {}

@@ -89,13 +89,16 @@ class GoutsMusicauxTab extends StatelessWidget {
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 20.0,
-                        runSpacing: 20.0,
-                        children: [
-                          for (String goutMusical in goutsMusicaux) goutMusicalChip(goutMusical)
-                        ],
+                      child: SingleChildScrollView(
+
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 20.0,
+                          runSpacing: 20.0,
+                          children: [
+                            for (String goutMusical in goutsMusicaux) goutMusicalChip(goutMusical)
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -114,11 +117,12 @@ class GoutsMusicauxTab extends StatelessWidget {
         if (!(userState is UserLoadSuccessState)) {
           return CircularProgressIndicator();
         }
+        bool isLiked = (userState as UserLoadSuccessState).user.goutsMusicaux.contains(goutMusical);
         return InkWell(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () {
-            if ((userState as UserLoadSuccessState).user.goutsMusicaux.contains(goutMusical)) {
+            if (isLiked) {
               BlocProvider.of<UserBloc>(context).add(
                 GoutMusicauxEvent(
                   status: GoutMusicauxEventStatus.remove,
@@ -139,11 +143,11 @@ class GoutsMusicauxTab extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(80.0)),
-              color: (userState as UserLoadSuccessState).user.goutsMusicaux.contains(goutMusical)
+              color: isLiked
                   ? TinterColors.primaryAccent
-                  : TinterColors.grey,
+                  : Color.fromARGB(255, 70, 70, 70),
             ),
-            child: Text(goutMusical),
+            child: Text(goutMusical, style: isLiked ? TinterTextStyle.goutMusicauxLiked : TinterTextStyle.goutMusicauxNotLiked,),
           ),
         );
       },

@@ -1,7 +1,12 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/repository/user_repository.dart';
@@ -12,6 +17,7 @@ import 'package:tinterapp/UI/user_profile/options.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:tinterapp/UI/user_profile/snap_scroll_physics.dart';
+import 'package:tinterapp/main.dart';
 
 import '../shared_element/slider_label.dart';
 import '../shared_element/const.dart';
@@ -22,8 +28,7 @@ main() {
     httpClient: httpClient,
   );
 
-  final UserRepository userRepository =
-      UserRepository(tinterAPIClient: tinterAPIClient);
+  final UserRepository userRepository = UserRepository(tinterAPIClient: tinterAPIClient);
 
   runApp(BlocProvider(
     create: (BuildContext context) => UserBloc(userRepository: userRepository),
@@ -38,10 +43,12 @@ class UserTab extends StatefulWidget {
   _UserTabState createState() => _UserTabState();
 }
 
-class _UserTabState extends State<UserTab> {
+class _UserTabState extends State<UserTab> with RouteAware {
   Widget separator = SizedBox(
     height: 40,
   );
+  OverlayEntry _saveModificationsOverlayEntry;
+  bool _showSaveModificationsOverlayEntry = true;
 
   ScrollController _controller = ScrollController();
 
@@ -61,12 +68,47 @@ class _UserTabState extends State<UserTab> {
   void initState() {
     BlocProvider.of<UserBloc>(context).add(UserRefreshEvent());
     super.initState();
+
+    _saveModificationsOverlayEntry?.remove();
+
+    _saveModificationsOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+      return SaveModificationsOverlay(
+        showSaveModificationsOverlayEntry: _showSaveModificationsOverlayEntry,
+      );
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Overlay.of(context).insert(_saveModificationsOverlayEntry);
+    });
   }
 
   @override
   void dispose() {
+    _saveModificationsOverlayEntry?.remove();
     _controller.dispose();
+    routeObserver.unsubscribe(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void didPushNext() {
+    setState(() {
+      _showSaveModificationsOverlayEntry = false;
+    });
+    super.didPushNext();
+  }
+
+  @override
+  void didPopNext() {
+    setState(() {
+      _showSaveModificationsOverlayEntry = true;
+    });
   }
 
   @override
@@ -123,6 +165,7 @@ class _UserTabState extends State<UserTab> {
                       children: <Widget>[
                         informationRectangle(
                           context: context,
+                          padding: EdgeInsets.only(top: 15.0, left: 20.0, bottom: 15.0),
                           child: AssociationsRectangle(),
                         ),
                         separator,
@@ -148,9 +191,13 @@ class _UserTabState extends State<UserTab> {
                         separator,
                         informationRectangle(
                           context: context,
+                          padding: EdgeInsets.only(top: 15.0, left: 20.0, bottom: 5.0, right: 20),
                           child: GoutsMusicauxRectangle(),
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: 30,
                     )
                   ],
                 ),
@@ -283,9 +330,7 @@ class HoveringUserInformation extends StatelessWidget {
                   child: BlocBuilder<UserBloc, UserState>(
                       builder: (BuildContext context, UserState userState) {
                     return AutoSizeText(
-                      ((userState is KnownUserState))
-                          ? userState.user.email
-                          : 'Loading...',
+                      ((userState is KnownUserState)) ? userState.user.email : 'Loading...',
                       style: TinterTextStyle.headline2,
                       maxLines: 1,
                     );
@@ -300,31 +345,298 @@ class HoveringUserInformation extends StatelessWidget {
   }
 }
 
-class HoveringUserPicture extends StatelessWidget {
+class HoveringUserPicture extends StatefulWidget {
   final double size;
 
   HoveringUserPicture({@required this.size});
 
   @override
+  _HoveringUserPictureState createState() => _HoveringUserPictureState();
+}
+
+class _HoveringUserPictureState extends State<HoveringUserPicture> {
+  final GlobalKey hoveringUserPictureKey = GlobalKey();
+  final Duration _folderOrCameraOverlayAnimationDuration = Duration(milliseconds: 200);
+  OverlayEntry _folderOrCameraOverlay;
+
+
+  void showFolderOrCameraOverlay() {
+    _folderOrCameraOverlay?.remove();
+
+    _folderOrCameraOverlay = OverlayEntry(builder: (BuildContext context) {
+      return GestureDetector(
+        onTap: hideFolderOrCameraOverlay,
+        child: FolderOrCameraOverlay(
+          shouldHide: false,
+          hoveringUserPictureKey: hoveringUserPictureKey,
+          changeProfilePicture: changeProfilePicture,
+            animationDuration: _folderOrCameraOverlayAnimationDuration,
+        ),
+      );
+    });
+    Overlay.of(context).insert(_folderOrCameraOverlay);
+  }
+
+  void hideFolderOrCameraOverlay() {
+    _folderOrCameraOverlay?.remove();
+
+    _folderOrCameraOverlay = OverlayEntry(builder: (BuildContext context) {
+      return GestureDetector(
+        onTap: hideFolderOrCameraOverlay,
+        child: FolderOrCameraOverlay(
+          shouldHide: true,
+          hoveringUserPictureKey: hoveringUserPictureKey,
+          changeProfilePicture: changeProfilePicture,
+          animationDuration: _folderOrCameraOverlayAnimationDuration,
+        ),
+      );
+    });
+    Overlay.of(context).insert(_folderOrCameraOverlay);
+
+    Future.delayed(_folderOrCameraOverlayAnimationDuration, () {
+      _folderOrCameraOverlay.remove();
+      _folderOrCameraOverlay = null;
+    });
+
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.cyan,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black,
-            spreadRadius: 0,
-            blurRadius: 3,
-            offset: Offset(0, 3),
-          ),
-        ],
+    return InkWell(
+      key: hoveringUserPictureKey,
+      splashColor: Colors.transparent,
+      onTap: showFolderOrCameraOverlay,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              spreadRadius: 0,
+              blurRadius: 3,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        height: widget.size,
+        width: widget.size,
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (BuildContext context, UserState userState) {
+            if (!(userState is KnownUserState)) {
+              return CircularProgressIndicator();
+            }
+            return Stack(
+              children: [
+                (userState as KnownUserState).user.getProfilePicture(height: 200, width: 200),
+                ClipPath(
+                  clipper: ModifyProfilePictureClipper(),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+                    child: Container(
+                      color: Colors.black.withOpacity(0.3),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  child: Icon(
+                    Icons.add,
+                    color: TinterColors.hint,
+                  ),
+                )
+              ],
+            );
+          },
+        ),
       ),
-      height: size,
-      width: size,
-      child: BlocProvider.of<UserBloc>(),
     );
   }
+
+  Future changeProfilePicture(BuildContext context, ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(
+      source: source,
+    );
+
+    if (pickedFile != null) {
+      File croppedFile = await ImageCropper.cropImage(
+        sourcePath: pickedFile.path,
+        cropStyle: CropStyle.circle,
+        maxWidth: 200,
+        maxHeight: 200,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        androidUiSettings: AndroidUiSettings(
+          toolbarTitle: '',
+          toolbarColor: TinterColors.background,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: true,
+          showCropGrid: false,
+        ),
+        iosUiSettings: IOSUiSettings(
+          aspectRatioLockEnabled: true,
+          minimumAspectRatio: 1.0,
+        ),
+      );
+
+      if (croppedFile != null) {
+        BlocProvider.of<UserBloc>(context)
+            .add(ProfilePicturePathChangedEvent(newPath: croppedFile.path));
+      }
+    }
+    _folderOrCameraOverlay?.remove();
+    _folderOrCameraOverlay = null;
+  }
+}
+
+class FolderOrCameraOverlay extends StatelessWidget {
+  final bool shouldHide;
+  final GlobalKey hoveringUserPictureKey;
+  final void Function(BuildContext, ImageSource) changeProfilePicture;
+  final Duration animationDuration;
+
+  const FolderOrCameraOverlay({
+    Key key,
+    @required this.shouldHide,
+    @required this.hoveringUserPictureKey,
+    @required this.changeProfilePicture,
+    @required this.animationDuration,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (hoveringUserPictureKey.currentContext == null) {
+      return Container();
+    }
+    final box = hoveringUserPictureKey.currentContext.findRenderObject() as RenderBox;
+    final pos = box.localToGlobal(Offset.zero);
+    final size = box.size;
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: shouldHide ? 1 : 0, end: shouldHide ? 0 : 1),
+      duration: animationDuration,
+      builder: (BuildContext context, double value, Widget child) {
+        return Container(
+          height: value*double.maxFinite,
+          width: value*double.maxFinite,
+          color: Colors.transparent,
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              double profilePictureWidthFraction = size.width / constraints.maxWidth;
+              double littleWidgetSize = 30;
+              return Stack(
+                children: [
+                  Positioned(
+                    top: pos.dy,
+                    height: size.height,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment(
+                              -value *
+                                  (profilePictureWidthFraction +
+                                      (littleWidgetSize + 40) / constraints.maxWidth),
+                              (1 - value) * (1 - value) * (1 - value),
+                            ),
+                            child: GestureDetector(
+                              onTap: () => changeProfilePicture(context, ImageSource.camera),
+                              child: Container(
+                                height: littleWidgetSize,
+                                width: littleWidgetSize,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      spreadRadius: 0,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                ),
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  size: littleWidgetSize - 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: pos.dy,
+                    height: size.height,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment(
+                              value *
+                                  (profilePictureWidthFraction +
+                                      (littleWidgetSize + 40) / constraints.maxWidth),
+                              (1 - value) * (1 - value) * (1 - value),
+                            ),
+                            child: GestureDetector(
+                              onTap: () => changeProfilePicture(context, ImageSource.gallery),
+                              child: Container(
+                                height: littleWidgetSize,
+                                width: littleWidgetSize,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      spreadRadius: 0,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                ),
+                                child: Icon(
+                                  Icons.folder_open,
+                                  size: littleWidgetSize - 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ModifyProfilePictureClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return Path()
+          ..moveTo(0, 2 / 3 * size.height)
+          ..lineTo(size.width, 2 / 3 * size.height)
+          ..arcToPoint(Offset(0, 1 / 3 * size.height), radius: Radius.circular(1))
+//      ..lineTo(size.width, size.height)
+//      ..lineTo(0, size.height)
+//      ..lineTo(0, size.height/2)
+        ;
+//    arcToPoint(Offset(0, 0), radius: Radius.circular(size.height))
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
 class AssociationsRectangle extends StatelessWidget {
@@ -341,11 +653,7 @@ class AssociationsRectangle extends StatelessWidget {
                 style: TinterTextStyle.headline2,
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
             Container(
-              padding: EdgeInsets.only(left: 10.0),
               width: double.infinity,
               child: Container(
                 height: 60,
@@ -354,26 +662,29 @@ class AssociationsRectangle extends StatelessWidget {
                     if (!(userState is KnownUserState)) {
                       return CircularProgressIndicator();
                     }
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: (userState as KnownUserState)
-                          .user
-                          .associations
-                          .length,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          width: 5,
-                        );
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        return associationBubble(
-                            context,
-                            (userState as KnownUserState)
-                                .user
-                                .associations[index]);
-                      },
-                    );
+                    return (userState as KnownUserState).user.associations.length == 0
+                        ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Aucune association séléctionnée.'),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount:
+                                  (userState as KnownUserState).user.associations.length,
+                              separatorBuilder: (BuildContext context, int index) {
+                                return SizedBox(
+                                  width: 5,
+                                );
+                              },
+                              itemBuilder: (BuildContext context, int index) {
+                                return associationBubble(context,
+                                    (userState as KnownUserState).user.associations[index]);
+                              },
+                            ),
+                          );
                   },
                 ),
               ),
@@ -430,10 +741,13 @@ class AttiranceVieAssoRectangle extends StatelessWidget {
       children: <Widget>[
         Align(
           alignment: AlignmentDirectional.topStart,
-          child: Text(
-            'Attirance pour la vie associative',
-            textAlign: TextAlign.center,
-            style: TinterTextStyle.headline2,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
+            child: Text(
+              'Attirance pour la vie associative',
+              textAlign: TextAlign.start,
+              style: TinterTextStyle.headline2,
+            ),
           ),
         ),
         SliderTheme(
@@ -462,9 +776,12 @@ class FeteOuCoursRectangle extends StatelessWidget {
       children: <Widget>[
         Align(
           alignment: AlignmentDirectional.topStart,
-          child: Text(
-            'Cours ou soirée?',
-            style: TinterTextStyle.headline2,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
+            child: Text(
+              'Cours ou soirée?',
+              style: TinterTextStyle.headline2,
+            ),
           ),
         ),
         SizedBox(
@@ -499,10 +816,13 @@ class AideOuSortirRectangle extends StatelessWidget {
       children: <Widget>[
         Align(
           alignment: AlignmentDirectional.topStart,
-          child: Text(
-            'Parrain qui aide ou avec qui sortir?',
-            style: TinterTextStyle.headline2,
-            textAlign: TextAlign.center,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
+            child: Text(
+              'Parrain qui aide ou avec qui sortir?',
+              style: TinterTextStyle.headline2,
+              textAlign: TextAlign.start,
+            ),
           ),
         ),
         SizedBox(
@@ -537,10 +857,13 @@ class OrganisationEvenementsRectangle extends StatelessWidget {
       children: <Widget>[
         Align(
           alignment: AlignmentDirectional.topStart,
-          child: Text(
-            'Aime organiser les événements?',
-            style: TinterTextStyle.headline2,
-            textAlign: TextAlign.center,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
+            child: Text(
+              'Aime organiser les événements?',
+              style: TinterTextStyle.headline2,
+              textAlign: TextAlign.start,
+            ),
           ),
         ),
         SliderTheme(
@@ -575,6 +898,7 @@ class GoutsMusicauxRectangle extends StatelessWidget {
       child: Stack(
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Align(
                 alignment: AlignmentDirectional.topStart,
@@ -589,15 +913,25 @@ class GoutsMusicauxRectangle extends StatelessWidget {
                     return CircularProgressIndicator();
                   }
                   return Wrap(
+                    alignment: WrapAlignment.start,
                     spacing: 15,
-                    children: <Widget>[
-                      for (String musicStyle in (userState as KnownUserState).user.goutsMusicaux)
-                        Chip(
-                          label: Text(musicStyle),
-                          labelStyle: TinterTextStyle.goutMusicaux,
-                          backgroundColor: TinterColors.primaryAccent,
-                        )
-                    ],
+                    children: (userState as KnownUserState).user.goutsMusicaux.length == 0
+                        ? [
+                            Chip(
+                              label: Text('Aucun'),
+                              labelStyle: TinterTextStyle.goutMusicauxLiked,
+                              backgroundColor: TinterColors.primaryAccent,
+                            ),
+                          ]
+                        : <Widget>[
+                            for (String musicStyle
+                                in (userState as KnownUserState).user.goutsMusicaux)
+                              Chip(
+                                label: Text(musicStyle),
+                                labelStyle: TinterTextStyle.goutMusicauxLiked,
+                                backgroundColor: TinterColors.primaryAccent,
+                              )
+                          ],
                   );
                 },
               )
@@ -665,6 +999,133 @@ class DiscoverSlider extends StatelessWidget {
           child: slider,
         ),
       ],
+    );
+  }
+}
+
+class SaveModificationsOverlay extends StatelessWidget {
+  final bool showSaveModificationsOverlayEntry;
+
+  const SaveModificationsOverlay({Key key, @required this.showSaveModificationsOverlayEntry})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (BuildContext context, UserState userState) {
+        bool isSaving = true;
+        if (!(userState is KnownUserUnsavedState)) {
+          isSaving = false;
+        }
+        return TweenAnimationBuilder<double>(
+          tween: Tween<double>(
+              begin: 0, end: (isSaving && showSaveModificationsOverlayEntry) ? 1 : 0),
+          duration: Duration(milliseconds: 300),
+          builder: (BuildContext context, double value, Widget child) {
+            return Positioned(
+              bottom: -80 * (1 - value),
+              right: 0,
+              left: 0,
+              height: 80,
+              child: child,
+            );
+          },
+          child: Material(
+            color: Colors.transparent,
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Container(
+                  color: TinterColors.background,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 5.0),
+                        child: Center(
+                          child: Text(
+                            (userState is KnownUserSavingFailedState)
+                                ? 'Echec de la sauvegarde, réessayer?'
+                                : 'Des modifications ont été effectuées',
+                            style: TinterTextStyle.headline2,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  onTap: () => BlocProvider.of<UserBloc>(context)
+                                      .add(UserUndoUnsavedChangesEvent()),
+                                  child: Center(
+                                    child: Container(
+                                      width: constraints.maxWidth / 3,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4.0),
+                                        color: TinterColors.secondaryAccent,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey[850],
+                                            spreadRadius: 3,
+                                            blurRadius: 5,
+                                            offset: Offset(0, 2), // changes position of shadow
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: AutoSizeText(
+                                          'Annuler',
+                                          style: TinterTextStyle.headline2,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  onTap: () =>
+                                      BlocProvider.of<UserBloc>(context).add(UserSaveEvent()),
+                                  child: Center(
+                                    child: Container(
+                                      width: constraints.maxWidth / 3,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4.0),
+                                        color: TinterColors.secondaryAccent,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey[850],
+                                            spreadRadius: 3,
+                                            blurRadius: 5,
+                                            offset: Offset(0, 2), // changes position of shadow
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: AutoSizeText(
+                                          'Valider',
+                                          style: TinterTextStyle.headline2,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

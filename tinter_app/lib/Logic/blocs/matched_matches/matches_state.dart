@@ -10,11 +10,12 @@ abstract class MatchedMatchesState extends Equatable {
 
 class MatchedMatchesInitialState extends MatchedMatchesState {}
 
-class MatchedMatchesLoadInProgressState extends MatchedMatchesState {}
+class MatchedMatchesInitializingState extends MatchedMatchesState {}
+
+class MatchedMatchesInitializingFailedState extends MatchedMatchesState {}
 
 class MatchedMatchesLoadSuccessState extends MatchedMatchesState {
   final List<Match> matches;
-
 
   const MatchedMatchesLoadSuccessState({@required this.matches}):assert(matches != null);
 
@@ -29,6 +30,16 @@ class MatchedMatchesLoadSuccessState extends MatchedMatchesState {
   List<Object> get props => [matches];
 }
 
-class MatchedMatchesSavingNewStatusState extends MatchedMatchesState {}
+class MatchedMatchesSavingNewStatusState extends MatchedMatchesLoadSuccessState {
 
-class MatchedMatchesLoadFailureState extends MatchedMatchesState {}
+  MatchedMatchesSavingNewStatusState({@required List<Match> matches}) : super(matches: matches);
+
+  List<Match> withUpdatedMatch(Match oldMatch, Match updatedMatch) {
+    throw UnimplementedError();
+  }
+}
+
+class MatchedMatchesLoadFailureState extends MatchedMatchesLoadSuccessState {
+
+  MatchedMatchesLoadFailureState({@required List<Match> matches}) : super(matches: matches);
+}

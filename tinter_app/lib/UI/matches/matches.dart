@@ -9,7 +9,6 @@ import 'package:tinterapp/Logic/blocs/matched_matches/matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
 import 'package:tinterapp/Logic/models/association.dart';
 import 'package:tinterapp/Logic/models/student.dart';
-import 'package:tinterapp/Logic/models/user.dart';
 import 'package:tinterapp/UI/shared_element/slider_label.dart';
 import 'package:tinterapp/UI/shared_element/const.dart';
 import 'package:tinterapp/Logic/models/match.dart';
@@ -33,7 +32,7 @@ class MatchsTab extends StatefulWidget {
 }
 
 class _MatchsTabState extends State<MatchsTab> {
-  Match _selectedMatch;
+  String _selectedMatchLogin;
   ScrollController _controller = ScrollController();
   ScrollPhysics _scrollPhysics = NeverScrollableScrollPhysics();
   double topMenuScrolledFraction = 0;
@@ -57,16 +56,21 @@ class _MatchsTabState extends State<MatchsTab> {
     return BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
         builder: (BuildContext context, MatchedMatchesState state) {
       if (!(state is MatchedMatchesLoadSuccessState)) {
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       }
-      final List<Match> _matchesNotParrains = (state as MatchedMatchesLoadSuccessState)
-          .matches
-          .where((match) => match.status != MatchStatus.parrainAccepted)
-          .toList();
-      final List<Match> _parrains = (state as MatchedMatchesLoadSuccessState)
-          .matches
-          .where((match) => match.status == MatchStatus.parrainAccepted)
-          .toList();
+
+      // Get the 2 list out of all the matched matches
+      final List<Match> allMatches = (state as MatchedMatchesLoadSuccessState).matches;
+      final List<Match> _matchesNotParrains =
+          allMatches.where((match) => match.status != MatchStatus.parrainAccepted).toList();
+      final List<Match> _parrains =
+          allMatches.where((match) => match.status == MatchStatus.parrainAccepted).toList();
+
+      // Sort them
+      _matchesNotParrains
+          .sort((Match matchA, Match matchB) => matchA.name.compareTo(matchB.name));
+      _parrains.sort((Match matchA, Match matchB) => matchA.name.compareTo(matchB.name));
+
       widget.fractions['matchSelectionMenu'] =
           ((_matchesNotParrains.length == 0) ? 0.0 : 0.2) +
               ((_parrains.length == 0) ? 0.0 : 0.2);
@@ -100,15 +104,16 @@ class _MatchsTabState extends State<MatchsTab> {
               controller: _controller,
               children: [
                 MatchSelectionMenu(
-                    onTap: matchSelected,
-                    height: constraints.maxHeight * widget.fractions['matchSelectionMenu'],
-                    matchesNotParrains: _matchesNotParrains,
-                    parrains: _parrains,
+                  onTap: matchSelected,
+                  height: constraints.maxHeight * widget.fractions['matchSelectionMenu'],
+                  matchesNotParrains: _matchesNotParrains,
+                  parrains: _parrains,
                 ),
-                (_selectedMatch == null)
+                (_selectedMatchLogin == null)
                     ? noMatchSelected(constraints.maxHeight)
                     : CompareView(
-                        match: _selectedMatch,
+                        match: allMatches
+                            .firstWhere((Match match) => match.login == _selectedMatchLogin),
                         appHeight: constraints.maxHeight,
                         topMenuScrolledFraction: topMenuScrolledFraction,
                         onCompareTapped: onCompareTapped,
@@ -180,7 +185,7 @@ class _MatchsTabState extends State<MatchsTab> {
 
   void matchSelected(Match match) {
     setState(() {
-      _selectedMatch = match;
+      _selectedMatchLogin = match.login;
     });
   }
 }
@@ -205,7 +210,7 @@ class CompareView extends StatelessWidget {
       children: [
         facesAroundScore(),
         SizedBox(height: 50),
-        statusRectangle(),
+        statusRectangle(context),
         SizedBox(height: 50),
         Opacity(
           opacity: topMenuScrolledFraction,
@@ -227,7 +232,15 @@ class CompareView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                userPicture(userPicture: ""),
+                BlocBuilder<UserBloc, UserState>(
+                    builder: (BuildContext context, UserState userState) {
+                  if (!(userState is UserLoadSuccessState)) {
+                    return CircularProgressIndicator();
+                  }
+                  return userPicture(
+                      getProfilePicture:
+                          (userState as UserLoadSuccessState).user.getProfilePicture);
+                }),
                 userPictureText(title: 'You'),
               ],
             ),
@@ -241,7 +254,7 @@ class CompareView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                userPicture(userPicture: ''),
+                userPicture(getProfilePicture: _match.getProfilePicture),
                 userPictureText(title: _match.name + '\n' + _match.surname),
               ],
             ),
@@ -267,14 +280,18 @@ class CompareView extends StatelessWidget {
   }
 
   /// Displays either your face or your match face
-  Widget userPicture({String userPicture}) {
+  Widget userPicture(
+      {Widget Function({@required double height, @required double width}) getProfilePicture}) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.amber,
       ),
       height: appHeight * 0.09,
       width: appHeight * 0.09,
+      child: getProfilePicture(
+        height: appHeight * 0.09,
+        width: appHeight * 0.09,
+      ),
     );
   }
 
@@ -333,7 +350,7 @@ class CompareView extends StatelessWidget {
     );
   }
 
-  Widget statusRectangle() {
+  Widget statusRectangle(BuildContext context) {
     return FractionallySizedBox(
       widthFactor: 0.75,
       child: informationRectangle(
@@ -362,10 +379,14 @@ class CompareView extends StatelessWidget {
                                       ? (_match.primoEntrant)
                                           ? "Cette personne te parraine!"
                                           : 'Tu parraine cette personne!'
-                                      : (_match.status == MatchStatus.parrainRefused)
-                                          ? 'Cette personne à refusée votre demande'
-                                          : 'ERROR: the status should not be ' +
-                                              _match.status.toString(),
+                                      : (_match.status == MatchStatus.parrainHeRefused)
+                                          ? 'Cette personne à refusée ta demande'
+                                          : (_match.status == MatchStatus.parrainYouRefused)
+                                              ? (_match.primoEntrant)
+                                                  ? "Tu as refusé de parrainer cette personne."
+                                                  : "Tu as refusé que cette personne te parraine."
+                                              : 'ERROR: the status should not be ' +
+                                                  _match.status.toString(),
                   style: TinterTextStyle.headline2,
                   maxLines: 1,
                 ),
@@ -383,6 +404,11 @@ class CompareView extends StatelessWidget {
                       child: (_match.status == MatchStatus.matched)
                           ? Center(
                               child: InkWell(
+                                splashColor: Colors.transparent,
+                                onTap: () {
+                                  BlocProvider.of<MatchedMatchesBloc>(context)
+                                      .add(AskParrainEvent(match: _match));
+                                },
                                 child: Container(
                                   padding: EdgeInsets.all(5.0),
                                   decoration: BoxDecoration(
@@ -401,6 +427,11 @@ class CompareView extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     InkWell(
+                                      splashColor: Colors.transparent,
+                                      onTap: () {
+                                        BlocProvider.of<MatchedMatchesBloc>(context)
+                                            .add(AcceptParrainEvent(match: _match));
+                                      },
                                       child: Container(
                                         padding: EdgeInsets.all(5.0),
                                         decoration: BoxDecoration(
@@ -417,6 +448,11 @@ class CompareView extends StatelessWidget {
                                       width: 30,
                                     ),
                                     InkWell(
+                                      splashColor: Colors.transparent,
+                                      onTap: () {
+                                        BlocProvider.of<MatchedMatchesBloc>(context)
+                                            .add(RefuseParrainEvent(match: _match));
+                                      },
                                       child: Container(
                                         padding: EdgeInsets.all(5.0),
                                         decoration: BoxDecoration(
@@ -696,7 +732,7 @@ class ProfileInformation extends StatelessWidget {
                       for (String musicStyle in student.goutsMusicaux)
                         Chip(
                           label: Text(musicStyle),
-                          labelStyle: TinterTextStyle.goutMusicaux,
+                          labelStyle: TinterTextStyle.goutMusicauxLiked,
                           backgroundColor: TinterColors.primaryAccent,
                         )
                     ],
@@ -815,12 +851,10 @@ class MatchSelectionMenu extends StatelessWidget {
       child: Column(
         children: [
           (matchesNotParrains.length != 0)
-              ? Expanded(
-                  child:
-                      topMenu(matches: matchesNotParrains, title: 'Mes parrains et marraines'))
+              ? Expanded(child: topMenu(matches: matchesNotParrains, title: 'Mes matchs'))
               : Container(),
           (parrains.length != 0)
-              ? Expanded(child: topMenu(matches: parrains, title: 'Mes matchs'))
+              ? Expanded(child: topMenu(matches: parrains, title: 'Mes Parrains et marraines'))
               : Container(),
         ],
       ),
@@ -851,15 +885,15 @@ class MatchSelectionMenu extends StatelessWidget {
                   onTap: () => _onTap(match),
                   child: Container(
                     margin: EdgeInsets.only(
-                      right: 30.0,
+                      right: 20.0,
                       left: match == matches[0] ? 20.0 : 0.0,
                     ),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.amber,
                     ),
-                    height: 40,
-                    width: 40,
+                    height: 50,
+                    width: 50,
+                    child: match.getProfilePicture(height: 50, width: 50),
                   ),
                 ),
             ],
@@ -872,7 +906,7 @@ class MatchSelectionMenu extends StatelessWidget {
 
   Widget separator() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+      margin: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
       height: 0.5,
       color: TinterColors.primaryAccent,
     );

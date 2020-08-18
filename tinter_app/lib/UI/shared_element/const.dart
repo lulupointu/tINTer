@@ -66,39 +66,69 @@ class TinterTextStyle {
   static const headline1 = TextStyle(
     fontSize: 30,
     color: TinterColors.white,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
   );
   static const headline2 = TextStyle(
     fontSize: 20,
     color: TinterColors.white,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
   );
   static const hint = TextStyle(
       fontSize: 14,
       color: TinterColors.hint,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
   );
   static const smallLabel = TextStyle(
       fontSize: 12,
-      color: Colors.black
+      color: Colors.black,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
   );
   static const bigLabel = TextStyle(
+      fontSize: 14,
+      color: Colors.black,
     fontFamily: 'Roboto',
-      fontSize: 14,
-      color: Colors.black
+    fontWeight: FontWeight.w400,
   );
-  static const goutMusicaux = TextStyle(
-      fontSize: 14,
-      color: Colors.black
+  static const goutMusicauxLiked = TextStyle(
+    fontSize: 16,
+    color: Colors.black,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
+  );
+  static const goutMusicauxNotLiked = TextStyle(
+    fontSize: 16,
+    color: Color.fromARGB(255, 180, 180, 180),
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
   );
   static const options = TextStyle(
     fontSize: 18,
     color: Colors.black,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
   );
   static const dialogTitle = TextStyle(
     fontSize: 25,
     color: Colors.black,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
   );
   static const dialogContent = TextStyle(
     fontSize: 18,
     color: Colors.black54,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
+  );
+
+  static const developedBy = TextStyle(
+    fontSize: 15,
+    color: TinterColors.white,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
   );
 
   // Login element

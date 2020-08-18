@@ -3,6 +3,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -103,13 +104,14 @@ class _AssociationsTabState extends State<AssociationsTab> {
               panelBuilder: (ScrollController scrollController) {
                 return AllAssociationsSheetBody(
                   scrollController: scrollController,
-                  keyboardMargin: isSearching ? 200 : 0,
+                  keyboardMargin: KeyboardVisibility.isVisible ? MediaQuery.of(context).viewInsets.bottom : 0,
                   width: constraints.maxWidth,
                   margin:
                       constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
                   headerHeight: constraints.maxHeight * AssociationsTab.fractions['titles'],
                   headerSpacing:
                       constraints.maxHeight * AssociationsTab.fractions['headerSpacing'],
+                  searchString: searchString,
                 );
               },
               header: TitleAndSearchBarAllAssociations(
@@ -676,6 +678,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
   final double headerSpacing;
   final double margin;
   final double keyboardMargin;
+  final String searchString;
 
   AllAssociationsSheetBody({
     @required this.scrollController,
@@ -684,6 +687,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
     @required this.headerSpacing,
     @required this.margin,
     @required this.keyboardMargin,
+    @required this.searchString,
   });
 
   @override
@@ -707,10 +711,17 @@ class AllAssociationsSheetBody extends StatelessWidget {
               }
               return CircularProgressIndicator();
             }
+            final _allAssociations = (associationsState as AssociationsLoadSuccessfulState).associations;
+            RegExp searchStringRegex = new RegExp(
+              searchString,
+              caseSensitive: false,
+              multiLine: false,
+            );
+            final _associations = (searchString == null) ? _allAssociations : _allAssociations.where((Association association) => searchStringRegex.hasMatch(association.name)).toList();
             return ListView.separated(
               controller: scrollController,
               itemCount:
-                  (associationsState as AssociationsLoadSuccessfulState).associations.length,
+                  _associations.length,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
                   height: 20,
@@ -723,38 +734,33 @@ class AllAssociationsSheetBody extends StatelessWidget {
                 final bool liked = (userState as UserLoadSuccessState)
                     .user
                     .associations
-                    .contains((associationsState as AssociationsLoadSuccessfulState)
-                        .associations[index]);
+                    .contains(_associations[index]);
                 return Padding(
                   padding: EdgeInsets.only(
                     top: index == 0 ? headerSpacing : 0,
                     bottom: index ==
-                            (associationsState as AssociationsLoadSuccessfulState)
-                                    .associations
+                            _associations
                                     .length -
                                 1
                         ? headerSpacing + keyboardMargin
                         : 0,
                   ),
                   child: AssociationCard(
-                    association: (associationsState as AssociationsLoadSuccessfulState)
-                        .associations[index],
+                    association: _associations[index],
                     liked: liked,
                     onLike: () {
                       if (liked) {
                         BlocProvider.of<UserBloc>(context).add(
                           AssociationEvent(
                             status: AssociationEventStatus.remove,
-                            association: (associationsState as AssociationsLoadSuccessfulState)
-                                .associations[index],
+                            association: _associations[index],
                           ),
                         );
                       } else {
                         BlocProvider.of<UserBloc>(context).add(
                           AssociationEvent(
                             status: AssociationEventStatus.add,
-                            association: (associationsState as AssociationsLoadSuccessfulState)
-                                .associations[index],
+                            association: _associations[index],
                           ),
                         );
                       }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +26,10 @@ class AuthenticationRepository {
     Token token;
     try {
       token = (await tinterAPIClient.logIn(login: login, password: password)).token;
+    } on SocketException catch (error) {
+      if (error.osError.message == 'Connection timed out') {
+        throw AuthenticationBadConnexionError();
+      }
     } catch (error) {
       print(error);
       throw AuthenticationWrongCredentialError();

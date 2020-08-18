@@ -49,5 +49,6 @@ const _$MatchStatusEnumMap = {
   MatchStatus.youAskedParrain: 'youAskedParrain',
   MatchStatus.heAskedParrain: 'heAskedParrain',
   MatchStatus.parrainAccepted: 'parrainAccepted',
-  MatchStatus.parrainRefused: 'parrainRefused',
+  MatchStatus.parrainHeRefused: 'parrainHeRefused',
+  MatchStatus.parrainYouRefused: 'parrainYouRefused',
 };

@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
-import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/models/relation_status.dart';
 import 'package:tinterapp/Logic/repository/matched_repository.dart';
 import 'package:tinterapp/Logic/models/match.dart';
@@ -22,24 +21,24 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
 
   @override
   Stream<MatchedMatchesState> mapEventToState(MatchedMatchesEvent event) async* {
-    switch (event.runtimeType) {
-      case MatchedMatchesRequestedEvent:
-        yield* _mapMatchedMatchesRequestedEventToState();
-        return;
-      case ChangeStatusMatchedMatchesEvent:
-        if (state is MatchedMatchesLoadSuccessState) {
-          yield* _mapChangeStatusMatchedMatchesEventToState(event);
-        } else {
-          _addError(
-              'ChangeStatusMatchedMatchesEvent was called while state is not MatchedMatchesLoadSuccessState');
-        }
+    if (event is MatchedMatchesRequestedEvent) {
+      yield* _mapMatchedMatchesRequestedEventToState();
+      return;
+    } else if (event is ChangeStatusMatchedMatchesEvent) {
+      if (state is MatchedMatchesLoadSuccessState) {
+        yield* _mapChangeMatchStatusEventToState(event);
+      } else {
+        _addError(
+            'ChangeStatusMatchedMatchesEvent was called while state is not MatchedMatchesLoadSuccessState');
+      }
+      return;
     }
 
     print('event: ' + event.toString() + ' no treated');
   }
 
   Stream<MatchedMatchesState> _mapMatchedMatchesRequestedEventToState() async* {
-    yield MatchedMatchesLoadInProgressState();
+    yield MatchedMatchesInitializingState();
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield MatchedMatchesInitialState();
@@ -51,21 +50,14 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
       matches = await matchedRepository.getMatches();
     } catch (error) {
       print(error);
-      yield MatchedMatchesLoadFailureState();
+      yield MatchedMatchesInitializingFailedState();
       return;
     }
     yield MatchedMatchesLoadSuccessState(matches: matches);
   }
 
-  Stream<MatchedMatchesState> _mapChangeStatusMatchedMatchesEventToState(
+  Stream<MatchedMatchesState> _mapChangeMatchStatusEventToState(
       ChangeStatusMatchedMatchesEvent event) async* {
-    List<Match> oldMatches = (state as DiscoverMatchesWaitingStatusChangeState).matches;
-    yield MatchedMatchesSavingNewStatusState();
-    if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
-      authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
-      yield MatchedMatchesInitialState();
-      return;
-    }
 
     Match newMatch = Match(
       login: event.match.login,
@@ -73,7 +65,7 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
       surname: event.match.surname,
       email: event.match.email,
       score: event.match.score,
-      status: event.newStatus,
+      status: event.matchStatus,
       primoEntrant: event.match.primoEntrant,
       associations: event.match.associations,
       attiranceVieAsso: event.match.attiranceVieAsso,
@@ -82,6 +74,18 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
       organisationEvenements: event.match.organisationEvenements,
       goutsMusicaux: event.match.goutsMusicaux,
     );
+
+    MatchedMatchesLoadSuccessState successState = MatchedMatchesLoadSuccessState(
+        matches:
+    (state as MatchedMatchesLoadSuccessState).withUpdatedMatch(event.match, newMatch));
+
+    yield MatchedMatchesSavingNewStatusState(
+        matches: (state as MatchedMatchesLoadSuccessState).matches);
+    if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
+      authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
+      yield MatchedMatchesInitialState();
+      return;
+    }
 
     try {
       matchedRepository.updateMatchStatus(
@@ -93,12 +97,11 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
       );
     } catch (error) {
       print(error);
-      yield MatchedMatchesLoadSuccessState(matches: oldMatches);
+      yield MatchedMatchesLoadFailureState(
+          matches: (state as MatchedMatchesLoadSuccessState).matches);
     }
 
-    yield MatchedMatchesLoadSuccessState(
-        matches:
-            (state as MatchedMatchesLoadSuccessState).withUpdatedMatch(event.match, newMatch));
+    yield successState;
   }
 
   void _addError(String error) {

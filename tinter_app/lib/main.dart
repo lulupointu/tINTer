@@ -6,6 +6,7 @@ import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/matched_matches/matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
+import 'package:tinterapp/Logic/blocs/user_search/user_search_bloc.dart';
 import 'package:tinterapp/Logic/repository/associations_repository.dart';
 import 'package:tinterapp/Logic/repository/authentication_repository.dart';
 import 'package:tinterapp/Logic/repository/discover_repository.dart';
@@ -22,6 +23,8 @@ import 'package:http/http.dart' as http;
 
 import 'UI/discover/discover.dart';
 import 'UI/shared_element/const.dart';
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 main() {
   Bloc.observer = AllBlocObserver();
@@ -78,11 +81,19 @@ main() {
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
+              BlocProvider(
+                create: (BuildContext context) => UserSearchBloc(
+                  userRepository: userRepository,
+                  matchedRepository: matchedRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
+              ),
             ],
             child: MaterialApp(
               home: SafeArea(
                 child: Tinter(),
               ),
+              navigatorObservers: [routeObserver],
             ),
           ),
         ),

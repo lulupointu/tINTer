@@ -21,7 +21,7 @@ class Student extends StaticStudent {
   final double _aideOuSortir;
   final double _organisationEvenements;
   final List<String> _goutsMusicaux;
-  final String _profilePictureUrl;
+  final String _profilePicturePath;
 
   Student({
     @required String login,
@@ -35,7 +35,7 @@ class Student extends StaticStudent {
     @required double aideOuSortir,
     @required double organisationEvenements,
     @required List<dynamic> goutsMusicaux,
-    String profilePictureUrl,
+    String profilePicturePath,
   })  : _associations = associations
             ?.map((var association) =>
                 (association is Association) ? association : Association.fromJson(association))
@@ -46,7 +46,7 @@ class Student extends StaticStudent {
         _organisationEvenements = organisationEvenements,
         _goutsMusicaux =
             goutsMusicaux?.map((dynamic goutMusical) => goutMusical.toString())?.toList(),
-        _profilePictureUrl = profilePictureUrl,
+        _profilePicturePath = profilePicturePath,
         super(
           login: login,
           name: name,
@@ -72,23 +72,41 @@ class Student extends StaticStudent {
 
   List<String> get goutsMusicaux => _goutsMusicaux;
 
-  Widget get profilePicture {
-    return FutureBuilder(
-      future: AuthenticationRepository.getAuthenticationToken(),
-      builder: (BuildContext context, AsyncSnapshot<Token> snapshot) {
-        return (!snapshot.hasData)
-            ? CircularProgressIndicator()
-            : Image.network(
-                _profilePictureUrl ??
-                    Uri.http(TinterAPIClient.baseUrl, '/user/profilePicture').toString(),
-                headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
-              );
-      },
+  String get profilePictureLocalPath => _profilePicturePath;
+
+  Widget getProfilePicture({@required double height, @required double width}) {
+    if (_profilePicturePath != null) {
+      return ClipOval(
+        child: Image.file(
+          File(_profilePicturePath),
+          height: height,
+          width: width,
+        ),
+      );
+    }
+
+    return ClipOval(
+      child: FutureBuilder(
+        future: AuthenticationRepository.getAuthenticationToken(),
+        builder: (BuildContext context, AsyncSnapshot<Token> snapshot) {
+          return (!snapshot.hasData)
+              ? Center(child: CircularProgressIndicator())
+              : Image.network(
+                  Uri.http(TinterAPIClient.baseUrl, '/user/profilePicture', {'login': login}).toString(),
+                  headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
+                  height: height,
+                  width: width,
+                );
+        },
+      ),
     );
   }
 
+  // We don't check for the profilePicturePath since
+  // the user doesn't need to set a profile picture to
+  // create a new profile.
   bool isAnyAttributeNull() {
-    return props.map((Object prop) => prop == null).contains(true);
+    return props.map((Object prop) => (prop != _profilePicturePath && prop == null)).contains(true);
   }
 
   @override
@@ -103,6 +121,6 @@ class Student extends StaticStudent {
         aideOuSortir,
         organisationEvenements,
         goutsMusicaux,
-        _profilePictureUrl,
+        _profilePicturePath,
       ];
 }
