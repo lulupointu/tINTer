@@ -142,20 +142,19 @@ class MatchesTable {
             throw UnauthorizedRelationStatusCombination(
                 status: status, otherStatus: otherStatus);
           case EnumRelationStatus.liked:
-            throw UnauthorizedRelationStatusCombination(
-                status: status, otherStatus: otherStatus);
+            return MatchStatus.youAskedParrain;
           case EnumRelationStatus.askedParrain:
             return MatchStatus.parrainAccepted;
           case EnumRelationStatus.acceptedParrain:
             return MatchStatus.parrainAccepted;
           case EnumRelationStatus.refusedParrain:
-            MatchStatus.parrainRefused;
+            MatchStatus.parrainHeRefused;
         }
         break;
       case EnumRelationStatus.acceptedParrain:
         return MatchStatus.parrainAccepted;
       case EnumRelationStatus.refusedParrain:
-        return MatchStatus.parrainRefused;
+        return MatchStatus.parrainYouRefused;
     }
   }
 }

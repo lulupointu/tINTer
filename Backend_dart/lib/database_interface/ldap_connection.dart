@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dartdap/dartdap.dart';
 import 'package:tinter_backend/models/http_errors.dart';
@@ -30,8 +31,8 @@ Future<StaticStudent> getStaticStudent({@required login, @required password}) as
     await for (SearchEntry entry in searchResult.stream) {
       staticStudent = StaticStudent(
         login: entry.attributes['uid'].values.first,
-        name: entry.attributes['givenName'].values.first,
-        surname: entry.attributes['sn'].values.first,
+        name: entry.attributes['givenName'].values.first.toString().capitalized,
+        surname: entry.attributes['sn'].values.first.toString().capitalized,
         email: entry.attributes['mail'].values.first,
         primoEntrant: null,
       );
@@ -39,6 +40,10 @@ Future<StaticStudent> getStaticStudent({@required login, @required password}) as
   } on LdapResultInvalidCredentialsException {
     await connection.close();
     throw InvalidCredentialsException('Login or password incorrect.', true);
+  } on SocketException catch (error) {
+    if (error.osError.message == 'Connection refused') {
+      throw ConnectionToLDAPRefused(error.osError.message, false);
+    }
   } catch (e) {
     print(e);
   } finally {
@@ -47,4 +52,8 @@ Future<StaticStudent> getStaticStudent({@required login, @required password}) as
   }
 
   return staticStudent;
+}
+
+extension CapExtension on String {
+  String get capitalized => '${this[0].toUpperCase()}${this.substring(1).toLowerCase()}';
 }

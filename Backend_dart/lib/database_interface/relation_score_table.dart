@@ -109,6 +109,7 @@ class RelationsScoreTable {
   }
 
   Future<void> addMultiple({@required List<RelationScore> listRelationScore}) async {
+    if (listRelationScore.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
           for (int index = 0; index < listRelationScore.length; index++)
@@ -151,6 +152,7 @@ class RelationsScoreTable {
   }
 
   Future<void> updateMultiple({@required List<RelationScore> listRelationScore}) async {
+    if (listRelationScore.length == 0) return;
     final String query = "UPDATE $name AS old SET score=new.score "
             "FROM (VALUES " +
         [

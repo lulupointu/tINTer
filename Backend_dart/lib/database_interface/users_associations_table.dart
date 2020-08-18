@@ -37,7 +37,8 @@ class UsersAssociationsTable {
   Future<void> addFromLogin(
       {@required String login, @required Association association}) async {
     // get the association id from the association name
-    int associationId = await associationsTable.getIdFromName(associationName: association.name);
+    int associationId =
+        await associationsTable.getIdFromName(associationName: association.name);
 
     final String query = "INSERT INTO $name VALUES (@login, @associationId);";
 
@@ -49,6 +50,7 @@ class UsersAssociationsTable {
 
   Future<void> addMultipleFromLogin(
       {@required login, @required List<Association> associations}) async {
+    if (associations.length == 0 ) return;
     // get the associations ids from the associations names
     List<int> associationsIds =
         await associationsTable.getMultipleIdFromName(associations: associations);
@@ -61,8 +63,8 @@ class UsersAssociationsTable {
         ';';
 
     return database.query(query, substitutionValues: {
+      'login': login,
       for (int index = 0; index < associations.length; index++) ...{
-        'login': login,
         'associationId$index': associationsIds[index],
       }
     });
@@ -93,6 +95,7 @@ class UsersAssociationsTable {
 
   Future<Map<String, List<Association>>> getMultipleFromLogins(
       {@required List<String> logins}) async {
+    if (logins.length == 0) return {};
     final String query = "SELECT * "
             "FROM ("
             "SELECT * FROM $name WHERE user_login IN (" +

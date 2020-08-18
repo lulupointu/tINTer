@@ -50,6 +50,7 @@ class GoutsMusicauxTable {
   }
 
   Future<void> addMultiple({@required List<String> goutsMusicaux}) async {
+    if (goutsMusicaux.length==0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
           for (int index = 0; index < goutsMusicaux.length; index++)
@@ -95,6 +96,7 @@ class GoutsMusicauxTable {
   }
 
   Future<List<int>> getMultipleIdFromName({@required List<String> goutsMusicaux}) async {
+    if (goutsMusicaux==0) return [];
     final String query = """
     SELECT id FROM $name WHERE name IN (
     """ +
@@ -140,6 +142,7 @@ class GoutsMusicauxTable {
   }
 
   Future<void> removeMultiple({@required List<String> goutsMusicaux}) async {
+    if (goutsMusicaux.length ==0) return;
     final String query = "DELETE FROM $name WHERE name IN (" +
         [for (int index = 0; index < goutsMusicaux.length; index++) '@$index'].join(',') +
         ");";

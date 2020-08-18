@@ -145,6 +145,7 @@ class SessionsTable {
   }
 
   Future<void> addMultiple({@required List<Session> sessions}) async {
+    if (sessions.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
           for (int index = 0; index < sessions.length; index++)
@@ -169,6 +170,7 @@ class SessionsTable {
   }
 
   Future<void> updateMultiple({@required List<Session> sessions}) async {
+    if (sessions.length == 0) return;
     final String query = "UPDATE $name AS old "
         "SET token=new.token, login=new.login, \"creationDate\"=new.\"creationDate\", \"isValid\"=new.\"isValid\" "
         "FROM (VALUES " +
@@ -215,6 +217,7 @@ class SessionsTable {
   }
 
   Future<List<Session>> getMultipleFromTokens({@required List<String> tokens}) async {
+    if (tokens.length == 0) return [];
     final String query = "SELECT * FROM $name WHERE token IN (" +
         [for (int index = 0; index < tokens.length; index++) '@$index'].join(', ') +
         ");";
@@ -275,6 +278,7 @@ class SessionsTable {
   }
 
   Future<void> removeMultipleFromTokens({@required List<String> tokens}) async {
+    if (tokens.length == 0) return;
     final String query = "DELETE FROM $name WHERE token IN (" +
         [for (int index = 0; index < tokens.length; index++) '@$index'].join(',') +
         ");";

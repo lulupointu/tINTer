@@ -69,3 +69,8 @@ class InvalidCredentialsException extends HttpError {
   InvalidCredentialsException(String error, bool shouldSend)
       : super(error, shouldSend);
 }
+
+class ConnectionToLDAPRefused extends HttpError {
+  ConnectionToLDAPRefused(String error, bool shouldSend)
+  : super(error, shouldSend);
+}

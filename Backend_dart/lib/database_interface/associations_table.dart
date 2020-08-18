@@ -53,6 +53,7 @@ class AssociationsTable {
   }
 
   Future<void> addMultiple({@required List<Association> associations}) async {
+    if (associations.length==0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
           for (int index = 0; index < associations.length; index++)
@@ -81,6 +82,7 @@ class AssociationsTable {
   }
 
   Future<void> updateMultiple({@required List<Association> associations}) async {
+    if (associations.length == 0) return;
     final String query =
         "UPDATE $name AS old SET name=new.name, description=new.description "
             "FROM (VALUES " +
@@ -120,6 +122,7 @@ class AssociationsTable {
   }
 
   Future<List<Association>> getMultipleFromName({@required List<Association> associations}) async {
+    if (associations.length == 0) return [];
     final String query = """
     SELECT * FROM $name WHERE name IN (
     """ +
@@ -166,6 +169,7 @@ class AssociationsTable {
   }
 
   Future<List<int>> getMultipleIdFromName({@required List<Association> associations}) async {
+    if (associations.length == 0) return [];
     final String query = """
     SELECT id FROM $name WHERE name IN (
     """ +
@@ -211,6 +215,7 @@ class AssociationsTable {
   }
 
   Future<void> removeMultiple({@required List<Association> associations}) async {
+    if (associations.length == 0) return;
     final String query = "DELETE FROM $name WHERE name IN (" +
         [for (int index = 0; index < associations.length; index++) '@$index'].join(',') +
         ");";

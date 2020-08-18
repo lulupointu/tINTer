@@ -13,7 +13,8 @@ enum MatchStatus {
   youAskedParrain,
   heAskedParrain,
   parrainAccepted,
-  parrainRefused
+  parrainHeRefused,
+  parrainYouRefused,
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -36,7 +37,6 @@ class Match extends Student {
     @required aideOuSortir,
     @required organisationEvenements,
     @required goutsMusicaux,
-    @required profilePictureUrl,
   })  : assert(score >= 0, score <= 100),
         assert(status != null),
         _status = status,
@@ -53,7 +53,6 @@ class Match extends Student {
           aideOuSortir: aideOuSortir,
           organisationEvenements: organisationEvenements,
           goutsMusicaux: goutsMusicaux,
-          profilePictureUrl: profilePictureUrl,
         );
 
   factory Match.fromJson(Map<String, dynamic> json) => _$MatchFromJson(json);

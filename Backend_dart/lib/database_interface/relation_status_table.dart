@@ -161,6 +161,7 @@ class RelationsStatusTable {
   }
 
   Future<void> addMultiple({@required List<RelationStatus> listRelationStatus}) async {
+    if (listRelationStatus.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
           for (int index = 0; index < listRelationStatus.length; index++)
@@ -184,6 +185,7 @@ class RelationsStatusTable {
   }
 
   Future<void> updateMultiple({@required List<RelationStatus> listRelationStatus}) async {
+    if (listRelationStatus.length == 0) return;
     final String query = "UPDATE $name AS old SET status=new.status "
             "FROM (VALUES " +
         [
@@ -263,6 +265,7 @@ class RelationsStatusTable {
   }
 
   Future<void> removeMultiple({@required List<RelationStatus> listRelationStatus}) async {
+    if (listRelationStatus.length == 0) return;
     final String query = "DELETE FROM $name WHERE (login, \"otherLogin\") IN (" +
         [
           for (int index = 0; index < listRelationStatus.length; index++)

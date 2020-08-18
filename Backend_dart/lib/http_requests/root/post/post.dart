@@ -12,10 +12,8 @@ Future<void> postToNextSegment(HttpRequest req, List<String> segments, String lo
   printReceivedSegments('postToNextSegment', segments);
 
   switch (segments.removeAt(0)) {
-    case 'createUser':
-      return userCreate(req, segments, login);
-    case 'userUpdate':
-      return userUpdate(req, segments, login);
+    case 'user':
+      return userPostToNextSegment(req, segments, login);
     case 'matchUpdateRelationStatus':
       return matchUpdateRelationStatus(req, segments, login);
     default:

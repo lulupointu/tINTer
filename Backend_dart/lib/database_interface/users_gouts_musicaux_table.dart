@@ -47,6 +47,7 @@ class UsersGoutsMusicauxTable {
 
   Future<void> addMultipleFromLogin(
       {@required String login, @required List<String> goutsMusicaux}) async {
+    if (goutsMusicaux.length == 0 ) return;
     // get the goutsMusicaux ids from the goutsMusicaux names
     List<int> goutsMusicauxIds =
         await goutsMusicauxTable.getMultipleIdFromName(goutsMusicaux: goutsMusicaux);
@@ -59,8 +60,8 @@ class UsersGoutsMusicauxTable {
         ';';
 
     return database.query(query, substitutionValues: {
+      'login': login,
       for (int index = 0; index < goutsMusicaux.length; index++) ...{
-        'login': login,
         'goutMusicalId$index': goutsMusicauxIds[index],
       }
     });
@@ -75,7 +76,7 @@ class UsersGoutsMusicauxTable {
   Future<List<String>> getFromLogin({@required String login}) async {
     final String query = "SELECT * "
         "FROM ("
-        "SELECT * FROM $name WHERE user_login = @login "
+        "SELECT * FROM $name WHERE user_login=@login "
         ") AS $name JOIN ${GoutsMusicauxTable.name} "
         "ON (${GoutsMusicauxTable.name}.id = $name.gout_musical_id);";
 
@@ -91,6 +92,7 @@ class UsersGoutsMusicauxTable {
 
   Future<Map<String, List<String>>> getMultipleFromLogins(
       {@required List<String> logins}) async {
+    if (logins.length == 0) return {};
     final String query = "SELECT * "
             "FROM ("
             "SELECT * FROM $name WHERE user_login IN (" +

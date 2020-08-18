@@ -41,16 +41,16 @@ class RelationScore extends Equatable {
         login: user.login,
         otherLogin: otherUser.login,
         score: ((1 -
-                    getNormalizedScoreBetweenLists(
-                        user.associations, otherUser.associations, numberMaxOfAssociations) +
-                    (user.attiranceVieAsso - otherUser.attiranceVieAsso).abs() / 2 +
-                    (user.feteOuCours - otherUser.feteOuCours).abs() / 2 +
-                    (user.aideOuSortir - otherUser.aideOuSortir).abs() / 2 +
-                    (user.organisationEvenements - otherUser.organisationEvenements).abs() /
-                        2 +
-                    getNormalizedScoreBetweenLists(user.goutsMusicaux, otherUser.goutsMusicaux,
-                        numberMaxOfGoutsMusicaux)) /
-                6 *
+                    (getNormalizedScoreBetweenLists(user.associations, otherUser.associations,
+                                numberMaxOfAssociations) +
+                            (user.attiranceVieAsso - otherUser.attiranceVieAsso).abs() +
+                            (user.feteOuCours - otherUser.feteOuCours).abs() +
+                            (user.aideOuSortir - otherUser.aideOuSortir).abs() +
+                            (user.organisationEvenements - otherUser.organisationEvenements)
+                                .abs() +
+                            getNormalizedScoreBetweenLists(user.goutsMusicaux,
+                                otherUser.goutsMusicaux, numberMaxOfGoutsMusicaux)) /
+                        6) *
                 100)
             .floor());
   }

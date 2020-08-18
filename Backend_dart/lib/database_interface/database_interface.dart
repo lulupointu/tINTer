@@ -112,7 +112,43 @@ main() async {
   await usersTable.populate();
   await relationsStatusTable.populate();
   await relationsScoreTable.populate();
-  await sessionsTable.populate();
+  await sessionsTable.populate();  await staticProfileTable.updateMultiple(staticProfiles: [
+    StaticStudent(
+      login: fakeStaticStudents[0].login,
+      name: fakeStaticStudents[0].name,
+      surname: fakeStaticStudents[0].surname,
+      email: fakeStaticStudents[0].email,
+      primoEntrant: false,
+    ),
+    StaticStudent(
+      login: fakeStaticStudents[1].login,
+      name: fakeStaticStudents[1].name,
+      surname: fakeStaticStudents[1].surname,
+      email: fakeStaticStudents[1].email,
+      primoEntrant: true,
+    ),
+    StaticStudent(
+      login: fakeStaticStudents[2].login,
+      name: fakeStaticStudents[2].name,
+      surname: fakeStaticStudents[2].surname,
+      email: fakeStaticStudents[2].email,
+      primoEntrant: true,
+    ),
+    StaticStudent(
+      login: fakeStaticStudents[3].login,
+      name: fakeStaticStudents[3].name,
+      surname: fakeStaticStudents[3].surname,
+      email: fakeStaticStudents[3].email,
+      primoEntrant: true,
+    ),
+    StaticStudent(
+      login: fakeStaticStudents[4].login,
+      name: fakeStaticStudents[4].name,
+      surname: fakeStaticStudents[4].surname,
+      email: fakeStaticStudents[4].email,
+      primoEntrant: true,
+    )
+  ]);
 
   // Tests
 //  await relationsStatusTable.update(
@@ -146,43 +182,7 @@ main() async {
 //      status: EnumRelationStatus.none,
 //    ),
 //    ]);
-//  await staticProfileTable.updateMultiple(staticProfiles: [
-//    StaticStudent(
-//      login: fakeStaticStudents[0].login,
-//      name: fakeStaticStudents[0].name,
-//      surname: fakeStaticStudents[0].surname,
-//      email: fakeStaticStudents[0].email,
-//      primoEntrant: true,
-//    ),
-//    StaticStudent(
-//      login: fakeStaticStudents[1].login,
-//      name: fakeStaticStudents[1].name,
-//      surname: fakeStaticStudents[1].surname,
-//      email: fakeStaticStudents[1].email,
-//      primoEntrant: false,
-//    ),
-//    StaticStudent(
-//      login: fakeStaticStudents[2].login,
-//      name: fakeStaticStudents[2].name,
-//      surname: fakeStaticStudents[2].surname,
-//      email: fakeStaticStudents[2].email,
-//      primoEntrant: true,
-//    ),
-//    StaticStudent(
-//      login: fakeStaticStudents[3].login,
-//      name: fakeStaticStudents[3].name,
-//      surname: fakeStaticStudents[3].surname,
-//      email: fakeStaticStudents[3].email,
-//      primoEntrant: false,
-//    ),
-//    StaticStudent(
-//      login: fakeStaticStudents[4].login,
-//      name: fakeStaticStudents[4].name,
-//      surname: fakeStaticStudents[4].surname,
-//      email: fakeStaticStudents[4].email,
-//      primoEntrant: true,
-//    )
-//  ]);
+
 //
 //  final List<Match> matches = (await matchesTable.getXDiscoverMatchesFromLogin(
 //  login: fakeStaticStudents[0].login, limit: 2));

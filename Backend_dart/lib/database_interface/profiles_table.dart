@@ -189,7 +189,7 @@ class UsersTable {
           "\"attiranceVieAsso\"=@attiranceVieAsso,"
           "\"feteOuCours\"=@feteOuCours,"
           "\"aideOuSortir\"=@aideOuSortir,"
-          "\"organisationEvenements\"=@organisationEvenements"
+          "\"organisationEvenements\"=@organisationEvenements "
           "WHERE login=@login;",
           substitutionValues: {
             "login": user.login,
@@ -233,6 +233,7 @@ class UsersTable {
   }
 
   Future<Map<String, User>> getMultipleFromLogin({@required List<String> logins}) async {
+    if (logins.length==0) return {};
     final List<Future> queries = [
       database.mappedResultsQuery(
           "SELECT * FROM $name JOIN ${StaticProfileTable.name} "
@@ -262,14 +263,15 @@ class UsersTable {
     });
   }
 
-  Future<Map<String, User>> getAllExceptOneFromLogin({@required String login}) async {
+  Future<Map<String, User>> getAllExceptOneFromLogin({@required String login, @required bool primoEntrant}) async {
     final List<Future> queries = [
       database.mappedResultsQuery(
           "SELECT * FROM $name JOIN ${StaticProfileTable.name} "
           "ON $name.login=${StaticProfileTable.name}.login "
-          "WHERE $name.login!=@login;",
+          "WHERE $name.login!=@login AND ${StaticProfileTable.name}.\"primoEntrant\"=@primoEntrant;",
           substitutionValues: {
             'login': login,
+            'primoEntrant': primoEntrant,
           }),
       usersAssociationsTable.getAllExceptOneFromLogin(login: login),
       usersGoutsMusicauxTable.getAllExceptOneFromLogin(login: login),
@@ -283,7 +285,7 @@ class UsersTable {
             ...queriesResults[0][index][StaticProfileTable.name],
             ...{
               'associations': queriesResults[1][queriesResults[0][index][name]['login']],
-              'goutsMusicaux': queriesResults[2][queriesResults[0][index][name]['login']]
+              'goutsMusicaux': queriesResults[2][queriesResults[0][index][name]['login']],
             }
           })
       };
@@ -303,6 +305,7 @@ class UsersTable {
   }
 
   Future<void> removeMultiple({@required List<Association> associations}) async {
+    if (associations.length == 0) return;
     final String query = "DELETE FROM $name WHERE name IN (" +
         [for (int index = 0; index < associations.length; index++) '@$index'].join(',') +
         ");";

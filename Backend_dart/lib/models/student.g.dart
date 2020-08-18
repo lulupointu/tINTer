@@ -19,7 +19,6 @@ Student _$StudentFromJson(Map<String, dynamic> json) {
     aideOuSortir: (json['aideOuSortir'] as num)?.toDouble(),
     organisationEvenements: (json['organisationEvenements'] as num)?.toDouble(),
     goutsMusicaux: json['goutsMusicaux'] as List,
-    profilePictureUrl: json['profilePictureUrl'],
   );
 }
 
@@ -35,5 +34,4 @@ Map<String, dynamic> _$StudentToJson(Student instance) => <String, dynamic>{
       'aideOuSortir': instance.aideOuSortir,
       'organisationEvenements': instance.organisationEvenements,
       'goutsMusicaux': instance.goutsMusicaux,
-      'profilePictureUrl': instance.profilePictureUrl,
     };

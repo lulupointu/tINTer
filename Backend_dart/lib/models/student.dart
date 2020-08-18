@@ -14,7 +14,6 @@ class Student extends StaticStudent {
   final double _aideOuSortir;
   final double _organisationEvenements;
   final List<String> _goutsMusicaux;
-  final String _profilePictureUrl;
 
   Student({
     @required String login,
@@ -28,25 +27,20 @@ class Student extends StaticStudent {
     @required double aideOuSortir,
     @required double organisationEvenements,
     @required List<dynamic> goutsMusicaux,
-    @required profilePictureUrl,
-  })  : assert(associations != null),
-        assert(attiranceVieAsso != null),
+  })  : assert(attiranceVieAsso != null),
         assert(feteOuCours != null),
         assert(aideOuSortir != null),
         assert(organisationEvenements != null),
-        assert(goutsMusicaux != null),
-        assert(profilePictureUrl != null),
         _associations = associations
-            .map((var association) =>
+            ?.map((var association) =>
                 (association is Association) ? association : Association.fromJson(association))
-            .toList(),
+            ?.toList() ?? List<Association>(),
         _attiranceVieAsso = attiranceVieAsso,
         _feteOuCours = feteOuCours,
         _aideOuSortir = aideOuSortir,
         _organisationEvenements = organisationEvenements,
         _goutsMusicaux =
-            goutsMusicaux.map((dynamic goutMusical) => goutMusical.toString()).toList(),
-        _profilePictureUrl=profilePictureUrl,
+            goutsMusicaux?.map((dynamic goutMusical) => goutMusical.toString())?.toList() ?? List<String>(),
         super(
           login: login,
           name: name,
@@ -71,8 +65,6 @@ class Student extends StaticStudent {
   double get organisationEvenements => _organisationEvenements;
 
   List<String> get goutsMusicaux => _goutsMusicaux;
-
-  String get profilePictureUrl => _profilePictureUrl;
 
 
   bool isAnyAttributeNull() {

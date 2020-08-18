@@ -129,6 +129,7 @@ class StaticProfileTable {
   }
 
   Future<void> addMultiple({@required List<StaticStudent> staticProfiles}) async {
+    if (staticProfiles.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
           for (int index = 0; index < staticProfiles.length; index++)
@@ -158,6 +159,7 @@ class StaticProfileTable {
   }
 
   Future<void> updateMultiple({@required List<StaticStudent> staticProfiles}) async {
+    if (staticProfiles.length == 0) return;
     final String query =
         "UPDATE $name AS old SET login=new.login, name=new.name, surname=new.surname, email=new.email, \"primoEntrant\"=\"newPrimoEntrant\" "
                 "FROM (VALUES " +
@@ -195,6 +197,7 @@ class StaticProfileTable {
   }
 
   Future<List<StaticStudent>> getMultipleFromLogin({@required List<String> logins}) async {
+    if (logins.length == 0) return [];
     final String query = """
     SELECT * FROM $name WHERE login IN (
     """ +
@@ -231,6 +234,26 @@ class StaticProfileTable {
     });
   }
 
+  Future<Map<String, StaticStudent>> getAllExceptOneFromLogin({@required String login, @required bool primoEntrant}) async {
+    final List<Future> queries = [
+      database.mappedResultsQuery(
+          "SELECT * FROM $name JOIN "
+          "WHERE login!=@login AND \"primoEntrant\"=@primoEntrant;",
+          substitutionValues: {
+            'login': login,
+            'primoEntrant': 'primoEntrant',
+          }),
+    ];
+
+    return Future.wait(queries).then((queriesResults) {
+      return {
+        for (int index = 0; index < queriesResults[0].length; index++)
+          queriesResults[0][index][name]['login']:
+              StaticStudent.fromJson(queriesResults[0][index][name])
+      };
+    });
+  }
+
   Future<void> remove({@required StaticStudent staticProfile}) async {
     final String query = "DELETE FROM $name WHERE login=@login;";
 
@@ -240,6 +263,7 @@ class StaticProfileTable {
   }
 
   Future<void> removeMultiple({@required List<StaticStudent> staticProfiles}) async {
+    if (staticProfiles.length == 0) return;
     final String query = "DELETE FROM $name WHERE login IN (" +
         [for (int index = 0; index < staticProfiles.length; index++) '@$index'].join(',') +
         ");";

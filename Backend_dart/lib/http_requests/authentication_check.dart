@@ -227,6 +227,7 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   } on InvalidCredentialsException catch (error) {
     throw error;
   } on EmptyResponseToDatabaseQuery {
+
     // This means that it is the first authentication, therefore we save the static profile
     await staticProfileTable.add(staticProfile: ldapStaticStudent);
 

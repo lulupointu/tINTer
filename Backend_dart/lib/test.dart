@@ -5,7 +5,7 @@ Future<void> main() async {
   Stream<HttpRequest> server;
 
   try {
-    server = await HttpServer.bind(InternetAddress.loopbackIPv4, 4044);
+    server = await HttpServer.bind(InternetAddress.anyIPv4, 4044);
   } catch (e) {
     print("Couldn't bind to port 4044: $e");
     exit(-1);
