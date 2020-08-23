@@ -7,8 +7,8 @@ import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/shared/internal_errors.dart';
 
-Future<void> userDeleteAccount(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('UserDeleteAccount', segments);
+Future<void> userDelete(HttpRequest req, List<String> segments, String login) async {
+  printReceivedSegments('UserDelete', segments);
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

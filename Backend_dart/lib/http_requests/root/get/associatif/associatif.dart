@@ -1,5 +1,4 @@
 import 'package:tinter_backend/http_requests/authentication_check.dart';
-import 'package:tinter_backend/http_requests/root/get/associatif/associations/associations.dart';
 import 'package:tinter_backend/http_requests/root/get/associatif/discover_matches/discover_matches.dart';
 import 'package:tinter_backend/http_requests/root/get/associatif/matched_matches/matched_matches.dart';
 import 'package:tinter_backend/http_requests/root/get/associatif/search_users/searchUsers.dart';
@@ -22,8 +21,6 @@ Future<void> associatifGetToNextSegment(HttpRequest req, List<String> segments, 
       return discoverMatchesGet(req, segments, login);
     case 'matchedMatches':
       return matchedMatchesGet(req, segments, login);
-    case 'associations':
-      return associationsGetToNextSegment(req, segments, login);
     default:
       throw UnknownRequestedPathError(req.uri.path);
   }

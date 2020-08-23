@@ -1,5 +1,8 @@
 import 'package:tinter_backend/http_requests/authentication_check.dart';
-import 'package:tinter_backend/http_requests/root/get/associatif/associations/associations.dart';
+import 'package:tinter_backend/http_requests/root/get/associatif/associatif.dart';
+import 'package:tinter_backend/http_requests/root/get/scolaire/scolaire.dart';
+import 'package:tinter_backend/http_requests/root/get/shared/shared.dart';
+import 'package:tinter_backend/http_requests/root/get/shared/user/info/info.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
@@ -10,9 +13,11 @@ Future<void> getToNextSegment(HttpRequest req, List<String> segments, String log
 
   switch (segments.removeAt(0)) {
     case 'associatif':
-      return associationsGetToNextSegment(req, segments, login);
-//    case 'scolaire':
-//      return scolaireGetToNextSegment(req, segments, login);
+      return associatifGetToNextSegment(req, segments, login);
+    case 'scolaire':
+      return scolaireGetToNextSegment(req, segments, login);
+    case 'shared':
+      return sharedGetToNextSegment(req, segments, login);
     default:
       throw UnknownRequestedPathError(req.uri.path);
   }

@@ -6,13 +6,13 @@ import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 
-class BinomesScolairesTable {
+class BinomesTable {
   final UsersTable usersTable;
   final RelationsScoreScolaireTable relationsScoreTable;
   final RelationsStatusScolaireTable relationsStatusTable;
   final PostgreSQLConnection database;
 
-  BinomesScolairesTable({
+  BinomesTable({
     @required this.database,
   })  : usersTable = UsersTable(database: database),
         relationsScoreTable = RelationsScoreScolaireTable(database: database),
@@ -59,7 +59,7 @@ class BinomesScolairesTable {
     });
   }
 
-  Future<List<BuildBinome>> getBinomesFromLogin({@required String login}) async {
+  Future<List<BuildBinome>> getMatchedBinomesFromLogin({@required String login}) async {
     String getDiscoverBinomesQuery =
         "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, status, \"otherStatus\" FROM ${RelationsScoreScolaireTable.name} JOIN "
         "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".status, \"otherRelationStatusScolaire\".status AS \"otherStatus\" "

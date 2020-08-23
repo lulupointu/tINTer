@@ -31,12 +31,16 @@ class UsersSharedPartTable {
 
     return Future.wait(queries);
   }
+  
+  Future<void> add({@required BuildUserSharedPart userSharedPart}) {
+    return usersTable.add(userJson: userSharedPart.toJson());
+  }
 
-  Future<void> update(BuildUserAssociatif userAssociatif) {
-    final Map<String, dynamic> userAssociatifJson = userAssociatif.toJson();
+  Future<void> update({@required BuildUserSharedPart userSharedPart}) {
+    final Map<String, dynamic> userSharedPartJson = userSharedPart.toJson();
 
     final List<Future> queries = [
-      usersTable.update(userJson: userAssociatifJson),
+      usersTable.update(userJson: userSharedPartJson),
     ];
 
     return Future.wait(queries);

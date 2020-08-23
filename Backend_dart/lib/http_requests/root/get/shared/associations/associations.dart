@@ -1,6 +1,6 @@
 import 'package:tinter_backend/http_requests/authentication_check.dart';
-import 'package:tinter_backend/http_requests/root/get/associatif/associations/all_associations/all_associations.dart';
-import 'package:tinter_backend/http_requests/root/get/associatif/associations/association_logo/association_logo.dart';
+import 'package:tinter_backend/http_requests/root/get/shared/associations/all_associations/all_associations.dart';
+import 'package:tinter_backend/http_requests/root/get/shared/associations/association_logo/association_logo.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
