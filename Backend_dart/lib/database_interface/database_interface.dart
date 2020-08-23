@@ -1,20 +1,25 @@
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
-import 'package:tinter_backend/database_interface/associations_table.dart';
-import 'package:tinter_backend/database_interface/gouts_musicaux_table.dart';
-import 'package:tinter_backend/database_interface/matches_table.dart';
-import 'package:tinter_backend/database_interface/profiles_table.dart';
-import 'package:tinter_backend/database_interface/relation_status_table.dart';
-import 'package:tinter_backend/database_interface/relation_score_table.dart';
-import 'package:tinter_backend/database_interface/sessions.dart';
-import 'package:tinter_backend/database_interface/static_profile_table.dart';
-import 'package:tinter_backend/database_interface/users_associations_table.dart';
-import 'package:tinter_backend/database_interface/users_gouts_musicaux_table.dart';
-import 'package:tinter_backend/models/relation_status.dart';
-import 'package:tinter_backend/models/static_student.dart';
-import 'package:tinter_backend/models/user.dart';
+import 'package:tinter_backend/database_interface/scolaire/matieres_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/users_horaires_de_travail.dart';
+import 'package:tinter_backend/database_interface/scolaire/users_matieres_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/users_scolaire_table.dart';
+import 'package:tinter_backend/database_interface/shared/associations_table.dart';
+import 'package:tinter_backend/database_interface/associatif/gouts_musicaux_table.dart';
+import 'package:tinter_backend/database_interface/associatif/matches_table.dart';
+import 'package:tinter_backend/database_interface/associatif/users_associatifs_table.dart';
+import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
+import 'package:tinter_backend/database_interface/associatif/relation_score_associatif_table.dart';
+import 'package:tinter_backend/database_interface/shared/sessions.dart';
+import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
+import 'package:tinter_backend/database_interface/shared/user_shared_part_table.dart';
+import 'package:tinter_backend/database_interface/shared/users_associations_table.dart';
+import 'package:tinter_backend/database_interface/associatif/users_gouts_musicaux_table.dart';
+import 'package:tinter_backend/database_interface/user_table.dart';
+import 'package:tinter_backend/models/associatif/user_associatif.dart';
+import 'package:tinter_backend/models/scolaire/user_scolaire.dart';
+import 'package:tinter_backend/models/shared/user_shared_part.dart';
 import 'package:tinter_backend/secret.dart';
-import 'package:tinter_backend/models/match.dart';
 
 class TinterDatabase {
   var connection = new PostgreSQLConnection(
@@ -65,21 +70,30 @@ main() async {
   final TinterDatabase tinterDatabase = TinterDatabase();
   await tinterDatabase.open();
 
-  final StaticProfileTable staticProfileTable =
-      StaticProfileTable(database: tinterDatabase.connection);
+  final UsersTable usersTable = UsersTable(database: tinterDatabase.connection);
   final AssociationsTable associationsTable =
       AssociationsTable(database: tinterDatabase.connection);
   final GoutsMusicauxTable goutsMusicauxTable =
       GoutsMusicauxTable(database: tinterDatabase.connection);
+  final MatieresTable matieresTable = MatieresTable(database: tinterDatabase.connection);
   final UsersAssociationsTable usersAssociationsTable =
       UsersAssociationsTable(database: tinterDatabase.connection);
+  final UsersHorairesDeTravailTable usersHorairesDeTravailTable =
+      UsersHorairesDeTravailTable(database: tinterDatabase.connection);
+  final UsersMatieresTable usersMatieresTable =
+      UsersMatieresTable(database: tinterDatabase.connection);
   final UsersGoutsMusicauxTable usersGoutsMusicauxTable =
       UsersGoutsMusicauxTable(database: tinterDatabase.connection);
-  final UsersTable usersTable = UsersTable(database: tinterDatabase.connection);
-  final RelationsScoreTable relationsScoreTable =
-      RelationsScoreTable(database: tinterDatabase.connection);
-  final RelationsStatusTable relationsStatusTable =
-      RelationsStatusTable(database: tinterDatabase.connection);
+  final UsersAssociatifsTable usersAssociatifsTable =
+      UsersAssociatifsTable(database: tinterDatabase.connection);
+  final UsersSharedPartTable usersSharedPartTable =
+      UsersSharedPartTable(database: tinterDatabase.connection);
+  final UsersScolairesTable usersScolairesTable =
+      UsersScolairesTable(database: tinterDatabase.connection);
+  final RelationsScoreAssociatifTable relationsScoreTable =
+      RelationsScoreAssociatifTable(database: tinterDatabase.connection);
+  final RelationsStatusAssociatifTable relationsStatusTable =
+      RelationsStatusAssociatifTable(database: tinterDatabase.connection);
   final MatchesTable matchesTable = MatchesTable(database: tinterDatabase.connection);
   final SessionsTable sessionsTable = SessionsTable(database: tinterDatabase.connection);
 
@@ -87,99 +101,91 @@ main() async {
   await sessionsTable.delete();
   await usersAssociationsTable.delete();
   await usersGoutsMusicauxTable.delete();
+  await usersMatieresTable.delete();
+  await usersHorairesDeTravailTable.delete();
   await usersTable.delete();
   await associationsTable.delete();
   await goutsMusicauxTable.delete();
+  await matieresTable.delete();
   await relationsStatusTable.delete();
   await relationsScoreTable.delete();
-  await staticProfileTable.delete();
 
   // Create
-  await staticProfileTable.create();
+  await usersTable.create();
   await associationsTable.create();
   await goutsMusicauxTable.create();
+  await matieresTable.create();
   await usersAssociationsTable.create();
   await usersGoutsMusicauxTable.create();
-  await usersTable.create();
+  await usersMatieresTable.create();
+  await usersHorairesDeTravailTable.create();
   await relationsStatusTable.create();
   await relationsScoreTable.create();
   await sessionsTable.create();
 
   // Populate
-  await staticProfileTable.populate();
   await goutsMusicauxTable.populate();
   await associationsTable.populate();
-  await usersTable.populate();
+  await matieresTable.populate();
+  await usersSharedPartTable.populate();
   await relationsStatusTable.populate();
   await relationsScoreTable.populate();
-  await sessionsTable.populate();  await staticProfileTable.updateMultiple(staticProfiles: [
-    StaticStudent(
-      login: fakeStaticStudents[0].login,
-      name: fakeStaticStudents[0].name,
-      surname: fakeStaticStudents[0].surname,
-      email: fakeStaticStudents[0].email,
-      primoEntrant: false,
-    ),
-    StaticStudent(
-      login: fakeStaticStudents[1].login,
-      name: fakeStaticStudents[1].name,
-      surname: fakeStaticStudents[1].surname,
-      email: fakeStaticStudents[1].email,
-      primoEntrant: true,
-    ),
-    StaticStudent(
-      login: fakeStaticStudents[2].login,
-      name: fakeStaticStudents[2].name,
-      surname: fakeStaticStudents[2].surname,
-      email: fakeStaticStudents[2].email,
-      primoEntrant: true,
-    ),
-    StaticStudent(
-      login: fakeStaticStudents[3].login,
-      name: fakeStaticStudents[3].name,
-      surname: fakeStaticStudents[3].surname,
-      email: fakeStaticStudents[3].email,
-      primoEntrant: true,
-    ),
-    StaticStudent(
-      login: fakeStaticStudents[4].login,
-      name: fakeStaticStudents[4].name,
-      surname: fakeStaticStudents[4].surname,
-      email: fakeStaticStudents[4].email,
-      primoEntrant: true,
-    )
-  ]);
+  await sessionsTable.populate();
+  await usersTable.update(userJson: {
+    'login': fakeUsersSharedPart[0].login,
+    'primoEntrant': true,
+  });
+  await usersTable.update(userJson: {
+    'login': fakeUsersSharedPart[1].login,
+    'primoEntrant': true,
+  });
+  await usersTable.update(userJson: {
+    'login': fakeUsersSharedPart[2].login,
+    'primoEntrant': false,
+  });
+  await usersTable.update(userJson: {
+    'login': fakeUsersSharedPart[3].login,
+    'primoEntrant': true,
+  });
+  await usersTable.update(userJson: {
+    'login': fakeUsersSharedPart[4].login,
+    'primoEntrant': false,
+  });
+  await usersAssociatifsTable.populate();
+  await usersScolairesTable.populate();
 
   // Tests
+  print(await usersScolairesTable.getAllExceptOneFromLogin(
+      login: fakeUsersScolaires[0].login, year: TSPYear.TSP3A));
 //  await relationsStatusTable.update(
-//    relationStatus: RelationStatus(
-//      login: fakeListRelationStatus[0].login,
-//      otherLogin: fakeListRelationStatus[0].otherLogin,
-//      status: EnumRelationStatus.ignored,
+//    relationStatus: RelationStatusAssociatif(
+//      login: fakeListRelationStatusAssociatif[0].login,
+//      otherLogin: fakeListRelationStatusAssociatif[0].otherLogin,
+//      status: EnumRelationStatusAssociatif.ignored,
 //    ),
 //  );
 
 //  try {
-//    await relationsStatusTable.updateMultiple(listRelationStatus: [
-//      RelationStatus(
+//    await relationsStatusTable.updateMultiple(listRelationStatusAssociatif: [
+//      RelationStatusAssociatif(
 //        login: fakeStaticStudents[0].login,
 //        otherLogin: fakeStaticStudents[1].login,
-//        status: EnumRelationStatus.askedParrain,
+//        status: EnumRelationStatusAssociatif.askedParrain,
 //      ),
-//    RelationStatus(
+//    RelationStatusAssociatif(
 //      login: fakeStaticStudents[0].login,
 //      otherLogin: fakeStaticStudents[2].login,
-//      status: EnumRelationStatus.none,
+//      status: EnumRelationStatusAssociatif.none,
 //    ),
-//    RelationStatus(
+//    RelationStatusAssociatif(
 //      login: fakeStaticStudents[0].login,
 //      otherLogin: fakeStaticStudents[3].login,
-//      status: EnumRelationStatus.none,
+//      status: EnumRelationStatusAssociatif.none,
 //    ),
-//    RelationStatus(
+//    RelationStatusAssociatif(
 //      login: fakeStaticStudents[0].login,
 //      otherLogin: fakeStaticStudents[4].login,
-//      status: EnumRelationStatus.none,
+//      status: EnumRelationStatusAssociatif.none,
 //    ),
 //    ]);
 

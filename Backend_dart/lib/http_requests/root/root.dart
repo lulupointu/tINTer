@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/http_requests/root/get/get.dart';
 import 'package:tinter_backend/http_requests/root/post/post.dart';
-import 'package:tinter_backend/models/http_errors.dart';
-import 'package:tinter_backend/test.dart';
+import 'package:tinter_backend/models/shared/http_errors.dart';
 
 Future<void> rootToGetOrPost(HttpRequest req, List<String> segments, String login) async {
   printReceivedSegments('rootToGetOrPost', segments);

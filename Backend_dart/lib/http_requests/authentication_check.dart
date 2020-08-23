@@ -3,14 +3,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:image/image.dart';
-import 'package:tinter_backend/database_interface/ldap_connection.dart' as ldap;
-import 'package:tinter_backend/database_interface/sessions.dart';
-import 'package:tinter_backend/database_interface/static_profile_table.dart';
+import 'package:tinter_backend/database_interface/shared/ldap_connection.dart' as ldap;
+import 'package:tinter_backend/database_interface/shared/sessions.dart';
+import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
+import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/http_requests/root/root.dart';
-import 'package:tinter_backend/models/http_errors.dart';
-import 'package:tinter_backend/models/session.dart';
-import 'package:tinter_backend/models/static_student.dart';
+import 'package:tinter_backend/models/shared/http_errors.dart';
+import 'package:tinter_backend/models/shared/session.dart';
 import 'package:meta/meta.dart';
 
 Future<void> authenticationCheckThenRoute(HttpRequest req) async {
@@ -122,12 +122,14 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
     if (session.creationDate.add(Session.MaximumLifeTime).compareTo(DateTime.now()) < 0) {
       await sessionsTable.update(
           session: Session(
-        token: session.token,
-        login: session.login,
-        creationDate: session.creationDate,
-        isValid: false,
+        (b) => b
+          ..token = session.token
+          ..login = session.login
+          ..creationDate = session.creationDate
+          ..isValid = false,
       ));
-      throw ExpiredTokenError(error: 'Your token is too old, you need to authenticate again', shouldSend: true);
+      throw ExpiredTokenError(
+          error: 'Your token is too old, you need to authenticate again', shouldSend: true);
     }
 
     // Check if the token should be refreshed if needed, default to false
@@ -149,17 +151,19 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
         final String _newToken = generateNewToken();
         await sessionsTable.update(
             session: Session(
-          token: session.token,
-          login: session.login,
-          creationDate: session.creationDate,
-          isValid: false,
+          (b) => b
+            ..token = session.token
+            ..login = session.login
+            ..creationDate = session.creationDate
+            ..isValid = false,
         ));
         await sessionsTable.add(
             session: Session(
-          token: _newToken,
-          login: session.login,
-          creationDate: DateTime.now(),
-          isValid: true,
+          (b) => b
+            ..token = _newToken
+            ..login = session.login
+            ..creationDate = DateTime.now()
+            ..isValid = true,
         ));
         await httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
       } else {
@@ -186,8 +190,7 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   TinterDatabase tinterDatabase = TinterDatabase();
   await tinterDatabase.open();
 
-  StaticStudent ldapStaticStudent;
-  StaticProfileTable staticProfileTable = StaticProfileTable(
+  UsersTable usersTable = UsersTable(
     database: tinterDatabase.connection,
   );
   SessionsTable sessionsTable = SessionsTable(
@@ -207,38 +210,40 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   final String _login = _loginPassword.substring(0, splitIndex);
   final String _password = _loginPassword.substring(splitIndex + 1);
 
+  Map<String, String> userBasicInfoJson;
   try {
     // Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised
-    ldapStaticStudent = await ldap.getStaticStudent(login: _login, password: _password);
+    userBasicInfoJson = await ldap.getUserInfoFromLDAP(login: _login, password: _password);
 
     // Get static student info from database, If unknown EmptyResponseToDatabaseQuery is raised
-    await staticProfileTable.getFromLogin(login: _login);
+    await usersTable.getFromLogin(login: _login);
 
     // Generate a new token, store it, and send it in the header
     String _newToken = generateNewToken();
     await sessionsTable.add(
         session: Session(
-      token: _newToken,
-      login: _login,
-      creationDate: DateTime.now(),
-      isValid: true,
+      (b) => b
+        ..token = _newToken
+        ..login = _login
+        ..creationDate = DateTime.now()
+        ..isValid = true,
     ));
     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
   } on InvalidCredentialsException catch (error) {
     throw error;
   } on EmptyResponseToDatabaseQuery {
-
     // This means that it is the first authentication, therefore we save the static profile
-    await staticProfileTable.add(staticProfile: ldapStaticStudent);
+    await usersTable.add(userJson: userBasicInfoJson);
 
     // Generate a new token, store it, and send it in the header
     String _newToken = generateNewToken();
     await sessionsTable.add(
         session: Session(
-      token: _newToken,
-      login: _login,
-      creationDate: DateTime.now(),
-      isValid: true,
+      (b) => b
+        ..token = _newToken
+        ..login = _login
+        ..creationDate = DateTime.now()
+        ..isValid = true,
     ));
     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
   } finally {

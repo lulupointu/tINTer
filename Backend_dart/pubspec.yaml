@@ -7,9 +7,11 @@ dependencies:
   equatable: ^1.2.3
   dartdap: ^0.4.5
   image:
+  built_value: ^7.1.0
 
 
 
 dev_dependencies:
   build_runner:
   json_serializable: ^3.3.0
+  built_value_generator: ^7.1.0
