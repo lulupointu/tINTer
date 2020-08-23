@@ -5,7 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/UI/shared_element/const.dart';
 import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
 

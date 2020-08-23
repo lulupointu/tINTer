@@ -3,21 +3,22 @@ import 'dart:io';
 
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
-import 'package:tinterapp/Logic/models/association.dart';
-import 'package:tinterapp/Logic/models/match.dart';
-import 'package:tinterapp/Logic/models/relation_status.dart';
-import 'package:tinterapp/Logic/models/searched_user.dart';
-import 'package:tinterapp/Logic/models/static_student.dart';
-import 'package:tinterapp/Logic/models/token.dart';
-import 'package:tinterapp/Logic/models/user.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
+import 'package:tinterapp/Logic/models/associatif/match.dart';
+import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
+import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
+import 'package:tinterapp/Logic/models/shared/user_shared_part.dart';
+import 'package:tinterapp/Logic/models/shared/token.dart';
+import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
 
-  class TinterAPIClient {
-  static const baseUrl = '86.193.242.149:4044';
+class TinterAPIClient {
+  static const baseUrl = '81.185.164.250:4044';
   final http.Client httpClient;
 
   TinterAPIClient({@required this.httpClient}) : assert(httpClient != null);
 
-  Future<TinterApiResponse<void>> logIn({@required String login, @required String password}) async {
+  Future<TinterApiResponse<void>> logIn(
+      {@required String login, @required String password}) async {
     http.Response response = await httpClient.post(Uri.http(baseUrl, '/login'), headers: {
       HttpHeaders.wwwAuthenticateHeader: base64Encode(utf8.encode('$login:$password'))
     });
@@ -33,7 +34,7 @@ import 'package:tinterapp/Logic/models/user.dart';
 
     try {
       token = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -43,13 +44,14 @@ import 'package:tinterapp/Logic/models/user.dart';
   }
 
   Future<TinterApiResponse<void>> authenticateWithToken({@required Token token}) async {
-    http.Response response = await httpClient.post(Uri.http(baseUrl, '/authenticate', {'shouldRefresh': 'true'}),
+    http.Response response = await httpClient.post(
+        Uri.http(baseUrl, '/authenticate', {'shouldRefresh': 'true'}),
         headers: {HttpHeaders.wwwAuthenticateHeader: token.token});
 
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -58,15 +60,17 @@ import 'package:tinterapp/Logic/models/user.dart';
     if (response.statusCode != HttpStatus.ok) {
       throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
     } else if (!response.headers.containsKey(HttpHeaders.wwwAuthenticateHeader)) {
-      throw TinterAPIError('Error the header does not contain wwwAuthenticateHeader}', newToken);
+      throw TinterAPIError(
+          'Error the header does not contain wwwAuthenticateHeader}', newToken);
     }
 
     return TinterApiResponse(value: null, token: newToken);
   }
 
-  Future<TinterApiResponse<void>> createUser({@required User user, @required Token token}) async {
+  Future<TinterApiResponse<void>> createUserAssociatif(
+      {@required BuildUserAssociatif user, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/user/create', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/user/create', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(user.toJson()),
     );
@@ -74,7 +78,7 @@ import 'package:tinterapp/Logic/models/user.dart';
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -87,9 +91,10 @@ import 'package:tinterapp/Logic/models/user.dart';
     return TinterApiResponse(value: null, token: newToken);
   }
 
-  Future<TinterApiResponse<void>> updateUser({@required User user, @required Token token}) async {
+  Future<TinterApiResponse<void>> updateUserAssociatif(
+      {@required BuildUserAssociatif user, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/user/update', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/user/update', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(user.toJson()),
     );
@@ -97,7 +102,7 @@ import 'package:tinterapp/Logic/models/user.dart';
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -110,9 +115,10 @@ import 'package:tinterapp/Logic/models/user.dart';
     return TinterApiResponse(value: null, token: newToken);
   }
 
-  Future<TinterApiResponse<void>> updateUserProfilePicture({@required String profilePictureLocalPath, @required Token token}) async {
+  Future<TinterApiResponse<void>> updateUserProfilePicture(
+      {@required String profilePictureLocalPath, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/user/updateProfilePicture', {'shouldRefresh': 'false'}),
+      Uri.http(baseUrl, '/shared/updateProfilePicture', {'shouldRefresh': 'false'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: File(profilePictureLocalPath).readAsBytesSync(),
     );
@@ -120,7 +126,7 @@ import 'package:tinterapp/Logic/models/user.dart';
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -134,9 +140,9 @@ import 'package:tinterapp/Logic/models/user.dart';
   }
 
   Future<TinterApiResponse<void>> updateMatchRelationStatus(
-      {@required RelationStatus relationStatus, @required Token token}) async {
+      {@required RelationStatusAssociatif relationStatus, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/matchUpdateRelationStatus', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/matchUpdateRelationStatus', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(relationStatus.toJson()),
     );
@@ -144,7 +150,7 @@ import 'package:tinterapp/Logic/models/user.dart';
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -157,109 +163,47 @@ import 'package:tinterapp/Logic/models/user.dart';
     return TinterApiResponse(value: null, token: newToken);
   }
 
-  Future<TinterApiResponse<StaticStudent>> getStaticStudent({@required Token token}) async {
+  Future<TinterApiResponse<BuildUserSharedPart>> getUserSharedPart({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/user/staticInfo', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/user/staticInfo', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
     }
 
-
     if (response.statusCode != HttpStatus.ok) {
       throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
     }
 
-    StaticStudent staticStudent;
+    BuildUserSharedPart userSharedPart;
     try {
-      staticStudent = StaticStudent.fromJson(jsonDecode(response.body));
+      userSharedPart = BuildUserSharedPart.fromJson(jsonDecode(response.body));
     } catch (error) {
       print(error);
       throw error;
     }
 
-    return TinterApiResponse(value: staticStudent, token: newToken);
+    return TinterApiResponse(value: userSharedPart, token: newToken);
   }
 
-
-//  Future<TinterApiResponse<StaticStudent>> getMultipleStaticStudents({@required Token token}) async {
-//    http.Response response = await httpClient.get(
-//      Uri.http(baseUrl, '/user/staticInfo', {'shouldRefresh': 'true'}),
-//      headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
-//    );
-//
-//    Token newToken;
-//    try {
-//      newToken = Token(
-//        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
-//      );
-//    } catch (error) {
-//      throw error;
-//    }
-//
-//
-//    if (response.statusCode != HttpStatus.ok) {
-//      throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
-//    }
-//
-//    StaticStudent staticStudent;
-//    try {
-//      staticStudent = StaticStudent.fromJson(jsonDecode(response.body));
-//    } catch (error) {
-//      print(error);
-//      throw error;
-//    }
-//
-//    return TinterApiResponse(value: staticStudent, token: newToken);
-//  }
-
-
-    Future<TinterApiResponse<List<SearchedUser>>> getAllSearchedUsers({@required Token token}) async {
-      http.Response response = await httpClient.get(
-        Uri.http(baseUrl, '/searchUsers', {'shouldRefresh': 'true'}),
-        headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
-      );
-
-      Token newToken;
-      try {
-        newToken = Token(
-          token: response.headers[HttpHeaders.wwwAuthenticateHeader],
-        );
-      } catch (error) {
-        throw error;
-      }
-
-      if (response.statusCode != HttpStatus.ok) {
-        throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
-      }
-
-      List<SearchedUser> searchedUsers;
-      try {
-        searchedUsers = json.decode(response.body).map<SearchedUser>((dynamic jsonSearchedUser) => SearchedUser.fromJson(jsonSearchedUser)).toList();
-      } catch (error) {
-        throw error;
-      }
-
-      return TinterApiResponse(value: searchedUsers, token: newToken);
-    }
-
-  Future<TinterApiResponse<User>> getUser({@required Token token}) async {
+  Future<TinterApiResponse<List<SearchedUserAssociatif>>>
+      getAllSearchedUsersAssociatifsAssociatif({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/user/info', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/searchUsers', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -269,9 +213,42 @@ import 'package:tinterapp/Logic/models/user.dart';
       throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
     }
 
-    User user;
+    List<SearchedUserAssociatif> searchedUsers;
     try {
-      user = User.fromJson(jsonDecode(response.body));
+      searchedUsers = json
+          .decode(response.body)
+          .map<SearchedUserAssociatif>((dynamic jsonSearchedUserAssociatif) =>
+              SearchedUserAssociatif.fromJson(jsonSearchedUserAssociatif))
+          .toList();
+    } catch (error) {
+      throw error;
+    }
+
+    return TinterApiResponse(value: searchedUsers, token: newToken);
+  }
+
+  Future<TinterApiResponse<BuildUserAssociatif>> getUserAssociatif({@required Token token}) async {
+    http.Response response = await httpClient.get(
+      Uri.http(baseUrl, '/associatif/user/info', {'shouldRefresh': 'true'}),
+      headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
+    );
+
+    Token newToken;
+    try {
+      newToken = Token(
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+      );
+    } catch (error) {
+      throw error;
+    }
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
+    }
+
+    BuildUserAssociatif user;
+    try {
+      user = BuildUserAssociatif.fromJson(jsonDecode(response.body));
     } catch (error) {
       throw error;
     }
@@ -281,14 +258,14 @@ import 'package:tinterapp/Logic/models/user.dart';
 
   Future<TinterApiResponse<bool>> isKnownUser({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/user/isKnown', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/user/isKnown', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -308,16 +285,16 @@ import 'package:tinterapp/Logic/models/user.dart';
     return TinterApiResponse(value: isKnown, token: newToken);
   }
 
-  Future<TinterApiResponse<List<Match>>> getMatchedMatches({@required Token token}) async {
+  Future<TinterApiResponse<List<BuildMatch>>> getMatchedMatches({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/matchedMatches', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/matchedMatches', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -327,9 +304,12 @@ import 'package:tinterapp/Logic/models/user.dart';
       throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
     }
 
-    List<Match> matchedMatches;
+    List<BuildMatch> matchedMatches;
     try {
-      matchedMatches = json.decode(response.body).map<Match>((dynamic jsonMatch) => Match.fromJson(jsonMatch)).toList();
+      matchedMatches = json
+          .decode(response.body)
+          .map<BuildMatch>((dynamic jsonMatch) => BuildMatch.fromJson(jsonMatch))
+          .toList();
     } catch (error) {
       throw error;
     }
@@ -337,10 +317,11 @@ import 'package:tinterapp/Logic/models/user.dart';
     return TinterApiResponse(value: matchedMatches, token: newToken);
   }
 
-  Future<TinterApiResponse<List<Match>>> getDiscoverMatches(
+  Future<TinterApiResponse<List<BuildMatch>>> getDiscoverMatches(
       {@required Token token, @required int limit, @required int offset}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/discoverMatches', {'limit': limit.toString(), 'offset': offset.toString(), 'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/discoverMatches',
+          {'limit': limit.toString(), 'offset': offset.toString(), 'shouldRefresh': 'true'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
       },
@@ -349,7 +330,7 @@ import 'package:tinterapp/Logic/models/user.dart';
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -359,9 +340,12 @@ import 'package:tinterapp/Logic/models/user.dart';
       throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
     }
 
-    List<Match> discoverMatches;
+    List<BuildMatch> discoverMatches;
     try {
-      discoverMatches = json.decode(response.body).map<Match>((dynamic jsonMatch) => Match.fromJson(jsonMatch)).toList();
+      discoverMatches = json
+          .decode(response.body)
+          .map<BuildMatch>((dynamic jsonMatch) => BuildMatch.fromJson(jsonMatch))
+          .toList();
     } catch (error) {
       throw error;
     }
@@ -369,11 +353,10 @@ import 'package:tinterapp/Logic/models/user.dart';
     return TinterApiResponse(value: discoverMatches, token: newToken);
   }
 
-
   Future<TinterApiResponse<List<Association>>> getAllAssociations(
       {@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/associations/allAssociations', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/associatif/associations/allAssociations', {'shouldRefresh': 'true'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
       },
@@ -382,7 +365,7 @@ import 'package:tinterapp/Logic/models/user.dart';
     Token newToken;
     try {
       newToken = Token(
-        token: response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -394,7 +377,10 @@ import 'package:tinterapp/Logic/models/user.dart';
 
     List<Association> allAssociations;
     try {
-      allAssociations = json.decode(response.body).map<Association>((dynamic jsonAssociation) => Association.fromJson(jsonAssociation)).toList();
+      allAssociations = json
+          .decode(response.body)
+          .map<Association>((dynamic jsonAssociation) => Association.fromJson(jsonAssociation))
+          .toList();
     } catch (error) {
       throw error;
     }
@@ -402,6 +388,29 @@ import 'package:tinterapp/Logic/models/user.dart';
     return TinterApiResponse(value: allAssociations, token: newToken);
   }
 
+  Future<TinterApiResponse<void>> deleteUserAccount({@required Token token}) async {
+    http.Response response = await httpClient.post(
+      Uri.http(baseUrl, '/shared/deleteAccount', {'shouldRefresh': 'false'}),
+      headers: {
+        HttpHeaders.wwwAuthenticateHeader: token.token,
+      },
+    );
+
+    Token newToken;
+    try {
+      newToken = Token(
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+      );
+    } catch (error) {
+      throw error;
+    }
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
+    }
+
+    return TinterApiResponse(value: null, token: newToken);
+  }
 }
 
 class TinterAPIError implements Exception {
@@ -412,7 +421,6 @@ class TinterAPIError implements Exception {
 
   @override
   String toString() => '(${this.runtimeType}) $error';
-
 }
 
 class TinterApiResponse<T> {

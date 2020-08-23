@@ -21,32 +21,12 @@ abstract class UserScolaireLoadSuccessState extends UserScolaireState {
   @override
   List<Object> get props => [userScolaire];
 
-  UserScolaireLoadSuccessState createNewState({UserScolaire newUserScolaire});
+  UserScolaireLoadSuccessState createNewState({UserScolaire newState});
 
-  UserScolaireLoadSuccessState withAttributeChanged({
-    TSPYear year,
-    List<dynamic> associations,
-    double groupeOuSeul,
-    LieuDeVie lieuDeVie,
-    List<HoraireDeTravail> horairesDeTravail,
-    OutilDeTravail enligneOuNon,
-    List<String> matieresPreferees,
-    String profilePicturePath,
+  UserScolaireLoadSuccessState withNewState({
+    @required UserScolaire newState,
   }) {
-    return createNewState(
-        newUserScolaire: UserScolaire(
-            login: userScolaire.login,
-            name: userScolaire.name,
-            surname: userScolaire.surname,
-            email: userScolaire.email,
-            year: year ?? userScolaire.year,
-            associations: associations ?? userScolaire.associations,
-            groupeOuSeul: groupeOuSeul ?? userScolaire.groupeOuSeul,
-            lieuDeVie: lieuDeVie ?? userScolaire.lieuDeVie,
-            horairesDeTravail: horairesDeTravail ?? userScolaire.horairesDeTravail,
-            enligneOuNon: enligneOuNon ?? userScolaire.enligneOuNon,
-            matieresPreferees: matieresPreferees ?? userScolaire.matieresPreferees)
-    );
+    return createNewState(newState: newState);
   }
 }
 
@@ -58,14 +38,14 @@ class NewUserScolaireCreatingProfileState extends NewUserScolaireState {
   NewUserScolaireCreatingProfileState({@required userScolaire})
       : super(userScolaire: userScolaire);
 
-  NewUserScolaireCreatingProfileState createNewState({UserScolaire newUserScolaire}) {
-    return NewUserScolaireCreatingProfileState(userScolaire: newUserScolaire);
+  NewUserScolaireCreatingProfileState createNewState({UserScolaire newState}) {
+    return NewUserScolaireCreatingProfileState(userScolaire: newState);
   }
 }
 
 class NewUserScolaireLoadingState extends NewUserScolaireState {
   @override
-  UserScolaireLoadSuccessState createNewState({UserScolaire newUserScolaire}) {
+  UserScolaireLoadSuccessState createNewState({UserScolaire newState}) {
     throw UnimplementedError();
   }
 }
@@ -74,7 +54,7 @@ class NewUserScolaireSavingState extends NewUserScolaireState {
   NewUserScolaireSavingState({@required userScolaire}) : super(userScolaire: userScolaire);
 
   @override
-  UserScolaireLoadSuccessState createNewState({UserScolaire newUserScolaire}) {
+  UserScolaireLoadSuccessState createNewState({UserScolaire newState}) {
     throw UnimplementedError();
   }
 }
@@ -88,10 +68,10 @@ class KnownUserScolaireRefreshingState extends KnownUserScolaireState {
       : super(userScolaire: userScolaire);
 
   @override
-  KnownUserScolaireState createNewState({UserScolaire newUserScolaire}) =>
-      (newUserScolaire != this.userScolaire)
+  KnownUserScolaireState createNewState({UserScolaire newState}) =>
+      (newState != this.userScolaire)
           ? KnownUserScolaireUnsavedState(
-          userScolaire: newUserScolaire, oldSavedUserScolaire: this.userScolaire)
+              userScolaire: newState, oldSavedUserScolaire: this.userScolaire)
           : KnownUserScolaireSavedState(userScolaire: this.userScolaire);
 }
 
@@ -99,10 +79,10 @@ class KnownUserScolaireSavedState extends KnownUserScolaireState {
   KnownUserScolaireSavedState({@required userScolaire}) : super(userScolaire: userScolaire);
 
   @override
-  KnownUserScolaireState createNewState({UserScolaire newUserScolaire}) =>
-      (newUserScolaire != this.userScolaire)
+  KnownUserScolaireState createNewState({UserScolaire newState}) =>
+      (newState != this.userScolaire)
           ? KnownUserScolaireUnsavedState(
-          userScolaire: newUserScolaire, oldSavedUserScolaire: this.userScolaire)
+              userScolaire: newState, oldSavedUserScolaire: this.userScolaire)
           : KnownUserScolaireSavedState(userScolaire: this.userScolaire);
 }
 
@@ -113,10 +93,10 @@ class KnownUserScolaireUnsavedState extends KnownUserScolaireState {
       : super(userScolaire: userScolaire);
 
   @override
-  KnownUserScolaireState createNewState({UserScolaire newUserScolaire}) =>
-      (newUserScolaire != this.oldSavedUserScolaire)
+  KnownUserScolaireState createNewState({UserScolaire newState}) =>
+      (newState != this.oldSavedUserScolaire)
           ? KnownUserScolaireUnsavedState(
-          userScolaire: newUserScolaire, oldSavedUserScolaire: this.oldSavedUserScolaire)
+              userScolaire: newState, oldSavedUserScolaire: this.oldSavedUserScolaire)
           : KnownUserScolaireSavedState(userScolaire: this.oldSavedUserScolaire);
 }
 
@@ -126,7 +106,7 @@ class KnownUserScolaireSavingState extends KnownUserScolaireUnsavedState {
       : super(userScolaire: userScolaire, oldSavedUserScolaire: oldSavedUserScolaire);
 
   @override
-  KnownUserScolaireState createNewState({UserScolaire newUserScolaire}) {
+  KnownUserScolaireState createNewState({UserScolaire newState}) {
     throw UnimplementedError();
   }
 }
@@ -142,9 +122,9 @@ class KnownUserScolaireRefreshingFailedState extends KnownUserScolaireState {
       : super(userScolaire: userScolaire);
 
   @override
-  KnownUserScolaireState createNewState({UserScolaire newUserScolaire}) =>
-      (newUserScolaire != this.userScolaire)
+  KnownUserScolaireState createNewState({UserScolaire newState}) =>
+      (newState != this.userScolaire)
           ? KnownUserScolaireUnsavedState(
-          userScolaire: newUserScolaire, oldSavedUserScolaire: this.userScolaire)
+              userScolaire: newState, oldSavedUserScolaire: this.userScolaire)
           : KnownUserScolaireSavedState(userScolaire: this.userScolaire);
 }

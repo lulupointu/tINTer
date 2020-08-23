@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status.dart';
+import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
@@ -14,7 +14,7 @@ class DiscoverBinomesRepository {
   DiscoverBinomesRepository({@required this.tinterAPIClient, @required this.authenticationRepository}) :
         assert(tinterAPIClient != null);
 
-  Future<List<Binome>> getBinomes({@required int limit, @required int offset}) async {
+  Future<List<BuildBinome>> getBinomes({@required int limit, @required int offset}) async {
     Token token;
     try {
       token = await AuthenticationRepository.getAuthenticationToken();
@@ -24,7 +24,7 @@ class DiscoverBinomesRepository {
       throw error;
     }
 
-    TinterApiResponse<List<Binome>> tinterApiResponse;
+    TinterApiResponse<List<BuildBinome>> tinterApiResponse;
     try {
       tinterApiResponse = await tinterAPIClient.getDiscoverBinomes(token: token, limit: limit, offset: offset);
     } on TinterAPIError catch(error) {

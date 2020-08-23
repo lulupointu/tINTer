@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:separated_column/separated_column.dart';
-import 'package:tinterapp/Logic/blocs/matched_matches/matches_bloc.dart';
-import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
-import 'package:tinterapp/Logic/models/association.dart';
-import 'package:tinterapp/Logic/models/student.dart';
+import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif/user_associatif_bloc.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
+import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
+import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
+import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared_element/slider_label.dart';
 import 'package:tinterapp/UI/shared_element/const.dart';
-import 'package:tinterapp/Logic/models/match.dart';
+import 'package:tinterapp/Logic/models/associatif/match.dart';
 
 import 'snap_scroll_sheet_physics.dart';
 
@@ -60,16 +62,17 @@ class _MatchsTabState extends State<MatchsTab> {
       }
 
       // Get the 2 list out of all the matched matches
-      final List<Match> allMatches = (state as MatchedMatchesLoadSuccessState).matches;
-      final List<Match> _matchesNotParrains =
+      final List<BuildMatch> allMatches = (state as MatchedMatchesLoadSuccessState).matches;
+      final List<BuildMatch> _matchesNotParrains =
           allMatches.where((match) => match.status != MatchStatus.parrainAccepted).toList();
-      final List<Match> _parrains =
+      final List<BuildMatch> _parrains =
           allMatches.where((match) => match.status == MatchStatus.parrainAccepted).toList();
 
       // Sort them
       _matchesNotParrains
-          .sort((Match matchA, Match matchB) => matchA.name.compareTo(matchB.name));
-      _parrains.sort((Match matchA, Match matchB) => matchA.name.compareTo(matchB.name));
+          .sort((BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
+      _parrains
+          .sort((BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
 
       widget.fractions['matchSelectionMenu'] =
           ((_matchesNotParrains.length == 0) ? 0.0 : 0.2) +
@@ -112,8 +115,8 @@ class _MatchsTabState extends State<MatchsTab> {
                 (_selectedMatchLogin == null)
                     ? noMatchSelected(constraints.maxHeight)
                     : CompareView(
-                        match: allMatches
-                            .firstWhere((Match match) => match.login == _selectedMatchLogin),
+                        match: allMatches.firstWhere(
+                            (BuildMatch match) => match.login == _selectedMatchLogin),
                         appHeight: constraints.maxHeight,
                         topMenuScrolledFraction: topMenuScrolledFraction,
                         onCompareTapped: onCompareTapped,
@@ -183,7 +186,7 @@ class _MatchsTabState extends State<MatchsTab> {
     );
   }
 
-  void matchSelected(Match match) {
+  void matchSelected(BuildMatch match) {
     setState(() {
       _selectedMatchLogin = match.login;
     });
@@ -191,13 +194,13 @@ class _MatchsTabState extends State<MatchsTab> {
 }
 
 class CompareView extends StatelessWidget {
-  final Match _match;
+  final BuildMatch _match;
   final double appHeight;
   final double topMenuScrolledFraction;
   final onCompareTapped;
 
   CompareView({
-    @required Match match,
+    @required BuildMatch match,
     @required this.appHeight,
     @required this.topMenuScrolledFraction,
     @required this.onCompareTapped,
@@ -232,14 +235,20 @@ class CompareView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BlocBuilder<UserBloc, UserState>(
-                    builder: (BuildContext context, UserState userState) {
+                BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+                    builder: (BuildContext context, UserAssociatifState userState) {
                   if (!(userState is UserLoadSuccessState)) {
                     return CircularProgressIndicator();
                   }
                   return userPicture(
-                      getProfilePicture:
-                          (userState as UserLoadSuccessState).user.getProfilePicture);
+                      getProfilePicture: ({@required height, @required width}) =>
+                          getProfilePictureFromLocalPathOrLogin(
+                              login: (userState as UserLoadSuccessState).user.login,
+                              localPath: (userState as UserLoadSuccessState)
+                                  .user
+                                  .profilePictureLocalPath,
+                              height: height,
+                              width: width));
                 }),
                 userPictureText(title: 'You'),
               ],
@@ -254,7 +263,13 @@ class CompareView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                userPicture(getProfilePicture: _match.getProfilePicture),
+                userPicture(
+                    getProfilePicture: ({@required height, @required width}) =>
+                        getProfilePictureFromLocalPathOrLogin(
+                            login: _match.login,
+                            localPath: _match.profilePictureLocalPath,
+                            height: height,
+                            width: width)),
                 userPictureText(title: _match.name + '\n' + _match.surname),
               ],
             ),
@@ -362,52 +377,77 @@ class CompareView extends StatelessWidget {
             Expanded(
               flex: 1000,
               child: Center(
-                child: AutoSizeText(
-                  (_match.status == MatchStatus.liked)
-                      ? "Cette personne ne t'a pas encore liker"
-                      : (_match.status == MatchStatus.matched)
-                          ? (_match.primoEntrant)
-                              ? "Demande lui de te parrainer"
-                              : "Propose lui d'être ton parrain"
-                          : (_match.status == MatchStatus.youAskedParrain)
-                              ? "Demande de parrainage envoyée"
-                              : (_match.status == MatchStatus.heAskedParrain)
-                                  ? (_match.primoEntrant)
-                                      ? "Cette personne veut te parrainer"
-                                      : "Cette personne veut que tu la parraine"
-                                  : (_match.status == MatchStatus.parrainAccepted)
-                                      ? (_match.primoEntrant)
-                                          ? "Cette personne te parraine!"
-                                          : 'Tu parraine cette personne!'
-                                      : (_match.status == MatchStatus.parrainHeRefused)
-                                          ? 'Cette personne à refusée ta demande'
-                                          : (_match.status == MatchStatus.parrainYouRefused)
-                                              ? (_match.primoEntrant)
-                                                  ? "Tu as refusé de parrainer cette personne."
-                                                  : "Tu as refusé que cette personne te parraine."
-                                              : 'ERROR: the status should not be ' +
-                                                  _match.status.toString(),
-                  style: TinterTextStyle.headline2,
-                  maxLines: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: AutoSizeText(
+                    (_match.status == MatchStatus.liked ||
+                            _match.status == MatchStatus.heIgnoredYou)
+                        ? "Cette personne ne t'a pas encore liker"
+                        : (_match.status == MatchStatus.matched)
+                            ? (_match.primoEntrant)
+                                ? "Demande lui de te parrainer"
+                                : "Propose lui d'être ton parrain"
+                            : (_match.status == MatchStatus.youAskedParrain)
+                                ? "Demande de parrainage envoyée"
+                                : (_match.status == MatchStatus.heAskedParrain)
+                                    ? (_match.primoEntrant)
+                                        ? "Cette personne veut te parrainer"
+                                        : "Cette personne veut que tu la parraine"
+                                    : (_match.status == MatchStatus.parrainAccepted)
+                                        ? (_match.primoEntrant)
+                                            ? "Cette personne te parraine!"
+                                            : 'Tu parraine cette personne!'
+                                        : (_match.status == MatchStatus.parrainHeRefused)
+                                            ? 'Cette personne à refusée ta demande'
+                                            : (_match.status == MatchStatus.parrainYouRefused)
+                                                ? (_match.primoEntrant)
+                                                    ? "Tu as refusé de parrainer cette personne."
+                                                    : "Tu as refusé que cette personne te parraine."
+                                                : 'ERROR: the status should not be ${_match.status}',
+                    style: TinterTextStyle.headline2,
+                    maxLines: 1,
+                  ),
                 ),
               ),
             ),
-            ...([MatchStatus.matched, MatchStatus.heAskedParrain].contains(_match.status))
-                ? [
-                    Container(
-                      constraints: BoxConstraints(
-                        minHeight: 10,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1000,
-                      child: (_match.status == MatchStatus.matched)
-                          ? Center(
-                              child: InkWell(
+            if ([MatchStatus.matched, MatchStatus.heAskedParrain].contains(_match.status)) ...[
+              Container(
+                constraints: BoxConstraints(
+                  minHeight: 10,
+                ),
+              ),
+              Expanded(
+                flex: 1000,
+                child: (_match.status == MatchStatus.matched)
+                    ? Center(
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: () {
+                            BlocProvider.of<MatchedMatchesBloc>(context)
+                                .add(AskParrainEvent(match: _match));
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                              color: TinterColors.secondaryAccent,
+                            ),
+                            child: AutoSizeText(
+                              "Envoyer une demande",
+                              style: TinterTextStyle.headline2,
+                            ),
+                          ),
+                        ),
+                      )
+                    : (_match.status == MatchStatus.heAskedParrain)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
                                 splashColor: Colors.transparent,
                                 onTap: () {
                                   BlocProvider.of<MatchedMatchesBloc>(context)
-                                      .add(AskParrainEvent(match: _match));
+                                      .add(AcceptParrainEvent(match: _match));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(5.0),
@@ -416,95 +456,69 @@ class CompareView extends StatelessWidget {
                                     color: TinterColors.secondaryAccent,
                                   ),
                                   child: AutoSizeText(
-                                    "Envoyer une demande",
+                                    "Accepter",
                                     style: TinterTextStyle.headline2,
                                   ),
                                 ),
                               ),
-                            )
-                          : (_match.status == MatchStatus.heAskedParrain)
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      onTap: () {
-                                        BlocProvider.of<MatchedMatchesBloc>(context)
-                                            .add(AcceptParrainEvent(match: _match));
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                                          color: TinterColors.secondaryAccent,
-                                        ),
-                                        child: AutoSizeText(
-                                          "Accepter",
-                                          style: TinterTextStyle.headline2,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 30,
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      onTap: () {
-                                        BlocProvider.of<MatchedMatchesBloc>(context)
-                                            .add(RefuseParrainEvent(match: _match));
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                                          color: TinterColors.secondaryAccent,
-                                        ),
-                                        child: AutoSizeText(
-                                          "Refuser",
-                                          style: TinterTextStyle.headline2,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : AutoSizeText(
-                                  'ERROR: the state should not be ' + _match.status.toString(),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              InkWell(
+                                splashColor: Colors.transparent,
+                                onTap: () {
+                                  BlocProvider.of<MatchedMatchesBloc>(context)
+                                      .add(RefuseParrainEvent(match: _match));
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                                    color: TinterColors.secondaryAccent,
+                                  ),
+                                  child: AutoSizeText(
+                                    "Refuser",
+                                    style: TinterTextStyle.headline2,
+                                  ),
                                 ),
-                    ),
-                  ]
-                : [Container()],
-            ...(topMenuScrolledFraction == 1)
-                ? [Container()]
-                : [
-                    Container(
-                      constraints: BoxConstraints(
-                        minHeight: 10,
-                      ),
-                    ),
-                    Expanded(
-                      flex: (1000 * (1 - topMenuScrolledFraction)).floor(),
-                      child: Center(
-                        child: InkWell(
-                          onTap: () {
-                            onCompareTapped(appHeight);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                              color: TinterColors.grey,
-                            ),
-                            child: AutoSizeText(
-                              'Compare vos profils',
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              maxFontSize: 15,
-                            ),
+                              ),
+                            ],
+                          )
+                        : AutoSizeText(
+                            'ERROR: the state should not be ' + _match.status.toString(),
                           ),
-                        ),
+              ),
+              Container(
+                constraints: BoxConstraints(
+                  minHeight: 10,
+                ),
+              ),
+            ],
+            if (topMenuScrolledFraction != 1)
+              Expanded(
+                flex: (1000 * (1 - topMenuScrolledFraction)).floor(),
+                child: Center(
+                  child: InkWell(
+                    onTap: () {
+                      onCompareTapped(appHeight);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                        color: TinterColors.background.withOpacity(0.8),
+                      ),
+                      child: AutoSizeText(
+                        'Compare vos profils',
+                        style: TinterTextStyle.goutMusicauxNotLiked,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        maxFontSize: 15,
                       ),
                     ),
-                  ],
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -542,18 +556,18 @@ class CompareView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState state) {
-              if (!(state is KnownUserState)) {
-                BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
+            child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+                builder: (BuildContext context, UserAssociatifState state) {
+              if (!(state is KnownUserAssociatifState)) {
+                BlocProvider.of<UserAssociatifBloc>(context).add(UserRequestEvent());
                 return CircularProgressIndicator();
               }
-              return ProfileInformation(student: (state as KnownUserState).user);
+              return ProfileInformation(user: (state as KnownUserAssociatifState).user);
             }),
           ),
           verticalSeparator(),
           Expanded(
-            child: ProfileInformation(student: _match),
+            child: ProfileInformation(user: _match),
           ),
         ],
       ),
@@ -562,9 +576,9 @@ class CompareView extends StatelessWidget {
 }
 
 class ProfileInformation extends StatelessWidget {
-  final Student student;
+  final dynamic user;
 
-  ProfileInformation({this.student}) : assert(student != null);
+  ProfileInformation({this.user}) : assert(user != null);
 
   @override
   Widget build(BuildContext context) {
@@ -596,17 +610,15 @@ class ProfileInformation extends StatelessWidget {
                   ),
                   Container(
                     height: 50,
-                    child: ListView.separated(
+                    child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
-                      itemCount: student.associations.length,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          width: 5,
-                        );
-                      },
+                      itemCount: user.user.associations.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return associationBubble(context, student.associations[index]);
+                        return Padding(
+                          padding: EdgeInsets.only(right: 5.0, left: index == 0 ? 5.0 : 0),
+                          child: associationBubble(context, user.user.associations[index]),
+                        );
                       },
                     ),
                   ),
@@ -628,7 +640,7 @@ class ProfileInformation extends StatelessWidget {
                   SliderTheme(
                     data: TinterSliderTheme.disabled,
                     child: Slider(
-                      value: student.attiranceVieAsso,
+                      value: user.attiranceVieAsso,
                       onChanged: null,
                     ),
                   ),
@@ -654,7 +666,7 @@ class ProfileInformation extends StatelessWidget {
                       SliderTheme(
                         data: TinterSliderTheme.disabled,
                         child: Slider(
-                          value: student.feteOuCours,
+                          value: user.feteOuCours,
                           onChanged: null,
                         ),
                       ),
@@ -683,7 +695,7 @@ class ProfileInformation extends StatelessWidget {
                       SliderTheme(
                         data: TinterSliderTheme.disabled,
                         child: Slider(
-                          value: student.aideOuSortir,
+                          value: user.aideOuSortir,
                           onChanged: null,
                         ),
                       ),
@@ -707,7 +719,7 @@ class ProfileInformation extends StatelessWidget {
                   SliderTheme(
                     data: TinterSliderTheme.disabled,
                     child: Slider(
-                      value: student.organisationEvenements,
+                      value: user.organisationEvenements,
                       onChanged: null,
                     ),
                   ),
@@ -729,7 +741,7 @@ class ProfileInformation extends StatelessWidget {
                   Wrap(
                     spacing: 15,
                     children: <Widget>[
-                      for (String musicStyle in student.goutsMusicaux)
+                      for (String musicStyle in user.goutsMusicaux)
                         Chip(
                           label: Text(musicStyle),
                           labelStyle: TinterTextStyle.goutMusicauxLiked,
@@ -760,20 +772,12 @@ class ProfileInformation extends StatelessWidget {
   }
 
   Widget associationBubble(BuildContext context, Association association) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: TinterTextStyle.headline1.color, width: 3),
-      ),
-      height: 60,
-      width: 60,
-      child: ClipOval(
-        child: Container(
-          alignment: AlignmentDirectional.centerStart,
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: association.getLogo(),
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+        child: ClipOval(
+          child: getLogoFromAssociation(associationName: association.name),
         ),
       ),
     );
@@ -834,8 +838,8 @@ class ProfileInformation extends StatelessWidget {
 class MatchSelectionMenu extends StatelessWidget {
   final _onTap;
   final double height;
-  final List<Match> matchesNotParrains;
-  final List<Match> parrains;
+  final List<BuildMatch> matchesNotParrains;
+  final List<BuildMatch> parrains;
 
   MatchSelectionMenu(
       {@required onTap,
@@ -862,7 +866,7 @@ class MatchSelectionMenu extends StatelessWidget {
   }
 
   /// Either displays the parrain top menu or the match top menu
-  Widget topMenu({@required List<Match> matches, @required String title}) {
+  Widget topMenu({@required List<BuildMatch> matches, @required String title}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -878,7 +882,7 @@ class MatchSelectionMenu extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              for (Match match in matches)
+              for (BuildMatch match in matches)
                 InkWell(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
@@ -893,7 +897,12 @@ class MatchSelectionMenu extends StatelessWidget {
                     ),
                     height: 50,
                     width: 50,
-                    child: match.getProfilePicture(height: 50, width: 50),
+                    child: getProfilePictureFromLocalPathOrLogin(
+                      login: match.login,
+                      localPath: match.profilePictureLocalPath,
+                      height: 50,
+                      width: 50,
+                    ),
                   ),
                 ),
             ],

@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:tinterapp/Logic/blocs/associations/associations_bloc.dart';
-import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
-import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
-import 'package:tinterapp/Logic/blocs/matched_matches/matches_bloc.dart';
-import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
-import 'package:tinterapp/Logic/blocs/user_search/user_search_bloc.dart';
-import 'package:tinterapp/Logic/repository/associations_repository.dart';
-import 'package:tinterapp/Logic/repository/authentication_repository.dart';
-import 'package:tinterapp/Logic/repository/discover_repository.dart';
-import 'package:tinterapp/Logic/repository/matched_repository.dart';
-import 'package:tinterapp/Logic/repository/user_repository.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif/user_associatif_bloc.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/associations/associations_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
+import 'package:tinterapp/Logic/blocs/associatif/discover_matches/discover_matches_bloc.dart';
+import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
+import 'package:tinterapp/Logic/repository/associatif/associations_repository.dart';
+import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
+import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
+import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';
+import 'package:tinterapp/Logic/repository/associatif/user_associatif_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
+import 'package:tinterapp/UI/discover/discover.dart';
 import 'package:tinterapp/UI/login/login.dart';
 import 'package:tinterapp/UI/profile_creation/create_profile.dart';
+import 'package:tinterapp/UI/shared_element/const.dart';
 import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
 import 'package:tinterapp/UI/shared_element/tinter_bottom_navigation_bar.dart';
 import 'package:tinterapp/UI/matches/matches.dart';
 import 'package:tinterapp/UI/user_profile/user_profile.dart';
 import 'package:http/http.dart' as http;
 
-import 'UI/discover/discover.dart';
-import 'UI/shared_element/const.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -37,13 +38,13 @@ main() {
   final AuthenticationRepository authenticationRepository =
       AuthenticationRepository(tinterAPIClient: tinterAPIClient);
 
-  final UserRepository userRepository = UserRepository(
+  final UserAssociatifRepository userRepository = UserAssociatifRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  final MatchedRepository matchedRepository = MatchedRepository(
+  final MatchedMatchesRepository matchedMatchesRepository = MatchedMatchesRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  final DiscoverRepository discoverRepository = DiscoverRepository(
+  final DiscoverMatchesRepository discoverMatchesRepository = DiscoverMatchesRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   final AssociationsRepository associationsRepository = AssociationsRepository(
@@ -57,21 +58,21 @@ main() {
               AuthenticationBloc(authenticationRepository: authenticationRepository),
           child: MultiBlocProvider(
             providers: [
-              BlocProvider<UserBloc>(
-                create: (BuildContext context) => UserBloc(
+              BlocProvider<UserAssociatifBloc>(
+                create: (BuildContext context) => UserAssociatifBloc(
                   userRepository: userRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
               BlocProvider<MatchedMatchesBloc>(
                 create: (BuildContext context) => MatchedMatchesBloc(
-                  matchedRepository: matchedRepository,
+                  matchedMatchesRepository: matchedMatchesRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
               BlocProvider(
                 create: (BuildContext context) => DiscoverMatchesBloc(
-                  discoverRepository: discoverRepository,
+                  discoverMatchesRepository: discoverMatchesRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
@@ -82,9 +83,9 @@ main() {
                 ),
               ),
               BlocProvider(
-                create: (BuildContext context) => UserSearchBloc(
+                create: (BuildContext context) => UserAssociatifSearchBloc(
                   userRepository: userRepository,
-                  matchedRepository: matchedRepository,
+                  matchedMatchesRepository: matchedMatchesRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
@@ -121,18 +122,18 @@ class Tinter extends StatelessWidget {
         }
 
         // next check on the user state
-        return BlocBuilder<UserBloc, UserState>(
-          builder: (BuildContext context, UserState userState) {
+        return BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+          builder: (BuildContext context, UserAssociatifState userState) {
             if (userState is UserInitialState) {
-              BlocProvider.of<UserBloc>(context).add(UserInitEvent());
-              return CircularProgressIndicator();
+              BlocProvider.of<UserAssociatifBloc>(context).add(UserInitEvent());
+              return SplashScreen();
             } else if (userState is UserInitializingState) {
-              return CircularProgressIndicator();
+              return SplashScreen();
             } else if (userState is NewUserSavingState) {
               return SplashScreen();
-            } else if (userState is NewUserState) {
+            } else if (userState is NewUserAssociatifState) {
               return UserCreationTab();
-            } else if (userState is KnownUserState) {
+            } else if (userState is KnownUserAssociatifState) {
               return TinterHome();
             }
             return Center(child: Text('Error, Unknown state: ${userState.runtimeType}'));

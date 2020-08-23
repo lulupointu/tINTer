@@ -1,20 +1,37 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
+import 'package:tinterapp/Logic/models/serializers.dart';
 
 part 'token.g.dart';
 
+abstract class Token implements Built<Token, TokenBuilder> {
+  String get token;
 
-@JsonSerializable(explicitToJson: true)
-class Token extends Equatable {
-  final String token;
+  Token._();
+  factory Token([void Function(TokenBuilder) updates]) = _$Token;
 
-  const Token({@required this.token});
+  Map<String, dynamic> toJson() {
+    return serializers.serializeWith(Token.serializer, this);
+  }
 
-  factory Token.fromJson(Map<String, dynamic> json) => _$TokenFromJson(json);
+  static Token fromJson(Map<String, dynamic> json) {
+    return serializers.deserializeWith(Token.serializer, json);
+  }
 
-  Map<String, dynamic> toJson() => _$TokenToJson(this);
-
-  @override
-  List<Object> get props => [token];
+  static Serializer<Token> get serializer => _$tokenSerializer;
 }
+
+//@JsonSerializable(explicitToJson: true)
+//class Token extends Equatable {
+//  final String token;
+//
+//  const Token({@required this.token});
+//
+//  factory Token.fromJson(Map<String, dynamic> json) => _$TokenFromJson(json);
+//
+//  Map<String, dynamic> toJson() => _$TokenToJson(this);
+//
+//  @override
+//  List<Object> get props => [token];
+//}

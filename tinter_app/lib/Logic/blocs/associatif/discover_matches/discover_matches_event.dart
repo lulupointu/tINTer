@@ -11,7 +11,7 @@ abstract class DiscoverMatchesEvent extends Equatable {
 class DiscoverMatchesRequestedEvent extends DiscoverMatchesEvent {}
 
 abstract class DiscoverMatchesLoadInSuccessEvent extends DiscoverMatchesEvent {
-  final Match match;
+  final BuildMatch match;
 
   const DiscoverMatchesLoadInSuccessEvent({@required this.match});
 

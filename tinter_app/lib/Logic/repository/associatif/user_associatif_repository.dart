@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
-import 'package:tinterapp/Logic/models/shared/static_student.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
@@ -18,7 +17,7 @@ class UserAssociatifRepository {
   UserAssociatifRepository({@required this.tinterAPIClient, @required this.authenticationRepository})
       : assert(tinterAPIClient != null);
 
-  Future<UserAssociatif> getUser() async {
+  Future<BuildUserAssociatif> getUser() async {
     Token token;
     try {
       token = await AuthenticationRepository.getAuthenticationToken();
@@ -29,7 +28,7 @@ class UserAssociatifRepository {
     }
     print('getUser using token ${token.token}');
 
-    TinterApiResponse<UserAssociatif> tinterApiResponse;
+    TinterApiResponse<BuildUserAssociatif> tinterApiResponse;
     try {
       tinterApiResponse = await tinterAPIClient.getUserAssociatif(token: token);
     } on TinterAPIError catch (error) {
@@ -44,7 +43,7 @@ class UserAssociatifRepository {
     return tinterApiResponse.value;
   }
 
-  Future<bool> updateUser({@required UserAssociatif user}) async {
+  Future<bool> updateUser({@required BuildUserAssociatif user}) async {
     Token token;
     try {
       token = await AuthenticationRepository.getAuthenticationToken();
@@ -57,10 +56,10 @@ class UserAssociatifRepository {
       newToken = (await tinterAPIClient.updateUserAssociatif(user: user, token: token)).token;
 
       // If not null this means that the profile picture has been updated
-      if (user.profilePictureLocalPath != null){
-        await tinterAPIClient.updateUserProfilePicture(
-            profilePictureLocalPath: user.profilePictureLocalPath, token: token);
-      }
+//      if (user.profilePictureLocalPath != null){
+//        await tinterAPIClient.updateUserProfilePicture(
+//            profilePictureLocalPath: user.profilePictureLocalPath, token: token);
+//      }
     } on TinterAPIError catch (error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);
@@ -73,7 +72,7 @@ class UserAssociatifRepository {
     return true;
   }
 
-  Future<void> createUser({@required UserAssociatif user}) async {
+  Future<void> createUser({@required BuildUserAssociatif user}) async {
     Token token;
     try {
       token = await AuthenticationRepository.getAuthenticationToken();
@@ -84,10 +83,10 @@ class UserAssociatifRepository {
     Token newToken;
     try {
       newToken = (await tinterAPIClient.createUserAssociatif(user: user, token: token)).token;
-      if (user.profilePictureLocalPath != null){
-        await tinterAPIClient.updateUserProfilePicture(
-            profilePictureLocalPath: user.profilePictureLocalPath, token: token);
-      }
+//      if (user.profilePictureLocalPath != null){
+//        await tinterAPIClient.updateUserProfilePicture(
+//            profilePictureLocalPath: user.profilePictureLocalPath, token: token);
+//      }
     } on TinterAPIError catch (error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);
@@ -98,28 +97,28 @@ class UserAssociatifRepository {
 
   }
 
-  Future<StaticStudent> getBasicUserInfo() async {
-    Token token;
-    try {
-      token = await AuthenticationRepository.getAuthenticationToken();
-    } catch (error) {
-      throw error;
-    }
-    print('getBasicUserInfo using token ${token.token}');
-
-    TinterApiResponse<StaticStudent> tinterApiResponse;
-    try {
-      tinterApiResponse = await tinterAPIClient.getStaticStudent(token: token);
-    } on TinterAPIError catch (error) {
-      await authenticationRepository.checkIfNewToken(
-          oldToken: token, newToken: error.token);
-      throw UnknownUserError();
-    }
-
-    await authenticationRepository.checkIfNewToken(
-        oldToken: token, newToken: tinterApiResponse.token);
-    return tinterApiResponse.value;
-  }
+//  Future<UserAssociatif> getBasicUserInfo() async {
+//    Token token;
+//    try {
+//      token = await AuthenticationRepository.getAuthenticationToken();
+//    } catch (error) {
+//      throw error;
+//    }
+//    print('getBasicUserInfo using token ${token.token}');
+//
+//    TinterApiResponse<UserAssociatif> tinterApiResponse;
+//    try {
+//      tinterApiResponse = await tinterAPIClient.getStaticStudent(token: token);
+//    } on TinterAPIError catch (error) {
+//      await authenticationRepository.checkIfNewToken(
+//          oldToken: token, newToken: error.token);
+//      throw UnknownUserError();
+//    }
+//
+//    await authenticationRepository.checkIfNewToken(
+//        oldToken: token, newToken: tinterApiResponse.token);
+//    return tinterApiResponse.value;
+//  }
 
   Future<List<SearchedUserAssociatif>> getAllSearchedUsersAssociatifs() async {
     Token token;

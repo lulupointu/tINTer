@@ -8,13 +8,11 @@ class UserSharedPartInitEvent extends UserSharedPartEvent {}
 
 class UserSharedPartRequestEvent extends UserSharedPartEvent {}
 
-class UserSharedPartMutableAttributeChangedEvent extends UserSharedPartEvent {
-  final UserSharedPartMutableAttribute userSharedPartMutableAttribute;
-  final dynamic newValue;
+class UserStateChangedEvent extends UserSharedPartEvent {
+  final BuildUserSharedPart newState;
 
-  UserSharedPartMutableAttributeChangedEvent({
-    @required this.userSharedPartMutableAttribute,
-    @required this.newValue,
+  UserStateChangedEvent({
+    @required this.newState,
   });
 }
 

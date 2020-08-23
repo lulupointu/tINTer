@@ -3,8 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status.dart';
-import 'package:tinterapp/Logic/repository/associatif/matched_repository.dart';
+import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
+import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
 
 part 'matches_event.dart';
@@ -12,11 +12,12 @@ part 'matches_event.dart';
 part 'matches_state.dart';
 
 class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> {
-  MatchedRepository matchedRepository;
+  MatchedMatchesRepository matchedMatchesRepository;
   AuthenticationBloc authenticationBloc;
 
-  MatchedMatchesBloc({@required this.matchedRepository, @required this.authenticationBloc})
-      : assert(matchedRepository != null),
+  MatchedMatchesBloc(
+      {@required this.matchedMatchesRepository, @required this.authenticationBloc})
+      : assert(matchedMatchesRepository != null),
         super(MatchedMatchesInitialState());
 
   @override
@@ -45,9 +46,9 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
       return;
     }
 
-    List<Match> matches;
+    List<BuildMatch> matches;
     try {
-      matches = await matchedRepository.getMatches();
+      matches = await matchedMatchesRepository.getMatches();
     } catch (error) {
       print(error);
       yield MatchedMatchesInitializingFailedState();
@@ -58,26 +59,23 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
 
   Stream<MatchedMatchesState> _mapChangeMatchStatusEventToState(
       ChangeStatusMatchedMatchesEvent event) async* {
-
-    Match newMatch = Match(
-      login: event.match.login,
-      name: event.match.name,
-      surname: event.match.surname,
-      email: event.match.email,
-      score: event.match.score,
-      status: event.matchStatus,
-      primoEntrant: event.match.primoEntrant,
-      associations: event.match.associations,
-      attiranceVieAsso: event.match.attiranceVieAsso,
-      feteOuCours: event.match.feteOuCours,
-      aideOuSortir: event.match.aideOuSortir,
-      organisationEvenements: event.match.organisationEvenements,
-      goutsMusicaux: event.match.goutsMusicaux,
-    );
+    BuildMatch newMatch = BuildMatch((m) => m
+      ..userAssociatif.user.login = event.match.userAssociatif.user.login
+      ..score = event.match.score
+      ..status = event.matchStatus
+      ..userAssociatif.primoEntrant = event.match.userAssociatif.primoEntrant
+      ..userAssociatif.user.associations =
+          event.match.userAssociatif.user.associations.toBuilder()
+      ..userAssociatif.attiranceVieAsso = event.match.userAssociatif.attiranceVieAsso
+      ..userAssociatif.feteOuCours = event.match.userAssociatif.feteOuCours
+      ..userAssociatif.aideOuSortir = event.match.userAssociatif.aideOuSortir
+      ..userAssociatif.organisationEvenements =
+          event.match.userAssociatif.organisationEvenements
+      ..userAssociatif.goutsMusicaux = event.match.userAssociatif.goutsMusicaux);
 
     MatchedMatchesLoadSuccessState successState = MatchedMatchesLoadSuccessState(
         matches:
-    (state as MatchedMatchesLoadSuccessState).withUpdatedMatch(event.match, newMatch));
+            (state as MatchedMatchesLoadSuccessState).withUpdatedMatch(event.match, newMatch));
 
     yield MatchedMatchesSavingNewStatusState(
         matches: (state as MatchedMatchesLoadSuccessState).matches);
@@ -88,11 +86,11 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
     }
 
     try {
-      matchedRepository.updateMatchStatus(
-        relationStatus: RelationStatusAssociatif(
-          login: null,
-          otherLogin: event.match.login,
-          status: event.enumRelationStatusAssociatif,
+      matchedMatchesRepository.updateMatchStatus(
+        relationStatus: RelationStatusAssociatif((r) => r
+          ..login = null
+          ..otherLogin = event.match.userAssociatif.user.login
+          ..status = event.enumRelationStatusAssociatif,
         ),
       );
     } catch (error) {

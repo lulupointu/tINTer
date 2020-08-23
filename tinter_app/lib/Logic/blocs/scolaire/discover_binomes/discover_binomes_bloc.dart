@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status.dart';
+import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
 import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
 import 'package:tinterapp/Logic/repository/scolaire/discover_binomes_repository.dart';
@@ -26,7 +26,7 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
       case DiscoverBinomesRequestedEvent:
         yield* _mapDiscoverBinomesRequestedEventToState();
         return;
-      case ChangeStatusDiscoverBinomesEvent:
+      case DiscoverBinomesChangeStatusEvent:
         if (state is DiscoverBinomesWaitingStatusChangeState) {
           yield* _mapChangeStatusDiscoverBinomesEventToState(event);
         } else {
@@ -63,7 +63,7 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
       return;
     }
 
-    List<Binome> binomes;
+    List<BuildBinome> binomes;
     try {
       binomes = await discoverBinomesRepository.getBinomes(limit: 5, offset: 0);
     } catch (error) {
@@ -76,15 +76,15 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
   }
 
   Stream<DiscoverBinomesState> _mapChangeStatusDiscoverBinomesEventToState(
-      ChangeStatusDiscoverBinomesEvent event) async* {
-    List<Binome> oldBinomes = (state as DiscoverBinomesWaitingStatusChangeState).binomes;
+      DiscoverBinomesChangeStatusEvent event) async* {
+    List<BuildBinome> oldBinomes = (state as DiscoverBinomesWaitingStatusChangeState).binomes;
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield DiscoverBinomesInitialState();
       return;
     }
 
-    List<Binome> newBinomes = List<Binome>.from(oldBinomes);
+    List<BuildBinome> newBinomes = List<BuildBinome>.from(oldBinomes);
     newBinomes.remove(event.binome);
 
 
@@ -93,10 +93,10 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
     // Update database
     try {
       await discoverBinomesRepository.updateBinomeStatus(
-        relationStatus: RelationStatusAssociatif(
-          login: null,
-          otherLogin: event.binome.login,
-          status: event.enumRelationStatusAssociatif,
+        relationStatus: RelationStatusAssociatif((r) => r
+          ..login = null
+          ..otherLogin = event.binome.userScolaire.user.login
+          ..status = event.enumRelationStatusAssociatif,
         ),
       );
     } catch (error) {
@@ -105,7 +105,7 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
     }
 
     // Get next discovery user
-    Binome newBinome;
+    BuildBinome newBinome;
     try {
       newBinome = (await discoverBinomesRepository.getBinomes(
         offset: newBinomes.length,
@@ -125,8 +125,8 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
 
   void _mapDiscoverBinomeLikeEventToState() {
     /// Grab the current displayed binome, we know it's the first in the list
-    final Binome displayedBinome = (state as DiscoverBinomesWaitingStatusChangeState).binomes[0];
-    add(ChangeStatusDiscoverBinomesEvent(
+    final BuildBinome displayedBinome = (state as DiscoverBinomesWaitingStatusChangeState).binomes[0];
+    add(DiscoverBinomesChangeStatusEvent(
         binome: displayedBinome,
         newStatus: BinomeStatus.liked,
         enumRelationStatusAssociatif: EnumRelationStatusAssociatif.liked));
@@ -134,8 +134,8 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
 
   void _mapDiscoverBinomeIgnoreEventToState() {
     /// Grab the current displayed binome, we know it's the first in the list
-    final Binome displayedBinome = (state as DiscoverBinomesWaitingStatusChangeState).binomes[0];
-    add(ChangeStatusDiscoverBinomesEvent(
+    final BuildBinome displayedBinome = (state as DiscoverBinomesWaitingStatusChangeState).binomes[0];
+    add(DiscoverBinomesChangeStatusEvent(
         binome: displayedBinome,
         newStatus: BinomeStatus.ignored,
         enumRelationStatusAssociatif: EnumRelationStatusAssociatif.ignored));

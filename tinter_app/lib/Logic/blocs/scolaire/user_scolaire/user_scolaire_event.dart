@@ -8,13 +8,13 @@ class UserScolaireInitEvent extends UserScolaireEvent {}
 
 class UserScolaireRequestEvent extends UserScolaireEvent {}
 
-class UserScolaireAttributeChangedEvent extends UserScolaireEvent {
-  final UserScolaireAttribute userScolaireAttribute;
-  final dynamic newValue;
+class UserScolaireMutableAttributeChangedEvent extends UserScolaireEvent {
+  final UserScolaireMutableAttribute userScolaireMutableAttribute;
+  final dynamic newState;
 
-  UserScolaireAttributeChangedEvent({
-    @required this.userScolaireAttribute,
-    @required this.newValue,
+  UserScolaireMutableAttributeChangedEvent({
+    @required this.userScolaireMutableAttribute,
+    @required this.newState,
   });
 }
 

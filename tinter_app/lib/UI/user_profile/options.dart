@@ -3,13 +3,11 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif/user_associatif_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
-import 'dart:math';
 
-import '../shared_element/slider_label.dart';
 import '../shared_element/const.dart';
-import '../../Logic/interface.dart';
 
 main() => runApp(MaterialApp(
       home: OptionsTab(),
@@ -107,19 +105,27 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                     children: [
                       Align(
                         alignment: Alignment(0, 0.05),
-                        child: informationRectangle(
-                          width: constraints.maxWidth * 0.4,
-                          padding: EdgeInsets.symmetric(vertical: 15.0),
-                          child: Text(
-                            'Supprimer\nmon profil',
-                            textAlign: TextAlign.center,
-                            style: TinterTextStyle.options,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: () {
+                            Navigator.pop(context);
+                            BlocProvider.of<UserAssociatifBloc>(context).add(DeleteUserAccountEvent());
+                          },
+                          child: informationRectangle(
+                            width: constraints.maxWidth * 0.4,
+                            padding: EdgeInsets.symmetric(vertical: 15.0),
+                            child: Text(
+                              'Supprimer\nmon profil',
+                              textAlign: TextAlign.center,
+                              style: TinterTextStyle.options,
+                            ),
                           ),
                         ),
                       ),
                       Align(
                         alignment: Alignment(0, 0.8),
                         child: InkWell(
+                          splashColor: Colors.transparent,
                           onTap: () {
                             Navigator.pop(context);
                             BlocProvider.of<AuthenticationBloc>(context)
@@ -172,7 +178,7 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                             width: constraints.maxWidth * 0.4,
                             height: informationsLegalesSelected ? 75.0 + 30.0 : 75.0,
                             padding: EdgeInsets.symmetric(vertical: 15.0),
-                            child: Text(
+                            child: AutoSizeText(
                               'Informations\nlégales',
                               textAlign: TextAlign.center,
                               style: TinterTextStyle.options.copyWith(
@@ -200,36 +206,28 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                             }),
                             child: AnimatedContainer(
                               duration: duration,
-                              height:
-                                  informationsLegalesSelected ? constraints.maxHeight * 0.3 : 0,
-                              child: SingleChildScrollView(
-                                child: Text('Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n' +
-                                    'Ce document présente les informations légales. \n'),
+                              height: informationsLegalesSelected
+                                  ? constraints.maxHeight * 0.3
+                                  : 0,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment(0, -0.5),
+                                  child: SingleChildScrollView(
+                                    child: AutoSizeText(
+                                      "Hébergeur de l'application :\n"
+                                      "Télécom SudParis\n"
+                                      "9 rue Charles Fourier\n"
+                                      "91011 Evry Cedex\n"
+                                      "Tel.: + 33 1 60 76 40 40\n"
+                                      "lucas.delsol@telecom-sudparis.eu\n"
+                                      "SIRET 180 092 025 00055 - APE 8542Z",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 18),
+                                      maxLines: 7,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -244,7 +242,8 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
-                    height: (fractions['logo'] + fractions['separator']) * constraints.maxHeight,
+                    height:
+                        (fractions['logo'] + fractions['separator']) * constraints.maxHeight,
                     width: double.maxFinite,
                     child: FlareActor(
                       'assets/splash_screen/tinter_logo_splash_screen.flr',

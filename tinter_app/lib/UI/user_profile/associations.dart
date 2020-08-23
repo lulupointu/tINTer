@@ -7,10 +7,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:tinterapp/Logic/blocs/associations/associations_bloc.dart';
-import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
-import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
-import 'package:tinterapp/Logic/models/association.dart';
+import 'package:tinterapp/Logic/blocs/shared/associations/associations_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
+import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/UI/shared_element/custom_flare_controller.dart';
 import '../shared_element/const.dart';
 
@@ -20,8 +20,9 @@ main() => runApp(MaterialApp(
 
 class AssociationsTab extends StatefulWidget {
   static final Map<String, double> fractions = {
-    'separator': 0.05,
-    'likedAssociations': 0.3,
+    'topSeparator': 0.08,
+    'sheetSeparator': 0.1,
+    'likedAssociations': 0.25,
     'horizontalMargin': 0.05,
     'titles': 0.05,
     'titlesSeparator': 0.01,
@@ -75,7 +76,7 @@ class _AssociationsTabState extends State<AssociationsTab> {
         body: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
           return Padding(
             padding: EdgeInsets.only(
-                top: constraints.maxHeight * AssociationsTab.fractions['separator']),
+                top: constraints.maxHeight * AssociationsTab.fractions['topSeparator']),
             child: SlidingUpPanel(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40.0),
@@ -86,9 +87,11 @@ class _AssociationsTabState extends State<AssociationsTab> {
               backdropOpacity: 1.0,
               backdropColor: TinterColors.background,
               controller: _panelController,
+              maxHeight: constraints.maxHeight,
               minHeight: constraints.maxHeight *
                   (1 -
-                      (2 * AssociationsTab.fractions['separator'] +
+                      (AssociationsTab.fractions['topSeparator'] +
+                          AssociationsTab.fractions['sheetSeparator'] +
                           AssociationsTab.fractions['likedAssociations'] +
                           AssociationsTab.fractions['titles'] +
                           AssociationsTab.fractions['titlesSeparator'])),
@@ -104,7 +107,9 @@ class _AssociationsTabState extends State<AssociationsTab> {
               panelBuilder: (ScrollController scrollController) {
                 return AllAssociationsSheetBody(
                   scrollController: scrollController,
-                  keyboardMargin: KeyboardVisibility.isVisible ? MediaQuery.of(context).viewInsets.bottom : 0,
+                  keyboardMargin: KeyboardVisibility.isVisible
+                      ? MediaQuery.of(context).viewInsets.bottom
+                      : 0,
                   width: constraints.maxWidth,
                   margin:
                       constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
@@ -284,30 +289,46 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.height,
-      child: BlocBuilder<UserBloc, UserState>(
-          buildWhen: (UserState previousState, UserState state) {
-        if (!(state is UserLoadSuccessState)) {
+      child: BlocBuilder<UserSharedPartBloc, UserSharedPartState>(
+          buildWhen: (UserSharedPartState previousState, UserSharedPartState state) {
+        if (!(state is UserSharedPartLoadSuccessState)) {
           return false;
         }
-        if (!(previousState is UserLoadSuccessState)) {
+        if (!(previousState is UserSharedPartLoadSuccessState)) {
           return true;
         }
-        if ((previousState as UserLoadSuccessState).user.associations ==
-            (state as UserLoadSuccessState).user.associations) {
+        if ((previousState as UserSharedPartLoadSuccessState).user.associations ==
+            (state as UserSharedPartLoadSuccessState).user.associations) {
           return false;
         }
-        checkForChanges((previousState as UserLoadSuccessState).user.associations,
-            (state as UserLoadSuccessState).user.associations);
+        if ((previousState as UserSharedPartLoadSuccessState)
+                .user
+                .associations
+                .length !=
+            0) {
+          checkForChanges(
+              (previousState as UserSharedPartLoadSuccessState)
+                  .user
+                  .associations
+                  .toList(),
+              (state as UserSharedPartLoadSuccessState).user.associations.toList());
+        }
         return true;
-      }, builder: (BuildContext context, UserState userState) {
-        if (!(userState is UserLoadSuccessState)) {
+      }, builder: (BuildContext context, UserSharedPartState userState) {
+        if (!(userState is UserSharedPartLoadSuccessState)) {
           return CircularProgressIndicator();
         }
+        if ((userState as UserSharedPartLoadSuccessState).user.associations.length ==
+            0)
+          return NoLikedAssociationWidget(
+            margin: widget.margin,
+          );
         return AnimatedList(
           physics: (_selectedItem == null) ? null : NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
           key: _listKey,
-          initialItemCount: (userState as UserLoadSuccessState).user.associations.length,
+          initialItemCount:
+              (userState as UserSharedPartLoadSuccessState).user.associations.length,
           controller: controller,
           itemBuilder: (BuildContext context, int index, Animation<double> animation) {
             return LikedAssociationWidget(
@@ -315,16 +336,28 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
               maxWidth: widget.width,
               margin: widget.margin,
               addOrRemoveAnimation: animation,
-              association: (userState as UserLoadSuccessState).user.associations[index],
+              association: (userState as UserSharedPartLoadSuccessState)
+                  .user
+                  .associations[index],
               isFirst: index == 0,
               selected: _selectedItem ==
-                  (userState as UserLoadSuccessState).user.associations[index],
-              onSelect: (AnimationController controller) => _onSelect(index, controller,
-                  (userState as UserLoadSuccessState).user.associations[index]),
-              onDislike: () => BlocProvider.of<UserBloc>(context).add(
-                AssociationEvent(
-                  status: AssociationEventStatus.remove,
-                  association: (userState as UserLoadSuccessState).user.associations[index],
+                  (userState as UserSharedPartLoadSuccessState)
+                      .user
+                      .associations[index],
+              onSelect: (AnimationController controller) => _onSelect(
+                  index,
+                  controller,
+                  (userState as UserSharedPartLoadSuccessState)
+                      .user
+                      .associations[index]),
+              onDislike: () => BlocProvider.of<UserSharedPartBloc>(context).add(
+                UserStateChangedEvent(
+                  newState: (userState as UserSharedPartLoadSuccessState)
+                      .user
+                      .rebuild((u) => u.associations.remove(
+                          (userState as UserSharedPartLoadSuccessState)
+                              .user
+                              .associations[index])),
                 ),
               ),
             );
@@ -374,6 +407,33 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
         _listKey.currentState.insertItem(associations.indexOf(association));
       }
     }
+  }
+}
+
+class NoLikedAssociationWidget extends StatelessWidget {
+  final double margin;
+
+  const NoLikedAssociationWidget({Key key, this.margin}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: margin),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        color: TinterColors.primaryAccent,
+      ),
+      child: Stack(
+        children: [
+          Center(
+            child: Text(
+              'Aucune association selectionnée.',
+              style: TinterTextStyle.headline2,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -507,11 +567,11 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                                         aspectRatio: 1,
                                         child: ClipOval(
                                           child: Container(
-                                            alignment: AlignmentDirectional.centerStart,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                             ),
-                                            child: widget.association.getLogo(),
+                                            child: getLogoFromAssociation(
+                                                associationName: widget.association.name),
                                           ),
                                         ),
                                       ),
@@ -533,13 +593,18 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                                             ),
                                             maxLines: 1,
                                           ),
-                                          AutoSizeText(
-                                            widget.association.description,
-                                            style: TinterTextStyle.smallLabel.copyWith(
-                                              fontSize: TinterTextStyle.smallLabel.fontSize *
-                                                  selectedValue,
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: AutoSizeText(
+                                                widget.association.description,
+                                                style: TinterTextStyle.smallLabel.copyWith(
+                                                  fontSize:
+                                                      TinterTextStyle.smallLabel.fontSize *
+                                                          selectedValue,
+                                                ),
+                                                maxLines: 3,
+                                              ),
                                             ),
-                                            maxLines: 3,
                                           ),
                                         ],
                                       ),
@@ -701,8 +766,8 @@ class AllAssociationsSheetBody extends StatelessWidget {
           }
           return true;
         },
-        child: BlocBuilder<UserBloc, UserState>(
-            builder: (BuildContext context, UserState userState) {
+        child: BlocBuilder<UserSharedPartBloc, UserSharedPartState>(
+            builder: (BuildContext context, UserSharedPartState userState) {
           return BlocBuilder<AssociationsBloc, AssociationsState>(
               builder: (BuildContext context, AssociationsState associationsState) {
             if (!(associationsState is AssociationsLoadSuccessfulState)) {
@@ -711,38 +776,40 @@ class AllAssociationsSheetBody extends StatelessWidget {
               }
               return CircularProgressIndicator();
             }
-            final _allAssociations = (associationsState as AssociationsLoadSuccessfulState).associations;
+            final _allAssociations =
+                (associationsState as AssociationsLoadSuccessfulState).associations;
             RegExp searchStringRegex = new RegExp(
               searchString,
               caseSensitive: false,
               multiLine: false,
             );
-            final _associations = (searchString == null) ? _allAssociations : _allAssociations.where((Association association) => searchStringRegex.hasMatch(association.name)).toList();
+            final _associations = (searchString == null)
+                ? _allAssociations
+                : _allAssociations
+                    .where((Association association) =>
+                        searchStringRegex.hasMatch(association.name))
+                    .toList();
             return ListView.separated(
               controller: scrollController,
-              itemCount:
-                  _associations.length,
+              itemCount: _associations.length,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
                   height: 20,
                 );
               },
               itemBuilder: (BuildContext context, int index) {
-                if (!(userState is UserLoadSuccessState)) {
+                if (!(userState is UserSharedPartLoadSuccessState)) {
                   return CircularProgressIndicator();
                 }
-                final bool liked = (userState as UserLoadSuccessState)
+                final bool liked = (userState as UserSharedPartLoadSuccessState)
                     .user
                     .associations
                     .contains(_associations[index]);
                 return Padding(
                   padding: EdgeInsets.only(
                     top: index == 0 ? headerSpacing : 0,
-                    bottom: index ==
-                            _associations
-                                    .length -
-                                1
-                        ? headerSpacing + keyboardMargin
+                    bottom: index == _associations.length - 1
+                        ? headerSpacing + keyboardMargin + 30
                         : 0,
                   ),
                   child: AssociationCard(
@@ -750,17 +817,19 @@ class AllAssociationsSheetBody extends StatelessWidget {
                     liked: liked,
                     onLike: () {
                       if (liked) {
-                        BlocProvider.of<UserBloc>(context).add(
-                          AssociationEvent(
-                            status: AssociationEventStatus.remove,
-                            association: _associations[index],
+                        BlocProvider.of<UserSharedPartBloc>(context).add(
+                          UserStateChangedEvent(
+                            newState: (userState as UserSharedPartLoadSuccessState)
+                                .user
+                                .rebuild((u) => u.associations.remove(_associations[index])),
                           ),
                         );
                       } else {
-                        BlocProvider.of<UserBloc>(context).add(
-                          AssociationEvent(
-                            status: AssociationEventStatus.add,
-                            association: _associations[index],
+                        BlocProvider.of<UserSharedPartBloc>(context).add(
+                          UserStateChangedEvent(
+                            newState: (userState as UserSharedPartLoadSuccessState)
+                                .user
+                                .rebuild((u) => u.associations.add(_associations[index])),
                           ),
                         );
                       }
@@ -806,7 +875,7 @@ class AssociationCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
-                child: association.getLogo(),
+                child: getLogoFromAssociation(associationName: association.name),
               ),
             ),
           ),

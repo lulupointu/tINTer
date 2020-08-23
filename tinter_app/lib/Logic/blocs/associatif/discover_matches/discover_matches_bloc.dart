@@ -3,8 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status.dart';
-import 'package:tinterapp/Logic/repository/associatif/discover_repository.dart';
+import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
+import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
 
 part 'discover_matches_event.dart';
@@ -12,11 +12,12 @@ part 'discover_matches_event.dart';
 part 'discover_matches_state.dart';
 
 class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesState> {
-  final DiscoverRepository discoverRepository;
+  final DiscoverMatchesRepository discoverMatchesRepository;
   final AuthenticationBloc authenticationBloc;
 
-  DiscoverMatchesBloc({@required this.discoverRepository, @required this.authenticationBloc})
-      : assert(discoverRepository != null),
+  DiscoverMatchesBloc(
+      {@required this.discoverMatchesRepository, @required this.authenticationBloc})
+      : assert(discoverMatchesRepository != null),
         super(DiscoverMatchesInitialState());
 
   @override
@@ -62,9 +63,9 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
       return;
     }
 
-    List<Match> matches;
+    List<BuildMatch> matches;
     try {
-      matches = await discoverRepository.getMatches(limit: 5, offset: 0);
+      matches = await discoverMatchesRepository.getMatches(limit: 5, offset: 0);
     } catch (error) {
       print(error);
       yield DiscoverMatchesLoadFailureState();
@@ -76,37 +77,34 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
 
   Stream<DiscoverMatchesState> _mapChangeStatusDiscoverMatchesEventToState(
       ChangeStatusDiscoverMatchesEvent event) async* {
-    List<Match> oldMatches = (state as DiscoverMatchesWaitingStatusChangeState).matches;
+    List<BuildMatch> oldMatches = (state as DiscoverMatchesWaitingStatusChangeState).matches;
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield DiscoverMatchesInitialState();
       return;
     }
 
-    List<Match> newMatches = List<Match>.from(oldMatches);
+    List<BuildMatch> newMatches = List<BuildMatch>.from(oldMatches);
     newMatches.remove(event.match);
-
 
     yield DiscoverMatchesSavingNewStatusState(matches: newMatches);
 
     // Update database
     try {
-      await discoverRepository.updateMatchStatus(
-        relationStatus: RelationStatusAssociatif(
-          login: null,
-          otherLogin: event.match.login,
-          status: event.enumRelationStatusAssociatif,
-        ),
-      );
+      await discoverMatchesRepository.updateMatchStatus(
+          relationStatus: RelationStatusAssociatif((r) => r
+            ..login = null
+            ..otherLogin = event.match.userAssociatif.user.login
+            ..status = event.enumRelationStatusAssociatif));
     } catch (error) {
       print(error);
       yield DiscoverMatchesWaitingStatusChangeState(matches: oldMatches);
     }
 
     // Get next discovery user
-    Match newMatch;
+    BuildMatch newMatch;
     try {
-      newMatch = (await discoverRepository.getMatches(
+      newMatch = (await discoverMatchesRepository.getMatches(
         offset: newMatches.length,
         limit: 1,
       ))[0];
@@ -124,7 +122,7 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
 
   void _mapDiscoverMatchLikeEventToState() {
     /// Grab the current displayed match, we know it's the first in the list
-    final Match displayedMatch = (state as DiscoverMatchesWaitingStatusChangeState).matches[0];
+    final BuildMatch displayedMatch = (state as DiscoverMatchesWaitingStatusChangeState).matches[0];
     add(ChangeStatusDiscoverMatchesEvent(
         match: displayedMatch,
         newStatus: MatchStatus.liked,
@@ -133,7 +131,7 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
 
   void _mapDiscoverMatchIgnoreEventToState() {
     /// Grab the current displayed match, we know it's the first in the list
-    final Match displayedMatch = (state as DiscoverMatchesWaitingStatusChangeState).matches[0];
+    final BuildMatch displayedMatch = (state as DiscoverMatchesWaitingStatusChangeState).matches[0];
     add(ChangeStatusDiscoverMatchesEvent(
         match: displayedMatch,
         newStatus: MatchStatus.ignored,

@@ -19,7 +19,7 @@ class MatchedMatchesRequestedEvent extends MatchedMatchesEvent {}
 //}
 
 abstract class ChangeStatusMatchedMatchesEvent extends MatchedMatchesEvent {
-  final Match match;
+  final BuildMatch match;
   final EnumRelationStatusAssociatif enumRelationStatusAssociatif;
   final MatchStatus matchStatus;
 
@@ -34,7 +34,7 @@ abstract class ChangeStatusMatchedMatchesEvent extends MatchedMatchesEvent {
 }
 
 class AskParrainEvent extends ChangeStatusMatchedMatchesEvent {
-  const AskParrainEvent({@required Match match})
+  const AskParrainEvent({@required BuildMatch match})
       : super(
           match: match,
           enumRelationStatusAssociatif: EnumRelationStatusAssociatif.askedParrain,
@@ -43,7 +43,7 @@ class AskParrainEvent extends ChangeStatusMatchedMatchesEvent {
 }
 
 class AcceptParrainEvent extends ChangeStatusMatchedMatchesEvent {
-  const AcceptParrainEvent({@required Match match})
+  const AcceptParrainEvent({@required BuildMatch match})
       : super(
           match: match,
           enumRelationStatusAssociatif: EnumRelationStatusAssociatif.acceptedParrain,
@@ -52,7 +52,7 @@ class AcceptParrainEvent extends ChangeStatusMatchedMatchesEvent {
 }
 
 class RefuseParrainEvent extends ChangeStatusMatchedMatchesEvent {
-  const RefuseParrainEvent({@required Match match})
+  const RefuseParrainEvent({@required BuildMatch match})
       : super(
           match: match,
           enumRelationStatusAssociatif: EnumRelationStatusAssociatif.refusedParrain,

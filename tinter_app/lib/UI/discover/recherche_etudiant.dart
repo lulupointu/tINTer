@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
-import 'package:tinterapp/Logic/blocs/user_search/user_search_bloc.dart';
-import 'package:tinterapp/Logic/models/association.dart';
-import 'package:tinterapp/Logic/models/searched_user.dart';
-import 'package:tinterapp/Logic/models/user.dart';
-import 'package:tinterapp/Logic/models/match.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
+import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
+import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 
 import '../shared_element/const.dart';
 
@@ -37,10 +34,12 @@ class _RechercheEtudiantTabState extends State<RechercheEtudiantTab> {
 
   @protected
   void initState() {
-    if (BlocProvider.of<UserSearchBloc>(context).state is UserSearchLoadSuccessfulState) {
-      BlocProvider.of<UserSearchBloc>(context).add(UserSearchRefreshEvent());
+    if (BlocProvider.of<UserAssociatifSearchBloc>(context).state
+        is UserAssociatifSearchLoadSuccessfulState) {
+      BlocProvider.of<UserAssociatifSearchBloc>(context)
+          .add(UserAssociatifSearchRefreshEvent());
     } else {
-      BlocProvider.of<UserSearchBloc>(context).add(UserSearchLoadEvent());
+      BlocProvider.of<UserAssociatifSearchBloc>(context).add(UserAssociatifSearchLoadEvent());
     }
 
     super.initState();
@@ -179,29 +178,32 @@ class _RechercheEtudiantTabState extends State<RechercheEtudiantTab> {
                 ),
                 Flexible(
                   child: SingleChildScrollView(
-                    child: BlocBuilder<UserSearchBloc, UserSearchState>(
-                        builder: (BuildContext context, UserSearchState userSearchState) {
-                      if (!(userSearchState is UserSearchLoadSuccessfulState))
+                    child: BlocBuilder<UserAssociatifSearchBloc, UserAssociatifSearchState>(
+                        builder:
+                            (BuildContext context, UserAssociatifSearchState userSearchState) {
+                      if (!(userSearchState is UserAssociatifSearchLoadSuccessfulState))
                         return Center(
                           child: CircularProgressIndicator(),
                         );
-                      List<SearchedUser> _allSearchedUsers =
-                          (userSearchState as UserSearchLoadSuccessfulState).searchedUsers;
-                      _allSearchedUsers.sort(
-                          (SearchedUser searchedUserA, SearchedUser searchedUserB) =>
-                              searchedUserA.name
-                                  .toLowerCase()
-                                  .compareTo(searchedUserB.name.toLowerCase()));
+                      List<SearchedUserAssociatif> _allSearchedUsersAssociatifs =
+                          (userSearchState as UserAssociatifSearchLoadSuccessfulState)
+                              .searchedUsers;
+                      _allSearchedUsersAssociatifs.sort((SearchedUserAssociatif searchedUserA,
+                              SearchedUserAssociatif searchedUserB) =>
+                          searchedUserA.name
+                              .toLowerCase()
+                              .compareTo(searchedUserB.name.toLowerCase()));
                       RegExp searchedStringRegex = RegExp(searchString, caseSensitive: false);
-                      List<SearchedUser> _searchedUsers = (searchString == '')
+                      List<SearchedUserAssociatif> _searchedUsers = (searchString == '')
                           ? []
-                          : _allSearchedUsers
-                              .where((SearchedUser searchedUser) => searchedStringRegex.hasMatch(
-                                  '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
+                          : _allSearchedUsersAssociatifs
+                              .where((SearchedUserAssociatif searchedUser) =>
+                                  searchedStringRegex.hasMatch(
+                                      '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
                               .toList();
                       return Column(
                         children: [
-                          for (SearchedUser searchedUser in _searchedUsers)
+                          for (SearchedUserAssociatif searchedUser in _searchedUsers)
                             userResume(searchedUser)
                         ],
                       );
@@ -216,7 +218,7 @@ class _RechercheEtudiantTabState extends State<RechercheEtudiantTab> {
     );
   }
 
-  Widget userResume(SearchedUser searchedUser) {
+  Widget userResume(SearchedUserAssociatif searchedUser) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -231,12 +233,15 @@ class _RechercheEtudiantTabState extends State<RechercheEtudiantTab> {
           ),
           height: 45,
           width: 45,
-          child: searchedUser.getProfilePicture(height: 45, width: 45),
+          child: getProfilePictureFromLogin(
+              login: searchedUser.login,
+              height: 45, width: 45),
         ),
         trailing: IconButton(
-          onPressed: () => BlocProvider.of<UserSearchBloc>(context).add(searchedUser.liked
-              ? UserSearchIgnoreEvent(ignoredSearchedUser: searchedUser)
-              : UserSearchLikeEvent(likedSearchedUser: searchedUser)),
+          onPressed: () => BlocProvider.of<UserAssociatifSearchBloc>(context).add(searchedUser
+                  .liked
+              ? UserAssociatifSearchIgnoreEvent(ignoredSearchedUserAssociatif: searchedUser)
+              : UserAssociatifSearchLikeEvent(likedSearchedUserAssociatif: searchedUser)),
           icon: Icon(
             searchedUser.liked ? Icons.favorite : Icons.favorite_border,
             color: TinterColors.secondaryAccent,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
-import 'package:tinterapp/Logic/models/shared/static_student.dart';
 import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Logic/repository/associatif/user_associatif_repository.dart';
@@ -53,71 +52,79 @@ class UserAssociatifBloc extends Bloc<UserAssociatifEvent, UserAssociatifState> 
         }
 
         return;
-      case PrimoEntrantChanged:
+      case UserAssociatifStateChangedEvent:
         if (state is UserLoadSuccessState) {
-          yield (state as UserLoadSuccessState)
-              .withPrimoEntrantChanged((event as PrimoEntrantChanged).newValue);
-        } else {
-          _addError('PrimoEntrantChanged received while state is not UserLoadSuccessState');
-        }
-        return;
-      case AssociationEvent:
-        if (state is UserLoadSuccessState) {
-          yield* _mapAssociationEventToState(event);
-        } else {
-          _addError('AssociationEvent received while state is not UserLoadSuccessState');
-        }
-        return;
-      case AttiranceVieAssoChanged:
-        if (state is UserLoadSuccessState) {
-          yield (state as UserLoadSuccessState)
-              .withAttiranceVieAssoChanged((event as AttiranceVieAssoChanged).newValue);
+          yield* _mapUserAssociatifStateChangedEventToState(event);
         } else {
           _addError(
-              'AttiranceVieAssoChanged received while state is not UserLoadSuccessState');
+              'UserSharedPartMutableAttributeChangedEvent received while state is not UserSharedPartLoadSuccessState');
         }
         return;
-      case AideOuSortirChanged:
-        if (state is UserLoadSuccessState) {
-          yield (state as UserLoadSuccessState)
-              .withAideOuSortirChanged((event as AideOuSortirChanged).newValue);
-        } else {
-          _addError('AideOuSortirChanged received while state is not UserLoadSuccessState');
-        }
-        return;
-      case FeteOuCoursChanged:
-        if (state is UserLoadSuccessState) {
-          yield (state as UserLoadSuccessState)
-              .withFeteOuCoursChanged((event as FeteOuCoursChanged).newValue);
-        } else {
-          _addError('FeteOuCoursChanged received while state is not UserLoadSuccessState');
-        }
-        return;
-      case OrganisationEvenementsChanged:
-        if (state is UserLoadSuccessState) {
-          yield (state as UserLoadSuccessState).withOrganisationEvenementsChanged(
-              (event as OrganisationEvenementsChanged).newValue);
-        } else {
-          _addError(
-              'OrganisationEvenementsChanged received while state is not UserLoadSuccessState');
-        }
-        return;
-      case GoutMusicauxEvent:
-        if (state is UserLoadSuccessState) {
-          yield* _mapGoutMusicauxEventToState(event);
-        } else {
-          _addError('GoutMusicauxEvent received while state is not UserLoadSuccessState');
-        }
-        return;
-      case ProfilePicturePathChangedEvent:
-        if (state is UserLoadSuccessState) {
-          yield (state as UserLoadSuccessState)
-              .withPictureProfileChanged((event as ProfilePicturePathChangedEvent).newPath);
-        } else {
-          _addError(
-              'ProfilePicturePathChangedEvent received while state is not UserLoadSuccessState');
-        }
-        return;
+//      case PrimoEntrantChanged:
+//        if (state is UserLoadSuccessState) {
+//          yield (state as UserLoadSuccessState)
+//              .withPrimoEntrantChanged((event as PrimoEntrantChanged).newValue);
+//        } else {
+//          _addError('PrimoEntrantChanged received while state is not UserLoadSuccessState');
+//        }
+//        return;
+//      case AssociationEvent:
+//        if (state is UserLoadSuccessState) {
+//          yield* _mapAssociationEventToState(event);
+//        } else {
+//          _addError('AssociationEvent received while state is not UserLoadSuccessState');
+//        }
+//        return;
+//      case AttiranceVieAssoChanged:
+//        if (state is UserLoadSuccessState) {
+//          yield (state as UserLoadSuccessState)
+//              .withAttiranceVieAssoChanged((event as AttiranceVieAssoChanged).newValue);
+//        } else {
+//          _addError(
+//              'AttiranceVieAssoChanged received while state is not UserLoadSuccessState');
+//        }
+//        return;
+//      case AideOuSortirChanged:
+//        if (state is UserLoadSuccessState) {
+//          yield (state as UserLoadSuccessState)
+//              .withAideOuSortirChanged((event as AideOuSortirChanged).newValue);
+//        } else {
+//          _addError('AideOuSortirChanged received while state is not UserLoadSuccessState');
+//        }
+//        return;
+//      case FeteOuCoursChanged:
+//        if (state is UserLoadSuccessState) {
+//          yield (state as UserLoadSuccessState)
+//              .withFeteOuCoursChanged((event as FeteOuCoursChanged).newValue);
+//        } else {
+//          _addError('FeteOuCoursChanged received while state is not UserLoadSuccessState');
+//        }
+//        return;
+//      case OrganisationEvenementsChanged:
+//        if (state is UserLoadSuccessState) {
+//          yield (state as UserLoadSuccessState).withOrganisationEvenementsChanged(
+//              (event as OrganisationEvenementsChanged).newValue);
+//        } else {
+//          _addError(
+//              'OrganisationEvenementsChanged received while state is not UserLoadSuccessState');
+//        }
+//        return;
+//      case GoutMusicauxEvent:
+//        if (state is UserLoadSuccessState) {
+//          yield* _mapGoutMusicauxEventToState(event);
+//        } else {
+//          _addError('GoutMusicauxEvent received while state is not UserLoadSuccessState');
+//        }
+//        return;
+//      case ProfilePicturePathChangedEvent:
+//        if (state is UserLoadSuccessState) {
+//          yield (state as UserLoadSuccessState)
+//              .withPictureProfileChanged((event as ProfilePicturePathChangedEvent).newPath);
+//        } else {
+//          _addError(
+//              'ProfilePicturePathChangedEvent received while state is not UserLoadSuccessState');
+//        }
+//        return;
       case DeleteUserAccountEvent:
         if (state is UserLoadSuccessState) {
           yield* _mapDeleteUserAccountEventToState();
@@ -134,24 +141,12 @@ class UserAssociatifBloc extends Bloc<UserAssociatifEvent, UserAssociatifState> 
   Stream<UserAssociatifState> _mapUserInitEventToState() async* {
     yield UserInitializingState();
 
-    UserAssociatif user;
+    BuildUserAssociatif user;
     try {
       user = await userRepository.getUser();
-    } on UnknownUserError catch (_) {
-      try {
-        StaticStudent staticUser = await userRepository.getBasicUserInfo();
-        yield NewUserCreatingProfileState(
-          user: UserAssociatif(
-            login: staticUser.login,
-            name: staticUser.name,
-            surname: staticUser.surname,
-            email: staticUser.email,
-          ),
-        );
-      } catch (error) {
-        print(error);
-        yield UserInitialState();
-      }
+    } catch (error) {
+      print(error);
+      yield UserInitialState();
       return;
     }
 
@@ -179,7 +174,7 @@ class UserAssociatifBloc extends Bloc<UserAssociatifEvent, UserAssociatifState> 
   Stream<UserAssociatifState> _mapUserRequestEventToState() async* {
     yield UserInitializingState();
 
-    UserAssociatif user;
+    BuildUserAssociatif user;
     try {
       user = await userRepository.getUser();
     } catch (error) {
@@ -197,7 +192,7 @@ class UserAssociatifBloc extends Bloc<UserAssociatifEvent, UserAssociatifState> 
     }
     yield KnownUserRefreshingState(user: (state as KnownUserAssociatifState).user);
 
-    UserAssociatif user;
+    BuildUserAssociatif user;
     try {
       user = await userRepository.getUser();
     } catch (error) {
@@ -218,26 +213,14 @@ class UserAssociatifBloc extends Bloc<UserAssociatifEvent, UserAssociatifState> 
 
     imageCache.clear();
 
-    // We create a new user manually in order to put the profilePicturePath to null
     yield KnownUserSavedState(
-      user: UserAssociatif(
-        login: (state as NewUserAssociatifState).user.login,
-        name: (state as NewUserAssociatifState).user.name,
-        surname: (state as NewUserAssociatifState).user.surname,
-        email: (state as NewUserAssociatifState).user.email,
-        primoEntrant: (state as NewUserAssociatifState).user.primoEntrant,
-        associations: (state as NewUserAssociatifState).user.associations,
-        attiranceVieAsso: (state as NewUserAssociatifState).user.attiranceVieAsso,
-        feteOuCours: (state as NewUserAssociatifState).user.feteOuCours,
-        aideOuSortir: (state as NewUserAssociatifState).user.aideOuSortir,
-        organisationEvenements: (state as NewUserAssociatifState).user.organisationEvenements,
-        goutsMusicaux: (state as NewUserAssociatifState).user.goutsMusicaux,
-      ),
+      user: (state as NewUserAssociatifState).user,
     );
   }
 
-  Stream<UserAssociatifState> _mapUserSaveEventToState(UserAssociatif user) async* {
-    yield KnownUserSavingState(user: user, oldSavedUser: (state as KnownUserUnsavedState).oldSavedUser);
+  Stream<UserAssociatifState> _mapUserSaveEventToState(BuildUserAssociatif user) async* {
+    yield KnownUserSavingState(
+        user: user, oldSavedUser: (state as KnownUserUnsavedState).oldSavedUser);
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
@@ -248,64 +231,52 @@ class UserAssociatifBloc extends Bloc<UserAssociatifEvent, UserAssociatifState> 
     try {
       await userRepository.updateUser(user: user);
     } catch (error) {
-      yield KnownUserSavingFailedState(user: user, oldSavedUser: (state as KnownUserUnsavedState).oldSavedUser);
+      yield KnownUserSavingFailedState(
+          user: user, oldSavedUser: (state as KnownUserUnsavedState).oldSavedUser);
       return;
     }
 
     imageCache.clear();
 
-    // We create a new user manually in order to put the profilePicturePath to null
-    yield KnownUserSavedState(
-      user: UserAssociatif(
-        login: (state as KnownUserUnsavedState).user.login,
-        name: (state as KnownUserUnsavedState).user.name,
-        surname: (state as KnownUserUnsavedState).user.surname,
-        email: (state as KnownUserUnsavedState).user.email,
-        primoEntrant: (state as KnownUserUnsavedState).user.primoEntrant,
-        associations: (state as KnownUserUnsavedState).user.associations,
-        attiranceVieAsso: (state as KnownUserUnsavedState).user.attiranceVieAsso,
-        feteOuCours: (state as KnownUserUnsavedState).user.feteOuCours,
-        aideOuSortir: (state as KnownUserUnsavedState).user.aideOuSortir,
-        organisationEvenements: (state as KnownUserUnsavedState).user.organisationEvenements,
-        goutsMusicaux: (state as KnownUserUnsavedState).user.goutsMusicaux,
-      ),
-    );
+    yield KnownUserSavedState(user: (state as KnownUserUnsavedState).user);
   }
-
 
   Stream<UserAssociatifState> _mapUserUndoUnsavedChangesEventToState() async* {
     yield KnownUserSavedState(user: (state as KnownUserUnsavedState).oldSavedUser);
   }
 
-  Stream<UserAssociatifState> _mapAssociationEventToState(AssociationEvent event) async* {
-    switch (event.status) {
-      case AssociationEventStatus.init:
-        yield (state as UserLoadSuccessState).withInitAssociation();
-        break;
-      case AssociationEventStatus.add:
-        yield (state as UserLoadSuccessState).withAddedAssociation(event.association);
-        break;
-      case AssociationEventStatus.remove:
-        yield (state as UserLoadSuccessState).withRemovedAssociation(event.association);
-        break;
-    }
+//  Stream<UserAssociatifState> _mapAssociationEventToState(AssociationEvent event) async* {
+//    switch (event.status) {
+//      case AssociationEventStatus.init:
+//        yield (state as UserLoadSuccessState).withInitAssociation();
+//        break;
+//      case AssociationEventStatus.add:
+//        yield (state as UserLoadSuccessState).withAddedAssociation(event.association);
+//        break;
+//      case AssociationEventStatus.remove:
+//        yield (state as UserLoadSuccessState).withRemovedAssociation(event.association);
+//        break;
+//    }
+//  }
+//
+//  Stream<UserAssociatifState> _mapGoutMusicauxEventToState(GoutMusicauxEvent event) async* {
+//    switch (event.status) {
+//      case GoutMusicauxEventStatus.init:
+//        yield (state as UserLoadSuccessState).withInitGoutsMusicaux();
+//        break;
+//      case GoutMusicauxEventStatus.add:
+//        yield (state as UserLoadSuccessState).withAddedGoutMusical(event.goutMusical);
+//        break;
+//      case GoutMusicauxEventStatus.remove:
+//        yield (state as UserLoadSuccessState).withRemovedGoutMusical(event.goutMusical);
+//        break;
+//    }
+//  }
+
+  Stream<UserAssociatifState> _mapUserAssociatifStateChangedEventToState(
+      UserAssociatifStateChangedEvent event) async* {
+    yield (state as UserLoadSuccessState).withNewState(newState: event.newState);
   }
-
-  Stream<UserAssociatifState> _mapGoutMusicauxEventToState(GoutMusicauxEvent event) async* {
-    switch (event.status) {
-      case GoutMusicauxEventStatus.init:
-        yield (state as UserLoadSuccessState).withInitGoutsMusicaux();
-        break;
-      case GoutMusicauxEventStatus.add:
-        yield (state as UserLoadSuccessState).withAddedGoutMusical(event.goutMusical);
-        break;
-      case GoutMusicauxEventStatus.remove:
-        yield (state as UserLoadSuccessState).withRemovedGoutMusical(event.goutMusical);
-        break;
-    }
-  }
-
-
 
   Stream<UserAssociatifState> _mapDeleteUserAccountEventToState() async* {
     try {

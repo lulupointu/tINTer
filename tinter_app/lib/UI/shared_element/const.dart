@@ -76,8 +76,14 @@ class TinterTextStyle {
     fontWeight: FontWeight.w400,
   );
   static const hint = TextStyle(
-      fontSize: 14,
-      color: TinterColors.hint,
+    fontSize: 14,
+    color: TinterColors.hint,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
+  );
+  static const hintLarge = TextStyle(
+    fontSize: 17,
+    color: TinterColors.hint,
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w400,
   );
@@ -120,6 +126,13 @@ class TinterTextStyle {
   static const dialogContent = TextStyle(
     fontSize: 18,
     color: Colors.black54,
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
+  );
+
+  static const hidingText = TextStyle(
+    fontSize: 18,
+    color: TinterColors.white,
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w400,
   );

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status.dart';
+import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
@@ -14,7 +14,7 @@ class MatchedMatchesRepository {
   MatchedMatchesRepository({@required this.tinterAPIClient, @required this.authenticationRepository}) :
         assert(tinterAPIClient != null);
 
-  Future<List<Match>> getMatches() async {
+  Future<List<BuildMatch>> getMatches() async {
     Token token;
     try {
       token = await AuthenticationRepository.getAuthenticationToken();
@@ -24,7 +24,7 @@ class MatchedMatchesRepository {
       throw error;
     }
 
-    TinterApiResponse<List<Match>> tinterApiResponse;
+    TinterApiResponse<List<BuildMatch>> tinterApiResponse;
     try {
       tinterApiResponse = await tinterAPIClient.getMatchedMatches(token: token);
     } on TinterAPIError catch(error) {

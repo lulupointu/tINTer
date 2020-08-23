@@ -14,7 +14,23 @@ import 'package:meta/meta.dart';
 
 part 'user_shared_part.g.dart';
 
-abstract class UserSharedPart implements Built<UserSharedPart, UserSharedPartBuilder> {
+abstract class BuildUserSharedPart with UserSharedPart implements Built<BuildUserSharedPart, BuildUserSharedPartBuilder> {
+
+  BuildUserSharedPart._();
+  factory BuildUserSharedPart([void Function(BuildUserSharedPartBuilder) updates]) = _$BuildUserSharedPart;
+
+  Map<String, dynamic> toJson() {
+    return serializers.serializeWith(BuildUserSharedPart.serializer, this);
+  }
+
+  static BuildUserSharedPart fromJson(Map<String, dynamic> json) {
+    return serializers.deserializeWith(BuildUserSharedPart.serializer, json);
+  }
+
+  static Serializer<BuildUserSharedPart> get serializer => _$buildUserSharedPartSerializer;
+}
+
+abstract class UserSharedPart {
   String get login;
 
   String get name;
@@ -29,21 +45,6 @@ abstract class UserSharedPart implements Built<UserSharedPart, UserSharedPartBui
   String get profilePictureLocalPath;
 
   BuiltList<Association> get associations;
-
-  UserSharedPart._();
-  factory UserSharedPart([void Function(UserSharedPartBuilder) updates]) = _$UserSharedPart;
-
-  Map<String, dynamic> toJson() {
-    return serializers.serializeWith(UserSharedPart.serializer, this);
-  }
-
-  static UserSharedPart fromJson(Map<String, dynamic> json) {
-    return serializers.deserializeWith(UserSharedPart.serializer, json);
-  }
-
-  static Serializer<UserSharedPart> get serializer => _$userSharedPartSerializer;
-
-
 }
 
 class School extends EnumClass {

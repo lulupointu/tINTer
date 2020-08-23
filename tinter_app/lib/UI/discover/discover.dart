@@ -6,16 +6,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tinterapp/Logic/blocs/discover_matches/discover_matches_bloc.dart';
-import 'package:tinterapp/Logic/models/association.dart';
-import 'package:tinterapp/Logic/repository/discover_repository.dart';
+import 'package:tinterapp/Logic/blocs/associatif/discover_matches/discover_matches_bloc.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
+import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
+import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:tinterapp/UI/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/discover/recherche_etudiant.dart';
 import 'package:tinterapp/UI/shared_element/slider_label.dart';
 import 'package:tinterapp/UI/shared_element/const.dart';
 import 'package:http/http.dart' as http;
-import 'package:tinterapp/Logic/models/match.dart';
+import 'package:tinterapp/Logic/models/associatif/match.dart';
 
 main() {
   final http.Client httpClient = http.Client();
@@ -23,15 +25,15 @@ main() {
     httpClient: httpClient,
   );
 
-  final DiscoverRepository discoverRepository =
-      DiscoverRepository(tinterAPIClient: tinterAPIClient);
+  final DiscoverMatchesRepository discoverMatchesRepository =
+      DiscoverMatchesRepository(tinterAPIClient: tinterAPIClient);
 
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(
     BlocProvider(
       create: (BuildContext context) =>
-          DiscoverMatchesBloc(discoverRepository: discoverRepository),
+          DiscoverMatchesBloc(discoverMatchesRepository: discoverMatchesRepository),
       child: MaterialApp(
         home: SafeArea(
           child: Scaffold(
@@ -50,51 +52,61 @@ class DiscoverTab extends StatelessWidget {
     // Update to last information
     BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchesRequestedEvent());
 
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return Stack(
-          children: [
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 55,
-                  child: MatchInformation(),
+    return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+        builder: (BuildContext context, DiscoverMatchesState discoverMatchesState) {
+      return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (discoverMatchesState is DiscoverMatchesInitialState ||
+              discoverMatchesState is DiscoverMatchesLoadInProgressState)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          if (discoverMatchesState is DiscoverMatchesLoadSuccessState &&
+              discoverMatchesState.matches.length == 0) return NoMoreDiscoveryMatchesWidget();
+          return Stack(
+            children: [
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 55,
+                    child: MatchInformation(),
+                  ),
+                  Expanded(
+                    flex: 45,
+                    child: DiscoverRight(constraints.maxHeight),
+                  ),
+                ],
+              ),
+              Positioned(
+                left: constraints.maxWidth * 55 / 100,
+                child: SvgPicture.asset(
+                  'assets/discover/DiscoverBackground.svg',
+                  color: TinterColors.background,
+                  height: constraints.maxHeight,
                 ),
-                Expanded(
-                  flex: 45,
-                  child: DiscoverRight(constraints.maxHeight),
+              ),
+              Positioned(
+                left: constraints.maxWidth * 55 / 100,
+                child: SvgPicture.asset(
+                  'assets/discover/DiscoverTop.svg',
+                  color: TinterColors.primaryAccent,
+                  height: constraints.maxHeight / 2,
                 ),
-              ],
-            ),
-            Positioned(
-              left: constraints.maxWidth * 55 / 100,
-              child: SvgPicture.asset(
-                'assets/discover/DiscoverBackground.svg',
-                color: TinterColors.background,
-                height: constraints.maxHeight,
               ),
-            ),
-            Positioned(
-              left: constraints.maxWidth * 55 / 100,
-              child: SvgPicture.asset(
-                'assets/discover/DiscoverTop.svg',
-                color: TinterColors.primaryAccent,
-                height: constraints.maxHeight / 2,
+              Positioned(
+                left: constraints.maxWidth * 55 / 100,
+                bottom: 0,
+                child: SvgPicture.asset(
+                  'assets/discover/DiscoverBottom.svg',
+                  color: TinterColors.primaryAccent,
+                  height: constraints.maxHeight / 2,
+                ),
               ),
-            ),
-            Positioned(
-              left: constraints.maxWidth * 55 / 100,
-              bottom: 0,
-              child: SvgPicture.asset(
-                'assets/discover/DiscoverBottom.svg',
-                color: TinterColors.primaryAccent,
-                height: constraints.maxHeight / 2,
-              ),
-            ),
-          ],
-        );
-      },
-    );
+            ],
+          );
+        },
+      );
+    });
   }
 }
 
@@ -116,8 +128,7 @@ class DiscoverRight extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            studentSearch(
-              context,
+            StudentSearch(
               height: 50,
             ),
             Padding(
@@ -140,7 +151,54 @@ class DiscoverRight extends StatelessWidget {
     );
   }
 
-  Widget studentSearch(BuildContext context, {@required double height}) {
+//  Widget likeOrIgnore(BuildContext context) {
+//    return Row(
+//      mainAxisAlignment: MainAxisAlignment.center,
+//      children: <Widget>[
+//        Flexible(
+//          child: IconButton(
+//            padding: EdgeInsets.only(left: 6.0),
+//            iconSize: 60,
+//            color: TinterColors.secondaryAccent,
+//            icon: FlareActor(
+//              'assets/icons/Heart.flr',
+//              color: TinterColors.secondaryAccent,
+//              animation: animation.value == 0 ? 'None' : 'Validate',
+//              fit: BoxFit.fill,
+//            ),
+//            onPressed: () {
+//              BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchLikeEvent());
+//            },
+//          ),
+//        ),
+//        Flexible(
+//          child: IconButton(
+//            padding: EdgeInsets.all(0.0),
+//            iconSize: 70,
+//            color: TinterColors.secondaryAccent,
+//            icon: FlareActor(
+//              'assets/icons/Clear.flr',
+//              color: TinterColors.secondaryAccent,
+//              animation: animation.value == 0 ? 'None' : 'Validate',
+//              fit: BoxFit.fill,
+//            ),
+//            onPressed: () {
+//              animateNextMatch(); // TODO: say it's ignored
+//            },
+//          ),
+//        ),
+//      ],
+//    );
+//  }
+}
+
+class StudentSearch extends StatelessWidget {
+  final double height;
+
+  const StudentSearch({Key key, @required this.height}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       child: Container(
@@ -208,46 +266,6 @@ class DiscoverRight extends StatelessWidget {
       ),
     );
   }
-
-//  Widget likeOrIgnore(BuildContext context) {
-//    return Row(
-//      mainAxisAlignment: MainAxisAlignment.center,
-//      children: <Widget>[
-//        Flexible(
-//          child: IconButton(
-//            padding: EdgeInsets.only(left: 6.0),
-//            iconSize: 60,
-//            color: TinterColors.secondaryAccent,
-//            icon: FlareActor(
-//              'assets/icons/Heart.flr',
-//              color: TinterColors.secondaryAccent,
-//              animation: animation.value == 0 ? 'None' : 'Validate',
-//              fit: BoxFit.fill,
-//            ),
-//            onPressed: () {
-//              BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchLikeEvent());
-//            },
-//          ),
-//        ),
-//        Flexible(
-//          child: IconButton(
-//            padding: EdgeInsets.all(0.0),
-//            iconSize: 70,
-//            color: TinterColors.secondaryAccent,
-//            icon: FlareActor(
-//              'assets/icons/Clear.flr',
-//              color: TinterColors.secondaryAccent,
-//              animation: animation.value == 0 ? 'None' : 'Validate',
-//              fit: BoxFit.fill,
-//            ),
-//            onPressed: () {
-//              animateNextMatch(); // TODO: say it's ignored
-//            },
-//          ),
-//        ),
-//      ],
-//    );
-//  }
 }
 
 class LikeOrIgnore extends StatefulWidget {
@@ -575,7 +593,7 @@ class MatchesFlock extends StatefulWidget {
 class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderStateMixin {
   final AutoSizeGroup nameAndSurnameAutoSizeGroup = AutoSizeGroup();
   AnimationController animationController;
-  Match previousFirstMatch;
+  BuildMatch previousFirstMatch;
 
   @override
   void initState() {
@@ -622,11 +640,59 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
               overflow: Overflow.visible,
               alignment: AlignmentDirectional.topCenter,
               children: <Widget>[
-                // Invisible head
-                Positioned(
-                  top: -50 * (1 - animationController.value),
-                  child: Opacity(
-                    opacity: animationController.value,
+                if ((state as DiscoverMatchesLoadSuccessState).matches.length >= 3) ...[
+                  // First head
+                  Positioned(
+                    top: -50 * (1 - animationController.value),
+                    child: Opacity(
+                      opacity: animationController.value,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 2,
+                            color: TinterColors.primaryAccent,
+                          ),
+                        ),
+                        height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                        width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                        child: Center(
+                          child: getProfilePictureFromLocalPathOrLogin(
+                            login: (state as DiscoverMatchesLoadSuccessState).matches[2].login,
+                              localPath: (state as DiscoverMatchesLoadSuccessState).matches[2].profilePictureLocalPath,
+                              height:
+                                  constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                              width:
+                                  constraints.maxHeight * MatchesFlock.fractions['smallHead']),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // First separator
+                  Positioned(
+                    top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        10 -
+                        50 * (1 - animationController.value),
+                    child: Opacity(
+                      opacity: animationController.value,
+                      child: Container(
+                        height:
+                            constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
+                        width: 1.5,
+                        color: TinterColors.primaryAccent,
+                      ),
+                    ),
+                  ),
+                ],
+                if ((state as DiscoverMatchesLoadSuccessState).matches.length >= 2) ...[
+                  // Second head
+                  Positioned(
+                    top: 0 +
+                        constraints.maxHeight *
+                            (MatchesFlock.fractions['smallHead'] +
+                                MatchesFlock.fractions['separator']) *
+                            animationController.value,
                     child: Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -638,243 +704,204 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                       height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
                       width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
                       child: Center(
-                        child: (state as DiscoverMatchesLoadSuccessState)
-                            .matches[2]
-                            .getProfilePicture(
-                                height: constraints.maxHeight *
-                                    MatchesFlock.fractions['smallHead'],
-                                width: constraints.maxHeight *
-                                    MatchesFlock.fractions['smallHead']),
+                        child: getProfilePictureFromLocalPathOrLogin(
+                            login: (state as DiscoverMatchesLoadSuccessState).matches[1].login,
+                            localPath: (state as DiscoverMatchesLoadSuccessState).matches[1].profilePictureLocalPath,
+                            height:
+                                constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                            width:
+                                constraints.maxHeight * MatchesFlock.fractions['smallHead']),
                       ),
                     ),
                   ),
-                ),
 
-                // Invisible separator
-                Positioned(
-                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                      10 -
-                      50 * (1 - animationController.value),
-                  child: Opacity(
-                    opacity: animationController.value,
+                  // Second separator
+                  Positioned(
+                    top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        10 +
+                        constraints.maxHeight *
+                            (MatchesFlock.fractions['smallHead'] +
+                                MatchesFlock.fractions['separator']) *
+                            animationController.value,
                     child: Container(
                       height: constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
                       width: 1.5,
                       color: TinterColors.primaryAccent,
                     ),
                   ),
-                ),
+                ],
+                if ((state as DiscoverMatchesLoadSuccessState).matches.length >= 1) ...[
+                  // Third head
+                  Positioned(
+                    top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                        constraints.maxHeight *
+                            (MatchesFlock.fractions['smallHead'] +
+                                MatchesFlock.fractions['separator']) *
+                            animationController.value,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          width: 2 + 2 * animationController.value,
+                          color: TinterColors.primaryAccent,
+                        ),
+                      ),
+                      height: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              (MatchesFlock.fractions['bigHead'] -
+                                  MatchesFlock.fractions['smallHead']) *
+                              animationController.value,
+                      width: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              (MatchesFlock.fractions['bigHead'] -
+                                  MatchesFlock.fractions['smallHead']) *
+                              animationController.value,
+                      child: Center(
+                        child: getProfilePictureFromLocalPathOrLogin(
+                            login: (state as DiscoverMatchesLoadSuccessState).matches[0].login,
+                            localPath: (state as DiscoverMatchesLoadSuccessState).matches[0].profilePictureLocalPath,
+                            height:
+                                constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                                    constraints.maxHeight *
+                                        (MatchesFlock.fractions['bigHead'] -
+                                            MatchesFlock.fractions['smallHead']) *
+                                        animationController.value,
+                            width:
+                                constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                                    constraints.maxHeight *
+                                        (MatchesFlock.fractions['bigHead'] -
+                                            MatchesFlock.fractions['smallHead']) *
+                                        animationController.value),
+                      ),
+                    ),
+                  ),
 
-                // First head
-                Positioned(
-                  top: 0 +
-                      constraints.maxHeight *
-                          (MatchesFlock.fractions['smallHead'] +
-                              MatchesFlock.fractions['separator']) *
-                          animationController.value,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        width: 2,
+                  // Third separator
+                  Positioned(
+                    top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                        constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        10 +
+                        50 * animationController.value,
+                    child: Opacity(
+                      opacity: 1 - animationController.value,
+                      child: Container(
+                        height:
+                            constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
+                        width: 1.5,
                         color: TinterColors.primaryAccent,
                       ),
                     ),
-                    height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
-                    width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
-                    child: Center(
-                      child: (state as DiscoverMatchesLoadSuccessState)
-                          .matches[1]
-                          .getProfilePicture(
-                              height:
-                                  constraints.maxHeight * MatchesFlock.fractions['smallHead'],
-                              width:
-                                  constraints.maxHeight * MatchesFlock.fractions['smallHead']),
-                    ),
                   ),
-                ),
 
-                // First separator
-                Positioned(
-                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                      10 +
-                      constraints.maxHeight *
-                          (MatchesFlock.fractions['smallHead'] +
-                              MatchesFlock.fractions['separator']) *
-                          animationController.value,
-                  child: Container(
-                    height: constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
-                    width: 1.5,
-                    color: TinterColors.primaryAccent,
-                  ),
-                ),
-
-                // Second head
-                Positioned(
-                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                      constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                      constraints.maxHeight *
-                          (MatchesFlock.fractions['smallHead'] +
-                              MatchesFlock.fractions['separator']) *
-                          animationController.value,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        width: 2 + 2 * animationController.value,
-                        color: TinterColors.primaryAccent,
-                      ),
-                    ),
-                    height: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                        constraints.maxHeight *
-                            (MatchesFlock.fractions['bigHead'] -
-                                MatchesFlock.fractions['smallHead']) *
-                            animationController.value,
-                    width: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                        constraints.maxHeight *
-                            (MatchesFlock.fractions['bigHead'] -
-                                MatchesFlock.fractions['smallHead']) *
-                            animationController.value,
-                    child: Center(
-                      child: (state as DiscoverMatchesLoadSuccessState)
-                          .matches[0]
-                          .getProfilePicture(
-                              height: constraints.maxHeight *
-                                      MatchesFlock.fractions['smallHead'] +
-                                  constraints.maxHeight *
-                                      (MatchesFlock.fractions['bigHead'] -
-                                          MatchesFlock.fractions['smallHead']) *
-                                      animationController.value,
-                              width:
-                                  constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                                      constraints.maxHeight *
-                                          (MatchesFlock.fractions['bigHead'] -
-                                              MatchesFlock.fractions['smallHead']) *
-                                          animationController.value),
-                    ),
-                  ),
-                ),
-
-                // Second separator
-                Positioned(
-                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                      constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                      constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                      10 +
-                      50 * animationController.value,
-                  child: Opacity(
-                    opacity: 1 - animationController.value,
-                    child: Container(
-                      height: constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
-                      width: 1.5,
-                      color: TinterColors.primaryAccent,
-                    ),
-                  ),
-                ),
-
-                Positioned(
-                  top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                      constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                      constraints.maxHeight * MatchesFlock.fractions['bigHead'] +
-                      animationController.value *
-                          (constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                              constraints.maxHeight * MatchesFlock.fractions['separator']),
-                  child: Opacity(
-                    opacity: animationController.value,
-                    child: Container(
-                      height: constraints.maxHeight * MatchesFlock.fractions['nameAndSurname'],
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            child: AutoSizeText(
-                              (state as DiscoverMatchesLoadSuccessState).matches[0].name,
-                              group: nameAndSurnameAutoSizeGroup,
-                              style: TinterTextStyle.headline2,
+                  // Name and surname
+                  Positioned(
+                    top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                        constraints.maxHeight * MatchesFlock.fractions['bigHead'] +
+                        animationController.value *
+                            (constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                                constraints.maxHeight * MatchesFlock.fractions['separator']),
+                    child: Opacity(
+                      opacity: animationController.value,
+                      child: Container(
+                        height:
+                            constraints.maxHeight * MatchesFlock.fractions['nameAndSurname'],
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: AutoSizeText(
+                                (state as DiscoverMatchesLoadSuccessState)
+                                    .matches[0]
+                                    .name,
+                                group: nameAndSurnameAutoSizeGroup,
+                                style: TinterTextStyle.headline2,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: AutoSizeText(
-                              (state as DiscoverMatchesLoadSuccessState).matches[0].surname,
-                              group: nameAndSurnameAutoSizeGroup,
-                              style: TinterTextStyle.headline2,
+                            Expanded(
+                              child: AutoSizeText(
+                                (state as DiscoverMatchesLoadSuccessState)
+                                    .matches[0]
+
+                                    .surname,
+                                group: nameAndSurnameAutoSizeGroup,
+                                style: TinterTextStyle.headline2,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-
-                ...(previousFirstMatch != null)
-                    ? [
-                        // Third head
-                        Positioned(
-                          top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                              constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                              constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                              constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                              50 * animationController.value,
-                          child: Opacity(
-                            opacity: 1 - animationController.value,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  width: 4,
-                                  color: TinterColors.primaryAccent,
-                                ),
-                              ),
-                              height:
-                                  constraints.maxHeight * MatchesFlock.fractions['bigHead'],
-                              width: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
-                              child: Center(
-                                child: previousFirstMatch.getProfilePicture(
-                                  height: constraints.maxHeight *
-                                      MatchesFlock.fractions['bigHead'],
-                                  width: constraints.maxHeight *
-                                      MatchesFlock.fractions['bigHead'],
-                                ),
-                              ),
-                            ),
+                ],
+                if (previousFirstMatch != null) ...[
+                  // Third head
+                  Positioned(
+                    top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                        constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                        50 * animationController.value,
+                    child: Opacity(
+                      opacity: 1 - animationController.value,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 4,
+                            color: TinterColors.primaryAccent,
                           ),
                         ),
+                        height: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
+                        width: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
+                        child: Center(
+                          child: getProfilePictureFromLocalPathOrLogin(
+                            login: previousFirstMatch.login,
+                            localPath: previousFirstMatch.profilePictureLocalPath,
+                            height: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
+                            width: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
 
-                        // Name and surname of the third head
-                        Positioned(
-                          top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                              constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                              constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                              constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                              constraints.maxHeight * MatchesFlock.fractions['bigHead'] +
-                              50 * animationController.value,
-                          child: Opacity(
-                            opacity: 1 - animationController.value,
-                            child: Container(
-                              height: constraints.maxHeight *
-                                  MatchesFlock.fractions['nameAndSurname'],
-                              child: Column(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: AutoSizeText(
-                                      previousFirstMatch.name,
-                                      group: nameAndSurnameAutoSizeGroup,
-                                      style: TinterTextStyle.headline2,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: AutoSizeText(
-                                      previousFirstMatch.surname,
-                                      group: nameAndSurnameAutoSizeGroup,
-                                      style: TinterTextStyle.headline2,
-                                    ),
-                                  ),
-                                ],
+                  // Name and surname of the third head
+                  Positioned(
+                    top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                        constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                        constraints.maxHeight * MatchesFlock.fractions['bigHead'] +
+                        50 * animationController.value,
+                    child: Opacity(
+                      opacity: 1 - animationController.value,
+                      child: Container(
+                        height:
+                            constraints.maxHeight * MatchesFlock.fractions['nameAndSurname'],
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: AutoSizeText(
+                                previousFirstMatch.name,
+                                group: nameAndSurnameAutoSizeGroup,
+                                style: TinterTextStyle.headline2,
                               ),
                             ),
-                          ),
-                        )
-                      ]
-                    : [Container()],
+                            Expanded(
+                              child: AutoSizeText(
+                                previousFirstMatch.surname,
+                                group: nameAndSurnameAutoSizeGroup,
+                                style: TinterTextStyle.headline2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ],
             ),
           );
@@ -1036,6 +1063,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                       scrollDirection: Axis.horizontal,
                                       itemCount: (state as DiscoverMatchesLoadSuccessState)
                                           .matches[0]
+
                                           .associations
                                           .length,
                                       separatorBuilder: (BuildContext context, int index) {
@@ -1048,6 +1076,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                             context,
                                             (state as DiscoverMatchesLoadSuccessState)
                                                 .matches[0]
+
                                                 .associations[index]);
                                       },
                                     ),
@@ -1313,7 +1342,7 @@ class _MatchInformationState extends State<MatchInformation> {
           decoration: BoxDecoration(
             color: Colors.white,
           ),
-          child: association.getLogo(),
+          child: getLogoFromAssociation(associationName: association.name),
         ),
       ),
     );
@@ -1375,12 +1404,117 @@ class NoPaddingTrackShape extends RoundedRectSliderTrackShape {
   }
 }
 
-//    Scaffold(
-//        floatingActionButton: FloatingActionButton(
-//          onPressed: () => controller.forward().whenComplete(() {
-//            setState(() {
-//              controller.animateTo(0, duration: Duration(seconds: 0));
-//              user.testDiscoverLike(); // TODO: Take this for tap
-//            });
-//          }),
-//        ),
+class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
+      child: Column(
+        children: [
+          WideStudentSearch(
+            height: 40,
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.face,
+                    color: TinterColors.white,
+                    size: 70,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  AutoSizeText(
+                    "Il n'y a plus de match à découvrir pour l'instant.\nDemande à d'autres étudiants de s'inscrire!",
+                    style: TinterTextStyle.headline2.copyWith(height: 2),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WideStudentSearch extends StatelessWidget {
+  final double height;
+
+  const WideStudentSearch({Key key, @required this.height}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
+      child: Container(
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(5.0),
+          ),
+          color: TinterColors.primaryAccent,
+        ),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RechercheEtudiantTab()),
+            );
+          },
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 30,
+                  child: Hero(
+                    tag: 'studentSearchBar',
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          color: TinterColors.primaryAccent,
+                        ),
+                        child: TextField(
+                          enabled: false,
+                          textInputAction: TextInputAction.search,
+                          decoration: InputDecoration(
+                            focusedBorder: InputBorder.none,
+                            icon: Padding(
+                              padding: const EdgeInsets.only(left: 0),
+                              child: Icon(
+                                Icons.search,
+                                color: TinterColors.hint,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: AutoSizeText(
+                    'Rechercher un.e étudiant.e',
+                    style: TinterTextStyle.hintLarge,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

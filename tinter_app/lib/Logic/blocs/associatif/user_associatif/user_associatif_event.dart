@@ -23,59 +23,67 @@ class PrimoEntrantChanged extends UserAssociatifEvent {
 
 class UserRequestEvent extends UserAssociatifEvent {}
 
-enum AssociationEventStatus { init, add, remove }
+class UserAssociatifStateChangedEvent extends UserAssociatifEvent {
+  final BuildUserAssociatif newState;
 
-class AssociationEvent extends UserAssociatifEvent {
-  final Association association;
-  final AssociationEventStatus status;
-
-  const AssociationEvent({@required this.association, @required this.status});
+  UserAssociatifStateChangedEvent({
+    @required this.newState,
+  });
 }
+//
+//enum AssociationEventStatus { init, add, remove }
+//
+//class AssociationEvent extends UserAssociatifEvent {
+//  final Association association;
+//  final AssociationEventStatus status;
+//
+//  const AssociationEvent({@required this.association, @required this.status});
+//}
+//
+//enum GoutMusicauxEventStatus { init, add, remove }
+//
+//class GoutMusicauxEvent extends UserAssociatifEvent {
+//  final String goutMusical;
+//  final GoutMusicauxEventStatus status;
+//
+//  const GoutMusicauxEvent({@required this.goutMusical, @required this.status});
+//}
+//
+//class AttiranceVieAssoChanged extends UserAssociatifEvent {
+//  final double newValue;
+//
+//  const AttiranceVieAssoChanged({@required this.newValue})
+//      : assert(0 <= newValue && newValue <= 1);
+//}
+//
+//class FeteOuCoursChanged extends UserAssociatifEvent {
+//  final double newValue;
+//
+//  const FeteOuCoursChanged({@required this.newValue}) : assert(0 <= newValue && newValue <= 1);
+//}
+//
+//class AideOuSortirChanged extends UserAssociatifEvent {
+//  final double newValue;
+//
+//  const AideOuSortirChanged({@required this.newValue})
+//      : assert(0 <= newValue && newValue <= 1);
+//}
+//
+//class OrganisationEvenementsChanged extends UserAssociatifEvent {
+//  final double newValue;
+//
+//  const OrganisationEvenementsChanged({@required this.newValue})
+//      : assert(0 <= newValue && newValue <= 1),
+//        super();
+//}
 
-enum GoutMusicauxEventStatus { init, add, remove }
-
-class GoutMusicauxEvent extends UserAssociatifEvent {
-  final String goutMusical;
-  final GoutMusicauxEventStatus status;
-
-  const GoutMusicauxEvent({@required this.goutMusical, @required this.status});
-}
-
-class AttiranceVieAssoChanged extends UserAssociatifEvent {
-  final double newValue;
-
-  const AttiranceVieAssoChanged({@required this.newValue})
-      : assert(0 <= newValue && newValue <= 1);
-}
-
-class FeteOuCoursChanged extends UserAssociatifEvent {
-  final double newValue;
-
-  const FeteOuCoursChanged({@required this.newValue}) : assert(0 <= newValue && newValue <= 1);
-}
-
-class AideOuSortirChanged extends UserAssociatifEvent {
-  final double newValue;
-
-  const AideOuSortirChanged({@required this.newValue})
-      : assert(0 <= newValue && newValue <= 1);
-}
-
-class OrganisationEvenementsChanged extends UserAssociatifEvent {
-  final double newValue;
-
-  const OrganisationEvenementsChanged({@required this.newValue})
-      : assert(0 <= newValue && newValue <= 1),
-        super();
-}
-
-class ProfilePicturePathChangedEvent extends UserAssociatifEvent {
-  final String newPath;
-
-  const ProfilePicturePathChangedEvent({@required this.newPath})
-      : assert(newPath != null),
-        super();
-}
+//class ProfilePicturePathChangedEvent extends UserAssociatifEvent {
+//  final String newPath;
+//
+//  const ProfilePicturePathChangedEvent({@required this.newPath})
+//      : assert(newPath != null),
+//        super();
+//}
 
 class UserSaveEvent extends UserAssociatifEvent {}
 

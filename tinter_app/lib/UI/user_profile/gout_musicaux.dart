@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif/user_associatif_bloc.dart';
 
 import '../shared_element/const.dart';
 
@@ -112,8 +112,8 @@ class GoutsMusicauxTab extends StatelessWidget {
   }
 
   Widget goutMusicalChip(String goutMusical) {
-    return BlocBuilder<UserBloc, UserState>(
-      builder: (BuildContext context, UserState userState) {
+    return BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+      builder: (BuildContext context, UserAssociatifState userState) {
         if (!(userState is UserLoadSuccessState)) {
           return CircularProgressIndicator();
         }
@@ -123,17 +123,21 @@ class GoutsMusicauxTab extends StatelessWidget {
           highlightColor: Colors.transparent,
           onTap: () {
             if (isLiked) {
-              BlocProvider.of<UserBloc>(context).add(
-                GoutMusicauxEvent(
-                  status: GoutMusicauxEventStatus.remove,
-                  goutMusical: goutMusical,
+              BlocProvider.of<UserAssociatifBloc>(context).add(
+                UserAssociatifStateChangedEvent(
+                  newState: (userState as UserLoadSuccessState)
+                      .user
+                      .rebuild((u) => u.goutsMusicaux.remove(
+                      goutMusical)),
                 ),
               );
             } else {
-              BlocProvider.of<UserBloc>(context).add(
-                GoutMusicauxEvent(
-                  status: GoutMusicauxEventStatus.add,
-                  goutMusical: goutMusical,
+              BlocProvider.of<UserAssociatifBloc>(context).add(
+                UserAssociatifStateChangedEvent(
+                  newState: (userState as UserLoadSuccessState)
+                      .user
+                      .rebuild((u) => u.goutsMusicaux.add(
+                      goutMusical)),
                 ),
               );
             }

@@ -15,12 +15,12 @@ class MatchedMatchesInitializingState extends MatchedMatchesState {}
 class MatchedMatchesInitializingFailedState extends MatchedMatchesState {}
 
 class MatchedMatchesLoadSuccessState extends MatchedMatchesState {
-  final List<Match> matches;
+  final List<BuildMatch> matches;
 
   const MatchedMatchesLoadSuccessState({@required this.matches}):assert(matches != null);
 
-  List<Match> withUpdatedMatch(Match oldMatch, Match updatedMatch) {
-    List<Match> newMatches = List.from(matches);
+  List<BuildMatch> withUpdatedMatch(BuildMatch oldMatch, BuildMatch updatedMatch) {
+    List<BuildMatch> newMatches = List.from(matches);
     newMatches.remove(oldMatch);
     newMatches.add(updatedMatch);
     return newMatches;
@@ -32,14 +32,14 @@ class MatchedMatchesLoadSuccessState extends MatchedMatchesState {
 
 class MatchedMatchesSavingNewStatusState extends MatchedMatchesLoadSuccessState {
 
-  MatchedMatchesSavingNewStatusState({@required List<Match> matches}) : super(matches: matches);
+  MatchedMatchesSavingNewStatusState({@required List<BuildMatch> matches}) : super(matches: matches);
 
-  List<Match> withUpdatedMatch(Match oldMatch, Match updatedMatch) {
+  List<BuildMatch> withUpdatedMatch(BuildMatch oldMatch, BuildMatch updatedMatch) {
     throw UnimplementedError();
   }
 }
 
 class MatchedMatchesLoadFailureState extends MatchedMatchesLoadSuccessState {
 
-  MatchedMatchesLoadFailureState({@required List<Match> matches}) : super(matches: matches);
+  MatchedMatchesLoadFailureState({@required List<BuildMatch> matches}) : super(matches: matches);
 }

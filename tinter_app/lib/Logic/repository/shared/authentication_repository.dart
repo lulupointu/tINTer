@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:meta/meta.dart';
-import 'package:tinterapp/Logic/blocs/authentication/authentication_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 

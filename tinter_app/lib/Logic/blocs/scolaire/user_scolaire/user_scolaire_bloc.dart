@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/user_scolaire.dart';
-import 'package:tinterapp/Logic/models/shared/static_student.dart';
 import 'package:tinterapp/Logic/repository/scolaire/user_scolaire_repository.dart';
 
 part 'user_scolaire_state.dart';
@@ -41,8 +40,7 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
               (state as NewUserScolaireCreatingProfileState).userScolaire);
         } else {
           _addError(
-              'Saved was call while state was ${state
-                  .runtimeType}. Whereas it should be either KnownUserScolaireUnsavedState or NewUserScolaireCreatingProfileState');
+              'Saved was call while state was ${state.runtimeType}. Whereas it should be either KnownUserScolaireUnsavedState or NewUserScolaireCreatingProfileState');
         }
         return;
       case UserScolaireUndoUnsavedChangesEvent:
@@ -50,17 +48,16 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
           yield* _mapUserScolaireUndoUnsavedChangesEventToState();
         } else {
           _addError(
-              'Saved was call while state was ${state
-                  .runtimeType}. Whereas it should be KnownUserScolaireUnsavedState');
+              'Saved was call while state was ${state.runtimeType}. Whereas it should be KnownUserScolaireUnsavedState');
         }
 
         return;
-      case UserScolaireAttributeChangedEvent:
+      case UserScolaireMutableAttributeChangedEvent:
         if (state is UserScolaireLoadSuccessState) {
-          yield* _mapUserScolaireAttributeChangedEventToState(event);
+          yield* _mapUserScolaireMutableAttributeChangedEventToState(event);
         } else {
           _addError(
-              'UserScolaireAttributeChangedEvent received while state is not UserScolaireLoadSuccessState');
+              'UserScolaireMutableAttributeChangedEvent received while state is not UserScolaireLoadSuccessState');
         }
         return;
       case DeleteUserScolaireAccountEvent:
@@ -82,28 +79,14 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
     UserScolaire userScolaire;
     try {
       userScolaire = await userScolaireRepository.getUser();
-    } on UnknownUserError catch (_) {
-      try {
-        StaticStudent staticUserScolaire = await userScolaireRepository
-            .getBasicUserInfo();
-        yield NewUserScolaireCreatingProfileState(
-          userScolaire: UserScolaire(
-            login: staticUserScolaire.login,
-            name: staticUserScolaire.name,
-            surname: staticUserScolaire.surname,
-            email: staticUserScolaire.email,
-          ),
-        );
-      } catch (error) {
-        print(error);
-        yield UserScolaireInitialState();
-      }
+    } catch (error) {
+      print(error);
+      yield UserScolaireInitialState();
       return;
     }
 
     yield KnownUserScolaireSavedState(userScolaire: userScolaire);
   }
-
 
   Stream<UserScolaireState> _mapUserScolaireRequestEventToState() async* {
     yield UserScolaireInitializingState();
@@ -138,7 +121,8 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
     yield KnownUserScolaireSavedState(userScolaire: userScolaire);
   }
 
-  Stream<UserScolaireState> _mapNewUserScolaireSaveEventToState(userScolaire) async* {
+  Stream<UserScolaireState> _mapNewUserScolaireSaveEventToState(
+      UserScolaire userScolaire) async* {
     yield NewUserScolaireSavingState(userScolaire: userScolaire);
     try {
       await userScolaireRepository.createUser(user: userScolaire);
@@ -151,13 +135,13 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
 
     // We create a new userScolaire manually in order to put the profilePicturePath to null
     yield KnownUserScolaireSavedState(
-      userScolaire: (state as KnownUserScolaireUnsavedState).withAttributeChanged().userScolaire,
-    );
+        userScolaire: (state as KnownUserScolaireUnsavedState).userScolaire);
   }
 
   Stream<UserScolaireState> _mapUserScolaireSaveEventToState(
       UserScolaire userScolaire) async* {
-    yield KnownUserScolaireSavingState(userScolaire: userScolaire,
+    yield KnownUserScolaireSavingState(
+        userScolaire: userScolaire,
         oldSavedUserScolaire: (state as KnownUserScolaireUnsavedState).oldSavedUserScolaire);
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
@@ -169,7 +153,8 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
     try {
       await userScolaireRepository.updateUser(user: userScolaire);
     } catch (error) {
-      yield KnownUserScolaireSavingFailedState(userScolaire: userScolaire,
+      yield KnownUserScolaireSavingFailedState(
+          userScolaire: userScolaire,
           oldSavedUserScolaire: (state as KnownUserScolaireUnsavedState).oldSavedUserScolaire);
       return;
     }
@@ -178,63 +163,20 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
 
     // We create a new userScolaire manually in order to put the profilePicturePath to null
     yield KnownUserScolaireSavedState(
-      userScolaire: (state as KnownUserScolaireUnsavedState).withAttributeChanged().userScolaire,
-    );
+        userScolaire: (state as KnownUserScolaireUnsavedState).userScolaire);
   }
-
 
   Stream<UserScolaireState> _mapUserScolaireUndoUnsavedChangesEventToState() async* {
     yield KnownUserScolaireSavedState(
         userScolaire: (state as KnownUserScolaireUnsavedState).oldSavedUserScolaire);
   }
 
-  Stream<UserScolaireState> _mapUserScolaireAttributeChangedEventToState(
-      UserScolaireAttributeChangedEvent event) async* {
-    switch (event.userScolaireAttribute) {
-      case UserScolaireAttribute.name:
-      case UserScolaireAttribute.surname:
-      case UserScolaireAttribute.email:
-      case UserScolaireAttribute.primoEntrant:
-        print('Error: Tried to change user scolaire attribute: ${event.userScolaireAttribute}.');
-        break;
-      case UserScolaireAttribute.associations:
-        yield (state as UserScolaireLoadSuccessState).withAttributeChanged(
-            associations: event.newValue,
-        );
-        break;
-      case UserScolaireAttribute.groupeOuSeul:
-        yield (state as UserScolaireLoadSuccessState).withAttributeChanged(
-            groupeOuSeul: event.newValue,
-        );
-        break;
-      case UserScolaireAttribute.lieuDeVie:
-        yield (state as UserScolaireLoadSuccessState).withAttributeChanged(
-            lieuDeVie: event.newValue,
-        );
-        break;
-      case UserScolaireAttribute.horairesDeTravail:
-        yield (state as UserScolaireLoadSuccessState).withAttributeChanged(
-            horairesDeTravail: event.newValue,
-        );
-        break;
-      case UserScolaireAttribute.enligneOuNon:
-        yield (state as UserScolaireLoadSuccessState).withAttributeChanged(
-            enligneOuNon: event.newValue,
-        );
-        break;
-      case UserScolaireAttribute.matieresPreferees:
-        yield (state as UserScolaireLoadSuccessState).withAttributeChanged(
-            matieresPreferees: event.newValue,
-        );
-        break;
-      case UserScolaireAttribute.profilePicturePath:
-        yield (state as UserScolaireLoadSuccessState).withAttributeChanged(
-            profilePicturePath: event.newValue,
-        );
-        break;
-    }
+  Stream<UserScolaireState> _mapUserScolaireMutableAttributeChangedEventToState(
+      UserScolaireMutableAttributeChangedEvent event) async* {
+    yield (state as UserScolaireLoadSuccessState).withNewState(
+      newState: event.newState,
+    );
   }
-
 
   Stream<UserScolaireState> _mapDeleteUserScolaireAccountEventToState() async* {
     try {

@@ -11,7 +11,7 @@ abstract class DiscoverBinomesEvent extends Equatable {
 class DiscoverBinomesRequestedEvent extends DiscoverBinomesEvent {}
 
 abstract class DiscoverBinomesLoadInSuccessEvent extends DiscoverBinomesEvent {
-  final Binome binome;
+  final BuildBinome binome;
 
   const DiscoverBinomesLoadInSuccessEvent({@required this.binome});
 
@@ -20,11 +20,11 @@ abstract class DiscoverBinomesLoadInSuccessEvent extends DiscoverBinomesEvent {
 
 }
 
-class ChangeStatusDiscoverBinomesEvent extends DiscoverBinomesLoadInSuccessEvent {
+class DiscoverBinomesChangeStatusEvent extends DiscoverBinomesLoadInSuccessEvent {
   final BinomeStatus newStatus;
   final EnumRelationStatusAssociatif enumRelationStatusAssociatif;
 
-  const ChangeStatusDiscoverBinomesEvent({@required binome, @required this.newStatus, @required this.enumRelationStatusAssociatif}):super(binome: binome);
+  const DiscoverBinomesChangeStatusEvent({@required binome, @required this.newStatus, @required this.enumRelationStatusAssociatif}):super(binome: binome);
 
   @override
   List<Object> get props => [binome, newStatus];

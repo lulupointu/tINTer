@@ -6,15 +6,16 @@ import 'package:tinterapp/Logic/models/shared/user_shared_part.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 
-Widget getProfilePictureFromUserSharedPart({
-  @required UserSharedPart userSharedPart,
+Widget getProfilePictureFromLocalPathOrLogin({
+  @required String login,
+  @required String localPath,
   @required double height,
   @required double width,
 }) {
-  if (userSharedPart.profilePictureLocalPath != null) {
+  if (localPath != null) {
     return ClipOval(
       child: Image.file(
-        File(userSharedPart.profilePictureLocalPath),
+        File(localPath),
         height: height,
         width: width,
       ),
@@ -22,7 +23,7 @@ Widget getProfilePictureFromUserSharedPart({
   }
 
   return getProfilePictureFromLogin(
-    login: userSharedPart.login,
+    login: login,
     height: height,
     width: width,
   );

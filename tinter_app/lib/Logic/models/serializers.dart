@@ -17,12 +17,12 @@ import 'package:built_collection/built_collection.dart';
 part 'serializers.g.dart';
 
 @SerializersFor(const [
-  UserSharedPart,
-  UserScolaire,
-  UserAssociatif,
-  Match,
+  BuildUserSharedPart,
+  BuildUserScolaire,
+  BuildUserAssociatif,
+  BuildMatch,
   MatchStatus,
-  Binome,
+  BuildBinome,
   BinomeStatus,
   SearchedUserAssociatif,
   SearchedUserScolaire,

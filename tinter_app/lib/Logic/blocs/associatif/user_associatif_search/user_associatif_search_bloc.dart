@@ -3,21 +3,25 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status.dart';
+import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
-import 'package:tinterapp/Logic/repository/associatif/matched_repository.dart';
+import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';
 import 'package:tinterapp/Logic/repository/associatif/user_associatif_repository.dart';
 
 part 'user_associatif_search_event.dart';
 
 part 'user_associatif_search_state.dart';
 
-class UserAssociatifSearchBloc extends Bloc<UserAssociatifSearchEvent, UserAssociatifSearchState> {
+class UserAssociatifSearchBloc
+    extends Bloc<UserAssociatifSearchEvent, UserAssociatifSearchState> {
   final UserAssociatifRepository userRepository;
-  final MatchedRepository matchedRepository;
+  final MatchedMatchesRepository matchedMatchesRepository;
   final AuthenticationBloc authenticationBloc;
 
-  UserAssociatifSearchBloc({@required this.userRepository, @required this.authenticationBloc, @required this.matchedRepository})
+  UserAssociatifSearchBloc(
+      {@required this.userRepository,
+      @required this.authenticationBloc,
+      @required this.matchedMatchesRepository})
       : super(UserAssociatifSearchInitialState());
 
   @override
@@ -78,7 +82,8 @@ class UserAssociatifSearchBloc extends Bloc<UserAssociatifSearchEvent, UserAssoc
   }
 
   Stream<UserAssociatifSearchState> _mapAssociationRefreshEventToState() async* {
-    yield UserAssociatifSearchRefreshingState(searchedUsers: (state as UserAssociatifSearchLoadSuccessfulState).searchedUsers);
+    yield UserAssociatifSearchRefreshingState(
+        searchedUsers: (state as UserAssociatifSearchLoadSuccessfulState).searchedUsers);
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
@@ -91,20 +96,22 @@ class UserAssociatifSearchBloc extends Bloc<UserAssociatifSearchEvent, UserAssoc
       searchedUsers = await userRepository.getAllSearchedUsersAssociatifs();
     } catch (error) {
       print(error);
-      yield UserAssociatifSearchRefreshingFailedState(searchedUsers:
-          (state as UserAssociatifSearchLoadSuccessfulState).searchedUsers);
+      yield UserAssociatifSearchRefreshingFailedState(
+          searchedUsers: (state as UserAssociatifSearchLoadSuccessfulState).searchedUsers);
     }
     yield UserAssociatifSearchLoadSuccessfulState(searchedUsers: searchedUsers);
   }
 
-  void _mapUserAssociatifSearchLikeEventToState(UserAssociatifSearchLikeEvent userSearchLikeEvent) {
+  void _mapUserAssociatifSearchLikeEventToState(
+      UserAssociatifSearchLikeEvent userSearchLikeEvent) {
     add(UserAssociatifSearchChangeStatusEvent(
         searchedUser: userSearchLikeEvent.likedSearchedUserAssociatif,
         newStatus: MatchStatus.liked,
         enumRelationStatusAssociatif: EnumRelationStatusAssociatif.liked));
   }
 
-  void _mapDiscoverMatchIgnoreEventToState(UserAssociatifSearchIgnoreEvent userSearchIgnoreEvent) {
+  void _mapDiscoverMatchIgnoreEventToState(
+      UserAssociatifSearchIgnoreEvent userSearchIgnoreEvent) {
     add(UserAssociatifSearchChangeStatusEvent(
         searchedUser: userSearchIgnoreEvent.ignoredSearchedUserAssociatif,
         newStatus: MatchStatus.ignored,
@@ -113,8 +120,8 @@ class UserAssociatifSearchBloc extends Bloc<UserAssociatifSearchEvent, UserAssoc
 
   Stream<UserAssociatifSearchState> _mapUserAssociatifSearchChangeStatusEventEventToState(
       UserAssociatifSearchChangeStatusEvent event) async* {
-
-    List<SearchedUserAssociatif> oldSearchedUsersAssociatifs = (state as UserAssociatifSearchLoadSuccessfulState).searchedUsers;
+    List<SearchedUserAssociatif> oldSearchedUsersAssociatifs =
+        (state as UserAssociatifSearchLoadSuccessfulState).searchedUsers;
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
@@ -125,15 +132,17 @@ class UserAssociatifSearchBloc extends Bloc<UserAssociatifSearchEvent, UserAssoc
     print('Getting the new match status');
 
     SearchedUserAssociatif newSearchedUserAssociatif = SearchedUserAssociatif(
-      login: event.searchedUser.login,
-      name: event.searchedUser.name,
-      surname: event.searchedUser.surname,
-      liked: event.newStatus == MatchStatus.ignored ? false : true,
+      (s) => s
+        ..login = event.searchedUser.login
+        ..name = event.searchedUser.name
+        ..surname = event.searchedUser.surname
+        ..liked = event.newStatus == MatchStatus.ignored ? false : true,
     );
 
     print('GotIT');
 
-    List<SearchedUserAssociatif> newSearchedUsersAssociatifs = List<SearchedUserAssociatif>.from(oldSearchedUsersAssociatifs);
+    List<SearchedUserAssociatif> newSearchedUsersAssociatifs =
+        List<SearchedUserAssociatif>.from(oldSearchedUsersAssociatifs);
     newSearchedUsersAssociatifs.remove(event.searchedUser);
     newSearchedUsersAssociatifs.add(newSearchedUserAssociatif);
 
@@ -144,23 +153,22 @@ class UserAssociatifSearchBloc extends Bloc<UserAssociatifSearchEvent, UserAssoc
     print('Changing state to saving');
 
     try {
-      matchedRepository.updateMatchStatus(
-        relationStatus: RelationStatusAssociatif(
-          login: null,
-          otherLogin: event.searchedUser.login,
-          status: event.enumRelationStatusAssociatif,
-        ),
+      matchedMatchesRepository.updateMatchStatus(
+        relationStatus: RelationStatusAssociatif((r) => r
+          ..login = null
+          ..otherLogin = event.searchedUser.login
+          ..status = event.enumRelationStatusAssociatif),
       );
       print('UPDATING');
     } catch (error) {
       print(error);
-      yield UserAssociatifSearchSavingNewStatusFailedState(searchedUsers: oldSearchedUsersAssociatifs);
+      yield UserAssociatifSearchSavingNewStatusFailedState(
+          searchedUsers: oldSearchedUsersAssociatifs);
     }
 
     print('YAHE');
     yield UserAssociatifSearchLoadSuccessfulState(searchedUsers: newSearchedUsersAssociatifs);
   }
-
 
   void _addError(String error) {
     addError(Exception(error), StackTrace.current);

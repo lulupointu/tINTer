@@ -7,9 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tinterapp/Logic/blocs/user/user_bloc.dart';
-import 'package:tinterapp/Logic/models/association.dart';
-import 'package:tinterapp/Logic/repository/user_repository.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif/user_associatif_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
+import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
+import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
+import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/Logic/models/shared/user_shared_part.dart';
+import 'package:tinterapp/Logic/repository/associatif/user_associatif_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:tinterapp/UI/user_profile/associations.dart';
 import 'package:tinterapp/UI/user_profile/gout_musicaux.dart';
@@ -27,17 +32,17 @@ main() {
     httpClient: httpClient,
   );
 
-  final UserRepository userRepository = UserRepository(tinterAPIClient: tinterAPIClient);
+  final UserAssociatifRepository userRepository =
+      UserAssociatifRepository(tinterAPIClient: tinterAPIClient);
 
   runApp(BlocProvider(
-    create: (BuildContext context) => UserBloc(userRepository: userRepository),
+    create: (BuildContext context) => UserAssociatifBloc(userRepository: userRepository),
     child: MaterialApp(
       home: SafeArea(
-        child: BlocBuilder<UserBloc, UserState>(
-          builder: (BuildContext context, UserState state) {
+        child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+          builder: (BuildContext context, UserAssociatifState state) {
             if (state is UserInitialState || state is UserInitializingState) {
-              BlocProvider.of<UserBloc>(context).add(UserInitEvent());
-              return CircularProgressIndicator();
+              BlocProvider.of<UserAssociatifBloc>(context).add(UserInitEvent());
             }
             return UserCreationTab();
           },
@@ -71,6 +76,9 @@ class _UserCreationTabState extends State<UserCreationTab> {
   /// have been scrolled.
   double invisiblyScrollFraction1 = 0;
   double invisiblyScrollFraction2 = 0;
+
+  // This describes which hiding rectangle have been clicked
+  List<bool> hidingRectangleHasBeenClicked = [false, false, false, false, false, false];
 
   @override
   void initState() {
@@ -144,13 +152,12 @@ class _UserCreationTabState extends State<UserCreationTab> {
                         separator,
                         informationRectangle(
                           context: context,
-                          padding: EdgeInsets.only(top: 15.0, left: 20.0, bottom: 15.0),
+                          padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                           child: HidingRectangle(
                             child: AssociationsRectangle(),
                             text: 'Clique pour choisir tes associations.',
                             onTap: () {
-                              BlocProvider.of<UserBloc>(context).add(AssociationEvent(
-                                  association: null, status: AssociationEventStatus.init));
+                              hidingRectangleHasBeenClicked[0] = true;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => AssociationsTab()),
@@ -162,8 +169,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
                         informationRectangle(
                           context: context,
                           child: HidingRectangle(
-                            onTap: () => BlocProvider.of<UserBloc>(context)
-                                .add(AttiranceVieAssoChanged(newValue: 0.5)),
+                            onTap: () => hidingRectangleHasBeenClicked[1] = true,
                             child: AttiranceVieAssoRectangle(),
                             text: 'Clique pour dire à quel point te plait la vie associative.',
                           ),
@@ -172,8 +178,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
                         informationRectangle(
                           context: context,
                           child: HidingRectangle(
-                            onTap: () => BlocProvider.of<UserBloc>(context)
-                                .add(FeteOuCoursChanged(newValue: 0.5)),
+                            onTap: () => hidingRectangleHasBeenClicked[2] = true,
                             child: FeteOuCoursRectangle(),
                             text: 'Clique pour dire si tu es plutôt fête ou cours.',
                           ),
@@ -182,8 +187,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
                         informationRectangle(
                           context: context,
                           child: HidingRectangle(
-                            onTap: () => BlocProvider.of<UserBloc>(context)
-                                .add(AideOuSortirChanged(newValue: 0.5)),
+                            onTap: () => hidingRectangleHasBeenClicked[3] = true,
                             child: AideOuSortirRectangle(),
                             text:
                                 "Clique pour dire si tu préfére un parrain qui t'aide scolairement ou avec qui sortir.",
@@ -193,8 +197,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
                         informationRectangle(
                           context: context,
                           child: HidingRectangle(
-                            onTap: () => BlocProvider.of<UserBloc>(context)
-                                .add(OrganisationEvenementsChanged(newValue: 0.5)),
+                            onTap: () => hidingRectangleHasBeenClicked[4] = true,
                             child: OrganisationEvenementsRectangle(),
                             text: 'Clique pour dire si tu aimes organiser des événements.',
                           ),
@@ -207,8 +210,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
                             child: GoutsMusicauxRectangle(),
                             text: 'Clique pour choisir tes goûts musicaux.',
                             onTap: () {
-                              BlocProvider.of<UserBloc>(context).add(GoutMusicauxEvent(
-                                  goutMusical: null, status: GoutMusicauxEventStatus.init));
+                              hidingRectangleHasBeenClicked[5] = true;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
@@ -253,6 +255,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: NextButton(
+                  enabled: !hidingRectangleHasBeenClicked.contains(false),
                   height: constraints.maxHeight * fractions['nextButton'],
                 ),
               )
@@ -287,18 +290,19 @@ class _UserCreationTabState extends State<UserCreationTab> {
 
 class NextButton extends StatelessWidget {
   final double height;
+  final bool enabled;
 
-  NextButton({@required this.height});
+  NextButton({@required this.height, @required this.enabled});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: Colors.transparent,
       onTap: () {
-        UserState userState = BlocProvider.of<UserBloc>(context).state;
-        if (userState is NewUserState) {
-          if (!userState.user.isAnyAttributeNull()) {
-            BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+        UserAssociatifState userState = BlocProvider.of<UserAssociatifBloc>(context).state;
+        if (userState is NewUserAssociatifState) {
+          if (enabled) {
+            BlocProvider.of<UserAssociatifBloc>(context).add(UserSaveEvent());
           }
         }
       },
@@ -348,10 +352,10 @@ class HoveringUserInformation extends StatelessWidget {
                 opacity: 1 - invisiblyScrollFraction2,
                 child: Transform.translate(
                   offset: Offset(0, -20 * invisiblyScrollFraction2),
-                  child: BlocBuilder<UserBloc, UserState>(
-                      builder: (BuildContext context, UserState userState) {
+                  child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+                      builder: (BuildContext context, UserAssociatifState userState) {
                     return AutoSizeText(
-                      ((userState is NewUserState))
+                      ((userState is NewUserAssociatifState))
                           ? userState.user.name + " " + userState.user.surname
                           : 'Loading...',
                       style: TinterTextStyle.headline1,
@@ -366,14 +370,17 @@ class HoveringUserInformation extends StatelessWidget {
                 opacity: 1 - invisiblyScrollFraction1,
                 child: Transform.translate(
                   offset: Offset(0, -20 * invisiblyScrollFraction1),
-                  child: BlocBuilder<UserBloc, UserState>(
-                      builder: (BuildContext context, UserState userState) {
-                    return AutoSizeText(
-                      ((userState is NewUserState)) ? userState.user.email : 'Loading...',
-                      style: TinterTextStyle.headline2,
-                      maxLines: 1,
-                    );
-                  }),
+                  child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+                    builder: (BuildContext context, UserAssociatifState userState) {
+                      return AutoSizeText(
+                        ((userState is NewUserAssociatifState))
+                            ? userState.user.email
+                            : 'Loading...',
+                        style: TinterTextStyle.headline2,
+                        maxLines: 1,
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -397,7 +404,6 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
   final GlobalKey hoveringUserPictureKey = GlobalKey();
   final Duration _folderOrCameraOverlayAnimationDuration = Duration(milliseconds: 200);
   OverlayEntry _folderOrCameraOverlay;
-
 
   void showFolderOrCameraOverlay() {
     _folderOrCameraOverlay?.remove();
@@ -436,7 +442,6 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
       _folderOrCameraOverlay.remove();
       _folderOrCameraOverlay = null;
     });
-
   }
 
   @override
@@ -459,14 +464,19 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
         ),
         height: widget.size,
         width: widget.size,
-        child: BlocBuilder<UserBloc, UserState>(
-          builder: (BuildContext context, UserState userState) {
-            if (!(userState is NewUserState)) {
+        child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+          builder: (BuildContext context, UserAssociatifState userState) {
+            if (!(userState is NewUserAssociatifState)) {
               return CircularProgressIndicator();
             }
             return Stack(
               children: [
-                (userState as NewUserState).user.getProfilePicture(height: widget.size, width: widget.size),
+                getProfilePictureFromLocalPathOrLogin(
+                    login: (userState as NewUserAssociatifState).user.login,
+                    localPath:
+                        (userState as NewUserAssociatifState).user.profilePictureLocalPath,
+                    height: widget.size,
+                    width: widget.size),
                 ClipPath(
                   clipper: ModifyProfilePictureClipper(),
                   child: BackdropFilter(
@@ -519,8 +529,11 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
       );
 
       if (croppedFile != null) {
-        BlocProvider.of<UserBloc>(context)
-            .add(ProfilePicturePathChangedEvent(newPath: croppedFile.path));
+        BlocProvider.of<UserSharedPartBloc>(context).add(UserStateChangedEvent(
+            newState: (BlocProvider.of<UserSharedPartBloc>(context).state
+                    as UserSharedPartLoadSuccessState)
+                .user
+                .rebuild((u) => u..profilePictureLocalPath = croppedFile.path)));
       }
     }
     _folderOrCameraOverlay?.remove();
@@ -555,8 +568,8 @@ class FolderOrCameraOverlay extends StatelessWidget {
       duration: animationDuration,
       builder: (BuildContext context, double value, Widget child) {
         return Container(
-          height: value*double.maxFinite,
-          width: value*double.maxFinite,
+          height: value * double.maxFinite,
+          width: value * double.maxFinite,
           color: Colors.transparent,
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
@@ -695,13 +708,13 @@ class PrimoEntrantRectangle extends StatelessWidget {
               width: double.infinity,
               child: Container(
                 height: 60,
-                child: BlocBuilder<UserBloc, UserState>(
-                  builder: (BuildContext context, UserState userState) {
-                    if (!(userState is NewUserState)) {
+                child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+                  builder: (BuildContext context, UserAssociatifState userState) {
+                    if (!(userState is NewUserAssociatifState)) {
                       return CircularProgressIndicator();
                     }
-                    if (((userState as NewUserState).user.primoEntrant) == null) {
-                      BlocProvider.of<UserBloc>(context)
+                    if (((userState as NewUserAssociatifState).user.primoEntrant) == null) {
+                      BlocProvider.of<UserAssociatifBloc>(context)
                           .add(PrimoEntrantChanged(newValue: true));
                       return CircularProgressIndicator();
                     }
@@ -712,10 +725,12 @@ class PrimoEntrantRectangle extends StatelessWidget {
                         children: [
                           InkWell(
                             splashColor: Colors.transparent,
-                            onTap: () => BlocProvider.of<UserBloc>(context)
+                            onTap: () => BlocProvider.of<UserAssociatifBloc>(context)
                                 .add(PrimoEntrantChanged(newValue: true)),
                             child: AnimatedOpacity(
-                              opacity: (userState as NewUserState).user.primoEntrant ? 1 : 0.5,
+                              opacity: (userState as NewUserAssociatifState).user.primoEntrant
+                                  ? 1
+                                  : 0.5,
                               duration: Duration(milliseconds: 300),
                               child: Container(
                                 decoration: BoxDecoration(
@@ -734,10 +749,12 @@ class PrimoEntrantRectangle extends StatelessWidget {
                           ),
                           InkWell(
                             splashColor: Colors.transparent,
-                            onTap: () => BlocProvider.of<UserBloc>(context)
+                            onTap: () => BlocProvider.of<UserAssociatifBloc>(context)
                                 .add(PrimoEntrantChanged(newValue: false)),
                             child: AnimatedOpacity(
-                              opacity: (userState as NewUserState).user.primoEntrant ? 0.5 : 1,
+                              opacity: (userState as NewUserAssociatifState).user.primoEntrant
+                                  ? 0.5
+                                  : 1,
                               duration: Duration(milliseconds: 300),
                               child: Container(
                                 decoration: BoxDecoration(
@@ -777,39 +794,64 @@ class AssociationsRectangle extends StatelessWidget {
           children: <Widget>[
             Align(
               alignment: AlignmentDirectional.topStart,
-              child: Text(
-                'Associations',
-                style: TinterTextStyle.headline2,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text(
+                  'Associations',
+                  style: TinterTextStyle.headline2,
+                ),
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
             Container(
-              padding: EdgeInsets.only(left: 10.0),
               width: double.infinity,
               child: Container(
                 height: 60,
-                child: BlocBuilder<UserBloc, UserState>(
-                  builder: (BuildContext context, UserState userState) {
-                    if (!(userState is NewUserState) || (userState as NewUserState).user.associations == null) {
+                child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+                  builder: (BuildContext context, UserAssociatifState userState) {
+                    if (!(userState is NewUserAssociatifState) ||
+                        (userState as NewUserAssociatifState).user.associations == null) {
                       return Text('Loading');
                     }
-                    return (userState as NewUserState).user.associations.length == 0
-                        ? Text('Aucune association sélectionnée.')
-                        : ListView.separated(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: (userState as NewUserState).user.associations.length,
-                            separatorBuilder: (BuildContext context, int index) {
-                              return SizedBox(
-                                width: 5,
-                              );
-                            },
-                            itemBuilder: (BuildContext context, int index) {
-                              return associationBubble(context,
-                                  (userState as NewUserState).user.associations[index]);
-                            },
+                    return (userState as NewUserAssociatifState).user.associations.length == 0
+                        ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                'Aucune association séléctionnée.',
+                                style: TinterTextStyle.headline2.copyWith(fontSize: 16),
+                              ),
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: (userState as NewUserAssociatifState)
+                                  .user
+                                  .associations
+                                  .length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      right: (index ==
+                                              (userState as NewUserAssociatifState)
+                                                      .user
+                                                      .associations
+                                                      .length -
+                                                  1)
+                                          ? 48
+                                          : 8.0,
+                                      left: (index == 0) ? 20.0 : 0),
+                                  child: associationBubble(
+                                      context,
+                                      (userState as NewUserAssociatifState)
+                                          .user
+                                          .associations[index]),
+                                );
+                              },
+                            ),
                           );
                   },
                 ),
@@ -840,20 +882,12 @@ class AssociationsRectangle extends StatelessWidget {
   }
 
   Widget associationBubble(BuildContext context, Association association) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: TinterTextStyle.headline1.color, width: 3),
-      ),
-      height: 60,
-      width: 60,
-      child: ClipOval(
-        child: Container(
-          alignment: AlignmentDirectional.centerStart,
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: association.getLogo(),
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+        child: ClipOval(
+          child: getLogoFromAssociation(associationName: association.name),
         ),
       ),
     );
@@ -868,25 +902,31 @@ class AttiranceVieAssoRectangle extends StatelessWidget {
         Align(
           alignment: AlignmentDirectional.topStart,
           child: Padding(
-            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
-            child: Text(
+            padding: const EdgeInsets.only(
+              top: 15,
+              left: 20,
+              right: 20,
+            ),
+            child: AutoSizeText(
               'Attirance pour la vie associative',
-              textAlign: TextAlign.center,
               style: TinterTextStyle.headline2,
             ),
           ),
         ),
         SliderTheme(
           data: TinterSliderTheme.enabled,
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (BuildContext context, UserState userState) {
-              if (!(userState is NewUserState)) {
+          child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+            builder: (BuildContext context, UserAssociatifState userState) {
+              if (!(userState is NewUserAssociatifState)) {
                 return CircularProgressIndicator();
               }
               return Slider(
-                value: (userState as NewUserState).user.attiranceVieAsso ?? 0.5,
-                onChanged: (value) => BlocProvider.of<UserBloc>(context)
-                    .add(AttiranceVieAssoChanged(newValue: value)),
+                value: (userState as NewUserAssociatifState).user.attiranceVieAsso ?? 0.5,
+                onChanged: (value) => BlocProvider.of<UserAssociatifBloc>(context).add(
+                    UserAssociatifStateChangedEvent(
+                        newState: (userState as NewUserAssociatifState)
+                            .user
+                            .rebuild((u) => u..attiranceVieAsso = value))),
               );
             },
           ),
@@ -904,7 +944,11 @@ class FeteOuCoursRectangle extends StatelessWidget {
         Align(
           alignment: AlignmentDirectional.topStart,
           child: Padding(
-            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
+            padding: const EdgeInsets.only(
+              top: 15,
+              left: 20,
+              right: 20,
+            ),
             child: Text(
               'Cours ou soirée?',
               style: TinterTextStyle.headline2,
@@ -917,15 +961,18 @@ class FeteOuCoursRectangle extends StatelessWidget {
         SliderTheme(
           data: TinterSliderTheme.enabled,
           child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is NewUserState)) {
+              slider: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+                builder: (BuildContext context, UserAssociatifState userState) {
+                  if (!(userState is NewUserAssociatifState)) {
                     return CircularProgressIndicator();
                   }
                   return Slider(
-                      value: (userState as NewUserState).user.feteOuCours ?? 0.5,
-                      onChanged: (value) => BlocProvider.of<UserBloc>(context)
-                          .add(FeteOuCoursChanged(newValue: value)));
+                      value: (userState as NewUserAssociatifState).user.feteOuCours ?? 0.5,
+                      onChanged: (value) => BlocProvider.of<UserAssociatifBloc>(context).add(
+                          UserAssociatifStateChangedEvent(
+                              newState: (userState as NewUserAssociatifState)
+                                  .user
+                                  .rebuild((u) => u..feteOuCours = value))));
                 },
               ),
               leftLabel: 'Cours',
@@ -944,11 +991,14 @@ class AideOuSortirRectangle extends StatelessWidget {
         Align(
           alignment: AlignmentDirectional.topStart,
           child: Padding(
-            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
-            child: Text(
+            padding: const EdgeInsets.only(
+              top: 15,
+              left: 20,
+              right: 20,
+            ),
+            child: AutoSizeText(
               'Parrain qui aide ou avec qui sortir?',
               style: TinterTextStyle.headline2,
-              textAlign: TextAlign.center,
             ),
           ),
         ),
@@ -958,15 +1008,18 @@ class AideOuSortirRectangle extends StatelessWidget {
         SliderTheme(
           data: TinterSliderTheme.enabled,
           child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is NewUserState)) {
+              slider: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+                builder: (BuildContext context, UserAssociatifState userState) {
+                  if (!(userState is NewUserAssociatifState)) {
                     return CircularProgressIndicator();
                   }
                   return Slider(
-                      value: (userState as NewUserState).user.aideOuSortir ?? 0.5,
-                      onChanged: (value) => BlocProvider.of<UserBloc>(context)
-                          .add(AideOuSortirChanged(newValue: value)));
+                      value: (userState as NewUserAssociatifState).user.aideOuSortir ?? 0.5,
+                      onChanged: (value) => BlocProvider.of<UserAssociatifBloc>(context).add(
+                          UserAssociatifStateChangedEvent(
+                              newState: (userState as NewUserAssociatifState)
+                                  .user
+                                  .rebuild((u) => u..aideOuSortir = value))));
                 },
               ),
               leftLabel: 'Aide',
@@ -985,25 +1038,32 @@ class OrganisationEvenementsRectangle extends StatelessWidget {
         Align(
           alignment: AlignmentDirectional.topStart,
           child: Padding(
-            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
-            child: Text(
+            padding: const EdgeInsets.only(
+              top: 15,
+              left: 20,
+              right: 20,
+            ),
+            child: AutoSizeText(
               'Aime organiser les événements?',
               style: TinterTextStyle.headline2,
-              textAlign: TextAlign.center,
             ),
           ),
         ),
         SliderTheme(
           data: TinterSliderTheme.enabled,
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (BuildContext context, UserState userState) {
-              if (!(userState is NewUserState)) {
+          child: BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+            builder: (BuildContext context, UserAssociatifState userState) {
+              if (!(userState is NewUserAssociatifState)) {
                 return CircularProgressIndicator();
               }
               return Slider(
-                  value: (userState as NewUserState).user.organisationEvenements ?? 0.5,
-                  onChanged: (value) => BlocProvider.of<UserBloc>(context)
-                      .add(OrganisationEvenementsChanged(newValue: value)));
+                  value:
+                      (userState as NewUserAssociatifState).user.organisationEvenements ?? 0.5,
+                  onChanged: (value) => BlocProvider.of<UserAssociatifBloc>(context).add(
+                      UserAssociatifStateChangedEvent(
+                          newState: (userState as NewUserAssociatifState)
+                              .user
+                              .rebuild((u) => u..organisationEvenements = value))));
             },
           ),
         ),
@@ -1026,30 +1086,32 @@ class GoutsMusicauxRectangle extends StatelessWidget {
                 style: TinterTextStyle.headline2,
               ),
             ),
-            BlocBuilder<UserBloc, UserState>(
-              builder: (BuildContext context, UserState userState) {
-                if (!(userState is NewUserState) || (userState as NewUserState).user.goutsMusicaux == null) {
+            BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
+              builder: (BuildContext context, UserAssociatifState userState) {
+                if (!(userState is NewUserAssociatifState) ||
+                    (userState as NewUserAssociatifState).user.goutsMusicaux == null) {
                   return Text('Loading');
                 }
                 return Wrap(
                   spacing: 15,
-                  children: (userState as NewUserState).user.goutsMusicaux.length == 0
-                      ? [
-                          Chip(
-                            label: Text('Aucun'),
-                            labelStyle: TinterTextStyle.goutMusicauxLiked,
-                            backgroundColor: TinterColors.primaryAccent,
-                          )
-                        ]
-                      : <Widget>[
-                          for (String musicStyle
-                              in (userState as NewUserState).user.goutsMusicaux)
-                            Chip(
-                              label: Text(musicStyle),
-                              labelStyle: TinterTextStyle.goutMusicauxLiked,
-                              backgroundColor: TinterColors.primaryAccent,
-                            )
-                        ],
+                  children:
+                      (userState as NewUserAssociatifState).user.goutsMusicaux.length == 0
+                          ? [
+                              Chip(
+                                label: Text('Aucun'),
+                                labelStyle: TinterTextStyle.goutMusicauxLiked,
+                                backgroundColor: TinterColors.primaryAccent,
+                              )
+                            ]
+                          : <Widget>[
+                              for (String musicStyle
+                                  in (userState as NewUserAssociatifState).user.goutsMusicaux)
+                                Chip(
+                                  label: Text(musicStyle),
+                                  labelStyle: TinterTextStyle.goutMusicauxLiked,
+                                  backgroundColor: TinterColors.primaryAccent,
+                                )
+                            ],
                 );
               },
             )
@@ -1167,9 +1229,10 @@ class _HidingRectangleState extends State<HidingRectangle> {
                         color: TinterColors.primary,
                       ),
                       child: Center(
-                        child: Text(
+                        child: AutoSizeText(
                           widget.text,
                           textAlign: TextAlign.center,
+                          style: TinterTextStyle.hidingText,
                         ),
                       ),
                     ),

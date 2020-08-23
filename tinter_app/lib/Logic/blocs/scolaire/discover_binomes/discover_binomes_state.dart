@@ -13,12 +13,12 @@ class DiscoverBinomesInitialState extends DiscoverBinomesState {}
 class DiscoverBinomesLoadInProgressState extends DiscoverBinomesState {}
 
 class DiscoverBinomesLoadSuccessState extends DiscoverBinomesState {
-  final List<Binome> binomes;
+  final List<BuildBinome> binomes;
 
   const DiscoverBinomesLoadSuccessState({@required this.binomes});
 
-  List<Binome> getUpdatedBinomes(Binome oldBinome, Binome updatedBinome) {
-    List<Binome> newBinomes = List.from(binomes);
+  List<BuildBinome> getUpdatedBinomes(BuildBinome oldBinome, BuildBinome updatedBinome) {
+    List<BuildBinome> newBinomes = List.from(binomes);
     newBinomes.remove(oldBinome);
     newBinomes.add(updatedBinome);
     return newBinomes;
@@ -29,12 +29,12 @@ class DiscoverBinomesLoadSuccessState extends DiscoverBinomesState {
 }
 
 class DiscoverBinomesWaitingStatusChangeState extends DiscoverBinomesLoadSuccessState {
-  const DiscoverBinomesWaitingStatusChangeState({@required List<Binome> binomes})
+  const DiscoverBinomesWaitingStatusChangeState({@required List<BuildBinome> binomes})
       : super(binomes: binomes);
 }
 
 class DiscoverBinomesSavingNewStatusState extends DiscoverBinomesLoadSuccessState {
-  const DiscoverBinomesSavingNewStatusState({@required List<Binome> binomes})
+  const DiscoverBinomesSavingNewStatusState({@required List<BuildBinome> binomes})
       : super(binomes: binomes);
 }
 

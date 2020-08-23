@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
+import 'package:tinterapp/Logic/models/shared/user_shared_part.dart';
 
 part 'user_shared_state.dart';
 
@@ -11,7 +12,8 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
   final UserSharedPartRepository userSharedPartRepository;
   final AuthenticationBloc authenticationBloc;
 
-  UserSharedPartBloc({@required this.userSharedPartRepository, @required this.authenticationBloc})
+  UserSharedPartBloc(
+      {@required this.userSharedPartRepository, @required this.authenticationBloc})
       : super(UserSharedPartInitialState());
 
   @override
@@ -32,10 +34,10 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
       case UserSharedPartSaveEvent:
         if (state is KnownUserSharedPartUnsavedState) {
           yield* _mapUserSharedPartSaveEventToState(
-              (state as KnownUserSharedPartUnsavedState).userSharedPart);
+              (state as KnownUserSharedPartUnsavedState).user);
         } else if (state is NewUserSharedPartCreatingProfileState) {
           yield* _mapNewUserSharedPartSaveEventToState(
-              (state as NewUserSharedPartCreatingProfileState).userSharedPart);
+              (state as NewUserSharedPartCreatingProfileState).user);
         } else {
           _addError(
               'Saved was call while state was ${state.runtimeType}. Whereas it should be either KnownUserSharedPartUnsavedState or NewUserSharedPartCreatingProfileState');
@@ -50,9 +52,9 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
         }
 
         return;
-      case UserSharedPartMutableAttributeChangedEvent:
+      case UserStateChangedEvent:
         if (state is UserSharedPartLoadSuccessState) {
-          yield* _mapUserSharedPartMutableAttributeChangedEventToState(event);
+          yield* _mapUserStateChangedEventToState(event);
         } else {
           _addError(
               'UserSharedPartMutableAttributeChangedEvent received while state is not UserSharedPartLoadSuccessState');
@@ -74,7 +76,7 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
   Stream<UserSharedPartState> _mapUserSharedPartInitEventToState() async* {
     yield UserSharedPartInitializingState();
 
-    UserSharedPart userSharedPart;
+    BuildUserSharedPart userSharedPart;
     try {
       userSharedPart = await userSharedPartRepository.getUser();
     } catch (error) {
@@ -89,7 +91,7 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
   Stream<UserSharedPartState> _mapUserSharedPartRequestEventToState() async* {
     yield UserSharedPartInitializingState();
 
-    UserSharedPart userSharedPart;
+    BuildUserSharedPart userSharedPart;
     try {
       userSharedPart = await userSharedPartRepository.getUser();
     } catch (error) {
@@ -106,14 +108,14 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
       return;
     }
     yield KnownUserSharedPartRefreshingState(
-        userSharedPart: (state as KnownUserSharedPartState).userSharedPart);
+        userSharedPart: (state as KnownUserSharedPartState).user);
 
-    UserSharedPart userSharedPart;
+    BuildUserSharedPart userSharedPart;
     try {
       userSharedPart = await userSharedPartRepository.getUser();
     } catch (error) {
       yield KnownUserSharedPartRefreshingFailedState(
-          userSharedPart: (state as KnownUserSharedPartState).userSharedPart);
+          userSharedPart: (state as KnownUserSharedPartState).user);
       return;
     }
     yield KnownUserSharedPartSavedState(userSharedPart: userSharedPart);
@@ -133,15 +135,16 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
     // We create a new userSharedPart manually in order to put the profilePicturePath to null
     yield KnownUserSharedPartSavedState(
       userSharedPart:
-      (state as KnownUserSharedPartUnsavedState).withAttributeChanged().userSharedPart,
+          (state as KnownUserSharedPartUnsavedState).user.rebuild((_) {}),
     );
   }
 
   Stream<UserSharedPartState> _mapUserSharedPartSaveEventToState(
-      UserSharedPart userSharedPart) async* {
+      BuildUserSharedPart userSharedPart) async* {
     yield KnownUserSharedPartSavingState(
         userSharedPart: userSharedPart,
-        oldSavedUserSharedPart: (state as KnownUserSharedPartUnsavedState).oldSavedUserSharedPart);
+        oldSavedUserSharedPart:
+            (state as KnownUserSharedPartUnsavedState).oldSavedUserSharedPart);
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
@@ -154,7 +157,8 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
     } catch (error) {
       yield KnownUserSharedPartSavingFailedState(
           userSharedPart: userSharedPart,
-          oldSavedUserSharedPart: (state as KnownUserSharedPartUnsavedState).oldSavedUserSharedPart);
+          oldSavedUserSharedPart:
+              (state as KnownUserSharedPartUnsavedState).oldSavedUserSharedPart);
       return;
     }
 
@@ -162,8 +166,9 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
 
     // We create a new userSharedPart manually in order to put the profilePicturePath to null
     yield KnownUserSharedPartSavedState(
-      userSharedPart:
-      (state as KnownUserSharedPartUnsavedState).withAttributeChanged().userSharedPart,
+      userSharedPart: (state as KnownUserSharedPartUnsavedState)
+          .user
+          .rebuild((u) => u..profilePictureLocalPath = null),
     );
   }
 
@@ -172,40 +177,9 @@ class UserSharedPartBloc extends Bloc<UserSharedPartEvent, UserSharedPartState> 
         userSharedPart: (state as KnownUserSharedPartUnsavedState).oldSavedUserSharedPart);
   }
 
-  Stream<UserSharedPartState> _mapUserSharedPartMutableAttributeChangedEventToState(
-      UserSharedPartMutableAttributeChangedEvent event) async* {
-    switch (event.userSharedPartMutableAttribute) {
-      case UserSharedPartMutableAttribute.year:
-        yield (state as UserSharedPartLoadSuccessState).withAttributeChanged(
-          year: event.newValue,
-        );
-        break;
-      case UserSharedPartMutableAttribute.groupeOuSeul:
-        yield (state as UserSharedPartLoadSuccessState).withAttributeChanged(
-          groupeOuSeul: event.newValue,
-        );
-        break;
-      case UserSharedPartMutableAttribute.lieuDeVie:
-        yield (state as UserSharedPartLoadSuccessState).withAttributeChanged(
-          lieuDeVie: event.newValue,
-        );
-        break;
-      case UserSharedPartMutableAttribute.horairesDeTravail:
-        yield (state as UserSharedPartLoadSuccessState).withAttributeChanged(
-          horairesDeTravail: event.newValue,
-        );
-        break;
-      case UserSharedPartMutableAttribute.enligneOuNon:
-        yield (state as UserSharedPartLoadSuccessState).withAttributeChanged(
-          enligneOuNon: event.newValue,
-        );
-        break;
-      case UserSharedPartMutableAttribute.matieresPreferees:
-        yield (state as UserSharedPartLoadSuccessState).withAttributeChanged(
-          matieresPreferees: event.newValue,
-        );
-        break;
-    }
+  Stream<UserSharedPartState> _mapUserStateChangedEventToState(
+      UserStateChangedEvent event) async* {
+    yield (state as UserSharedPartLoadSuccessState).withNewState(newState: event.newState);
   }
 
   Stream<UserSharedPartState> _mapDeleteUserSharedPartAccountEventToState() async* {

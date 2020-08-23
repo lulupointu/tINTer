@@ -1,6 +1,6 @@
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
-import 'package:tinterapp/Logic/repository/authentication_repository.dart';
+import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:meta/meta.dart';
 

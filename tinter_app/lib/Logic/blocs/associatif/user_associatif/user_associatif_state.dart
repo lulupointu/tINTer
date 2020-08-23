@@ -14,256 +14,22 @@ class UserInitializingState extends UserAssociatifState {}
 class UserInitializingFailedState extends UserAssociatifState {}
 
 abstract class UserLoadSuccessState extends UserAssociatifState {
-  final UserAssociatif user;
+  final BuildUserAssociatif user;
 
   UserLoadSuccessState({@required this.user}) : assert(user != null);
 
   @override
   List<Object> get props => [user];
 
-  UserLoadSuccessState createNewState({UserAssociatif newUser});
+  UserLoadSuccessState createNewState({BuildUserAssociatif newUser});
 
-  UserLoadSuccessState withPrimoEntrantChanged(bool newValue) {
+  UserLoadSuccessState withNewState({
+    @required BuildUserAssociatif newState,
+  }) {
     return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: newValue,
-        associations: user.associations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
+        newUser: newState);
   }
 
-  UserLoadSuccessState withAttiranceVieAssoChanged(
-    double newValue,
-  ) {
-    assert(0 <= newValue && newValue <= 1);
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: user.associations,
-        attiranceVieAsso: newValue,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withAideOuSortirChanged(double newValue) {
-    assert(0 <= newValue && newValue <= 1);
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: user.associations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: newValue,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withFeteOuCoursChanged(double newValue) {
-    assert(0 <= newValue && newValue <= 1);
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: user.associations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: newValue,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withOrganisationEvenementsChanged(double newValue) {
-    assert(0 <= newValue && newValue <= 1);
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: user.associations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: newValue,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withInitAssociation() {
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: List<Association>(),
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withAddedAssociation(Association newAssociation) {
-    final List<Association> newAssociations = List.from(user.associations);
-    newAssociations.add(newAssociation);
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: newAssociations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withRemovedAssociation(Association associationToRemove) {
-    final List<Association> newAssociations = List.from(user.associations);
-    newAssociations.remove(associationToRemove);
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: newAssociations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withInitGoutsMusicaux() {
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: user.associations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: List<String>(),
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withAddedGoutMusical(String newGoutMusical) {
-    final List<String> newGoutMusicaux = List.from(user.goutsMusicaux);
-    newGoutMusicaux.add(newGoutMusical);
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: user.associations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: newGoutMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withRemovedGoutMusical(String goutMusicalToRemove) {
-    final List<String> newGoutMusicaux = List.from(user.goutsMusicaux);
-    newGoutMusicaux.remove(goutMusicalToRemove);
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: user.associations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: newGoutMusicaux,
-        profilePicturePath: user.profilePictureLocalPath,
-      ),
-    );
-  }
-
-  UserLoadSuccessState withPictureProfileChanged(String pictureProfilePath) {
-    return createNewState(
-      newUser: UserAssociatif(
-        login: user.login,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        primoEntrant: user.primoEntrant,
-        associations: user.associations,
-        attiranceVieAsso: user.attiranceVieAsso,
-        feteOuCours: user.feteOuCours,
-        aideOuSortir: user.aideOuSortir,
-        organisationEvenements: user.organisationEvenements,
-        goutsMusicaux: user.goutsMusicaux,
-        profilePicturePath: pictureProfilePath,
-      ),
-    );
-  }
 }
 
 abstract class NewUserAssociatifState extends UserLoadSuccessState {
@@ -273,14 +39,14 @@ abstract class NewUserAssociatifState extends UserLoadSuccessState {
 class NewUserCreatingProfileState extends NewUserAssociatifState {
   NewUserCreatingProfileState({@required user}) : super(user: user);
 
-  NewUserCreatingProfileState createNewState({UserAssociatif newUser}) {
+  NewUserCreatingProfileState createNewState({BuildUserAssociatif newUser}) {
     return NewUserCreatingProfileState(user: newUser);
   }
 }
 
 class NewUserLoadingState extends NewUserAssociatifState {
   @override
-  UserLoadSuccessState createNewState({UserAssociatif newUser}) {
+  UserLoadSuccessState createNewState({BuildUserAssociatif newUser}) {
     throw UnimplementedError();
   }
 }
@@ -289,7 +55,7 @@ class NewUserSavingState extends NewUserAssociatifState {
   NewUserSavingState({@required user}) : super(user: user);
 
   @override
-  UserLoadSuccessState createNewState({UserAssociatif newUser}) {
+  UserLoadSuccessState createNewState({BuildUserAssociatif newUser}) {
     throw UnimplementedError();
   }
 }
@@ -302,7 +68,7 @@ class KnownUserRefreshingState extends KnownUserAssociatifState {
   KnownUserRefreshingState({@required user}) : super(user: user);
 
   @override
-  KnownUserAssociatifState createNewState({UserAssociatif newUser}) => (newUser != this.user)
+  KnownUserAssociatifState createNewState({BuildUserAssociatif newUser}) => (newUser != this.user)
       ? KnownUserUnsavedState(user: newUser, oldSavedUser: this.user)
       : KnownUserSavedState(user: this.user);
 }
@@ -311,18 +77,18 @@ class KnownUserSavedState extends KnownUserAssociatifState {
   KnownUserSavedState({@required user}) : super(user: user);
 
   @override
-  KnownUserAssociatifState createNewState({UserAssociatif newUser}) => (newUser != this.user)
+  KnownUserAssociatifState createNewState({BuildUserAssociatif newUser}) => (newUser != this.user)
       ? KnownUserUnsavedState(user: newUser, oldSavedUser: this.user)
       : KnownUserSavedState(user: this.user);
 }
 
 class KnownUserUnsavedState extends KnownUserAssociatifState {
-  final UserAssociatif oldSavedUser;
+  final BuildUserAssociatif oldSavedUser;
 
   KnownUserUnsavedState({@required user, @required this.oldSavedUser}) : super(user: user);
 
   @override
-  KnownUserAssociatifState createNewState({UserAssociatif newUser}) => (newUser != this.oldSavedUser)
+  KnownUserAssociatifState createNewState({BuildUserAssociatif newUser}) => (newUser != this.oldSavedUser)
       ? KnownUserUnsavedState(user: newUser, oldSavedUser: this.oldSavedUser)
       : KnownUserSavedState(user: this.oldSavedUser);
 }
@@ -333,7 +99,7 @@ class KnownUserSavingState extends KnownUserUnsavedState {
       : super(user: user, oldSavedUser: oldSavedUser);
 
   @override
-  KnownUserAssociatifState createNewState({UserAssociatif newUser}) {
+  KnownUserAssociatifState createNewState({BuildUserAssociatif newUser}) {
     throw UnimplementedError();
   }
 }
@@ -348,7 +114,7 @@ class KnownUserRefreshingFailedState extends KnownUserAssociatifState {
   KnownUserRefreshingFailedState({@required user}) : super(user: user);
 
   @override
-  KnownUserAssociatifState createNewState({UserAssociatif newUser}) => (newUser != this.user)
+  KnownUserAssociatifState createNewState({BuildUserAssociatif newUser}) => (newUser != this.user)
       ? KnownUserUnsavedState(user: newUser, oldSavedUser: this.user)
       : KnownUserSavedState(user: this.user);
 }

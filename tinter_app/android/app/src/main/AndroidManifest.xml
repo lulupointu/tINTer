@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="tinterapp"
+        android:label="tINTer"
         android:icon="@mipmap/ic_launcher"
         android:fullBackupContent="@xml/my_backup_rules"
         android:allowBackup="false"
