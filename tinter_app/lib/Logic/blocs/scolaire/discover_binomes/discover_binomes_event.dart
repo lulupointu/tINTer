@@ -22,9 +22,9 @@ abstract class DiscoverBinomesLoadInSuccessEvent extends DiscoverBinomesEvent {
 
 class DiscoverBinomesChangeStatusEvent extends DiscoverBinomesLoadInSuccessEvent {
   final BinomeStatus newStatus;
-  final EnumRelationStatusAssociatif enumRelationStatusAssociatif;
+  final EnumRelationStatusScolaire enumRelationStatusScolaire;
 
-  const DiscoverBinomesChangeStatusEvent({@required binome, @required this.newStatus, @required this.enumRelationStatusAssociatif}):super(binome: binome);
+  const DiscoverBinomesChangeStatusEvent({@required binome, @required this.newStatus, @required this.enumRelationStatusScolaire}):super(binome: binome);
 
   @override
   List<Object> get props => [binome, newStatus];

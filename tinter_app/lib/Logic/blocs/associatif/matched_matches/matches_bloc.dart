@@ -60,18 +60,18 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
   Stream<MatchedMatchesState> _mapChangeMatchStatusEventToState(
       ChangeStatusMatchedMatchesEvent event) async* {
     BuildMatch newMatch = BuildMatch((m) => m
-      ..userAssociatif.user.login = event.match.userAssociatif.user.login
+      ..login = event.match.login
       ..score = event.match.score
       ..status = event.matchStatus
-      ..userAssociatif.primoEntrant = event.match.userAssociatif.primoEntrant
-      ..userAssociatif.user.associations =
-          event.match.userAssociatif.user.associations.toBuilder()
-      ..userAssociatif.attiranceVieAsso = event.match.userAssociatif.attiranceVieAsso
-      ..userAssociatif.feteOuCours = event.match.userAssociatif.feteOuCours
-      ..userAssociatif.aideOuSortir = event.match.userAssociatif.aideOuSortir
-      ..userAssociatif.organisationEvenements =
-          event.match.userAssociatif.organisationEvenements
-      ..userAssociatif.goutsMusicaux = event.match.userAssociatif.goutsMusicaux);
+      ..primoEntrant = event.match.primoEntrant
+      ..associations =
+          event.match.associations.toBuilder()
+      ..attiranceVieAsso = event.match.attiranceVieAsso
+      ..feteOuCours = event.match.feteOuCours
+      ..aideOuSortir = event.match.aideOuSortir
+      ..organisationEvenements =
+          event.match.organisationEvenements
+      ..goutsMusicaux = event.match.goutsMusicaux);
 
     MatchedMatchesLoadSuccessState successState = MatchedMatchesLoadSuccessState(
         matches:
@@ -89,7 +89,7 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
       matchedMatchesRepository.updateMatchStatus(
         relationStatus: RelationStatusAssociatif((r) => r
           ..login = null
-          ..otherLogin = event.match.userAssociatif.user.login
+          ..otherLogin = event.match.login
           ..status = event.enumRelationStatusAssociatif,
         ),
       );

@@ -24,4 +24,4 @@ class UserScolaireRefreshEvent extends UserScolaireEvent {}
 
 class UserScolaireUndoUnsavedChangesEvent extends UserScolaireEvent {}
 
-class DeleteUserScolaireAccountEvent extends UserScolaireEvent {}
+//class DeleteUserScolaireAccountEvent extends UserScolaireEvent {}

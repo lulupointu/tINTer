@@ -91,4 +91,4 @@ class UserRefreshEvent extends UserAssociatifEvent {}
 
 class UserUndoUnsavedChangesEvent extends UserAssociatifEvent {}
 
-class DeleteUserAccountEvent extends UserAssociatifEvent {}
+//class DeleteUserAccountEvent extends UserAssociatifEvent {}

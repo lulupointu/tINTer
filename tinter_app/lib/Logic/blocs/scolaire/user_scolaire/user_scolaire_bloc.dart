@@ -60,14 +60,14 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
               'UserScolaireMutableAttributeChangedEvent received while state is not UserScolaireLoadSuccessState');
         }
         return;
-      case DeleteUserScolaireAccountEvent:
-        if (state is UserScolaireLoadSuccessState) {
-          yield* _mapDeleteUserScolaireAccountEventToState();
-        } else {
-          _addError(
-              'ProfilePicturePathChangedEvent received while state is not UserScolaireLoadSuccessState');
-        }
-        return;
+//      case DeleteUserScolaireAccountEvent:
+//        if (state is UserScolaireLoadSuccessState) {
+//          yield* _mapDeleteUserScolaireAccountEventToState();
+//        } else {
+//          _addError(
+//              'ProfilePicturePathChangedEvent received while state is not UserScolaireLoadSuccessState');
+//        }
+//        return;
     }
 
     print('event: ' + event.toString() + ' no treated');
@@ -178,18 +178,18 @@ class UserScolaireBloc extends Bloc<UserScolaireEvent, UserScolaireState> {
     );
   }
 
-  Stream<UserScolaireState> _mapDeleteUserScolaireAccountEventToState() async* {
-    try {
-      await userScolaireRepository.deleteUserAccount();
-    } catch (error) {
-      print('Removing account failed: $error');
-      return;
-    }
-
-    authenticationBloc.add(AuthenticationLoggedOutEvent());
-
-    yield UserScolaireInitialState();
-  }
+//  Stream<UserScolaireState> _mapDeleteUserScolaireAccountEventToState() async* {
+//    try {
+//      await userScolaireRepository.deleteUserAccount();
+//    } catch (error) {
+//      print('Removing account failed: $error');
+//      return;
+//    }
+//
+//    authenticationBloc.add(AuthenticationLoggedOutEvent());
+//
+//    yield UserScolaireInitialState();
+//  }
 
   void _addError(String error) {
     addError(Exception(error), StackTrace.current);

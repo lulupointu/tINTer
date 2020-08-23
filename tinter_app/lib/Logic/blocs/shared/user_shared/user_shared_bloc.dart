@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user_shared_part.dart';
+import 'package:tinterapp/Logic/repository/shared/user_shared_repository.dart';
 
 part 'user_shared_state.dart';
 

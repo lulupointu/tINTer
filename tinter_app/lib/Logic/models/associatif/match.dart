@@ -1,11 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinterapp/Logic/models/serializers.dart';
+import 'package:tinterapp/Logic/models/shared/user_shared_part.dart';
 
 part 'match.g.dart';
 

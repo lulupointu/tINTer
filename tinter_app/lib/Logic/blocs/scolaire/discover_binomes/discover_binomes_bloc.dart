@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
+import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
 import 'package:tinterapp/Logic/repository/scolaire/discover_binomes_repository.dart';
 
@@ -93,10 +94,10 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
     // Update database
     try {
       await discoverBinomesRepository.updateBinomeStatus(
-        relationStatus: RelationStatusAssociatif((r) => r
+        relationStatus: RelationStatusScolaire((r) => r
           ..login = null
-          ..otherLogin = event.binome.userScolaire.user.login
-          ..status = event.enumRelationStatusAssociatif,
+          ..otherLogin = event.binome.login
+          ..status = event.enumRelationStatusScolaire,
         ),
       );
     } catch (error) {
@@ -129,7 +130,7 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
     add(DiscoverBinomesChangeStatusEvent(
         binome: displayedBinome,
         newStatus: BinomeStatus.liked,
-        enumRelationStatusAssociatif: EnumRelationStatusAssociatif.liked));
+        enumRelationStatusScolaire: EnumRelationStatusScolaire.liked));
   }
 
   void _mapDiscoverBinomeIgnoreEventToState() {
@@ -138,7 +139,7 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
     add(DiscoverBinomesChangeStatusEvent(
         binome: displayedBinome,
         newStatus: BinomeStatus.ignored,
-        enumRelationStatusAssociatif: EnumRelationStatusAssociatif.ignored));
+        enumRelationStatusScolaire: EnumRelationStatusScolaire.ignored));
   }
 
   void _addError(String error) {

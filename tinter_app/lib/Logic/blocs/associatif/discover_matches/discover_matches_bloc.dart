@@ -94,7 +94,7 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
       await discoverMatchesRepository.updateMatchStatus(
           relationStatus: RelationStatusAssociatif((r) => r
             ..login = null
-            ..otherLogin = event.match.userAssociatif.user.login
+            ..otherLogin = event.match.login
             ..status = event.enumRelationStatusAssociatif));
     } catch (error) {
       print(error);

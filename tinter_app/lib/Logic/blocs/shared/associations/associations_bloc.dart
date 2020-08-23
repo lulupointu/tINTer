@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
-import 'package:tinterapp/Logic/repository/associatif/associations_repository.dart';
+import 'package:tinterapp/Logic/repository/shared/associations_repository.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 
 part 'associations_event.dart';

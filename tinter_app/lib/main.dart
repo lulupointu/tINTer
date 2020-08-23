@@ -8,7 +8,7 @@ import 'package:tinterapp/Logic/blocs/shared/associations/associations_bloc.dart
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/blocs/associatif/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
-import 'package:tinterapp/Logic/repository/associatif/associations_repository.dart';
+import 'package:tinterapp/Logic/repository/shared/associations_repository.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
 import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';

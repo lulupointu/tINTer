@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tinterapp/Logic/blocs/associatif/user_associatif/user_associatif_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
 
 import '../shared_element/const.dart';
@@ -109,7 +110,7 @@ class _OptionsTabState extends State<OptionsTab> with SingleTickerProviderStateM
                           splashColor: Colors.transparent,
                           onTap: () {
                             Navigator.pop(context);
-                            BlocProvider.of<UserAssociatifBloc>(context).add(DeleteUserAccountEvent());
+                            BlocProvider.of<UserSharedPartBloc>(context).add(DeleteUserSharedPartAccountEvent());
                           },
                           child: informationRectangle(
                             width: constraints.maxWidth * 0.4,

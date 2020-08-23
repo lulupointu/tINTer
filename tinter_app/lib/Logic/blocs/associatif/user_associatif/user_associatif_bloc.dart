@@ -125,14 +125,14 @@ class UserAssociatifBloc extends Bloc<UserAssociatifEvent, UserAssociatifState> 
 //              'ProfilePicturePathChangedEvent received while state is not UserLoadSuccessState');
 //        }
 //        return;
-      case DeleteUserAccountEvent:
-        if (state is UserLoadSuccessState) {
-          yield* _mapDeleteUserAccountEventToState();
-        } else {
-          _addError(
-              'ProfilePicturePathChangedEvent received while state is not UserLoadSuccessState');
-        }
-        return;
+//      case DeleteUserAccountEvent:
+//        if (state is UserLoadSuccessState) {
+//          yield* _mapDeleteUserAccountEventToState();
+//        } else {
+//          _addError(
+//              'ProfilePicturePathChangedEvent received while state is not UserLoadSuccessState');
+//        }
+//        return;
     }
 
     print('event: ' + event.toString() + ' no treated');
@@ -278,18 +278,18 @@ class UserAssociatifBloc extends Bloc<UserAssociatifEvent, UserAssociatifState> 
     yield (state as UserLoadSuccessState).withNewState(newState: event.newState);
   }
 
-  Stream<UserAssociatifState> _mapDeleteUserAccountEventToState() async* {
-    try {
-      await userRepository.deleteUserAccount();
-    } catch (error) {
-      print('Removing account failed: $error');
-      return;
-    }
-
-    authenticationBloc.add(AuthenticationLoggedOutEvent());
-
-    yield UserInitialState();
-  }
+//  Stream<UserAssociatifState> _mapDeleteUserAccountEventToState() async* {
+//    try {
+//      await userRepository.deleteUserAccount();
+//    } catch (error) {
+//      print('Removing account failed: $error');
+//      return;
+//    }
+//
+//    authenticationBloc.add(AuthenticationLoggedOutEvent());
+//
+//    yield UserInitialState();
+//  }
 
   void _addError(String error) {
     addError(Exception(error), StackTrace.current);

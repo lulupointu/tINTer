@@ -109,7 +109,7 @@ class UserScolaireRepository {
 
     TinterApiResponse<List<SearchedUserScolaire>> tinterApiResponse;
     try {
-      tinterApiResponse = await tinterAPIClient.getAllSearchedUsersScolaire(token: token);
+      tinterApiResponse = await tinterAPIClient.getAllSearchedUsersScolaires(token: token);
     } on TinterAPIError catch (error) {
       await authenticationRepository.checkIfNewToken(
           oldToken: token, newToken: error.token);
@@ -121,23 +121,23 @@ class UserScolaireRepository {
     return tinterApiResponse.value;
   }
 
-  Future<void> deleteUserAccount() async {
-    Token token;
-    try {
-      token = await AuthenticationRepository.getAuthenticationToken();
-    } catch (error) {
-      throw error;
-    }
-    print('getMultipleBasicUsersInfo using token ${token.token}');
-
-    TinterApiResponse<void> tinterApiResponse;
-    try {
-      tinterApiResponse = await tinterAPIClient.deleteUserAccount(token: token);
-    } on TinterAPIError catch (error) {
-      throw UnknownUserError();
-    }
-
-    return tinterApiResponse.value;
-  }
+//  Future<void> deleteUserAccount() async {
+//    Token token;
+//    try {
+//      token = await AuthenticationRepository.getAuthenticationToken();
+//    } catch (error) {
+//      throw error;
+//    }
+//    print('getMultipleBasicUsersInfo using token ${token.token}');
+//
+//    TinterApiResponse<void> tinterApiResponse;
+//    try {
+//      tinterApiResponse = await tinterAPIClient.deleteUserAccount(token: token);
+//    } on TinterAPIError catch (error) {
+//      throw UnknownUserError();
+//    }
+//
+//    return tinterApiResponse.value;
+//  }
 
 }
