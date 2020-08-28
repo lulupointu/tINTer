@@ -10,7 +10,7 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
   Map<String, String> userJson;
 
   // Create an LDAP connection object
-  var host = "localhost";
+  var host = "157.159.10.70";
   var ssl = false; // true = use LDAPS (i.e. LDAP over SSL/TLS)
   var port = 389; // null = use standard LDAP/LDAPS port
   var bindDN = "uid=$login,ou=People,dc=int-evry,dc=fr"; // null=unauthenticated

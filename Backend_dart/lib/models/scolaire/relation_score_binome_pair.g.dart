@@ -1,0 +1,189 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'relation_score_binome_pair.dart';
+
+// **************************************************************************
+// BuiltValueGenerator
+// **************************************************************************
+
+Serializer<RelationScoreBinomePair> _$relationScoreBinomePairSerializer =
+    new _$RelationScoreBinomePairSerializer();
+
+class _$RelationScoreBinomePairSerializer
+    implements StructuredSerializer<RelationScoreBinomePair> {
+  @override
+  final Iterable<Type> types = const [
+    RelationScoreBinomePair,
+    _$RelationScoreBinomePair
+  ];
+  @override
+  final String wireName = 'RelationScoreBinomePair';
+
+  @override
+  Iterable<Object> serialize(
+      Serializers serializers, RelationScoreBinomePair object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[
+      'binomePairId',
+      serializers.serialize(object.binomePairId,
+          specifiedType: const FullType(int)),
+      'otherBinomePairId',
+      serializers.serialize(object.otherBinomePairId,
+          specifiedType: const FullType(int)),
+      'score',
+      serializers.serialize(object.score, specifiedType: const FullType(int)),
+    ];
+
+    return result;
+  }
+
+  @override
+  RelationScoreBinomePair deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new RelationScoreBinomePairBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'binomePairId':
+          result.binomePairId = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'otherBinomePairId':
+          result.otherBinomePairId = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'score':
+          result.score = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$RelationScoreBinomePair extends RelationScoreBinomePair {
+  @override
+  final int binomePairId;
+  @override
+  final int otherBinomePairId;
+  @override
+  final int score;
+
+  factory _$RelationScoreBinomePair(
+          [void Function(RelationScoreBinomePairBuilder) updates]) =>
+      (new RelationScoreBinomePairBuilder()..update(updates)).build();
+
+  _$RelationScoreBinomePair._(
+      {this.binomePairId, this.otherBinomePairId, this.score})
+      : super._() {
+    if (binomePairId == null) {
+      throw new BuiltValueNullFieldError(
+          'RelationScoreBinomePair', 'binomePairId');
+    }
+    if (otherBinomePairId == null) {
+      throw new BuiltValueNullFieldError(
+          'RelationScoreBinomePair', 'otherBinomePairId');
+    }
+    if (score == null) {
+      throw new BuiltValueNullFieldError('RelationScoreBinomePair', 'score');
+    }
+  }
+
+  @override
+  RelationScoreBinomePair rebuild(
+          void Function(RelationScoreBinomePairBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  RelationScoreBinomePairBuilder toBuilder() =>
+      new RelationScoreBinomePairBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is RelationScoreBinomePair &&
+        binomePairId == other.binomePairId &&
+        otherBinomePairId == other.otherBinomePairId &&
+        score == other.score;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc(
+        $jc($jc(0, binomePairId.hashCode), otherBinomePairId.hashCode),
+        score.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper('RelationScoreBinomePair')
+          ..add('binomePairId', binomePairId)
+          ..add('otherBinomePairId', otherBinomePairId)
+          ..add('score', score))
+        .toString();
+  }
+}
+
+class RelationScoreBinomePairBuilder
+    implements
+        Builder<RelationScoreBinomePair, RelationScoreBinomePairBuilder> {
+  _$RelationScoreBinomePair _$v;
+
+  int _binomePairId;
+  int get binomePairId => _$this._binomePairId;
+  set binomePairId(int binomePairId) => _$this._binomePairId = binomePairId;
+
+  int _otherBinomePairId;
+  int get otherBinomePairId => _$this._otherBinomePairId;
+  set otherBinomePairId(int otherBinomePairId) =>
+      _$this._otherBinomePairId = otherBinomePairId;
+
+  int _score;
+  int get score => _$this._score;
+  set score(int score) => _$this._score = score;
+
+  RelationScoreBinomePairBuilder();
+
+  RelationScoreBinomePairBuilder get _$this {
+    if (_$v != null) {
+      _binomePairId = _$v.binomePairId;
+      _otherBinomePairId = _$v.otherBinomePairId;
+      _score = _$v.score;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(RelationScoreBinomePair other) {
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
+    _$v = other as _$RelationScoreBinomePair;
+  }
+
+  @override
+  void update(void Function(RelationScoreBinomePairBuilder) updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$RelationScoreBinomePair build() {
+    final _$result = _$v ??
+        new _$RelationScoreBinomePair._(
+            binomePairId: binomePairId,
+            otherBinomePairId: otherBinomePairId,
+            score: score);
+    replace(_$result);
+    return _$result;
+  }
+}
+
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

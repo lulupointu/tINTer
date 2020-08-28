@@ -9,8 +9,12 @@ import 'package:tinter_backend/models/associatif/relation_score_associatif.dart'
 import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
 import 'package:tinter_backend/models/associatif/searched_user_associatif.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
+import 'package:tinter_backend/models/scolaire/binome_pair.dart';
+import 'package:tinter_backend/models/scolaire/relation_score_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
+import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
+import 'package:tinter_backend/models/scolaire/searched_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinter_backend/models/shared/session.dart';
 import 'package:tinter_backend/models/shared/token.dart';
@@ -40,6 +44,11 @@ part 'serializers.g.dart';
   TSPYear,
   LieuDeVie,
   School,
+  BinomePair,
+  RelationScoreBinomePair,
+  RelationStatusBinomePair,
+  EnumRelationStatusBinomePair,
+  SearchedBinomePair,
 ])
 final Serializers serializers =
     (_$serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();
