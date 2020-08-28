@@ -1,6 +1,3 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -8,13 +5,19 @@ import 'package:tinterapp/Logic/models/serializers.dart';
 
 part 'relation_status_scolaire.g.dart';
 
-abstract class RelationStatusScolaire implements Built<RelationStatusScolaire, RelationStatusScolaireBuilder> {
+abstract class RelationStatusScolaire
+    implements Built<RelationStatusScolaire, RelationStatusScolaireBuilder> {
+  @nullable
   String get login;
+
   String get otherLogin;
-  EnumRelationStatusScolaire get status;
+
+  EnumRelationStatusScolaire get statusScolaire;
 
   RelationStatusScolaire._();
-  factory RelationStatusScolaire([void Function(RelationStatusScolaireBuilder) updates]) = _$RelationStatusScolaire;
+
+  factory RelationStatusScolaire([void Function(RelationStatusScolaireBuilder) updates]) =
+      _$RelationStatusScolaire;
 
   Map<String, dynamic> toJson() {
     return serializers.serializeWith(RelationStatusScolaire.serializer, this);
@@ -24,9 +27,9 @@ abstract class RelationStatusScolaire implements Built<RelationStatusScolaire, R
     return serializers.deserializeWith(RelationStatusScolaire.serializer, json);
   }
 
-  static Serializer<RelationStatusScolaire> get serializer => _$relationStatusScolaireSerializer;
+  static Serializer<RelationStatusScolaire> get serializer =>
+      _$relationStatusScolaireSerializer;
 }
-
 
 class EnumRelationStatusScolaire extends EnumClass {
   static const EnumRelationStatusScolaire none = _$none;
@@ -36,11 +39,12 @@ class EnumRelationStatusScolaire extends EnumClass {
   static const EnumRelationStatusScolaire acceptedBinome = _$acceptedBinome;
   static const EnumRelationStatusScolaire refusedBinome = _$refusedBinome;
 
-
   const EnumRelationStatusScolaire._(String name) : super(name);
 
   static BuiltSet<EnumRelationStatusScolaire> get values => _$enumRelationStatusScolaireValues;
-  static EnumRelationStatusScolaire valueOf(String name) => _$enumRelationStatusScolaireValueOf(name);
+
+  static EnumRelationStatusScolaire valueOf(String name) =>
+      _$enumRelationStatusScolaireValueOf(name);
 
   String serialize() {
     return serializers.serializeWith(EnumRelationStatusScolaire.serializer, this);
@@ -50,7 +54,8 @@ class EnumRelationStatusScolaire extends EnumClass {
     return serializers.deserializeWith(EnumRelationStatusScolaire.serializer, string);
   }
 
-  static Serializer<EnumRelationStatusScolaire> get serializer => _$enumRelationStatusScolaireSerializer;
+  static Serializer<EnumRelationStatusScolaire> get serializer =>
+      _$enumRelationStatusScolaireSerializer;
 }
 
 //enum EnumRelationStatusScolaire {

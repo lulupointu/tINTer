@@ -7,39 +7,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
-import 'package:tinterapp/Network/tinter_api_client.dart';
-import 'package:tinterapp/UI/user_profile/associations.dart';
-import 'package:tinterapp/UI/user_profile/gout_musicaux.dart';
-import 'package:tinterapp/UI/user_profile/options.dart';
 import 'dart:math';
-import 'package:http/http.dart' as http;
-import 'package:tinterapp/UI/user_profile/snap_scroll_physics.dart';
+import 'package:tinterapp/UI/associatif/user_profile/user_associatif_profile.dart';
+import 'package:tinterapp/UI/scolaire/user_profile/user_scolaire_profile.dart';
+import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.dart';
+import 'package:tinterapp/UI/shared/user_profile/associations.dart';
+import 'package:tinterapp/UI/shared/user_profile/options.dart';
+import 'package:tinterapp/UI/shared/user_profile/snap_scroll_physics.dart';
 import 'package:tinterapp/main.dart';
 
 import '../shared_element/slider_label.dart';
 import '../shared_element/const.dart';
 
-main() {
-  final http.Client httpClient = http.Client();
-  TinterAPIClient tinterAPIClient = TinterAPIClient(
-    httpClient: httpClient,
-  );
-
-  final UserRepository userRepository =
-      UserRepository(tinterAPIClient: tinterAPIClient);
-
-  runApp(BlocProvider(
-    create: (BuildContext context) => UserBloc(userRepository: userRepository),
-    child: MaterialApp(
-      home: SafeArea(child: UserTab()),
-    ),
-  ));
-}
+//main() {
+//  final http.Client httpClient = http.Client();
+//  TinterAPIClient tinterAPIClient = TinterAPIClient(
+//    httpClient: httpClient,
+//  );
+//
+//  final UserRepository userRepository = UserRepository(tinterAPIClient: tinterAPIClient);
+//
+//  runApp(BlocProvider(
+//    create: (BuildContext context) => UserBloc(userRepository: userRepository),
+//    child: MaterialApp(
+//      home: SafeArea(child: UserTab()),
+//    ),
+//  ));
+//}
 
 class UserTab extends StatefulWidget {
   @override
@@ -116,9 +116,27 @@ class _UserTabState extends State<UserTab> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: TinterColors.background,
-      body: LayoutBuilder(
+    return Consumer<TinterTheme>(
+      builder: (context, tinterTheme, child) {
+        return TweenAnimationBuilder(
+          duration: Duration(milliseconds: 500),
+          tween: ColorTween(
+              begin: tinterTheme.colors.background, end: tinterTheme.colors.background),
+          builder: (context, animatedColor, child) {
+            return Scaffold(
+              backgroundColor: animatedColor,
+              body: child,
+//              floatingActionButton: FloatingActionButton(
+//                onPressed: () {
+//                  insertAssociatifToScolaireButtonOverlay();
+//                },
+//              ),
+            );
+          },
+          child: child,
+        );
+      },
+      child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           // ignore: invalid_use_of_protected_member
           if (!_controller.hasListeners) {
@@ -164,42 +182,27 @@ class _UserTabState extends State<UserTab> with RouteAware {
                       height: fractions['invisibleRectangle2'] * constraints.maxHeight,
                       color: Colors.transparent,
                     ),
-                    Column(
-                      children: <Widget>[
-                        informationRectangle(
-                          context: context,
-                          padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                          child: AssociationsRectangle(),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          child: AttiranceVieAssoRectangle(),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          child: FeteOuCoursRectangle(),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          child: AideOuSortirRectangle(),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          child: OrganisationEvenementsRectangle(),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          padding:
-                              EdgeInsets.only(top: 15.0, left: 20.0, bottom: 5.0, right: 20),
-                          child: GoutsMusicauxRectangle(),
-                        ),
-                      ],
-                    ),
+                    Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                      return AnimatedSwitcher(
+                        duration: Duration(milliseconds: 300),
+                        transitionBuilder: (Widget child, Animation<double> animation) {
+                          return SlideTransition(
+                            child: child,
+                            position: Tween<Offset>(
+                              begin: const Offset(0, 1),
+                              end: Offset.zero,
+                            ).animate(animation),
+                          );
+                        },
+                        child: tinterTheme.theme == MyTheme.dark
+                            ? UserAssociatifProfile(
+                                separator: separator,
+                              )
+                            : UserScolaireProfile(
+                                separator: separator,
+                              ),
+                      );
+                    }),
                     SizedBox(
                       height: 30,
                     )
@@ -210,11 +213,19 @@ class _UserTabState extends State<UserTab> with RouteAware {
                 height: constraints.maxHeight *
                     (0.19 - 0.07 * invisiblyScrollFraction1 - 0.04 * invisiblyScrollFraction2),
                 width: constraints.maxWidth,
-                child: SvgPicture.asset(
-                  'assets/profile/topProfile.svg',
-                  color: TinterColors.primaryLight,
-                  fit: BoxFit.fill,
-                ),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return TweenAnimationBuilder(
+                      duration: Duration(milliseconds: 500),
+                      tween: ColorTween(
+                          begin: tinterTheme.colors.primary, end: tinterTheme.colors.primary),
+                      builder: (context, animatedColor, child) {
+                        return SvgPicture.asset(
+                          'assets/profile/topProfile.svg',
+                          color: animatedColor,
+                          fit: BoxFit.fill,
+                        );
+                      });
+                }),
               ),
               Positioned(
                 top: constraints.maxHeight * (0.095 - 0.1 * invisiblyScrollFraction1) -
@@ -241,37 +252,18 @@ class _UserTabState extends State<UserTab> with RouteAware {
                       MaterialPageRoute(builder: (context) => OptionsTab()),
                     );
                   },
-                  icon: Icon(
-                    Icons.settings,
-                    size: 24,
-                    color: TinterColors.hint,
-                  ),
+                  icon: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return Icon(
+                      Icons.settings,
+                      size: 24,
+                      color: tinterTheme.colors.primaryAccent,
+                    );
+                  }),
                 ),
               )
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget informationRectangle(
-      {@required BuildContext context,
-      @required Widget child,
-      double width,
-      double height,
-      EdgeInsets padding}) {
-    return Align(
-      alignment: AlignmentDirectional.center,
-      child: Container(
-        padding: padding ?? EdgeInsets.all(0.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          color: TinterColors.primary,
-        ),
-        width: width != null ? width : Size.infinite.width,
-        height: height,
-        child: child,
       ),
     );
   }
@@ -292,19 +284,24 @@ class HoveringUserInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: 1 - invisiblyScrollFraction2,
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: TinterColors.secondaryAccent.withAlpha(230),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0 * (1 - invisiblyScrollFraction1)),
-            topRight: Radius.circular(20.0 * (1 - invisiblyScrollFraction1)),
-            bottomLeft: Radius.circular(20.0),
-            bottomRight: Radius.circular(20.0),
-          ),
-        ),
-        width: width,
-        height: height,
+      child: Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Container(
+            padding: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: tinterTheme.colors.secondary.withAlpha(230),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0 * (1 - invisiblyScrollFraction1)),
+                topRight: Radius.circular(20.0 * (1 - invisiblyScrollFraction1)),
+                bottomLeft: Radius.circular(20.0),
+                bottomRight: Radius.circular(20.0),
+              ),
+            ),
+            width: width,
+            height: height,
+            child: child,
+          );
+        },
         child: Stack(
           children: <Widget>[
             Align(
@@ -315,14 +312,22 @@ class HoveringUserInformation extends StatelessWidget {
                   offset: Offset(0, -20 * invisiblyScrollFraction2),
                   child: BlocBuilder<UserBloc, UserState>(
                       builder: (BuildContext context, UserState userState) {
-                    return AutoSizeText(
-                      ((userState is UserLoadSuccessState))
-                          ? userState.user.name +
-                              " " +
-                              userState.user.surname
-                          : 'Loading...',
-                      style: TinterTextStyle.headline1,
-                    );
+                    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                      return TweenAnimationBuilder(
+                          duration: Duration(milliseconds: 500),
+                          tween: ColorTween(
+                              begin: tinterTheme.colors.defaultTextColor,
+                              end: tinterTheme.colors.defaultTextColor),
+                          builder: (context, animatedColor, child) {
+                            return AutoSizeText(
+                              ((userState is UserLoadSuccessState))
+                                  ? userState.user.name + " " + userState.user.surname
+                                  : 'Loading...',
+                              style: tinterTheme.textStyle.headline1
+                                  .copyWith(color: animatedColor),
+                            );
+                          });
+                    });
                   }),
                 ),
               ),
@@ -335,12 +340,23 @@ class HoveringUserInformation extends StatelessWidget {
                   offset: Offset(0, -20 * invisiblyScrollFraction1),
                   child: BlocBuilder<UserBloc, UserState>(
                       builder: (BuildContext context, UserState userState) {
-                    return AutoSizeText(
-                      ((userState is UserLoadSuccessState))
-                          ? userState.user.email
-                          : 'Loading...',
-                      style: TinterTextStyle.headline2,
-                      maxLines: 1,
+                    return Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) => (!(userState
+                              is UserLoadSuccessState))
+                          ? AutoSizeText(
+                              'Loading...',
+                              style: tinterTheme.textStyle.headline2,
+                              maxLines: 1,
+                            )
+                          : ((userState as UserLoadSuccessState).user.school == School.TSP &&
+                                  (userState as UserLoadSuccessState).user.year ==
+                                      TSPYear.TSP1A)
+                              ? AssociatifToScolaireButton()
+                              : AutoSizeText(
+                                  (userState as UserLoadSuccessState).user.email,
+                                  style: tinterTheme.textStyle.headline2,
+                                  maxLines: 1,
+                                ),
                     );
                   }),
                 ),
@@ -434,11 +450,11 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
             return Stack(
               children: [
                 getProfilePictureFromLocalPathOrLogin(
-                  login: (userState as UserLoadSuccessState).user.login,
+                    login: (userState as UserLoadSuccessState).user.login,
                     localPath:
                         (userState as UserLoadSuccessState).user.profilePictureLocalPath,
-                    height: 200,
-                    width: 200),
+                    height: widget.size,
+                    width: widget.size),
                 ClipPath(
                   clipper: ModifyProfilePictureClipper(),
                   child: BackdropFilter(
@@ -450,10 +466,12 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
                 ),
                 Align(
                   alignment: AlignmentDirectional.bottomCenter,
-                  child: Icon(
-                    Icons.add,
-                    color: TinterColors.hint,
-                  ),
+                  child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return Icon(
+                      Icons.add,
+                      color: tinterTheme.colors.primaryAccent,
+                    );
+                  }),
                 )
               ],
             );
@@ -463,7 +481,8 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
     );
   }
 
-  Future changeProfilePicture(BuildContext context, ImageSource source) async {
+  Future changeProfilePicture(BuildContext context, ImageSource source, Color backgroundColor,
+      Color defaultTextColor) async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(
       source: source,
@@ -478,8 +497,8 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
         aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
         androidUiSettings: AndroidUiSettings(
           toolbarTitle: '',
-          toolbarColor: TinterColors.background,
-          toolbarWidgetColor: Colors.white,
+          toolbarColor: backgroundColor,
+          toolbarWidgetColor: defaultTextColor,
           initAspectRatio: CropAspectRatioPreset.square,
           lockAspectRatio: true,
           showCropGrid: false,
@@ -493,8 +512,7 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
       if (croppedFile != null) {
         BlocProvider.of<UserBloc>(context).add(
           UserStateChangedEvent(
-            newState: (BlocProvider.of<UserBloc>(context).state
-                    as UserLoadSuccessState)
+            newState: (BlocProvider.of<UserBloc>(context).state as UserLoadSuccessState)
                 .user
                 .rebuild((u) => u..profilePictureLocalPath = croppedFile.path),
           ),
@@ -509,7 +527,7 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
 class FolderOrCameraOverlay extends StatelessWidget {
   final bool shouldHide;
   final GlobalKey hoveringUserPictureKey;
-  final void Function(BuildContext, ImageSource) changeProfilePicture;
+  final void Function(BuildContext, ImageSource, Color, Color) changeProfilePicture;
   final Duration animationDuration;
 
   const FolderOrCameraOverlay({
@@ -557,8 +575,18 @@ class FolderOrCameraOverlay extends StatelessWidget {
                                       (littleWidgetSize + 40) / constraints.maxWidth),
                               (1 - value) * (1 - value) * (1 - value),
                             ),
-                            child: GestureDetector(
-                              onTap: () => changeProfilePicture(context, ImageSource.camera),
+                            child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                                return GestureDetector(
+                                  onTap: () => changeProfilePicture(
+                                    context,
+                                    ImageSource.camera,
+                                    tinterTheme.colors.background,
+                                    tinterTheme.colors.defaultTextColor,
+                                  ),
+                                  child: child,
+                                );
+                              },
                               child: Container(
                                 height: littleWidgetSize,
                                 width: littleWidgetSize,
@@ -600,8 +628,18 @@ class FolderOrCameraOverlay extends StatelessWidget {
                                       (littleWidgetSize + 40) / constraints.maxWidth),
                               (1 - value) * (1 - value) * (1 - value),
                             ),
-                            child: GestureDetector(
-                              onTap: () => changeProfilePicture(context, ImageSource.gallery),
+                            child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                                return GestureDetector(
+                                  onTap: () => changeProfilePicture(
+                                    context,
+                                    ImageSource.gallery,
+                                    tinterTheme.colors.background,
+                                    tinterTheme.colors.defaultTextColor,
+                                  ),
+                                  child: child,
+                                );
+                              },
                               child: Container(
                                 height: littleWidgetSize,
                                 width: littleWidgetSize,
@@ -656,374 +694,45 @@ class ModifyProfilePictureClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-class AssociationsRectangle extends StatelessWidget {
+class InformationRectangle extends StatelessWidget {
+  final Widget child;
+  final double width, height;
+  final EdgeInsets padding;
+
+  const InformationRectangle({
+    Key key,
+    this.width,
+    this.height,
+    this.padding,
+    this.child,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          children: <Widget>[
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  'Associations',
-                  style: TinterTextStyle.headline2,
+    return Align(
+      alignment: AlignmentDirectional.center,
+      child: Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return TweenAnimationBuilder(
+            duration: Duration(milliseconds: 500),
+            tween:
+                ColorTween(begin: tinterTheme.colors.primary, end: tinterTheme.colors.primary),
+            builder: (context, animatedColor, child) {
+              return Container(
+                padding: padding ?? EdgeInsets.all(0.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  color: animatedColor,
                 ),
-              ),
-            ),
-            Container(
-              height: 60,
-              alignment: Alignment.centerLeft,
-              child: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
-                  }
-                  return (userState as UserLoadSuccessState)
-                              .user
-                              .associations
-                              .length ==
-                          0
-                      ? Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Text(
-                              'Aucune association séléctionnée.',
-                              style: TinterTextStyle.headline2.copyWith(fontSize: 16),
-                            ),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: (userState as UserLoadSuccessState)
-                                .user
-                                .associations
-                                .length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  left: (index == 0) ? 20.0 : 0,
-                                  right: (index ==
-                                          (userState as UserLoadSuccessState)
-                                                  .user
-                                                  .associations
-                                                  .length -
-                                              1)
-                                      ? 48
-                                      : 8.0,
-                                ),
-                                child: associationBubble(
-                                    context,
-                                    (userState as UserLoadSuccessState)
-                                        .user
-                                        .associations[index]),
-                              );
-                            },
-                          ),
-                        );
-                },
-              ),
-            ),
-          ],
-        ),
-        Positioned.fill(
-          child: Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AssociationsTab()),
-                );
-              },
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                size: 30,
-                color: TinterColors.primaryAccent,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget associationBubble(BuildContext context, Association association) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Container(
-        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-        child: ClipOval(
-          child: getLogoFromAssociation(associationName: association.name),
-        ),
-      ),
-    );
-  }
-}
-
-class AttiranceVieAssoRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
-            ),
-            child: Text(
-              'Attirance pour la vie associative',
-              textAlign: TextAlign.start,
-              style: TinterTextStyle.headline2,
-            ),
-          ),
-        ),
-        SliderTheme(
-          data: TinterSliderTheme.enabled,
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (BuildContext context, UserState userState) {
-              if (!(userState is KnownUserState)) {
-                return CircularProgressIndicator();
-              }
-              return Slider(
-                value: (userState as KnownUserState).user.attiranceVieAsso,
-                onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                  UserStateChangedEvent(
-                    newState: (userState as KnownUserState)
-                        .user
-                        .rebuild((u) => u..attiranceVieAsso = value),
-                  ),
-                ),
+                width: width != null ? width : Size.infinite.width,
+                height: height,
+                child: child,
               );
             },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class FeteOuCoursRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
-            ),
-            child: Text(
-              'Cours ou soirée?',
-              style: TinterTextStyle.headline2,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        SliderTheme(
-          data: TinterSliderTheme.enabled,
-          child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is KnownUserState)) {
-                    return CircularProgressIndicator();
-                  }
-                  return Slider(
-                    value: (userState as KnownUserState).user.feteOuCours,
-                    onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                      UserStateChangedEvent(
-                        newState: (userState as KnownUserState)
-                            .user
-                            .rebuild((u) => u..feteOuCours = value),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              leftLabel: 'Cours',
-              rightLabel: 'Soirée'),
-        ),
-      ],
-    );
-  }
-}
-
-class AideOuSortirRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
-            ),
-            child: Text(
-              'Parrain qui aide ou avec qui sortir?',
-              style: TinterTextStyle.headline2,
-              textAlign: TextAlign.start,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        SliderTheme(
-          data: TinterSliderTheme.enabled,
-          child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is KnownUserState)) {
-                    return CircularProgressIndicator();
-                  }
-                  return Slider(
-                    value: (userState as KnownUserState).user.aideOuSortir,
-                    onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                      UserStateChangedEvent(
-                        newState: (userState as KnownUserState)
-                            .user
-                            .rebuild((u) => u..aideOuSortir = value),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              leftLabel: 'Aide',
-              rightLabel: 'Sortir'),
-        ),
-      ],
-    );
-  }
-}
-
-class OrganisationEvenementsRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
-            ),
-            child: Text(
-              'Aime organiser les événements?',
-              style: TinterTextStyle.headline2,
-              textAlign: TextAlign.start,
-            ),
-          ),
-        ),
-        SliderTheme(
-          data: TinterSliderTheme.enabled,
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (BuildContext context, UserState userState) {
-              if (!(userState is KnownUserState)) {
-                return CircularProgressIndicator();
-              }
-              return Slider(
-                value: (userState as KnownUserState).user.organisationEvenements,
-                onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                  UserStateChangedEvent(
-                    newState: (userState as KnownUserState)
-                        .user
-                        .rebuild((u) => u..organisationEvenements = value),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class GoutsMusicauxRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
-        );
-      },
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Align(
-                alignment: AlignmentDirectional.topStart,
-                child: Text(
-                  'Goûts musicaux',
-                  style: TinterTextStyle.headline2,
-                ),
-              ),
-              BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is KnownUserState)) {
-                    return CircularProgressIndicator();
-                  }
-                  return Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 15,
-                    children:
-                        (userState as KnownUserState).user.goutsMusicaux.length == 0
-                            ? [
-                                Chip(
-                                  label: Text('Aucun'),
-                                  labelStyle: TinterTextStyle.goutMusicauxLiked,
-                                  backgroundColor: TinterColors.primaryAccent,
-                                ),
-                              ]
-                            : <Widget>[
-                                for (String musicStyle
-                                    in (userState as KnownUserState)
-                                        .user
-                                        .goutsMusicaux)
-                                  Chip(
-                                    label: Text(musicStyle),
-                                    labelStyle: TinterTextStyle.goutMusicauxLiked,
-                                    backgroundColor: TinterColors.primaryAccent,
-                                  )
-                              ],
-                  );
-                },
-              )
-            ],
-          ),
-          Positioned.fill(
-            child: Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 30,
-                color: TinterColors.primaryAccent,
-              ),
-            ),
-          ),
-        ],
+            child: child,
+          );
+        },
+        child: child,
       ),
     );
   }
@@ -1046,10 +755,12 @@ class DiscoverSlider extends StatelessWidget {
               padding: const EdgeInsets.only(left: 23.0),
               child: SliderLabel(
                 padding: EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                child: Text(
-                  leftLabel,
-                  style: TinterTextStyle.bigLabel,
-                ),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return Text(
+                    leftLabel,
+                    style: tinterTheme.textStyle.bigLabel,
+                  );
+                }),
                 side: Side.Left,
                 triangleSize: 14,
               ),
@@ -1059,10 +770,12 @@ class DiscoverSlider extends StatelessWidget {
               child: SliderLabel(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                  child: Text(
-                    rightLabel,
-                    style: TinterTextStyle.bigLabel,
-                  ),
+                  child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return Text(
+                      rightLabel,
+                      style: tinterTheme.textStyle.bigLabel,
+                    );
+                  }),
                 ),
                 side: Side.Right,
                 triangleSize: 14,
@@ -1110,136 +823,259 @@ class SaveModificationsOverlay extends StatelessWidget {
             color: Colors.transparent,
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                return Container(
-                  color: TinterColors.background,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, bottom: 5.0),
-                        child: Center(
-                          child: Text(
-                            (userState is KnownUserSavingFailedState)
-                                ? 'Echec de la sauvegarde, réessayer?'
-                                : 'Des modifications ont été effectuées',
-                            style: TinterTextStyle.headline2,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: AnimatedSwitcher(
-                            duration: Duration(milliseconds: 200),
-                            child: TweenAnimationBuilder(
-                              duration: Duration(milliseconds: 200),
-                              tween: Tween<double>(
-                                  begin: 0,
-                                  end: (userState is KnownUserSavingState ||
-                                          userState is KnownUserSavedState)
-                                      ? 1
-                                      : 0),
-                              builder: (BuildContext context, double value, Widget child) {
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: (1 - value) * 10.0 + value * 2.0),
-                                  child: (userState is KnownUserSavingState ||
-                                          userState is KnownUserSavedState)
-                                      ? LayoutBuilder(
-                                          builder: (BuildContext context,
-                                              BoxConstraints smallConstraints) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(4.0),
-                                                color: TinterColors.secondaryAccent,
-                                              ),
-                                              width: value * smallConstraints.maxHeight +
-                                                  4 +
-                                                  (1 - value) *
-                                                      (constraints.maxWidth * 2 / 3 +
-                                                          constraints.maxWidth * 1 / 9),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: AnimatedSwitcher(
-                                                    duration: Duration(milliseconds: 100),
-                                                    child: value == 1
-                                                        ? CircularProgressIndicator(
-                                                            valueColor:
-                                                                AlwaysStoppedAnimation<Color>(
-                                                              TinterColors.white,
-                                                            ),
-                                                            strokeWidth: 3,
-                                                          )
-                                                        : Container(),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        )
-                                      : child,
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: InkWell(
-                                      splashColor: Colors.transparent,
-                                      onTap: () => BlocProvider.of<UserBloc>(context)
-                                          .add(UserUndoUnsavedChangesEvent()),
-                                      child: Center(
-                                        child: Container(
-                                          width: constraints.maxWidth / 3,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(4.0),
-                                            color: TinterColors.secondaryAccent,
-                                          ),
-                                          child: Center(
-                                            child: AutoSizeText(
-                                              'Annuler',
-                                              style: TinterTextStyle.headline2,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      splashColor: Colors.transparent,
-                                      onTap: () => BlocProvider.of<UserBloc>(context)
-                                          .add(UserSaveEvent()),
-                                      child: Center(
-                                        child: Container(
-                                          width: constraints.maxWidth / 3,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(4.0),
-                                            color: TinterColors.secondaryAccent,
-                                          ),
-                                          child: Center(
-                                            child: AutoSizeText(
-                                              'Valider',
-                                              style: TinterTextStyle.headline2,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    color: tinterTheme.colors.background,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 5.0),
+                          child: Center(
+                            child: Text(
+                              (userState is KnownUserSavingFailedState)
+                                  ? 'Echec de la sauvegarde, réessayer?'
+                                  : 'Des modifications ont été effectuées',
+                              style: tinterTheme.textStyle.headline2,
                             ),
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                );
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 200),
+                              child: TweenAnimationBuilder(
+                                duration: Duration(milliseconds: 200),
+                                tween: Tween<double>(
+                                    begin: 0,
+                                    end: (userState is KnownUserSavingState ||
+                                            userState is KnownUserSavedState)
+                                        ? 1
+                                        : 0),
+                                builder: (BuildContext context, double value, Widget child) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: (1 - value) * 10.0 + value * 2.0),
+                                    child: (userState is KnownUserSavingState ||
+                                            userState is KnownUserSavedState)
+                                        ? LayoutBuilder(
+                                            builder: (BuildContext context,
+                                                BoxConstraints smallConstraints) {
+                                              return AnimatedContainer(
+                                                duration: Duration(milliseconds: 300),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(4.0),
+                                                  color: tinterTheme.colors.secondary,
+                                                ),
+                                                width: value * smallConstraints.maxHeight +
+                                                    4 +
+                                                    (1 - value) *
+                                                        (constraints.maxWidth * 2 / 3 +
+                                                            constraints.maxWidth * 1 / 9),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Center(
+                                                    child: AnimatedSwitcher(
+                                                      duration: Duration(milliseconds: 100),
+                                                      child: value == 1
+                                                          ? CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                tinterTheme
+                                                                    .colors.defaultTextColor,
+                                                              ),
+                                                              strokeWidth: 3,
+                                                            )
+                                                          : Container(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : child,
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        onTap: () => BlocProvider.of<UserBloc>(context)
+                                            .add(UserUndoUnsavedChangesEvent()),
+                                        child: Center(
+                                          child: AnimatedContainer(
+                                            duration: Duration(milliseconds: 300),
+                                            width: constraints.maxWidth / 3,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(4.0),
+                                              color: tinterTheme.colors.secondary,
+                                            ),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Annuler',
+                                                style: tinterTheme.textStyle.headline2,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        onTap: () => BlocProvider.of<UserBloc>(context)
+                                            .add(UserSaveEvent()),
+                                        child: Center(
+                                          child: AnimatedContainer(
+                                            duration: Duration(milliseconds: 300),
+                                            width: constraints.maxWidth / 3,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(4.0),
+                                              color: tinterTheme.colors.secondary,
+                                            ),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Valider',
+                                                style: tinterTheme.textStyle.headline2,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                });
               },
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class AssociationsRectangle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Column(
+          children: <Widget>[
+            Align(
+              alignment: AlignmentDirectional.topStart,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return Text(
+                    'Associations',
+                    style: tinterTheme.textStyle.headline2,
+                  );
+                }),
+              ),
+            ),
+            SizedBox(
+              height: 5.0,
+            ),
+            Container(
+              height: 60,
+              alignment: Alignment.centerLeft,
+              child: BlocBuilder<UserBloc, UserState>(
+                builder: (BuildContext context, UserState userState) {
+                  if (!(userState is UserLoadSuccessState)) {
+                    return CircularProgressIndicator();
+                  }
+                  return (userState as UserLoadSuccessState).user.associations.length == 0
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child:
+                                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                              return Text(
+                                'Aucune association séléctionnée.',
+                                style: tinterTheme.textStyle.headline2.copyWith(fontSize: 16),
+                              );
+                            }),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount:
+                                (userState as UserLoadSuccessState).user.associations.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  left: (index == 0) ? 20.0 : 0,
+                                  right: (index ==
+                                          (userState as UserLoadSuccessState)
+                                                  .user
+                                                  .associations
+                                                  .length -
+                                              1)
+                                      ? 48
+                                      : 8.0,
+                                ),
+                                child: associationBubble(
+                                    context,
+                                    (userState as UserLoadSuccessState)
+                                        .user
+                                        .associations[index]),
+                              );
+                            },
+                          ),
+                        );
+                },
+              ),
+            ),
+          ],
+        ),
+        Positioned.fill(
+          child: Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AssociationsTab()),
+                );
+              },
+              icon: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Icon(
+                  Icons.arrow_forward_ios,
+                  size: 30,
+                  color: tinterTheme.colors.primaryAccent,
+                );
+              }),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget associationBubble(BuildContext context, Association association) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+        child: ClipOval(
+          child: getLogoFromAssociation(associationName: association.name),
+        ),
+      ),
     );
   }
 }

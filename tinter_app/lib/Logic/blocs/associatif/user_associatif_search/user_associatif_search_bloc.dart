@@ -6,7 +6,7 @@ import 'package:tinterapp/Logic/models/associatif/match.dart';
 import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
 import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';
-import 'package:tinterapp/Logic/repository/associatif/user_associatif_repository.dart';
+import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
 
 part 'user_associatif_search_event.dart';
 
@@ -14,7 +14,7 @@ part 'user_associatif_search_state.dart';
 
 class UserAssociatifSearchBloc
     extends Bloc<UserAssociatifSearchEvent, UserAssociatifSearchState> {
-  final UserAssociatifRepository userRepository;
+  final UserRepository userRepository;
   final MatchedMatchesRepository matchedMatchesRepository;
   final AuthenticationBloc authenticationBloc;
 

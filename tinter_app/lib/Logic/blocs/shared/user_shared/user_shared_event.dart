@@ -1,25 +1,25 @@
 part of 'user_shared_bloc.dart';
 
-abstract class UserSharedPartEvent {
-  const UserSharedPartEvent();
+abstract class UserEvent {
+  const UserEvent();
 }
 
-class UserSharedPartInitEvent extends UserSharedPartEvent {}
+class UserInitEvent extends UserEvent {}
 
-class UserSharedPartRequestEvent extends UserSharedPartEvent {}
+class UserRequestEvent extends UserEvent {}
 
-class UserStateChangedEvent extends UserSharedPartEvent {
-  final BuildUserSharedPart newState;
+class UserStateChangedEvent extends UserEvent {
+  final BuildUser newState;
 
   UserStateChangedEvent({
     @required this.newState,
   });
 }
 
-class UserSharedPartSaveEvent extends UserSharedPartEvent {}
+class UserSaveEvent extends UserEvent {}
 
-class UserSharedPartRefreshEvent extends UserSharedPartEvent {}
+class UserRefreshEvent extends UserEvent {}
 
-class UserSharedPartUndoUnsavedChangesEvent extends UserSharedPartEvent {}
+class UserUndoUnsavedChangesEvent extends UserEvent {}
 
-class DeleteUserSharedPartAccountEvent extends UserSharedPartEvent {}
+class DeleteUserAccountEvent extends UserEvent {}

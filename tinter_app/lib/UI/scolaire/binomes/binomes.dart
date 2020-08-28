@@ -4,36 +4,38 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:separated_column/separated_column.dart';
-import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
+import 'package:tinterapp/Logic/blocs/scolaire/matched_binomes/binomes_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
+import 'package:tinterapp/Logic/models/scolaire/binome.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
-import 'package:tinterapp/Logic/models/associatif/match.dart';
 
-import 'snap_scroll_sheet_physics.dart';
+import '../../shared/snap_scroll_sheet_physics/snap_scroll_sheet_physics.dart';
 
 main() => runApp(MaterialApp(
       home: Material(
-        color: TinterColors.background,
-        child: MatchsTab(),
+        child: BinomesTab(),
       ),
     ));
 
-class MatchsTab extends StatefulWidget {
+class BinomesTab extends StatefulWidget {
   final Map<String, double> fractions = {
-    'matchSelectionMenu': null,
+    'binomeSelectionMenu': null,
   };
 
   @override
-  _MatchsTabState createState() => _MatchsTabState();
+  _BinomesTabState createState() => _BinomesTabState();
 }
 
-class _MatchsTabState extends State<MatchsTab> {
-  String _selectedMatchLogin;
+class _BinomesTabState extends State<BinomesTab> {
+  String _selectedBinomeLogin;
   ScrollController _controller = ScrollController();
   ScrollPhysics _scrollPhysics = NeverScrollableScrollPhysics();
   double topMenuScrolledFraction = 0;
@@ -41,7 +43,7 @@ class _MatchsTabState extends State<MatchsTab> {
   @override
   void initState() {
     // Update to last information
-    BlocProvider.of<MatchedMatchesBloc>(context).add(MatchedMatchesRequestedEvent());
+    BlocProvider.of<MatchedBinomesBloc>(context).add(MatchedBinomesRequestedEvent());
 
     super.initState();
   }
@@ -54,28 +56,30 @@ class _MatchsTabState extends State<MatchsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
-        builder: (BuildContext context, MatchedMatchesState state) {
-      if (!(state is MatchedMatchesLoadSuccessState)) {
+    return BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(
+        builder: (BuildContext context, MatchedBinomesState state) {
+      if (!(state is MatchedBinomesLoadSuccessState)) {
         return Center(child: CircularProgressIndicator());
       }
 
-      // Get the 2 list out of all the matched matches
-      final List<BuildMatch> allMatches = (state as MatchedMatchesLoadSuccessState).matches;
-      final List<BuildMatch> _matchesNotParrains =
-          allMatches.where((match) => match.status != MatchStatus.parrainAccepted).toList();
-      final List<BuildMatch> _parrains =
-          allMatches.where((match) => match.status == MatchStatus.parrainAccepted).toList();
+      // Get the 2 list out of all the matched binomes
+      final List<BuildBinome> allBinomes = (state as MatchedBinomesLoadSuccessState).binomes;
+      final List<BuildBinome> _binomesNotBinomes = allBinomes
+          .where((binome) => binome.statusScolaire != BinomeStatus.binomeAccepted)
+          .toList();
+      final List<BuildBinome> _binomes = allBinomes
+          .where((binome) => binome.statusScolaire == BinomeStatus.binomeAccepted)
+          .toList();
 
       // Sort them
-      _matchesNotParrains
-          .sort((BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
-      _parrains
-          .sort((BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
+      _binomesNotBinomes.sort(
+          (BuildBinome binomeA, BuildBinome binomeB) => binomeA.name.compareTo(binomeB.name));
+      _binomes.sort(
+          (BuildBinome binomeA, BuildBinome binomeB) => binomeA.name.compareTo(binomeB.name));
 
-      widget.fractions['matchSelectionMenu'] =
-          ((_matchesNotParrains.length == 0) ? 0.0 : 0.2) +
-              ((_parrains.length == 0) ? 0.0 : 0.2);
+      widget.fractions['binomeSelectionMenu'] =
+          ((_binomesNotBinomes.length == 0) ? 0.0 : 0.2) +
+              ((_binomes.length == 0) ? 0.0 : 0.2);
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           // ignore: invalid_use_of_protected_member
@@ -85,37 +89,38 @@ class _MatchsTabState extends State<MatchsTab> {
                 topMenuScrolledFraction = min(
                     1,
                     _controller.position.pixels /
-                        (widget.fractions['matchSelectionMenu'] * constraints.maxHeight));
+                        (widget.fractions['binomeSelectionMenu'] * constraints.maxHeight));
               });
             });
           }
 
           return NotificationListener<ScrollEndNotification>(
             onNotification: (ScrollEndNotification scrollEndNotification) {
-              _scrollPhysics = scrollEndNotification.metrics.pixels == 0
+              _scrollPhysics = _controller.offset == 0
                   ? NeverScrollableScrollPhysics()
                   : SnapScrollSheetPhysics(
                       topChildrenHeight: [
-                        widget.fractions['matchSelectionMenu'] * constraints.maxHeight,
+                        widget.fractions['binomeSelectionMenu'] * constraints.maxHeight,
                       ],
                     );
+              setState(() {});
               return true;
             },
             child: ListView(
               physics: _scrollPhysics,
               controller: _controller,
               children: [
-                MatchSelectionMenu(
-                  onTap: matchSelected,
-                  height: constraints.maxHeight * widget.fractions['matchSelectionMenu'],
-                  matchesNotParrains: _matchesNotParrains,
-                  parrains: _parrains,
+                BinomeSelectionMenu(
+                  onTap: binomeSelected,
+                  height: constraints.maxHeight * widget.fractions['binomeSelectionMenu'],
+                  binomesNotBinomes: _binomesNotBinomes,
+                  binomes: _binomes,
                 ),
-                (_selectedMatchLogin == null)
-                    ? noMatchSelected(constraints.maxHeight)
+                (_selectedBinomeLogin == null)
+                    ? noBinomeSelected(constraints.maxHeight)
                     : CompareView(
-                        match: allMatches.firstWhere(
-                            (BuildMatch match) => match.login == _selectedMatchLogin),
+                        binome: allBinomes.firstWhere(
+                            (BuildBinome binome) => binome.login == _selectedBinomeLogin),
                         appHeight: constraints.maxHeight,
                         topMenuScrolledFraction: topMenuScrolledFraction,
                         onCompareTapped: onCompareTapped,
@@ -131,86 +136,94 @@ class _MatchsTabState extends State<MatchsTab> {
   void onCompareTapped(appHeight) {
     setState(() {
       _controller.animateTo(
-        widget.fractions['matchSelectionMenu'] * appHeight,
+        widget.fractions['binomeSelectionMenu'] * appHeight,
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     });
   }
 
-  Widget noMatchSelected(appHeight) {
+  Widget noBinomeSelected(appHeight) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           height: appHeight * 0.1,
         ),
-        Icon(
-          Icons.face,
-          color: TinterColors.white,
-          size: 70,
+        Consumer<TinterTheme>(
+            builder: (context, tinterTheme, child) {
+              return Icon(
+              Icons.face,
+              color: tinterTheme.colors.defaultTextColor,
+              size: 70,
+            );
+          }
         ),
         SizedBox(
           height: 10,
         ),
-        BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
-          buildWhen: (MatchedMatchesState previousState, MatchedMatchesState state) {
+        BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(
+          buildWhen: (MatchedBinomesState previousState, MatchedBinomesState state) {
             if (previousState.runtimeType != state.runtimeType) {
               return true;
             }
-            if (previousState is MatchedMatchesLoadSuccessState &&
-                state is MatchedMatchesLoadSuccessState) {
-              if (previousState.matches.length != state.matches.length) {
+            if (previousState is MatchedBinomesLoadSuccessState &&
+                state is MatchedBinomesLoadSuccessState) {
+              if (previousState.binomes.length != state.binomes.length) {
                 return true;
               }
             }
             return false;
           },
-          builder: (BuildContext context, MatchedMatchesState state) {
-            if (!(state is MatchedMatchesLoadSuccessState)) {
+          builder: (BuildContext context, MatchedBinomesState state) {
+            if (!(state is MatchedBinomesLoadSuccessState)) {
               return CircularProgressIndicator();
             }
-            return ((state as MatchedMatchesLoadSuccessState).matches.length == 0)
-                ? Text(
-                    "Aucun match pour l'instant",
-                    style: TinterTextStyle.headline2,
-                  )
-                : Text(
-                    'Selectionnez un match.',
-                    style: TinterTextStyle.headline2,
-                  );
+            return Consumer<TinterTheme>(
+                builder: (context, tinterTheme, child) {
+                  return ((state as MatchedBinomesLoadSuccessState).binomes.length == 0)
+                    ? Text(
+                        "Aucun binome pour l'instant",
+                        style: tinterTheme.textStyle.headline2,
+                      )
+                    : Text(
+                        'Selectionnez un binome.',
+                        style: tinterTheme.textStyle.headline2,
+                      );
+              }
+            );
           },
         ),
       ],
     );
   }
 
-  void matchSelected(BuildMatch match) {
+  void binomeSelected(BuildBinome binome) {
     setState(() {
-      _selectedMatchLogin = match.login;
+      _selectedBinomeLogin = binome.login;
     });
   }
 }
 
 class CompareView extends StatelessWidget {
-  final BuildMatch _match;
+  final BuildBinome _binome;
   final double appHeight;
   final double topMenuScrolledFraction;
   final onCompareTapped;
 
   CompareView({
-    @required BuildMatch match,
+    @required BuildBinome binome,
     @required this.appHeight,
     @required this.topMenuScrolledFraction,
     @required this.onCompareTapped,
-  }) : _match = match;
+  }) : _binome = binome;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        facesAroundScore(),
+        facesAroundScore(context),
         SizedBox(height: 50),
         statusRectangle(context),
         SizedBox(height: 50),
@@ -222,7 +235,7 @@ class CompareView extends StatelessWidget {
     );
   }
 
-  Widget facesAroundScore() {
+  Widget facesAroundScore(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 20.0),
       height: appHeight * 0.25,
@@ -255,7 +268,7 @@ class CompareView extends StatelessWidget {
           ),
           Expanded(
             flex: 20,
-            child: score(),
+            child: score(context),
           ),
           Expanded(
             flex: 20,
@@ -265,11 +278,11 @@ class CompareView extends StatelessWidget {
                 userPicture(
                     getProfilePicture: ({@required height, @required width}) =>
                         getProfilePictureFromLocalPathOrLogin(
-                            login: _match.login,
-                            localPath: _match.profilePictureLocalPath,
+                            login: _binome.login,
+                            localPath: _binome.profilePictureLocalPath,
                             height: height,
                             width: width)),
-                userPictureText(title: _match.name + '\n' + _match.surname),
+                userPictureText(title: _binome.name + '\n' + _binome.surname),
               ],
             ),
           ),
@@ -278,22 +291,26 @@ class CompareView extends StatelessWidget {
     );
   }
 
-  /// Displays either your face text or your match face text
+  /// Displays either your face text or your binome face text
   Widget userPictureText({String title}) {
     return Container(
       height: appHeight * 0.1,
       child: Center(
-        child: AutoSizeText(
-          title,
-          textAlign: TextAlign.center,
-          style: TinterTextStyle.headline2,
-          maxFontSize: 18,
+        child: Consumer<TinterTheme>(
+            builder: (context, tinterTheme, child) {
+              return AutoSizeText(
+              title,
+              textAlign: TextAlign.center,
+              style: tinterTheme.textStyle.headline2,
+              maxFontSize: 18,
+            );
+          }
         ),
       ),
     );
   }
 
-  /// Displays either your face or your match face
+  /// Displays either your face or your binome face
   Widget userPicture(
       {Widget Function({@required double height, @required double width}) getProfilePicture}) {
     return Container(
@@ -309,7 +326,7 @@ class CompareView extends StatelessWidget {
     );
   }
 
-  Widget score() {
+  Widget score(BuildContext context) {
     return informationRectangle(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -320,19 +337,27 @@ class CompareView extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
-                    'Score',
-                    style: TinterTextStyle.headline1,
+                  Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) {
+                        return Text(
+                        'Score',
+                        style: tinterTheme.textStyle.headline1,
+                      );
+                    }
                   ),
                   Stack(
                     children: <Widget>[
-                      Text(
-                        _match.score.toString(),
-                        style: TextStyle(
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                          color: TinterTextStyle.headline1.color,
-                        ),
+                      Consumer<TinterTheme>(
+                          builder: (context, tinterTheme, child) {
+                            return Text(
+                            _binome.score.toString(),
+                            style: TextStyle(
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                              color: tinterTheme.textStyle.headline1.color,
+                            ),
+                          );
+                        }
                       ),
                     ],
                   ),
@@ -341,20 +366,28 @@ class CompareView extends StatelessWidget {
             ),
             Align(
               alignment: AlignmentDirectional.bottomEnd,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 2,
-                  ),
-                ),
-                height: 20,
-                width: 20,
-                child: Center(
-                  child: Text(
-                    '?',
-                    style: TextStyle(),
-                  ),
+              child: InkWell(
+                onTap: () => showWhatIsScore(context),
+                child: Consumer<TinterTheme>(
+                    builder: (context, tinterTheme, child) {
+                      return Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          width: 2,
+                          color: tinterTheme.colors.defaultTextColor
+                        ),
+                      ),
+                      height: 20,
+                      width: 20,
+                      child: Center(
+                        child: Text(
+                          '?',
+                          style: TextStyle(color: tinterTheme.colors.defaultTextColor),
+                        ),
+                      ),
+                    );
+                  }
                 ),
               ),
             )
@@ -378,38 +411,37 @@ class CompareView extends StatelessWidget {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: AutoSizeText(
-                    (_match.status == MatchStatus.liked ||
-                            _match.status == MatchStatus.heIgnoredYou)
-                        ? "Cette personne ne t'a pas encore liker"
-                        : (_match.status == MatchStatus.matched)
-                            ? (_match.primoEntrant)
-                                ? "Demande lui de te parrainer"
-                                : "Propose lui d'être ton parrain"
-                            : (_match.status == MatchStatus.youAskedParrain)
-                                ? "Demande de parrainage envoyée"
-                                : (_match.status == MatchStatus.heAskedParrain)
-                                    ? (_match.primoEntrant)
-                                        ? "Cette personne veut te parrainer"
-                                        : "Cette personne veut que tu la parraine"
-                                    : (_match.status == MatchStatus.parrainAccepted)
-                                        ? (_match.primoEntrant)
-                                            ? "Cette personne te parraine!"
-                                            : 'Tu parraine cette personne!'
-                                        : (_match.status == MatchStatus.parrainHeRefused)
-                                            ? 'Cette personne à refusée ta demande'
-                                            : (_match.status == MatchStatus.parrainYouRefused)
-                                                ? (_match.primoEntrant)
-                                                    ? "Tu as refusé de parrainer cette personne."
-                                                    : "Tu as refusé que cette personne te parraine."
-                                                : 'ERROR: the status should not be ${_match.status}',
-                    style: TinterTextStyle.headline2,
-                    maxLines: 1,
+                  child: Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) {
+                        return AutoSizeText(
+                        (_binome.statusScolaire == BinomeStatus.liked ||
+                                _binome.statusScolaire == BinomeStatus.heIgnoredYou)
+                            ? "Cette personne ne t'a pas encore liker"
+                            : (_binome.statusScolaire == BinomeStatus.matched)
+                                ? "Propose lui d'être son binome"
+                                : (_binome.statusScolaire == BinomeStatus.youAskedBinome)
+                                    ? "Demande envoyée"
+                                    : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
+                                        ? "Cette personne veut être ton/ta binome"
+                                        : (_binome.statusScolaire == BinomeStatus.binomeAccepted)
+                                            ? "Tu es en binome avec cette personne!"
+                                            : (_binome.statusScolaire ==
+                                                    BinomeStatus.binomeHeRefused)
+                                                ? 'Cette personne à refusée ta demande'
+                                                : (_binome.statusScolaire ==
+                                                        BinomeStatus.binomeYouRefused)
+                                                    ? "Tu as refusé d'être le/la binome de cette personne."
+                                                    : 'ERROR: the status should not be ${_binome.statusScolaire}',
+                        style: tinterTheme.textStyle.headline2,
+                        maxLines: 1,
+                      );
+                    }
                   ),
                 ),
               ),
             ),
-            if ([MatchStatus.matched, MatchStatus.heAskedParrain].contains(_match.status)) ...[
+            if ([BinomeStatus.matched, BinomeStatus.heAskedBinome]
+                .contains(_binome.statusScolaire)) ...[
               Container(
                 constraints: BoxConstraints(
                   minHeight: 10,
@@ -417,47 +449,55 @@ class CompareView extends StatelessWidget {
               ),
               Expanded(
                 flex: 1000,
-                child: (_match.status == MatchStatus.matched)
+                child: (_binome.statusScolaire == BinomeStatus.matched)
                     ? Center(
                         child: InkWell(
                           splashColor: Colors.transparent,
                           onTap: () {
-                            BlocProvider.of<MatchedMatchesBloc>(context)
-                                .add(AskParrainEvent(match: _match));
+                            BlocProvider.of<MatchedBinomesBloc>(context)
+                                .add(AskBinomeEvent(binome: _binome));
                           },
-                          child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                              color: TinterColors.secondaryAccent,
-                            ),
-                            child: AutoSizeText(
-                              "Envoyer une demande",
-                              style: TinterTextStyle.headline2,
-                            ),
+                          child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                                return Container(
+                                padding: EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                                  color: tinterTheme.colors.secondary,
+                                ),
+                                child: AutoSizeText(
+                                  "Envoyer une demande",
+                                  style: tinterTheme.textStyle.headline2,
+                                ),
+                              );
+                            }
                           ),
                         ),
                       )
-                    : (_match.status == MatchStatus.heAskedParrain)
+                    : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               InkWell(
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  BlocProvider.of<MatchedMatchesBloc>(context)
-                                      .add(AcceptParrainEvent(match: _match));
+                                  BlocProvider.of<MatchedBinomesBloc>(context)
+                                      .add(AcceptBinomeEvent(binome: _binome));
                                 },
-                                child: Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                                    color: TinterColors.secondaryAccent,
-                                  ),
-                                  child: AutoSizeText(
-                                    "Accepter",
-                                    style: TinterTextStyle.headline2,
-                                  ),
+                                child: Consumer<TinterTheme>(
+                                    builder: (context, tinterTheme, child) {
+                                      return Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                                        color: tinterTheme.colors.secondary,
+                                      ),
+                                      child: AutoSizeText(
+                                        "Accepter",
+                                        style: tinterTheme.textStyle.headline2,
+                                      ),
+                                    );
+                                  }
                                 ),
                               ),
                               SizedBox(
@@ -466,25 +506,30 @@ class CompareView extends StatelessWidget {
                               InkWell(
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  BlocProvider.of<MatchedMatchesBloc>(context)
-                                      .add(RefuseParrainEvent(match: _match));
+                                  BlocProvider.of<MatchedBinomesBloc>(context)
+                                      .add(RefuseBinomeEvent(binome: _binome));
                                 },
-                                child: Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                                    color: TinterColors.secondaryAccent,
-                                  ),
-                                  child: AutoSizeText(
-                                    "Refuser",
-                                    style: TinterTextStyle.headline2,
-                                  ),
+                                child: Consumer<TinterTheme>(
+                                    builder: (context, tinterTheme, child) {
+                                      return Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                                        color: tinterTheme.colors.secondary,
+                                      ),
+                                      child: AutoSizeText(
+                                        "Refuser",
+                                        style: tinterTheme.textStyle.headline2,
+                                      ),
+                                    );
+                                  }
                                 ),
                               ),
                             ],
                           )
                         : AutoSizeText(
-                            'ERROR: the state should not be ' + _match.status.toString(),
+                            'ERROR: the state should not be ' +
+                                _binome.statusScolaire.toString(),
                           ),
               ),
               Container(
@@ -501,19 +546,23 @@ class CompareView extends StatelessWidget {
                     onTap: () {
                       onCompareTapped(appHeight);
                     },
-                    child: Container(
-                      padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                        color: TinterColors.background.withOpacity(0.8),
-                      ),
-                      child: AutoSizeText(
-                        'Compare vos profils',
-                        style: TinterTextStyle.goutMusicauxNotLiked,
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        maxFontSize: 15,
-                      ),
+                    child: Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                          return Container(
+                          padding: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                            color: tinterTheme.colors.button,
+                          ),
+                          child: AutoSizeText(
+                            'Compare vos profils',
+                            style: tinterTheme.textStyle.chipNotLiked,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            maxFontSize: 15,
+                          ),
+                        );
+                      }
                     ),
                   ),
                 ),
@@ -528,23 +577,32 @@ class CompareView extends StatelessWidget {
       {@required Widget child, double width, double height, EdgeInsetsGeometry padding}) {
     return Align(
       alignment: AlignmentDirectional.center,
-      child: Container(
-        padding: padding,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          color: TinterColors.primary,
-        ),
-        width: width != null ? width : Size.infinite.width,
-        height: height,
+      child: Consumer<TinterTheme>(
+          builder: (context, tinterTheme, child) {
+            return Container(
+            padding: padding,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              color: tinterTheme.colors.primary,
+            ),
+            width: width != null ? width : Size.infinite.width,
+            height: height,
+            child: child,
+          );
+        },
         child: child,
       ),
     );
   }
 
   Widget verticalSeparator() {
-    return Container(
-      width: 1.0,
-      color: TinterColors.primaryAccent,
+    return Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Container(
+          width: 1.0,
+          color: tinterTheme.colors.primaryAccent,
+        );
+      }
     );
   }
 
@@ -566,7 +624,7 @@ class CompareView extends StatelessWidget {
           ),
           verticalSeparator(),
           Expanded(
-            child: ProfileInformation(user: _match),
+            child: ProfileInformation(user: _binome),
           ),
         ],
       ),
@@ -591,34 +649,241 @@ class ProfileInformation extends StatelessWidget {
           );
         },
         includeOuterSeparators: false,
-        children: <Widget>[
+        children: [
           informationRectangle(
             context: context,
-            width: double.infinity,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Text(
-                    'Associations',
-                    style: TinterTextStyle.headline2,
+                  Align(
+                    alignment: AlignmentDirectional.topCenter,
+                    child: Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                          return Text(
+                          'Lieu de vie',
+                          style: tinterTheme.textStyle.headline2,
+                        );
+                      }
+                    ),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Container(
-                    height: 50,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: user.associations.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: EdgeInsets.only(right: 5.0, left: index == 0 ? 5.0 : 0),
-                          child: associationBubble(context, user.associations[index]),
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    child: Container(
+                      height: 60,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Opacity(
+                              opacity: user.lieuDeVie != LieuDeVie.maisel ? 0.5 : 1,
+                              child: Consumer<TinterTheme>(
+                                  builder: (context, tinterTheme, child) {
+                                    return Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(5.0),
+                                        topLeft: Radius.circular(5.0),
+                                      ),
+                                      color: tinterTheme.colors.primaryAccent,
+                                    ),
+                                    width: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Center(
+                                        child: AutoSizeText(
+                                          'MAISEL',
+                                          maxLines: 1,
+                                          minFontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              ),
+                            ),
+                            Opacity(
+                              opacity: user.lieuDeVie != LieuDeVie.other ? 0.5 : 1,
+                              child: Consumer<TinterTheme>(
+                                  builder: (context, tinterTheme, child) {
+                                    return Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(5.0),
+                                        bottomRight: Radius.circular(5.0),
+                                      ),
+                                      color: tinterTheme.colors.primaryAccent,
+                                    ),
+                                    width: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Center(
+                                        child: AutoSizeText(
+                                          'Autre',
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          informationRectangle(
+            context: context,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: AlignmentDirectional.topCenter,
+                    child: Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                          return Text(
+                          'Horaires de travail',
+                          style: tinterTheme.textStyle.headline2,
                         );
-                      },
+                      }
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: [
+                          Opacity(
+                            opacity: user.horairesDeTravail.contains(HoraireDeTravail.morning)
+                                ? 1
+                                : 0.5,
+                            child: Consumer<TinterTheme>(
+                                builder: (context, tinterTheme, child) {
+                                  return Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0),
+                                    ),
+                                    color: tinterTheme.colors.primaryAccent,
+                                  ),
+                                  width: 60,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                    child: Center(
+                                      child: Text(
+                                        'Matin',
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
+                          ),
+                          Opacity(
+                            opacity:
+                                user.horairesDeTravail.contains(HoraireDeTravail.afternoon)
+                                    ? 1
+                                    : 0.5,
+                            child: Consumer<TinterTheme>(
+                                builder: (context, tinterTheme, child) {
+                                  return Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0),
+                                    ),
+                                    color: tinterTheme.colors.primaryAccent,
+                                  ),
+                                  width: 60,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                    child: Center(
+                                      child: Text(
+                                        'Aprem',
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
+                          ),
+                          Opacity(
+                            opacity: user.horairesDeTravail.contains(HoraireDeTravail.evening)
+                                ? 1
+                                : 0.5,
+                            child: Consumer<TinterTheme>(
+                                builder: (context, tinterTheme, child) {
+                                  return Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0),
+                                    ),
+                                    color: tinterTheme.colors.primaryAccent,
+                                  ),
+                                  width: 60,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                    child: Center(
+                                      child: Text(
+                                        'Soir',
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
+                          ),
+                          Opacity(
+                            opacity: user.horairesDeTravail.contains(HoraireDeTravail.night)
+                                ? 1
+                                : 0.5,
+                            child: Consumer<TinterTheme>(
+                                builder: (context, tinterTheme, child) {
+                                  return Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0),
+                                    ),
+                                    color: tinterTheme.colors.primaryAccent,
+                                  ),
+                                  width: 60,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                    child: Center(
+                                      child: Text(
+                                        'Nuit',
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -628,19 +893,55 @@ class ProfileInformation extends StatelessWidget {
           informationRectangle(
             context: context,
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Column(
                 children: <Widget>[
-                  Text(
-                    'Attirance pour la vie associative',
-                    textAlign: TextAlign.center,
-                    style: TinterTextStyle.headline2,
+                  Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) {
+                        return Text(
+                        'Associations',
+                        style: tinterTheme.textStyle.headline2,
+                      );
+                    }
                   ),
-                  SliderTheme(
-                    data: TinterSliderTheme.disabled,
-                    child: Slider(
-                      value: user.attiranceVieAsso,
-                      onChanged: null,
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 60,
+                    child: Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (int index = 0; index < user.associations.length; index++) ...[
+                              if (index == 0)
+                                SizedBox(
+                                  width: 10,
+                                ),
+                              associationBubble(context, user.associations[index]),
+                              SizedBox(
+                                width: 5,
+                              )
+                            ]
+                          ],
+                        ),
+                      ),
+//                            child: ListView.separated(
+//                              shrinkWrap: true,
+//                              scrollDirection: Axis.horizontal,
+//                              itemCount: user.associations.length,
+//                              separatorBuilder: (BuildContext context, int index) {
+//                                return SizedBox(
+//                                  width: 5,
+//                                );
+//                              },
+//                              itemBuilder: (BuildContext context, int index) {
+//                                return associationBubble(context, user.associations[index]);
+//                              },
+//                            ),
                     ),
                   ),
                 ],
@@ -652,54 +953,41 @@ class ProfileInformation extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'Cours ou soirée?',
-                    style: TinterTextStyle.headline2,
+                  Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) {
+                        return Text(
+                        'Seul.e ou en groupe?',
+                        style: tinterTheme.textStyle.headline2,
+                        textAlign: TextAlign.center,
+                      );
+                    }
                   ),
                   SizedBox(
                     height: 15,
                   ),
                   discoverSlider(
                       context,
-                      SliderTheme(
-                        data: TinterSliderTheme.disabled,
-                        child: Slider(
-                          value: user.feteOuCours,
-                          onChanged: null,
-                        ),
+                      Consumer<TinterTheme>(
+                          builder: (context, tinterTheme, child) {
+                            return SliderTheme(
+                            data: tinterTheme.slider.disabled,
+                            child: TweenAnimationBuilder(
+                              tween: Tween<double>(begin: 0.5, end: user.groupeOuSeul),
+                              duration: Duration(milliseconds: 300),
+                              builder: (BuildContext context, value, Widget child) {
+                                return Slider(
+                                  value: value,
+                                  onChanged: null,
+                                );
+                              },
+                            ),
+                          );
+                        }
                       ),
-                      leftLabel: 'Cours',
-                      rightLabel: 'Soirée'),
-                ],
-              ),
-            ),
-          ),
-          informationRectangle(
-            context: context,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Parrain qui aide ou avec qui sortir?',
-                    style: TinterTextStyle.headline2,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  discoverSlider(
-                      context,
-                      SliderTheme(
-                        data: TinterSliderTheme.disabled,
-                        child: Slider(
-                          value: user.aideOuSortir,
-                          onChanged: null,
-                        ),
-                      ),
-                      leftLabel: 'Aide',
-                      rightLabel: 'Sortir'),
+                      leftLabel: 'Seul',
+                      rightLabel: 'Groupe'),
                 ],
               ),
             ),
@@ -709,19 +997,41 @@ class ProfileInformation extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'Aime organiser les événements?',
-                    style: TinterTextStyle.headline2,
-                    textAlign: TextAlign.center,
+                  Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) {
+                        return Text(
+                        'En ligne ou à l\'école?',
+                        style: tinterTheme.textStyle.headline2,
+                        textAlign: TextAlign.center,
+                      );
+                    }
                   ),
-                  SliderTheme(
-                    data: TinterSliderTheme.disabled,
-                    child: Slider(
-                      value: user.organisationEvenements,
-                      onChanged: null,
-                    ),
+                  SizedBox(
+                    height: 15,
                   ),
+                  discoverSlider(
+                      context,
+                      Consumer<TinterTheme>(
+                          builder: (context, tinterTheme, child) {
+                            return SliderTheme(
+                            data: tinterTheme.slider.disabled,
+                            child: TweenAnimationBuilder(
+                              tween: Tween<double>(begin: 0.5, end: user.enligneOuNon),
+                              duration: Duration(milliseconds: 300),
+                              builder: (BuildContext context, value, Widget child) {
+                                return Slider(
+                                  value: value,
+                                  onChanged: null,
+                                );
+                              },
+                            ),
+                          );
+                        }
+                      ),
+                      leftLabel: 'En ligne',
+                      rightLabel: 'A l\'école'),
                 ],
               ),
             ),
@@ -731,24 +1041,39 @@ class ProfileInformation extends StatelessWidget {
             child: informationRectangle(
               context: context,
               width: double.infinity,
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Goûts musicaux',
-                    style: TinterTextStyle.headline2,
-                  ),
-                  Wrap(
-                    spacing: 15,
-                    children: <Widget>[
-                      for (String musicStyle in user.goutsMusicaux)
-                        Chip(
-                          label: Text(musicStyle),
-                          labelStyle: TinterTextStyle.goutMusicauxLiked,
-                          backgroundColor: TinterColors.primaryAccent,
-                        )
-                    ],
-                  )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                          return Text(
+                          'Matières préférées',
+                          style: tinterTheme.textStyle.headline2,
+                        );
+                      }
+                    ),
+                    SizedBox(height: 8.0),
+                    Wrap(
+                      key: GlobalKey(),
+                      spacing: 15,
+                      alignment: WrapAlignment.center,
+                      children: <Widget>[
+                        for (String matierePreferee in user.matieresPreferees)
+                          Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                                return Chip(
+                                label: Text(matierePreferee),
+                                labelStyle: tinterTheme.textStyle.chipLiked,
+                                backgroundColor: tinterTheme.colors.primaryAccent,
+                              );
+                            }
+                          )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -759,13 +1084,18 @@ class ProfileInformation extends StatelessWidget {
 
   Widget informationRectangle(
       {@required BuildContext context, @required Widget child, double width, double height}) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        color: TinterColors.primary,
-      ),
-      width: width,
-      height: height,
+    return Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            color: tinterTheme.colors.primary,
+          ),
+          width: width,
+          height: height,
+          child: child,
+        );
+      },
       child: child,
     );
   }
@@ -804,9 +1134,13 @@ class ProfileInformation extends StatelessWidget {
             SliderLabel(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                child: Text(
-                  leftLabel,
-                  style: TinterTextStyle.smallLabel,
+                child: Consumer<TinterTheme>(
+                    builder: (context, tinterTheme, child) {
+                      return Text(
+                      leftLabel,
+                      style: tinterTheme.textStyle.smallLabel,
+                    );
+                  }
                 ),
               ),
               side: Side.Left,
@@ -815,9 +1149,13 @@ class ProfileInformation extends StatelessWidget {
             SliderLabel(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                child: Text(
-                  rightLabel,
-                  style: TinterTextStyle.smallLabel,
+                child: Consumer<TinterTheme>(
+                    builder: (context, tinterTheme, child) {
+                      return Text(
+                      rightLabel,
+                      style: tinterTheme.textStyle.smallLabel,
+                    );
+                  }
                 ),
               ),
               side: Side.Right,
@@ -834,17 +1172,17 @@ class ProfileInformation extends StatelessWidget {
   }
 }
 
-class MatchSelectionMenu extends StatelessWidget {
+class BinomeSelectionMenu extends StatelessWidget {
   final _onTap;
   final double height;
-  final List<BuildMatch> matchesNotParrains;
-  final List<BuildMatch> parrains;
+  final List<BuildBinome> binomesNotBinomes;
+  final List<BuildBinome> binomes;
 
-  MatchSelectionMenu(
+  BinomeSelectionMenu(
       {@required onTap,
       @required this.height,
-      @required this.matchesNotParrains,
-      @required this.parrains})
+      @required this.binomesNotBinomes,
+      @required this.binomes})
       : _onTap = onTap;
 
   @override
@@ -853,43 +1191,47 @@ class MatchSelectionMenu extends StatelessWidget {
       height: height,
       child: Column(
         children: [
-          (matchesNotParrains.length != 0)
-              ? Expanded(child: topMenu(matches: matchesNotParrains, title: 'Mes matchs'))
+          (binomesNotBinomes.length != 0)
+              ? Expanded(child: topMenu(binomes: binomesNotBinomes, title: 'Mes binomes'))
               : Container(),
-          (parrains.length != 0)
-              ? Expanded(child: topMenu(matches: parrains, title: 'Mes Parrains et marraines'))
+          (binomes.length != 0)
+              ? Expanded(child: topMenu(binomes: binomes, title: 'Mes Binomes et marraines'))
               : Container(),
         ],
       ),
     );
   }
 
-  /// Either displays the parrain top menu or the match top menu
-  Widget topMenu({@required List<BuildMatch> matches, @required String title}) {
+  /// Either displays the binome top menu or the binome top menu
+  Widget topMenu({@required List<BuildBinome> binomes, @required String title}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-          child: Text(
-            title,
-            style: TinterTextStyle.headline2,
+          child: Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return Text(
+                title,
+                style: tinterTheme.textStyle.headline2,
+              );
+            }
           ),
         ),
         Flexible(
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              for (BuildMatch match in matches)
+              for (BuildBinome binome in binomes)
                 InkWell(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  onTap: () => _onTap(match),
+                  onTap: () => _onTap(binome),
                   child: Container(
                     margin: EdgeInsets.only(
                       right: 20.0,
-                      left: match == matches[0] ? 20.0 : 0.0,
+                      left: binome == binomes[0] ? 20.0 : 0.0,
                     ),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -897,8 +1239,8 @@ class MatchSelectionMenu extends StatelessWidget {
                     height: 50,
                     width: 50,
                     child: getProfilePictureFromLocalPathOrLogin(
-                      login: match.login,
-                      localPath: match.profilePictureLocalPath,
+                      login: binome.login,
+                      localPath: binome.profilePictureLocalPath,
                       height: 50,
                       width: 50,
                     ),
@@ -913,10 +1255,14 @@ class MatchSelectionMenu extends StatelessWidget {
   }
 
   Widget separator() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-      height: 0.5,
-      color: TinterColors.primaryAccent,
+    return Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Container(
+          margin: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+          height: 0.5,
+          color: Colors.black,
+        );
+      }
     );
   }
 }

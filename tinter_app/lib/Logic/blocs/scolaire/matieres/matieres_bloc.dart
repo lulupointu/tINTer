@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
-import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Logic/repository/scolaire/matieres_repository.dart';
-import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 
 part 'matieres_event.dart';
 
@@ -44,6 +42,7 @@ class MatieresBloc extends Bloc<MatieresEvent, MatieresState> {
     } catch (error) {
       print(error);
       yield MatieresLoadFailedState();
+      return;
     }
     yield MatieresLoadSuccessfulState(matieres: matieres);
   }

@@ -1,8 +1,7 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
 import 'package:tinterapp/Logic/models/serializers.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 
 part 'relation_score_associatif.g.dart';
 
@@ -31,20 +30,20 @@ abstract class RelationScoreAssociatif
       _$relationScoreAssociatifSerializer;
 
   static Map<String, RelationScoreAssociatif> getScoreBetweenMultiple(
-      BuildUserAssociatif user,
-      List<BuildUserAssociatif> otherUsers,
+      BuildUser user,
+      List<BuildUser> otherUsers,
       int numberMaxOfAssociations,
       int numberMaxOfGoutsMusicaux) {
     return {
-      for (BuildUserAssociatif otherUser in otherUsers)
+      for (BuildUser otherUser in otherUsers)
         otherUser.login: RelationScoreAssociatif.getScoreBetween(
             user, otherUser, numberMaxOfAssociations, numberMaxOfGoutsMusicaux)
     };
   }
 
   static RelationScoreAssociatif getScoreBetween(
-      BuildUserAssociatif user,
-      BuildUserAssociatif otherUser,
+      BuildUser user,
+      BuildUser otherUser,
       int numberMaxOfAssociations,
       int numberMaxOfGoutsMusicaux) {
     return RelationScoreAssociatif((r) => r
@@ -96,17 +95,17 @@ abstract class RelationScoreAssociatif
 //  @override
 //  List<Object> get props => [login, otherLogin, score];
 //
-//  static Map<String, RelationScoreAssociatif> getScoreBetweenMultiple(BuildUserAssociatif user, List<BuildUserAssociatif> otherUsers,
+//  static Map<String, RelationScoreAssociatif> getScoreBetweenMultiple(BuildUser user, List<BuildUser> otherUsers,
 //      int numberMaxOfAssociations, int numberMaxOfGoutsMusicaux) {
 //    return {
-//      for (BuildUserAssociatif otherUser in otherUsers)
+//      for (BuildUser otherUser in otherUsers)
 //        otherUser.login: RelationScoreAssociatif.getScoreBetween(
 //            user, otherUser, numberMaxOfAssociations, numberMaxOfGoutsMusicaux)
 //    };
 //  }
 //
 //  static RelationScoreAssociatif getScoreBetween(
-//      BuildUserAssociatif user, BuildUserAssociatif otherUser, int numberMaxOfAssociations, int numberMaxOfGoutsMusicaux) {
+//      BuildUser user, BuildUser otherUser, int numberMaxOfAssociations, int numberMaxOfGoutsMusicaux) {
 //    return RelationScoreAssociatif(
 //        login: user.login,
 //        otherLogin: otherUser.login,

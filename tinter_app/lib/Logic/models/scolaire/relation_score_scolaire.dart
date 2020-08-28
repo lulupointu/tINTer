@@ -1,11 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
-import 'package:tinterapp/Logic/models/scolaire/user_scolaire.dart';
 import 'package:tinterapp/Logic/models/serializers.dart';
 
 part 'relation_score_scolaire.g.dart';

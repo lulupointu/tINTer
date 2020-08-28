@@ -3,26 +3,24 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
-import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
+import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
-import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';
-import 'package:tinterapp/Logic/repository/associatif/user_associatif_repository.dart';
-import 'package:tinterapp/Logic/repository/scolaire/user_scolaire_repository.dart';
+import 'package:tinterapp/Logic/repository/scolaire/matched_binomes_repository.dart';
+import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
 
 part 'user_scolaire_search_event.dart';
 
 part 'user_scolaire_search_state.dart';
 
 class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireSearchState> {
-  final UserScolaireRepository userScolaireRepository;
-  final MatchedMatchesRepository matchedMatchesRepository;
+  final UserRepository userRepository;
+  final MatchedBinomesRepository matchedBinomesRepository;
   final AuthenticationBloc authenticationBloc;
 
   UserScolaireSearchBloc(
-      {@required this.userScolaireRepository,
+      {@required this.userRepository,
       @required this.authenticationBloc,
-      @required this.matchedMatchesRepository})
+      @required this.matchedBinomesRepository})
       : super(UserScolaireSearchInitialState());
 
   @override
@@ -39,7 +37,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
           yield* _mapUserScolaireSearchChangeStatusEventEventToState(event);
         } else {
           _addError(
-              'DiscoverMatchLikeEvent was called while state is not DiscoverMatchesLoadSuccessState');
+              'DiscoverMatchLikeEvent was called while state is not DiscoverBinomesLoadSuccessState');
         }
         return;
       case UserScolaireSearchLikeEvent:
@@ -47,7 +45,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
           _mapUserScolaireSearchLikeEventToState(event);
         } else {
           _addError(
-              'DiscoverMatchLikeEvent was called while state is not DiscoverMatchesLoadSuccessState');
+              'DiscoverMatchLikeEvent was called while state is not DiscoverBinomesLoadSuccessState');
         }
         return;
       case UserScolaireSearchIgnoreEvent:
@@ -55,7 +53,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
           _mapDiscoverMatchIgnoreEventToState(event);
         } else {
           _addError(
-              'DiscoverMatchLikeEvent was called while state is not DiscoverMatchesLoadSuccessState');
+              'DiscoverMatchLikeEvent was called while state is not DiscoverBinomesLoadSuccessState');
         }
         return;
       default:
@@ -74,10 +72,11 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
 
     List<SearchedUserScolaire> searchedUsers;
     try {
-      searchedUsers = await userScolaireRepository.getAllSearchedUsers();
+      searchedUsers = await userRepository.getAllSearchedUsersScolaire();
     } catch (error) {
       print(error);
       yield UserScolaireSearchLoadFailedState();
+      return;
     }
     yield UserScolaireSearchLoadSuccessfulState(searchedUsers: searchedUsers);
   }
@@ -94,7 +93,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
 
     List<SearchedUserScolaire> searchedUsers;
     try {
-      searchedUsers = await userScolaireRepository.getAllSearchedUsers();
+      searchedUsers = await userRepository.getAllSearchedUsersScolaire();
     } catch (error) {
       print(error);
       yield UserScolaireSearchRefreshingFailedState(
@@ -108,7 +107,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
     add(UserScolaireSearchChangeStatusEvent(
         searchedUser: userSearchLikeEvent.likedSearchedUserScolaire,
         newStatus: MatchStatus.liked,
-        enumRelationStatusAssociatif: EnumRelationStatusAssociatif.liked));
+        enumRelationStatusScolaire: EnumRelationStatusScolaire.liked));
   }
 
   void _mapDiscoverMatchIgnoreEventToState(
@@ -116,7 +115,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
     add(UserScolaireSearchChangeStatusEvent(
         searchedUser: userSearchIgnoreEvent.ignoredSearchedUserScolaire,
         newStatus: MatchStatus.ignored,
-        enumRelationStatusAssociatif: EnumRelationStatusAssociatif.ignored));
+        enumRelationStatusScolaire: EnumRelationStatusScolaire.ignored));
   }
 
   Stream<UserScolaireSearchState> _mapUserScolaireSearchChangeStatusEventEventToState(
@@ -149,10 +148,10 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
     print('Changing state to saving');
 
     try {
-      matchedMatchesRepository.updateMatchStatus(
-        relationStatus: RelationStatusAssociatif((r) => r
+      matchedBinomesRepository.updateBinomeStatus(
+        relationStatus: RelationStatusScolaire((r) => r
           ..otherLogin = event.searchedUser.login
-          ..status = event.enumRelationStatusAssociatif,
+          ..statusScolaire = event.enumRelationStatusScolaire,
         ),
       );
       print('UPDATING');

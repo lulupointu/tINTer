@@ -2,24 +2,30 @@ import 'package:flare_flutter/flare.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:tinterapp/UI/shared_element/const.dart';
-
+import 'package:provider/provider.dart';
+import 'package:tinterapp/UI/shared/shared_element/const.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: TinterColors.background,
-        body: Center(
-          child: SizedBox(
-            height: 400,
-            width: 400,
-            child: FlareActor(
-              'assets/splash_screen/tinter_logo_splash_screen.flr',
-              controller: SplashScreenFlareController(),
-            ),
+    return Consumer<TinterTheme>(
+      builder: (context, tinterTheme, child) {
+        return Scaffold(
+          backgroundColor: tinterTheme.colors.background,
+          body: child,
+        );
+      },
+      child: Center(
+        child: SizedBox(
+          height: 400,
+          width: 400,
+          child: FlareActor(
+            'assets/splash_screen/tinter_logo_splash_screen.flr',
+            controller: SplashScreenFlareController(),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 

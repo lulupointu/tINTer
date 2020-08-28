@@ -3,10 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
-import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
 import 'package:tinterapp/Logic/repository/scolaire/discover_binomes_repository.dart';
 
 part 'discover_binomes_event.dart';
@@ -97,7 +95,7 @@ class DiscoverBinomesBloc extends Bloc<DiscoverBinomesEvent, DiscoverBinomesStat
         relationStatus: RelationStatusScolaire((r) => r
           ..login = null
           ..otherLogin = event.binome.login
-          ..status = event.enumRelationStatusScolaire,
+          ..statusScolaire = event.enumRelationStatusScolaire,
         ),
       );
     } catch (error) {

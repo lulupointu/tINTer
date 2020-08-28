@@ -17,12 +17,13 @@ class _$TokenSerializer implements StructuredSerializer<Token> {
   @override
   Iterable<Object> serialize(Serializers serializers, Token object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
-      'token',
-      serializers.serialize(object.token,
-          specifiedType: const FullType(String)),
-    ];
-
+    final result = <Object>[];
+    if (object.token != null) {
+      result
+        ..add('token')
+        ..add(serializers.serialize(object.token,
+            specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -55,11 +56,7 @@ class _$Token extends Token {
   factory _$Token([void Function(TokenBuilder) updates]) =>
       (new TokenBuilder()..update(updates)).build();
 
-  _$Token._({this.token}) : super._() {
-    if (token == null) {
-      throw new BuiltValueNullFieldError('Token', 'token');
-    }
-  }
+  _$Token._({this.token}) : super._();
 
   @override
   Token rebuild(void Function(TokenBuilder) updates) =>

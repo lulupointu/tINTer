@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import 'const.dart';
 
@@ -51,9 +52,21 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 fractions['selectedRectangle'])) /
         4; // /4 because there are 4 spaces.
 
-    return Container(
-      height: 60,
-      color: TinterColors.background,
+    return Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return TweenAnimationBuilder(
+              duration: Duration(milliseconds: 500),
+              tween: ColorTween(begin: tinterTheme.colors.background, end: tinterTheme.colors.background),
+              builder: (context, animatedColor, child) {
+                return Container(
+              height: 60,
+              color: animatedColor,
+              child: child,
+        );
+            },
+            child: child  ,
+          );
+      },
       child: Center(
         child: Container(
           height: selectedRectangleHeight,
@@ -85,14 +98,18 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           duration: duration,
           curve: curve,
           opacity: selection[0].toDouble(),
-          child: AnimatedContainer(
-            duration: duration,
-            curve: curve,
-            decoration: BoxDecoration(
-              color: TinterColors.secondaryAccent,
-              borderRadius: BorderRadius.all(Radius.circular(60.0)),
-            ),
-            width: parentWidth * fractions['selectedRectangle'] * selection[0],
+          child: Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return AnimatedContainer(
+                duration: duration,
+                curve: curve,
+                decoration: BoxDecoration(
+                  color: tinterTheme.colors.secondary,
+                  borderRadius: BorderRadius.all(Radius.circular(60.0)),
+                ),
+                width: parentWidth * fractions['selectedRectangle'] * selection[0],
+              );
+            }
           ),
         ),
       ),
@@ -122,12 +139,22 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             curve: curve,
             opacity: selection[0].toDouble(),
             child: Center(
-              child: AutoSizeText(
-                "Matches",
-                textAlign: TextAlign.center,
-                maxFontSize: 18,
-                style: TinterTextStyle.BottomNavigationBarTextStyle,
-                maxLines: 1,
+              child: Consumer<TinterTheme>(
+                  builder: (context, tinterTheme, child) {
+                    return TweenAnimationBuilder(
+                        duration: Duration(milliseconds: 500),
+                        tween: ColorTween(begin: tinterTheme.textStyle.bottomNavigationBarTextStyle.color, end: tinterTheme.textStyle.bottomNavigationBarTextStyle.color),
+                        builder: (context, animatedColor, child) {
+                          return AutoSizeText(
+                        "Matches",
+                        textAlign: TextAlign.center,
+                        maxFontSize: 18,
+                        style: tinterTheme.textStyle.bottomNavigationBarTextStyle.copyWith(color: animatedColor),
+                        maxLines: 1,
+                  );
+                      }
+                    );
+                }
               ),
             ),
           ),
@@ -144,10 +171,20 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         height: selectedRectangleHeight,
         child: Center(
           child: Container(
-            child: SvgPicture.asset(
-              'assets/icons/match.svg',
-              width: fractions['match'] * parentWidth,
-              color: selection[0] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
+            child: Consumer<TinterTheme>(
+                builder: (context, tinterTheme, child) {
+                  return TweenAnimationBuilder(
+                      duration: Duration(milliseconds: 500),
+                      tween: ColorTween(begin: selection[0] == 0 ? tinterTheme.colors.secondary : tinterTheme.colors.background, end: selection[0] == 0 ? tinterTheme.colors.secondary : tinterTheme.colors.background),
+                      builder: (context, animatedColor, child) {
+                        return SvgPicture.asset(
+                      'assets/icons/match.svg',
+                      width: fractions['match'] * parentWidth,
+                      color: animatedColor,
+                );
+                    }
+                  );
+              }
             ),
           ),
         ),
@@ -199,14 +236,18 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           duration: duration,
           curve: curve,
           opacity: selection[1].toDouble(),
-          child: AnimatedContainer(
-            duration: duration,
-            curve: curve,
-            decoration: BoxDecoration(
-              color: TinterColors.secondaryAccent,
-              borderRadius: BorderRadius.all(Radius.circular(60.0)),
-            ),
-            width: parentWidth * fractions['selectedRectangle'] * selection[1],
+          child: Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return AnimatedContainer(
+                duration: duration,
+                curve: curve,
+                decoration: BoxDecoration(
+                  color: tinterTheme.colors.secondary,
+                  borderRadius: BorderRadius.all(Radius.circular(60.0)),
+                ),
+                width: parentWidth * fractions['selectedRectangle'] * selection[1],
+              );
+            }
           ),
         ),
       ),
@@ -238,12 +279,22 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             curve: curve,
             opacity: selection[1].toDouble(),
             child: Center(
-              child: AutoSizeText(
-                "Discover",
-                textAlign: TextAlign.center,
-                maxFontSize: 18,
-                style: TinterTextStyle.BottomNavigationBarTextStyle,
-                maxLines: 1,
+              child: Consumer<TinterTheme>(
+                  builder: (context, tinterTheme, child) {
+                    return TweenAnimationBuilder(
+                        duration: Duration(milliseconds: 500),
+                        tween: ColorTween(begin: tinterTheme.textStyle.bottomNavigationBarTextStyle.color, end: tinterTheme.textStyle.bottomNavigationBarTextStyle.color),
+                        builder: (context, animatedColor, child) {
+                          return AutoSizeText(
+                        "Discover",
+                        textAlign: TextAlign.center,
+                        maxFontSize: 18,
+                        style: tinterTheme.textStyle.bottomNavigationBarTextStyle.copyWith(color: animatedColor),
+                        maxLines: 1,
+                  );
+                      }
+                    );
+                }
               ),
             ),
           ),
@@ -261,10 +312,20 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 selection[1] * (fractions['spaceBeforeIconInRectangle'])),
         height: selectedRectangleHeight,
         child: Center(
-          child: SvgPicture.asset(
-            'assets/icons/discover.svg',
-            width: fractions['discover'] * parentWidth,
-            color: selection[1] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
+          child: Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return TweenAnimationBuilder(
+                    duration: Duration(milliseconds: 500),
+                    tween: ColorTween(begin: selection[1] == 0 ? tinterTheme.colors.secondary : tinterTheme.colors.background, end: selection[1] == 0 ? tinterTheme.colors.secondary : tinterTheme.colors.background),
+                    builder: (context, animatedColor, child) {
+                      return SvgPicture.asset(
+                    'assets/icons/discover.svg',
+                    width: fractions['discover'] * parentWidth,
+                    color: animatedColor,
+              );
+                  }
+                );
+            }
           ),
         ),
       ),
@@ -317,14 +378,18 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           duration: duration,
           curve: curve,
           opacity: selection[2].toDouble(),
-          child: AnimatedContainer(
-            duration: duration,
-            curve: curve,
-            decoration: BoxDecoration(
-              color: TinterColors.secondaryAccent,
-              borderRadius: BorderRadius.all(Radius.circular(60.0)),
-            ),
-            width: parentWidth * fractions['selectedRectangle'] * selection[2],
+          child: Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return AnimatedContainer(
+                duration: duration,
+                curve: curve,
+                decoration: BoxDecoration(
+                  color: tinterTheme.colors.secondary,
+                  borderRadius: BorderRadius.all(Radius.circular(60.0)),
+                ),
+                width: parentWidth * fractions['selectedRectangle'] * selection[2],
+              );
+            }
           ),
         ),
       ),
@@ -357,12 +422,22 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             curve: curve,
             opacity: selection[2].toDouble(),
             child: Center(
-              child: AutoSizeText(
-                "Profile",
-                textAlign: TextAlign.center,
-                maxFontSize: 18,
-                style: TinterTextStyle.BottomNavigationBarTextStyle,
-                maxLines: 1,
+              child: Consumer<TinterTheme>(
+                  builder: (context, tinterTheme, child) {
+                    return TweenAnimationBuilder(
+                        duration: Duration(milliseconds: 500),
+                        tween: ColorTween(begin: tinterTheme.textStyle.bottomNavigationBarTextStyle.color, end: tinterTheme.textStyle.bottomNavigationBarTextStyle.color),
+                        builder: (context, animatedColor, child) {
+                          return AutoSizeText(
+                        "Profile",
+                        textAlign: TextAlign.center,
+                        maxFontSize: 18,
+                        style: tinterTheme.textStyle.bottomNavigationBarTextStyle.copyWith(color: animatedColor),
+                        maxLines: 1,
+                  );
+                      }
+                    );
+                }
               ),
             ),
           ),
@@ -381,10 +456,20 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 selection[2] * (fractions['spaceBeforeIconInRectangle'])),
         height: selectedRectangleHeight,
         child: Center(
-          child: SvgPicture.asset(
-            'assets/icons/profile.svg',
-            width: fractions['profile'] * parentWidth,
-            color: selection[2] == 0 ? TinterColors.secondaryAccent : TinterColors.white,
+          child: Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return TweenAnimationBuilder(
+                    duration: Duration(milliseconds: 500),
+                    tween: ColorTween(begin: selection[2] == 0 ? tinterTheme.colors.secondary : tinterTheme.colors.background, end: selection[2] == 0 ? tinterTheme.colors.secondary : tinterTheme.colors.background),
+                    builder: (context, animatedColor, child) {
+                      return SvgPicture.asset(
+                    'assets/icons/profile.svg',
+                    width: fractions['profile'] * parentWidth,
+                    color: animatedColor,
+              );
+                  }
+                );
+            }
           ),
         ),
       ),
@@ -428,7 +513,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 //width: 30,
 //height: 30,
 //color: ColorTween(
-//begin: TinterColors.secondaryAccent,
-//end: TinterColors.white,
+//begin: tinterTheme.colorss.secondaryAccent,
+//end: tinterTheme.colorss.white,
 //).evaluate(animationMatch),
 //)

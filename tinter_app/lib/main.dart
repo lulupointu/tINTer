@@ -1,29 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:tinterapp/Logic/blocs/associatif/user_associatif/user_associatif_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
+import 'package:tinterapp/Logic/blocs/scolaire/discover_binomes/discover_binomes_bloc.dart';
+import 'package:tinterapp/Logic/blocs/scolaire/matched_binomes/binomes_bloc.dart';
+import 'package:tinterapp/Logic/blocs/scolaire/matieres/matieres_bloc.dart';
+import 'package:tinterapp/Logic/blocs/scolaire/user_scolaire_search/user_scolaire_search_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/associations/associations_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/blocs/associatif/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
+import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
+import 'package:tinterapp/Logic/repository/scolaire/discover_binomes_repository.dart';
+import 'package:tinterapp/Logic/repository/scolaire/matched_binomes_repository.dart';
+import 'package:tinterapp/Logic/repository/scolaire/matieres_repository.dart';
 import 'package:tinterapp/Logic/repository/shared/associations_repository.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
 import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';
-import 'package:tinterapp/Logic/repository/associatif/user_associatif_repository.dart';
+import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
-import 'package:tinterapp/UI/discover/discover.dart';
-import 'package:tinterapp/UI/login/login.dart';
-import 'package:tinterapp/UI/profile_creation/create_profile.dart';
-import 'package:tinterapp/UI/shared_element/const.dart';
-import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
-import 'package:tinterapp/UI/shared_element/tinter_bottom_navigation_bar.dart';
-import 'package:tinterapp/UI/matches/matches.dart';
-import 'package:tinterapp/UI/user_profile/user_profile.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:tinterapp/UI/associatif/discover/discover.dart';
+import 'package:tinterapp/UI/associatif/matches/matches.dart';
+import 'package:tinterapp/UI/scolaire/binomes/binomes.dart';
+import 'package:tinterapp/UI/scolaire/discover/discover.dart';
+import 'package:tinterapp/UI/shared/login/login.dart';
+import 'package:tinterapp/UI/shared/profile_creation/create_profile.dart';
+import 'package:tinterapp/UI/shared/shared_element/const.dart';
+import 'package:tinterapp/UI/shared/shared_element/tinter_bottom_navigation_bar.dart';
+import 'package:tinterapp/UI/shared/splash_screen/splash_screen.dart';
+import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -38,7 +46,7 @@ main() {
   final AuthenticationRepository authenticationRepository =
       AuthenticationRepository(tinterAPIClient: tinterAPIClient);
 
-  final UserAssociatifRepository userRepository = UserAssociatifRepository(
+  final UserRepository userRepository = UserRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   final MatchedMatchesRepository matchedMatchesRepository = MatchedMatchesRepository(
@@ -47,7 +55,16 @@ main() {
   final DiscoverMatchesRepository discoverMatchesRepository = DiscoverMatchesRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
+  final MatchedBinomesRepository matchedBinomesRepository = MatchedBinomesRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
+
+  final DiscoverBinomesRepository discoverBinomesRepository = DiscoverBinomesRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
+
   final AssociationsRepository associationsRepository = AssociationsRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
+
+  final MatieresRepository matieresRepository = MatieresRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   runApp(
@@ -58,8 +75,8 @@ main() {
               AuthenticationBloc(authenticationRepository: authenticationRepository),
           child: MultiBlocProvider(
             providers: [
-              BlocProvider<UserAssociatifBloc>(
-                create: (BuildContext context) => UserAssociatifBloc(
+              BlocProvider<UserBloc>(
+                create: (BuildContext context) => UserBloc(
                   userRepository: userRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
@@ -70,31 +87,59 @@ main() {
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
-              BlocProvider(
+              BlocProvider<DiscoverMatchesBloc>(
                 create: (BuildContext context) => DiscoverMatchesBloc(
                   discoverMatchesRepository: discoverMatchesRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
-              BlocProvider(
-                create: (BuildContext context) => AssociationsBloc(
-                  associationsRepository: associationsRepository,
+              BlocProvider<MatchedBinomesBloc>(
+                create: (BuildContext context) => MatchedBinomesBloc(
+                  matchedBinomesRepository: matchedBinomesRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
-              BlocProvider(
+              BlocProvider<DiscoverBinomesBloc>(
+                create: (BuildContext context) => DiscoverBinomesBloc(
+                  discoverBinomesRepository: discoverBinomesRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
+              ),
+              BlocProvider<UserAssociatifSearchBloc>(
                 create: (BuildContext context) => UserAssociatifSearchBloc(
                   userRepository: userRepository,
                   matchedMatchesRepository: matchedMatchesRepository,
                   authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                 ),
               ),
-            ],
-            child: MaterialApp(
-              home: SafeArea(
-                child: Tinter(),
+              BlocProvider<UserScolaireSearchBloc>(
+                create: (BuildContext context) => UserScolaireSearchBloc(
+                  userRepository: userRepository,
+                  matchedBinomesRepository: matchedBinomesRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
               ),
-              navigatorObservers: [routeObserver],
+              BlocProvider<AssociationsBloc>(
+                create: (BuildContext context) => AssociationsBloc(
+                  associationsRepository: associationsRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
+              ),
+              BlocProvider<MatieresBloc>(
+                create: (BuildContext context) => MatieresBloc(
+                  matieresRepository: matieresRepository,
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                ),
+              ),
+            ],
+            child: ChangeNotifierProvider<TinterTheme>(
+              create: (_) => TinterTheme(),
+              child: MaterialApp(
+                home: SafeArea(
+                  child: Tinter(),
+                ),
+                navigatorObservers: [routeObserver],
+              ),
             ),
           ),
         ),
@@ -122,18 +167,18 @@ class Tinter extends StatelessWidget {
         }
 
         // next check on the user state
-        return BlocBuilder<UserAssociatifBloc, UserAssociatifState>(
-          builder: (BuildContext context, UserAssociatifState userState) {
+        return BlocBuilder<UserBloc, UserState>(
+          builder: (BuildContext context, UserState userState) {
             if (userState is UserInitialState) {
-              BlocProvider.of<UserAssociatifBloc>(context).add(UserInitEvent());
+              BlocProvider.of<UserBloc>(context).add(UserInitEvent());
               return SplashScreen();
             } else if (userState is UserInitializingState) {
               return SplashScreen();
             } else if (userState is NewUserSavingState) {
               return SplashScreen();
-            } else if (userState is NewUserAssociatifState) {
+            } else if (userState is NewUserState) {
               return UserCreationTab();
-            } else if (userState is KnownUserAssociatifState) {
+            } else if (userState is KnownUserState) {
               return TinterHome();
             }
             return Center(child: Text('Error, Unknown state: ${userState.runtimeType}'));
@@ -145,7 +190,8 @@ class Tinter extends StatelessWidget {
 }
 
 class TinterHome extends StatefulWidget {
-  final List<Widget> tabs = [MatchsTab(), DiscoverTab(), UserTab()];
+  final List<Widget> tabsAssociatif = [MatchsTab(), DiscoverAssociatifTab(), UserTab()];
+  final List<Widget> tabsScolaire = [BinomesTab(), DiscoverScolaireTab(), UserTab()];
 
   @override
   _TinterHomeState createState() => _TinterHomeState();
@@ -156,11 +202,20 @@ class _TinterHomeState extends State<TinterHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: TinterColors.background,
-      body: widget.tabs[_selectedTab],
-      bottomNavigationBar: CustomBottomNavigationBar(
-        onTap: _onItemTapped,
+    return Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Scaffold(
+          backgroundColor: tinterTheme.colors.background,
+          body: child,
+          bottomNavigationBar: CustomBottomNavigationBar(
+            onTap: _onItemTapped,
+          ),
+        );
+      },
+      child:  Consumer<TinterTheme>(
+          builder: (context, tinterTheme, child) {
+            return tinterTheme.theme == MyTheme.dark ? widget.tabsAssociatif[_selectedTab] : widget.tabsScolaire[_selectedTab] ;
+        }
       ),
     );
   }

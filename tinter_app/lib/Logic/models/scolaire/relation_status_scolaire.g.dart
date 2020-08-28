@@ -68,17 +68,19 @@ class _$RelationStatusScolaireSerializer
       Serializers serializers, RelationStatusScolaire object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'login',
-      serializers.serialize(object.login,
-          specifiedType: const FullType(String)),
       'otherLogin',
       serializers.serialize(object.otherLogin,
           specifiedType: const FullType(String)),
-      'status',
-      serializers.serialize(object.status,
+      'statusScolaire',
+      serializers.serialize(object.statusScolaire,
           specifiedType: const FullType(EnumRelationStatusScolaire)),
     ];
-
+    if (object.login != null) {
+      result
+        ..add('login')
+        ..add(serializers.serialize(object.login,
+            specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -102,8 +104,8 @@ class _$RelationStatusScolaireSerializer
           result.otherLogin = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'status':
-          result.status = serializers.deserialize(value,
+        case 'statusScolaire':
+          result.statusScolaire = serializers.deserialize(value,
                   specifiedType: const FullType(EnumRelationStatusScolaire))
               as EnumRelationStatusScolaire;
           break;
@@ -139,23 +141,21 @@ class _$RelationStatusScolaire extends RelationStatusScolaire {
   @override
   final String otherLogin;
   @override
-  final EnumRelationStatusScolaire status;
+  final EnumRelationStatusScolaire statusScolaire;
 
   factory _$RelationStatusScolaire(
           [void Function(RelationStatusScolaireBuilder) updates]) =>
       (new RelationStatusScolaireBuilder()..update(updates)).build();
 
-  _$RelationStatusScolaire._({this.login, this.otherLogin, this.status})
+  _$RelationStatusScolaire._({this.login, this.otherLogin, this.statusScolaire})
       : super._() {
-    if (login == null) {
-      throw new BuiltValueNullFieldError('RelationStatusScolaire', 'login');
-    }
     if (otherLogin == null) {
       throw new BuiltValueNullFieldError(
           'RelationStatusScolaire', 'otherLogin');
     }
-    if (status == null) {
-      throw new BuiltValueNullFieldError('RelationStatusScolaire', 'status');
+    if (statusScolaire == null) {
+      throw new BuiltValueNullFieldError(
+          'RelationStatusScolaire', 'statusScolaire');
     }
   }
 
@@ -174,13 +174,13 @@ class _$RelationStatusScolaire extends RelationStatusScolaire {
     return other is RelationStatusScolaire &&
         login == other.login &&
         otherLogin == other.otherLogin &&
-        status == other.status;
+        statusScolaire == other.statusScolaire;
   }
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc($jc(0, login.hashCode), otherLogin.hashCode), status.hashCode));
+    return $jf($jc($jc($jc(0, login.hashCode), otherLogin.hashCode),
+        statusScolaire.hashCode));
   }
 
   @override
@@ -188,7 +188,7 @@ class _$RelationStatusScolaire extends RelationStatusScolaire {
     return (newBuiltValueToStringHelper('RelationStatusScolaire')
           ..add('login', login)
           ..add('otherLogin', otherLogin)
-          ..add('status', status))
+          ..add('statusScolaire', statusScolaire))
         .toString();
   }
 }
@@ -205,9 +205,10 @@ class RelationStatusScolaireBuilder
   String get otherLogin => _$this._otherLogin;
   set otherLogin(String otherLogin) => _$this._otherLogin = otherLogin;
 
-  EnumRelationStatusScolaire _status;
-  EnumRelationStatusScolaire get status => _$this._status;
-  set status(EnumRelationStatusScolaire status) => _$this._status = status;
+  EnumRelationStatusScolaire _statusScolaire;
+  EnumRelationStatusScolaire get statusScolaire => _$this._statusScolaire;
+  set statusScolaire(EnumRelationStatusScolaire statusScolaire) =>
+      _$this._statusScolaire = statusScolaire;
 
   RelationStatusScolaireBuilder();
 
@@ -215,7 +216,7 @@ class RelationStatusScolaireBuilder
     if (_$v != null) {
       _login = _$v.login;
       _otherLogin = _$v.otherLogin;
-      _status = _$v.status;
+      _statusScolaire = _$v.statusScolaire;
       _$v = null;
     }
     return this;
@@ -238,7 +239,9 @@ class RelationStatusScolaireBuilder
   _$RelationStatusScolaire build() {
     final _$result = _$v ??
         new _$RelationStatusScolaire._(
-            login: login, otherLogin: otherLogin, status: status);
+            login: login,
+            otherLogin: otherLogin,
+            statusScolaire: statusScolaire);
     replace(_$result);
     return _$result;
   }

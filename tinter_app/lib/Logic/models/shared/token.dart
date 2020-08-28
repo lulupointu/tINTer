@@ -1,4 +1,3 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinterapp/Logic/models/serializers.dart';
@@ -6,6 +5,7 @@ import 'package:tinterapp/Logic/models/serializers.dart';
 part 'token.g.dart';
 
 abstract class Token implements Built<Token, TokenBuilder> {
+  @nullable
   String get token;
 
   Token._();

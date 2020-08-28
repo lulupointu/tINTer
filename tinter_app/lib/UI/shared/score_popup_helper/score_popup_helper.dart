@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tinterapp/UI/shared/shared_element/const.dart';
+
 void showWhatIsScore(BuildContext context) {
   showDialog(
     context: context,

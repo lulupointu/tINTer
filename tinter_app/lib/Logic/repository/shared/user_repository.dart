@@ -5,7 +5,6 @@ import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
-import 'package:tinterapp/Logic/models/associatif/user_associatif.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
@@ -18,6 +17,31 @@ class UserRepository {
 
   UserRepository({@required this.tinterAPIClient, @required this.authenticationRepository})
       : assert(tinterAPIClient != null);
+
+  Future<bool> isKnown() async {
+    Token token;
+    try {
+      token = await AuthenticationRepository.getAuthenticationToken();
+    } catch (error) {
+      print('Cannot get User:');
+      print(error);
+      throw error;
+    }
+    print('getUser using token ${token.token}');
+
+    TinterApiResponse<bool> tinterApiResponse;
+    try {
+      tinterApiResponse = await tinterAPIClient.isKnownUser(token: token);
+    } on TinterAPIError catch (error) {
+      await authenticationRepository.checkIfNewToken(oldToken: token, newToken: error.token);
+      throw UnknownUserError();
+    }
+
+    await authenticationRepository.checkIfNewToken(
+        oldToken: token, newToken: tinterApiResponse.token);
+
+    return tinterApiResponse.value;
+  }
 
   Future<BuildUser> getUser() async {
     Token token;
@@ -57,10 +81,10 @@ class UserRepository {
       newToken = (await tinterAPIClient.updateUser(user: user, token: token)).token;
 
       // If not null this means that the profile picture has been updated
-//      if (user.profilePictureLocalPath != null){
-//        await tinterAPIClient.updateUserProfilePicture(
-//            profilePictureLocalPath: user.profilePictureLocalPath, token: token);
-//      }
+      if (user.profilePictureLocalPath != null){
+        await tinterAPIClient.updateUserProfilePicture(
+            profilePictureLocalPath: user.profilePictureLocalPath, token: token);
+      }
     } on TinterAPIError catch (error) {
       await authenticationRepository.checkIfNewToken(oldToken: token, newToken: error.token);
       print(error);
@@ -83,6 +107,8 @@ class UserRepository {
     Token newToken;
     try {
       newToken = (await tinterAPIClient.createUser(user: user, token: token)).token;
+
+      // If not null this means that the profile picture has been updated
       if (user.profilePictureLocalPath != null) {
         await tinterAPIClient.updateUserProfilePicture(
             profilePictureLocalPath: user.profilePictureLocalPath, token: token);
@@ -197,7 +223,7 @@ class UserRepository {
     TinterApiResponse<void> tinterApiResponse;
     try {
       tinterApiResponse = await tinterAPIClient.deleteUserAccount(token: token);
-    } on TinterAPIError catch (error) {
+    } on TinterAPIError catch (_) {
       throw UnknownUserError();
     }
 

@@ -22,8 +22,8 @@ class UserScolaireSearchIgnoreEvent extends UserScolaireSearchEvent {
 class UserScolaireSearchChangeStatusEvent extends UserScolaireSearchEvent {
   final SearchedUserScolaire searchedUser;
   final MatchStatus newStatus;
-  final EnumRelationStatusAssociatif enumRelationStatusAssociatif;
+  final EnumRelationStatusScolaire enumRelationStatusScolaire;
 
-  UserScolaireSearchChangeStatusEvent({@required this.searchedUser, @required this.newStatus, @required this.enumRelationStatusAssociatif});
+  UserScolaireSearchChangeStatusEvent({@required this.searchedUser, @required this.newStatus, @required this.enumRelationStatusScolaire});
 }
 

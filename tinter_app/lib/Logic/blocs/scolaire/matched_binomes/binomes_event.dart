@@ -20,42 +20,42 @@ class MatchedBinomesRequestedEvent extends MatchedBinomesEvent {}
 
 abstract class ChangeStatusMatchedBinomesEvent extends MatchedBinomesEvent {
   final BuildBinome binome;
-  final EnumRelationStatusAssociatif enumRelationStatusAssociatif;
+  final EnumRelationStatusScolaire enumRelationStatusScolaire;
   final BinomeStatus binomeStatus;
 
   const ChangeStatusMatchedBinomesEvent({
     @required this.binome,
-    @required this.enumRelationStatusAssociatif,
+    @required this.enumRelationStatusScolaire,
     @required this.binomeStatus,
   });
 
   @override
-  List<Object> get props => [binome, enumRelationStatusAssociatif];
+  List<Object> get props => [binome, enumRelationStatusScolaire];
 }
 
-class AskParrainEvent extends ChangeStatusMatchedBinomesEvent {
-  const AskParrainEvent({@required BuildBinome binome})
+class AskBinomeEvent extends ChangeStatusMatchedBinomesEvent {
+  const AskBinomeEvent({@required BuildBinome binome})
       : super(
           binome: binome,
-          enumRelationStatusAssociatif: EnumRelationStatusAssociatif.askedParrain,
-          binomeStatus: BinomeStatus.youAskedParrain,
+          enumRelationStatusScolaire: EnumRelationStatusScolaire.askedBinome,
+          binomeStatus: BinomeStatus.youAskedBinome,
         );
 }
 
-class AcceptParrainEvent extends ChangeStatusMatchedBinomesEvent {
-  const AcceptParrainEvent({@required BuildBinome binome})
+class AcceptBinomeEvent extends ChangeStatusMatchedBinomesEvent {
+  const AcceptBinomeEvent({@required BuildBinome binome})
       : super(
           binome: binome,
-          enumRelationStatusAssociatif: EnumRelationStatusAssociatif.acceptedParrain,
-          binomeStatus: BinomeStatus.parrainAccepted,
+          enumRelationStatusScolaire: EnumRelationStatusScolaire.acceptedBinome,
+          binomeStatus: BinomeStatus.binomeAccepted,
         );
 }
 
-class RefuseParrainEvent extends ChangeStatusMatchedBinomesEvent {
-  const RefuseParrainEvent({@required BuildBinome binome})
+class RefuseBinomeEvent extends ChangeStatusMatchedBinomesEvent {
+  const RefuseBinomeEvent({@required BuildBinome binome})
       : super(
           binome: binome,
-          enumRelationStatusAssociatif: EnumRelationStatusAssociatif.refusedParrain,
-          binomeStatus: BinomeStatus.parrainYouRefused,
+          enumRelationStatusScolaire: EnumRelationStatusScolaire.refusedBinome,
+          binomeStatus: BinomeStatus.binomeYouRefused,
         );
 }

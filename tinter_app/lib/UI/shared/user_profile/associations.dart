@@ -6,12 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tinterapp/Logic/blocs/shared/associations/associations_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
-import 'package:tinterapp/UI/shared_element/custom_flare_controller.dart';
+import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import '../shared_element/const.dart';
 
 main() => runApp(MaterialApp(
@@ -67,69 +68,79 @@ class _AssociationsTabState extends State<AssociationsTab> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: TinterColors.background,
-        resizeToAvoidBottomInset: false,
-        appBar: AllAssociationsAppBar(
-          height: 120,
-        ),
-        body: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+      child: Consumer<TinterTheme>(
+          builder: (context, tinterTheme, child) {
+            return Scaffold(
+            backgroundColor: tinterTheme.colors.background,
+            resizeToAvoidBottomInset: false,
+            appBar: AllAssociationsAppBar(
+              height: 120,
+            ),
+            body: child,
+          );
+        },
+        child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
           return Padding(
             padding: EdgeInsets.only(
                 top: constraints.maxHeight * AssociationsTab.fractions['topSeparator']),
-            child: SlidingUpPanel(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40.0),
-                topRight: Radius.circular(40.0),
-              ),
-              color: TinterColors.grey,
-              backdropEnabled: true,
-              backdropOpacity: 1.0,
-              backdropColor: TinterColors.background,
-              controller: _panelController,
-              maxHeight: constraints.maxHeight,
-              minHeight: constraints.maxHeight *
-                  (1 -
-                      (AssociationsTab.fractions['topSeparator'] +
-                          AssociationsTab.fractions['sheetSeparator'] +
-                          AssociationsTab.fractions['likedAssociations'] +
-                          AssociationsTab.fractions['titles'] +
-                          AssociationsTab.fractions['titlesSeparator'])),
-              body: LikedAssociationsWidgetWithTitle(
-                titleHeight: constraints.maxHeight * AssociationsTab.fractions['titles'],
-                titleSeparatorHeight:
+            child: Consumer<TinterTheme>(
+                builder: (context, tinterTheme, child) {
+                  return SlidingUpPanel(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40.0),
+                    topRight: Radius.circular(40.0),
+                  ),
+                  margin: EdgeInsets.only(top: 5),
+                  color: tinterTheme.colors.bottomSheet,
+                  backdropEnabled: true,
+                  backdropOpacity: 1.0,
+                  backdropColor: tinterTheme.colors.background,
+                  controller: _panelController,
+                  maxHeight: constraints.maxHeight,
+                  minHeight: constraints.maxHeight *
+                      (1 -
+                          (AssociationsTab.fractions['topSeparator'] +
+                              AssociationsTab.fractions['sheetSeparator'] +
+                              AssociationsTab.fractions['likedAssociations'] +
+                              AssociationsTab.fractions['titles'] +
+                              AssociationsTab.fractions['titlesSeparator'])),
+                  body: LikedAssociationsWidgetWithTitle(
+                    titleHeight: constraints.maxHeight * AssociationsTab.fractions['titles'],
+                    titleSeparatorHeight:
                     constraints.maxHeight * AssociationsTab.fractions['titlesSeparator'],
-                likedAssociationsHeight:
+                    likedAssociationsHeight:
                     constraints.maxHeight * AssociationsTab.fractions['likedAssociations'],
-                width: constraints.maxWidth,
-                margin: constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
-              ),
-              panelBuilder: (ScrollController scrollController) {
-                return AllAssociationsSheetBody(
-                  scrollController: scrollController,
-                  keyboardMargin: KeyboardVisibility.isVisible
-                      ? MediaQuery.of(context).viewInsets.bottom
-                      : 0,
-                  width: constraints.maxWidth,
-                  margin:
+                    width: constraints.maxWidth,
+                    margin: constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
+                  ),
+                  panelBuilder: (ScrollController scrollController) {
+                    return AllAssociationsSheetBody(
+                      scrollController: scrollController,
+                      keyboardMargin: KeyboardVisibility.isVisible
+                          ? MediaQuery.of(context).viewInsets.bottom
+                          : 0,
+                      width: constraints.maxWidth,
+                      margin:
                       constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
-                  headerHeight: constraints.maxHeight * AssociationsTab.fractions['titles'],
-                  headerSpacing:
+                      headerHeight: constraints.maxHeight * AssociationsTab.fractions['titles'],
+                      headerSpacing:
                       constraints.maxHeight * AssociationsTab.fractions['headerSpacing'],
-                  searchString: searchString,
-                );
-              },
-              header: TitleAndSearchBarAllAssociations(
-                height: constraints.maxHeight * AssociationsTab.fractions['titles'],
-                width: constraints.maxWidth,
-                margin: constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
-                headerSpacing:
+                      searchString: searchString,
+                    );
+                  },
+                  header: TitleAndSearchBarAllAssociations(
+                    height: constraints.maxHeight * AssociationsTab.fractions['titles'],
+                    width: constraints.maxWidth,
+                    margin: constraints.maxHeight * AssociationsTab.fractions['horizontalMargin'],
+                    headerSpacing:
                     constraints.maxHeight * AssociationsTab.fractions['headerSpacing'],
-                isSearching: isSearching,
-                searchString: searchString,
-                onSearch: onSearch,
-                clearSearch: clearSearch,
-              ),
+                    isSearching: isSearching,
+                    searchString: searchString,
+                    onSearch: onSearch,
+                    clearSearch: clearSearch,
+                  ),
+                );
+              }
             ),
           );
         }),
@@ -171,19 +182,27 @@ class AllAssociationsAppBar extends PreferredSize {
         alignment: AlignmentDirectional.topCenter,
         fit: StackFit.expand,
         children: <Widget>[
-          SvgPicture.asset(
-            'assets/profile/topProfile.svg',
-            color: TinterColors.primaryLight,
-            fit: BoxFit.fill,
+          Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return SvgPicture.asset(
+                'assets/profile/topProfile.svg',
+                color: tinterTheme.colors.primary,
+                fit: BoxFit.fill,
+              );
+            }
           ),
           Align(
             alignment: Alignment.center,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: AutoSizeText(
-                'Associations',
-                style: TinterTextStyle.headline1,
-                textAlign: TextAlign.center,
+              child: Consumer<TinterTheme>(
+                  builder: (context, tinterTheme, child) {
+                    return AutoSizeText(
+                    'Associations',
+                    style: tinterTheme.textStyle.headline1,
+                    textAlign: TextAlign.center,
+                  );
+                }
               ),
             ),
           ),
@@ -193,10 +212,14 @@ class AllAssociationsAppBar extends PreferredSize {
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(
-                Icons.arrow_back,
-                size: 24,
-                color: TinterColors.hint,
+              icon: Consumer<TinterTheme>(
+                  builder: (context, tinterTheme, child) {
+                    return Icon(
+                    Icons.arrow_back,
+                    size: 24,
+                    color: tinterTheme.colors.primaryAccent,
+                  );
+                }
               ),
             ),
           ),
@@ -227,9 +250,13 @@ class LikedAssociationsWidgetWithTitle extends StatelessWidget {
           height: titleHeight,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: margin),
-            child: AutoSizeText(
-              'Vos Associations',
-              style: TinterTextStyle.headline2,
+            child: Consumer<TinterTheme>(
+                builder: (context, tinterTheme, child) {
+                  return AutoSizeText(
+                  'Vos Associations',
+                  style: tinterTheme.textStyle.headline2,
+                );
+              }
             ),
           ),
         ),
@@ -249,7 +276,7 @@ class LikedAssociationsWidgetWithTitle extends StatelessWidget {
 class LikedAssociationsWidget extends StatefulWidget {
   final duration = Duration(milliseconds: 300);
   final Curve curve = Curves.easeIn;
-  final double height, width, margin; // TODO : use margin
+  final double height, width, margin;
 
   LikedAssociationsWidget({
     @required this.height,
@@ -417,22 +444,26 @@ class NoLikedAssociationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: margin),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        color: TinterColors.primaryAccent,
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: Text(
-              'Aucune association selectionnée.',
-              style: TinterTextStyle.headline2,
-            ),
+    return Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Container(
+          margin: EdgeInsets.symmetric(horizontal: margin),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            color: tinterTheme.colors.primaryAccent,
           ),
-        ],
-      ),
+          child: Stack(
+            children: [
+              Center(
+                child: Text(
+                  'Aucune association selectionnée.',
+                  style: tinterTheme.textStyle.headline2.copyWith(color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     );
   }
 }
@@ -514,21 +545,26 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
               duration: duration,
               tween: Tween<double>(begin: 0, end: widget.selected ? 1 : 0),
               builder: (BuildContext context, double selectedValue, Widget child) {
-                return Container(
-                  margin: EdgeInsets.only(
-                      right: widget.margin, left: widget.isFirst ? widget.margin : 0.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: TinterColors.primaryAccent,
-                  ),
-                  width: widget.height +
-                      selectedValue *
-                          (widget.maxWidth -
-                              2 *
-                                  widget.maxWidth *
-                                  AssociationsTab.fractions['horizontalMargin'] -
-                              widget.height),
-                  height: widget.height,
+                return Consumer<TinterTheme>(
+                    builder: (context, tinterTheme, child) {
+                      return Container(
+                      margin: EdgeInsets.only(
+                          right: widget.margin, left: widget.isFirst ? widget.margin : 0.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        color: tinterTheme.colors.primaryAccent,
+                      ),
+                      width: widget.height +
+                          selectedValue *
+                              (widget.maxWidth -
+                                  2 *
+                                      widget.maxWidth *
+                                      AssociationsTab.fractions['horizontalMargin'] -
+                                  widget.height),
+                      height: widget.height,
+                      child: child,
+                    );
+                  },
                   child: Stack(
                     children: [
                       Align(
@@ -537,11 +573,15 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                           margin: EdgeInsets.all(8.0),
                           height: 20,
                           width: 20,
-                          child: FlareActor(
-                            'assets/icons/AnimatedExpand.flr',
-                            color: TinterColors.white,
-                            fit: BoxFit.contain,
-                            controller: flareController,
+                          child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                                return FlareActor(
+                                'assets/icons/AnimatedExpand.flr',
+                                color: Colors.black,
+                                fit: BoxFit.contain,
+                                controller: flareController,
+                              );
+                            }
                           ),
                         ),
                       ),
@@ -581,32 +621,37 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                                     ),
                                     Flexible(
                                       flex: (1000 * selectedValue).round() + 1,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          AutoSizeText(
-                                            widget.association.name,
-                                            style: TinterTextStyle.headline2.copyWith(
-                                              fontSize: TinterTextStyle.headline2.fontSize *
-                                                  selectedValue,
-                                            ),
-                                            maxLines: 1,
-                                          ),
-                                          Expanded(
-                                            child: SingleChildScrollView(
-                                              child: AutoSizeText(
-                                                widget.association.description,
-                                                style: TinterTextStyle.smallLabel.copyWith(
-                                                  fontSize:
-                                                      TinterTextStyle.smallLabel.fontSize *
-                                                          selectedValue,
+                                      child: Consumer<TinterTheme>(
+                                          builder: (context, tinterTheme, child) {
+                                            return Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              AutoSizeText(
+                                                widget.association.name,
+                                                style: tinterTheme.textStyle.headline2.copyWith(
+                                                  fontSize: tinterTheme.textStyle.headline2.fontSize *
+                                                      selectedValue,
+                                                  color: Colors.black
                                                 ),
-                                                maxLines: 3,
+                                                maxLines: 1,
                                               ),
-                                            ),
-                                          ),
-                                        ],
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  child: AutoSizeText(
+                                                    widget.association.description,
+                                                    style: tinterTheme.textStyle.smallLabel.copyWith(
+                                                      fontSize:
+                                                      tinterTheme.textStyle.smallLabel.fontSize *
+                                                          selectedValue,
+                                                    ),
+                                                    maxLines: 3,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
                                       ),
                                     ),
                                   ],
@@ -615,22 +660,31 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                             ),
                             Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                widget.association.name,
-                                style: TinterTextStyle.headline2.copyWith(
-                                  fontSize:
-                                      TinterTextStyle.headline2.fontSize * (1 - selectedValue),
-                                ),
+                              child: Consumer<TinterTheme>(
+                                  builder: (context, tinterTheme, child) {
+                                    return Text(
+                                    widget.association.name,
+                                    style: tinterTheme.textStyle.headline2.copyWith(
+                                      fontSize:
+                                      tinterTheme.textStyle.headline2.fontSize * (1 - selectedValue),
+                                      color: Colors.black
+                                    ),
+                                  );
+                                }
                               ),
                             ),
                             InkWell(
                               onTap: widget.onDislike,
                               child: Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Icon(
-                                  Icons.favorite,
-                                  color: TinterColors.secondaryAccent,
-                                  size: 28 + 6 * selectedValue,
+                                child: Consumer<TinterTheme>(
+                                    builder: (context, tinterTheme, child) {
+                                      return Icon(
+                                      Icons.favorite,
+                                      color: tinterTheme.colors.secondary,
+                                      size: 28 + 6 * selectedValue,
+                                    );
+                                  }
                                 ),
                               ),
                             ),
@@ -671,67 +725,72 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: width - 2 * margin,
-      color: TinterColors.grey,
-      margin: EdgeInsets.only(left: margin, right: margin, top: headerSpacing),
-      child: Stack(
-        alignment: Alignment.centerLeft,
-        children: [
-          AnimatedOpacity(
-            duration: duration,
-            opacity: isSearching ? 0 : 1,
-            child: Text(
-              'Toutes les associations',
-              style: TinterTextStyle.headline2,
-              maxLines: 1,
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: InkWell(
-              onTap: () => onSearch(""),
-              child: AnimatedContainer(
+    return Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Container(
+          height: height,
+          width: width - 2 * margin,
+          color: tinterTheme.colors.bottomSheet,
+          margin: EdgeInsets.only(left: margin, right: margin, top: headerSpacing),
+          child: Stack(
+            alignment: Alignment.centerLeft,
+            children: [
+              AnimatedOpacity(
                 duration: duration,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  color: TinterColors.primaryAccent,
+                opacity: isSearching ? 0 : 1,
+                child: Text(
+                  'Toutes les associations',
+                  style: tinterTheme.textStyle.headline2.copyWith(color: tinterTheme.colors.defaultTextColor),
+                  maxLines: 1,
                 ),
-                width: isSearching ? width : height,
-                height: height,
-                child: !isSearching
-                    ? Icon(
-                        Icons.search,
-                        color: TinterColors.hint,
-                      )
-                    : TextField(
-                        textInputAction: TextInputAction.search,
-                        decoration: InputDecoration(
-                          focusedBorder: InputBorder.none,
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: TinterColors.hint,
-                          ),
-                          suffixIcon: searchString == ""
-                              ? null
-                              : InkWell(
-                                  onTap: clearSearch,
-                                  child: Icon(
-                                    Icons.clear,
-                                    color: TinterColors.white,
-                                  ),
-                                ),
-                        ),
-                        autofocus: isSearching,
-                        maxLines: 1,
-                        onChanged: (String text) => onSearch(text),
-                      ),
               ),
-            ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () => onSearch(""),
+                  child: AnimatedContainer(
+                    duration: duration,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      color: tinterTheme.colors.primaryAccent,
+                    ),
+                    width: isSearching ? width : height,
+                    height: height,
+                    child: !isSearching
+                        ? Icon(
+                            Icons.search,
+                            color: Colors.black,
+                          )
+                        : TextField(
+                            textInputAction: TextInputAction.search,
+                            decoration: InputDecoration(
+                              focusedBorder: InputBorder.none,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Colors.black,
+                              ),
+                              suffixIcon: searchString == ""
+                                  ? null
+                                  : InkWell(
+                                      onTap: clearSearch,
+                                      child: Icon(
+                                        Icons.clear,
+                                        color: Colors.black,
+                                        size: 22,
+                                      ),
+                                    ),
+                            ),
+                            autofocus: isSearching,
+                            maxLines: 1,
+                            onChanged: (String text) => onSearch(text),
+                          ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 }
@@ -799,7 +858,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
               },
               itemBuilder: (BuildContext context, int index) {
                 if (!(userState is UserLoadSuccessState)) {
-                  return CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
                 }
                 final bool liked = (userState as UserLoadSuccessState)
                     .user
@@ -856,46 +915,50 @@ class AssociationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        color: TinterColors.primary,
-      ),
-      child: ListTile(
-        leading: Container(
-          height: double.maxFinite,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            width: 50,
-            height: 50,
-            child: ClipOval(
+    return Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            color: tinterTheme.colors.primary,
+          ),
+          child: ListTile(
+            leading: Container(
+              height: double.maxFinite,
               child: Container(
+                alignment: Alignment.centerLeft,
                 width: 50,
                 height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.white,
+                child: ClipOval(
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: getLogoFromAssociation(associationName: association.name),
+                  ),
                 ),
-                child: getLogoFromAssociation(associationName: association.name),
+              ),
+            ),
+            title: Text(
+              association.name,
+              style: tinterTheme.textStyle.headline2,
+            ),
+            subtitle: Text(
+              association.description,
+              style: tinterTheme.textStyle.bigLabel,
+            ),
+            trailing: IconButton(
+              onPressed: onLike,
+              icon: Icon(
+                liked ? Icons.favorite : Icons.favorite_border,
+                color: tinterTheme.colors.secondary,
               ),
             ),
           ),
-        ),
-        title: Text(
-          association.name,
-          style: TinterTextStyle.headline2,
-        ),
-        subtitle: Text(
-          association.description,
-          style: TinterTextStyle.bigLabel,
-        ),
-        trailing: IconButton(
-          onPressed: onLike,
-          icon: Icon(
-            liked ? Icons.favorite : Icons.favorite_border,
-            color: TinterColors.secondaryAccent,
-          ),
-        ),
-      ),
+        );
+      }
     );
   }
 }

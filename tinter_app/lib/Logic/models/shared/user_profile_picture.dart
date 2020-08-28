@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
-import 'package:tinterapp/Logic/models/shared/user_shared_part.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 
@@ -41,11 +40,12 @@ Widget getProfilePictureFromLogin({
         return (!snapshot.hasData)
             ? Center(child: CircularProgressIndicator())
             : Image.network(
-                Uri.http(TinterAPIClient.baseUrl, '/user/profilePicture', {'login': login})
+                Uri.http(TinterAPIClient.baseUrl, '/shared/user/profilePicture', {'login': login})
                     .toString(),
                 headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
                 height: height,
                 width: width,
+          fit: BoxFit.fitWidth,
               );
       },
     ),

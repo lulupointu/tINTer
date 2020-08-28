@@ -2,19 +2,18 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
-import 'package:tinterapp/Logic/models/scolaire/user_scolaire.dart';
 import 'package:tinterapp/Logic/models/serializers.dart';
-import 'package:tinterapp/Logic/models/shared/user_shared_part.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 
 part 'binome.g.dart';
 
-abstract class Binome extends Object implements UserScolaire {
-  BinomeStatus get status;
+abstract class Binome extends Object implements User {
+  BinomeStatus get statusScolaire;
   int get score;
 }
 
 abstract class BuildBinome
-//    with UserSharedPart, UserScolaire
+//    with User, UserScolaire
     implements Binome, Built<BuildBinome, BuildBinomeBuilder> {
 
 

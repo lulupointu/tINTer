@@ -7,45 +7,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
-import 'package:tinterapp/Logic/models/associatif/association.dart';
-import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
-import 'package:tinterapp/Network/tinter_api_client.dart';
-import 'package:tinterapp/UI/user_profile/associations.dart';
-import 'package:tinterapp/UI/user_profile/gout_musicaux.dart';
 import 'dart:math';
-import 'package:http/http.dart' as http;
-import 'package:tinterapp/UI/user_profile/snap_scroll_physics.dart';
+import 'package:tinterapp/UI/associatif/profile_creation/create_profile_associatif.dart';
+import 'package:tinterapp/UI/scolaire/profile_creation/create_profile_scolaire.dart';
+import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.dart';
+import 'package:tinterapp/UI/shared/user_profile/snap_scroll_physics.dart';
 
-import '../shared_element/slider_label.dart';
 import '../shared_element/const.dart';
-
-main() {
-  final http.Client httpClient = http.Client();
-  TinterAPIClient tinterAPIClient = TinterAPIClient(
-    httpClient: httpClient,
-  );
-
-  final UserRepository userRepository = UserRepository(tinterAPIClient: tinterAPIClient);
-
-  runApp(BlocProvider(
-    create: (BuildContext context) => UserBloc(userRepository: userRepository),
-    child: MaterialApp(
-      home: SafeArea(
-        child: BlocBuilder<UserBloc, UserState>(
-          builder: (BuildContext context, UserState state) {
-            if (state is UserInitialState || state is UserInitializingState) {
-              BlocProvider.of<UserBloc>(context).add(UserInitEvent());
-            }
-            return UserCreationTab();
-          },
-        ),
-      ),
-    ),
-  ));
-}
 
 class UserCreationTab extends StatefulWidget {
   @override
@@ -53,6 +25,9 @@ class UserCreationTab extends StatefulWidget {
 }
 
 class _UserCreationTabState extends State<UserCreationTab> {
+  final _associatifFormKey = GlobalKey<FormState>();
+  final _scolaireFormKey = GlobalKey<FormState>();
+
   Widget separator = SizedBox(
     height: 40,
   );
@@ -72,12 +47,31 @@ class _UserCreationTabState extends State<UserCreationTab> {
   double invisiblyScrollFraction1 = 0;
   double invisiblyScrollFraction2 = 0;
 
-  // This describes which hiding rectangle have been clicked
-  List<bool> hidingRectangleHasBeenClicked = [false, false, false, false, false, false];
+  OverlayEntry associatifToScolaireButtonOverlay;
+  final GlobalKey associatifToScolaireButtonKey = GlobalKey();
+
+  bool nextPressed = false;
 
   @override
   void initState() {
     super.initState();
+
+    associatifToScolaireButtonOverlay = OverlayEntry(
+      builder: (context) {
+        return AssociatifToScolaireButtonOverlay(
+          associatifToScolaireButtonKey: associatifToScolaireButtonKey,
+          removeSelf: removeAssociatifToScolaireButtonOverlay,
+        );
+      },
+    );
+  }
+
+  void insertAssociatifToScolaireButtonOverlay() {
+    Overlay.of(context).insert(this.associatifToScolaireButtonOverlay);
+  }
+
+  void removeAssociatifToScolaireButtonOverlay() {
+    associatifToScolaireButtonOverlay.remove();
   }
 
   @override
@@ -88,9 +82,14 @@ class _UserCreationTabState extends State<UserCreationTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: TinterColors.background,
-      body: LayoutBuilder(
+    return Consumer<TinterTheme>(
+      builder: (context, tinterTheme, child) {
+        return Scaffold(
+          backgroundColor: tinterTheme.colors.background,
+          body: child,
+        );
+      },
+      child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           // ignore: invalid_use_of_protected_member
           if (!_controller.hasListeners) {
@@ -137,85 +136,31 @@ class _UserCreationTabState extends State<UserCreationTab> {
                       height: fractions['invisibleRectangle2'] * constraints.maxHeight,
                       color: Colors.transparent,
                     ),
-                    Column(
-                      children: <Widget>[
-                        informationRectangle(
-                          context: context,
-                          padding: EdgeInsets.only(top: 15.0, left: 20.0),
-                          child: PrimoEntrantRectangle(),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                          child: HidingRectangle(
-                            child: AssociationsRectangle(),
-                            text: 'Clique pour choisir tes associations.',
-                            onTap: () {
-                              setState(() => hidingRectangleHasBeenClicked[0] = true);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AssociationsTab()),
-                              );
-                            },
-                          ),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          child: HidingRectangle(
-                            onTap: () => setState(() => hidingRectangleHasBeenClicked[1] = true),
-                            child: AttiranceVieAssoRectangle(),
-                            text: 'Clique pour dire à quel point te plait la vie associative.',
-                          ),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          child: HidingRectangle(
-                            onTap: () => setState(() => hidingRectangleHasBeenClicked[2] = true),
-                            child: FeteOuCoursRectangle(),
-                            text: 'Clique pour dire si tu es plutôt fête ou cours.',
-                          ),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          child: HidingRectangle(
-                            onTap: () => setState(() => hidingRectangleHasBeenClicked[3] = true),
-                            child: AideOuSortirRectangle(),
-                            text:
-                                "Clique pour dire si tu préfére un parrain qui t'aide scolairement ou avec qui sortir.",
-                          ),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          child: HidingRectangle(
-                            onTap: () => setState(() => hidingRectangleHasBeenClicked[4] = true),
-                            child: OrganisationEvenementsRectangle(),
-                            text: 'Clique pour dire si tu aimes organiser des événements.',
-                          ),
-                        ),
-                        separator,
-                        informationRectangle(
-                          context: context,
-                          padding: EdgeInsets.only(top: 15.0, left: 20.0, bottom: 5.0),
-                          child: HidingRectangle(
-                            child: GoutsMusicauxRectangle(),
-                            text: 'Clique pour choisir tes goûts musicaux.',
-                            onTap: () {
-                              setState(() {
-                                hidingRectangleHasBeenClicked[5] = true;
-                              });
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                    Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) {
+                        return Stack(
+                          children: [
+                            Form(
+                              key: _associatifFormKey,
+                              child: Offstage(
+                                offstage: tinterTheme.theme != MyTheme.dark,
+                                child: CreateProfileAssociatif(
+                                  separator: separator,
+                                ),
+                              ),
+                            ),
+                            Form(
+                              key: _scolaireFormKey,
+                              child: Offstage(
+                                offstage: tinterTheme.theme != MyTheme.light,
+                                child: CreateProfileScolaire(
+                                  separator: separator,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     SizedBox(
                       height: 20,
@@ -227,11 +172,13 @@ class _UserCreationTabState extends State<UserCreationTab> {
                 height: constraints.maxHeight *
                     (0.19 - 0.07 * invisiblyScrollFraction1 - 0.04 * invisiblyScrollFraction2),
                 width: constraints.maxWidth,
-                child: SvgPicture.asset(
-                  'assets/profile/topProfile.svg',
-                  color: TinterColors.primaryLight,
-                  fit: BoxFit.fill,
-                ),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return SvgPicture.asset(
+                    'assets/profile/topProfile.svg',
+                    color: tinterTheme.colors.primary,
+                    fit: BoxFit.fill,
+                  );
+                }),
               ),
               Positioned(
                 top: constraints.maxHeight * (0.095 - 0.1 * invisiblyScrollFraction1) -
@@ -241,6 +188,8 @@ class _UserCreationTabState extends State<UserCreationTab> {
                   height: 0.24 * constraints.maxHeight,
                   invisiblyScrollFraction1: invisiblyScrollFraction1,
                   invisiblyScrollFraction2: invisiblyScrollFraction2,
+                  associatifToScolaireButtonKey: associatifToScolaireButtonKey,
+                  nextPressed: nextPressed,
                 ),
               ),
               Positioned(
@@ -252,7 +201,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: NextButton(
-                  enabled: !hidingRectangleHasBeenClicked.contains(false),
+                  onNextPressed: onNextPressed,
                   height: constraints.maxHeight * fractions['nextButton'],
                 ),
               )
@@ -263,84 +212,122 @@ class _UserCreationTabState extends State<UserCreationTab> {
     );
   }
 
-  Widget informationRectangle(
-      {@required BuildContext context,
-      @required Widget child,
-      double width,
-      double height,
-      EdgeInsets padding}) {
-    return Align(
-      alignment: AlignmentDirectional.center,
-      child: Container(
-        padding: padding ?? EdgeInsets.all(0.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          color: TinterColors.primary,
-        ),
-        width: width != null ? width : Size.infinite.width,
-        height: height,
-        child: child,
-      ),
-    );
+  void onNextPressed(MyTheme currentTheme) {
+    UserState userState = BlocProvider.of<UserBloc>(context).state;
+    if (userState is NewUserState) {
+      if (!nextPressed) {
+        if (_associatifFormKey.currentState.validate()) {
+          if (userState.user.school == School.TSP &&
+              userState.user.year == TSPYear.TSP1A &&
+              !nextPressed) {
+            _controller.animateTo(0,
+                duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+            Future.delayed(Duration(milliseconds: 200), () {
+              setState(() {
+                nextPressed = true;
+              });
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                insertAssociatifToScolaireButtonOverlay();
+              });
+            });
+          }
+        } else {
+          _controller.animateTo(0,
+              duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+        }
+      } else {
+        if (currentTheme == MyTheme.light) {
+          if (_scolaireFormKey.currentState.validate()) {
+            if (_associatifFormKey.currentState.validate()) {
+              BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+            } else {
+              Provider.of<TinterTheme>(context, listen: false).changeTheme();
+              _controller.animateTo(0,
+                  duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+            }
+          } else {
+            _controller.animateTo(0,
+                duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+          }
+        } else {
+          if (_associatifFormKey.currentState.validate()) {
+            if (_scolaireFormKey.currentState.validate()) {
+              BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+            } else {
+              Provider.of<TinterTheme>(context, listen: false).changeTheme();
+              _controller.animateTo(0,
+                  duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+            }
+          } else {
+            _controller.animateTo(0,
+                duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+          }
+        }
+      }
+    }
   }
 }
 
 class NextButton extends StatelessWidget {
   final double height;
-  final bool enabled;
+  final Function(MyTheme) onNextPressed;
 
-  NextButton({@required this.height, @required this.enabled});
+  NextButton({@required this.height, @required this.onNextPressed});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      onTap: () {
-        UserState userState = BlocProvider.of<UserBloc>(context).state;
-        if (userState is NewUserState) {
-          if (enabled) {
-            BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
-          }
-        }
-      },
-      child: Container(
-        height: height,
-        width: double.maxFinite,
-        color: TinterColors.secondaryAccent,
-        child: Center(child: Text('Next')),
-      ),
-    );
+    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+      return InkWell(
+        splashColor: Colors.transparent,
+        onTap: () => onNextPressed(tinterTheme.theme),
+        child: Container(
+          height: height,
+          width: double.maxFinite,
+          color: tinterTheme.colors.secondary,
+          child: Center(child: Text('Next')),
+        ),
+      );
+    });
   }
 }
 
 class HoveringUserInformation extends StatelessWidget {
   final double invisiblyScrollFraction1, invisiblyScrollFraction2;
   final double width, height;
+  final GlobalKey associatifToScolaireButtonKey;
+  final bool nextPressed;
 
   HoveringUserInformation({
     @required this.width,
     @required this.height,
     @required this.invisiblyScrollFraction1,
     @required this.invisiblyScrollFraction2,
+    @required this.associatifToScolaireButtonKey,
+    @required this.nextPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return Opacity(
       opacity: 1 - invisiblyScrollFraction2,
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: TinterColors.secondaryAccent.withAlpha(230),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0 * (1 - invisiblyScrollFraction1)),
-            topRight: Radius.circular(20.0 * (1 - invisiblyScrollFraction1)),
-            bottomLeft: Radius.circular(20.0),
-            bottomRight: Radius.circular(20.0),
-          ),
-        ),
-        width: width,
-        height: height,
+      child: Consumer<TinterTheme>(
+        builder: (context, tinterTheme, child) {
+          return Container(
+            padding: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: tinterTheme.colors.secondary.withAlpha(230),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0 * (1 - invisiblyScrollFraction1)),
+                topRight: Radius.circular(20.0 * (1 - invisiblyScrollFraction1)),
+                bottomLeft: Radius.circular(20.0),
+                bottomRight: Radius.circular(20.0),
+              ),
+            ),
+            width: width,
+            height: height,
+            child: child,
+          );
+        },
         child: Stack(
           children: <Widget>[
             Align(
@@ -351,12 +338,14 @@ class HoveringUserInformation extends StatelessWidget {
                   offset: Offset(0, -20 * invisiblyScrollFraction2),
                   child: BlocBuilder<UserBloc, UserState>(
                       builder: (BuildContext context, UserState userState) {
-                    return AutoSizeText(
-                      ((userState is NewUserState))
-                          ? userState.user.name + " " + userState.user.surname
-                          : 'Loading...',
-                      style: TinterTextStyle.headline1,
-                    );
+                    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                      return AutoSizeText(
+                        ((userState is NewUserState))
+                            ? userState.user.name + " " + userState.user.surname
+                            : 'Loading...',
+                        style: tinterTheme.textStyle.headline1,
+                      );
+                    });
                   }),
                 ),
               ),
@@ -369,10 +358,26 @@ class HoveringUserInformation extends StatelessWidget {
                   offset: Offset(0, -20 * invisiblyScrollFraction1),
                   child: BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
-                      return AutoSizeText(
-                        ((userState is NewUserState)) ? userState.user.email : 'Loading...',
-                        style: TinterTextStyle.headline2,
-                        maxLines: 1,
+                      return Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) => (!(userState
+                                is UserLoadSuccessState))
+                            ? AutoSizeText(
+                                'Loading...',
+                                style: tinterTheme.textStyle.headline2,
+                                maxLines: 1,
+                              )
+                            : ((userState as UserLoadSuccessState).user.school == School.TSP &&
+                                    (userState as UserLoadSuccessState).user.year ==
+                                        TSPYear.TSP1A &&
+                                    nextPressed)
+                                ? AssociatifToScolaireButton(
+                                    key: associatifToScolaireButtonKey,
+                                  )
+                                : AutoSizeText(
+                                    (userState as UserLoadSuccessState).user.email,
+                                    style: tinterTheme.textStyle.headline2,
+                                    maxLines: 1,
+                                  ),
                       );
                     },
                   ),
@@ -482,10 +487,12 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
                 ),
                 Align(
                   alignment: AlignmentDirectional.bottomCenter,
-                  child: Icon(
-                    Icons.add,
-                    color: TinterColors.hint,
-                  ),
+                  child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return Icon(
+                      Icons.add,
+                      color: tinterTheme.colors.primaryAccent,
+                    );
+                  }),
                 )
               ],
             );
@@ -495,7 +502,8 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
     );
   }
 
-  Future changeProfilePicture(BuildContext context, ImageSource source) async {
+  Future changeProfilePicture(
+      BuildContext context, ImageSource source, Color backgroundColor) async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(
       source: source,
@@ -510,7 +518,7 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
         aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
         androidUiSettings: AndroidUiSettings(
           toolbarTitle: '',
-          toolbarColor: TinterColors.background,
+          toolbarColor: backgroundColor,
           toolbarWidgetColor: Colors.white,
           initAspectRatio: CropAspectRatioPreset.square,
           lockAspectRatio: true,
@@ -537,7 +545,7 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
 class FolderOrCameraOverlay extends StatelessWidget {
   final bool shouldHide;
   final GlobalKey hoveringUserPictureKey;
-  final void Function(BuildContext, ImageSource) changeProfilePicture;
+  final void Function(BuildContext, ImageSource, Color) changeProfilePicture;
   final Duration animationDuration;
 
   const FolderOrCameraOverlay({
@@ -585,8 +593,14 @@ class FolderOrCameraOverlay extends StatelessWidget {
                                       (littleWidgetSize + 40) / constraints.maxWidth),
                               (1 - value) * (1 - value) * (1 - value),
                             ),
-                            child: GestureDetector(
-                              onTap: () => changeProfilePicture(context, ImageSource.camera),
+                            child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                                return GestureDetector(
+                                  onTap: () => changeProfilePicture(context,
+                                      ImageSource.camera, tinterTheme.colors.background),
+                                  child: child,
+                                );
+                              },
                               child: Container(
                                 height: littleWidgetSize,
                                 width: littleWidgetSize,
@@ -628,8 +642,14 @@ class FolderOrCameraOverlay extends StatelessWidget {
                                       (littleWidgetSize + 40) / constraints.maxWidth),
                               (1 - value) * (1 - value) * (1 - value),
                             ),
-                            child: GestureDetector(
-                              onTap: () => changeProfilePicture(context, ImageSource.gallery),
+                            child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                                return GestureDetector(
+                                  onTap: () => changeProfilePicture(context,
+                                      ImageSource.gallery, tinterTheme.colors.background),
+                                  child: child,
+                                );
+                              },
                               child: Container(
                                 height: littleWidgetSize,
                                 width: littleWidgetSize,
@@ -679,557 +699,91 @@ class ModifyProfilePictureClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-class PrimoEntrantRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          children: <Widget>[
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Text(
-                'Est-tu primo-entrant?',
-                style: TinterTextStyle.headline2,
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 10.0),
-              width: double.infinity,
-              child: Container(
-                height: 60,
-                child: BlocBuilder<UserBloc, UserState>(
-                  builder: (BuildContext context, UserState userState) {
-                    if (!(userState is NewUserState)) {
-                      return CircularProgressIndicator();
-                    }
-                    if (((userState as NewUserState).user.primoEntrant) == null) {
-                      BlocProvider.of<UserBloc>(context)
-                          .add(                                UserStateChangedEvent(
-                          newState: (userState as NewUserState)
-                              .user
-                              .rebuild((b) => b..primoEntrant = true)));
-                      return CircularProgressIndicator();
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            splashColor: Colors.transparent,
-                            onTap: () => BlocProvider.of<UserBloc>(context)
-                                .add(                                UserStateChangedEvent(
-                                newState: (userState as NewUserState)
-                                    .user
-                                    .rebuild((b) => b..primoEntrant = true))),
-                            child: AnimatedOpacity(
-                              opacity: (userState as NewUserState).user.primoEntrant ? 1 : 0.5,
-                              duration: Duration(milliseconds: 300),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5.0),
-                                    bottomLeft: Radius.circular(5.0),
-                                  ),
-                                  color: TinterColors.primaryAccent,
-                                ),
-                                width: 50,
-                                child: Center(
-                                  child: AutoSizeText('Oui'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            splashColor: Colors.transparent,
-                            onTap: () => BlocProvider.of<UserBloc>(context).add(
-                                UserStateChangedEvent(
-                                    newState: (userState as NewUserState)
-                                        .user
-                                        .rebuild((b) => b..primoEntrant = false))),
-                            child: AnimatedOpacity(
-                              opacity: (userState as NewUserState).user.primoEntrant ? 0.5 : 1,
-                              duration: Duration(milliseconds: 300),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5.0),
-                                    bottomRight: Radius.circular(5.0),
-                                  ),
-                                  color: TinterColors.primaryAccent,
-                                ),
-                                width: 50,
-                                child: Center(
-                                  child: AutoSizeText('Non'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class AssociationsRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          children: <Widget>[
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  'Associations',
-                  style: TinterTextStyle.headline2,
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              child: Container(
-                height: 60,
-                child: BlocBuilder<UserBloc, UserState>(
-                  builder: (BuildContext context, UserState userState) {
-                    if (!(userState is NewUserState) ||
-                        (userState as NewUserState).user.associations == null) {
-                      return Text('Loading');
-                    }
-                    return (userState as NewUserState).user.associations.length == 0
-                        ? Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: Text(
-                                'Aucune association séléctionnée.',
-                                style: TinterTextStyle.headline2.copyWith(fontSize: 16),
-                              ),
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: (userState as NewUserState).user.associations.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                      right: (index ==
-                                              (userState as NewUserState)
-                                                      .user
-                                                      .associations
-                                                      .length -
-                                                  1)
-                                          ? 48
-                                          : 8.0,
-                                      left: (index == 0) ? 20.0 : 0),
-                                  child: associationBubble(context,
-                                      (userState as NewUserState).user.associations[index]),
-                                );
-                              },
-                            ),
-                          );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-        Positioned.fill(
-          child: Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AssociationsTab()),
-                );
-              },
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                size: 30,
-                color: TinterColors.primaryAccent,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget associationBubble(BuildContext context, Association association) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Container(
-        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-        child: ClipOval(
-          child: getLogoFromAssociation(associationName: association.name),
-        ),
-      ),
-    );
-  }
-}
-
-class AttiranceVieAssoRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
-            ),
-            child: AutoSizeText(
-              'Attirance pour la vie associative',
-              style: TinterTextStyle.headline2,
-            ),
-          ),
-        ),
-        SliderTheme(
-          data: TinterSliderTheme.enabled,
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (BuildContext context, UserState userState) {
-              if (!(userState is NewUserState)) {
-                return CircularProgressIndicator();
-              }
-              return Slider(
-                value: (userState as NewUserState).user.attiranceVieAsso ?? 0.5,
-                onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                    UserStateChangedEvent(
-                        newState: (userState as NewUserState)
-                            .user
-                            .rebuild((u) => u..attiranceVieAsso = value))),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class FeteOuCoursRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
-            ),
-            child: Text(
-              'Cours ou soirée?',
-              style: TinterTextStyle.headline2,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        SliderTheme(
-          data: TinterSliderTheme.enabled,
-          child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is NewUserState)) {
-                    return CircularProgressIndicator();
-                  }
-                  return Slider(
-                      value: (userState as NewUserState).user.feteOuCours ?? 0.5,
-                      onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                              newState: (userState as NewUserState)
-                                  .user
-                                  .rebuild((u) => u..feteOuCours = value))));
-                },
-              ),
-              leftLabel: 'Cours',
-              rightLabel: 'Soirée'),
-        ),
-      ],
-    );
-  }
-}
-
-class AideOuSortirRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
-            ),
-            child: AutoSizeText(
-              'Parrain qui aide ou avec qui sortir?',
-              style: TinterTextStyle.headline2,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        SliderTheme(
-          data: TinterSliderTheme.enabled,
-          child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is NewUserState)) {
-                    return CircularProgressIndicator();
-                  }
-                  return Slider(
-                      value: (userState as NewUserState).user.aideOuSortir ?? 0.5,
-                      onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                              newState: (userState as NewUserState)
-                                  .user
-                                  .rebuild((u) => u..aideOuSortir = value))));
-                },
-              ),
-              leftLabel: 'Aide',
-              rightLabel: 'Sortir'),
-        ),
-      ],
-    );
-  }
-}
-
-class OrganisationEvenementsRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
-            ),
-            child: AutoSizeText(
-              'Aime organiser les événements?',
-              style: TinterTextStyle.headline2,
-            ),
-          ),
-        ),
-        SliderTheme(
-          data: TinterSliderTheme.enabled,
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (BuildContext context, UserState userState) {
-              if (!(userState is NewUserState)) {
-                return CircularProgressIndicator();
-              }
-              return Slider(
-                  value: (userState as NewUserState).user.organisationEvenements ?? 0.5,
-                  onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                      UserStateChangedEvent(
-                          newState: (userState as NewUserState)
-                              .user
-                              .rebuild((u) => u..organisationEvenements = value))));
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class GoutsMusicauxRectangle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          children: <Widget>[
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Text(
-                'Goûts musicaux',
-                style: TinterTextStyle.headline2,
-              ),
-            ),
-            BlocBuilder<UserBloc, UserState>(
-              builder: (BuildContext context, UserState userState) {
-                if (!(userState is NewUserState) ||
-                    (userState as NewUserState).user.goutsMusicaux == null) {
-                  return Text('Loading');
-                }
-                return Wrap(
-                  spacing: 15,
-                  children: (userState as NewUserState).user.goutsMusicaux.length == 0
-                      ? [
-                          Chip(
-                            label: Text('Aucun'),
-                            labelStyle: TinterTextStyle.goutMusicauxLiked,
-                            backgroundColor: TinterColors.primaryAccent,
-                          )
-                        ]
-                      : <Widget>[
-                          for (String musicStyle
-                              in (userState as NewUserState).user.goutsMusicaux)
-                            Chip(
-                              label: Text(musicStyle),
-                              labelStyle: TinterTextStyle.goutMusicauxLiked,
-                              backgroundColor: TinterColors.primaryAccent,
-                            )
-                        ],
-                );
-              },
-            )
-          ],
-        ),
-        Positioned.fill(
-          child: Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
-                );
-              },
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                size: 30,
-                color: TinterColors.primaryAccent,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class DiscoverSlider extends StatelessWidget {
-  final String leftLabel, rightLabel;
-  final Widget slider;
-
-  DiscoverSlider({@required this.leftLabel, @required this.rightLabel, @required this.slider});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 23.0),
-              child: SliderLabel(
-                padding: EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                child: Text(
-                  leftLabel,
-                  style: TinterTextStyle.bigLabel,
-                ),
-                side: Side.Left,
-                triangleSize: 14,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: SliderLabel(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                  child: Text(
-                    rightLabel,
-                    style: TinterTextStyle.bigLabel,
-                  ),
-                ),
-                side: Side.Right,
-                triangleSize: 14,
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 13.0, left: 4, right: 4),
-          child: slider,
-        ),
-      ],
-    );
-  }
-}
-
 class HidingRectangle extends StatefulWidget {
   final Widget child;
   final String text;
   final VoidCallback onTap;
+  final EdgeInsets padding;
 
-  HidingRectangle({@required this.text, @required this.child, this.onTap});
+  HidingRectangle({@required this.text, @required this.child, this.onTap, this.padding});
 
   @override
   _HidingRectangleState createState() => _HidingRectangleState();
 }
 
 class _HidingRectangleState extends State<HidingRectangle> {
-  bool isReviled;
+  bool isReviled = false;
 
   @override
   void initState() {
-    isReviled = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.child,
-        Positioned.fill(
-          child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 150),
-            child: isReviled
-                ? Container()
-                : InkWell(
-                    onTap: onTap,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 50),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        color: TinterColors.primary,
-                      ),
-                      child: Center(
-                        child: AutoSizeText(
-                          widget.text,
-                          textAlign: TextAlign.center,
-                          style: TinterTextStyle.hidingText,
+    return FormField(
+      autovalidate: false,
+      validator: (_) {
+        if (isReviled) {
+          return null;
+        }
+        return 'This rectangle should not be hided in order to validate';
+      },
+      builder: (FormFieldState<dynamic> field) {
+        return TweenAnimationBuilder<double>(
+          duration: Duration(milliseconds: 800),
+          tween: Tween<double>(begin: 0, end: field.errorText == null ? 0 : 1),
+          builder: (BuildContext context, double value, Widget child) {
+            double x = value * 5 * 2 * pi - pi;
+            return Transform.translate(
+              offset: Offset(value == 0 ? 0 : 10 * sin(x) / x, 0),
+              child: child,
+            );
+          },
+          child: Stack(
+            children: [
+              widget.child,
+              Positioned.fill(
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 150),
+                  child: isReviled
+                      ? Container()
+                      : InkWell(
+                          onTap: onTap,
+                          child: Consumer<TinterTheme>(
+                            builder: (context, tinterTheme, child) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: 50),
+                                decoration: BoxDecoration(
+                                  border: field.errorText == null
+                                      ? null
+                                      : Border.all(
+                                          color: tinterTheme.colors.secondary,
+                                          width: 2,
+                                        ),
+                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                  color: tinterTheme.colors.primary,
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: widget.padding ?? EdgeInsets.all(0.0),
+                                    child: AutoSizeText(
+                                      widget.text,
+                                      textAlign: TextAlign.center,
+                                      style: tinterTheme.textStyle.hidingText,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
+                ),
+              ),
+            ],
           ),
-        )
-      ],
+        );
+      },
     );
   }
 

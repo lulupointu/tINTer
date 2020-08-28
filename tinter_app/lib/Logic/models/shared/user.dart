@@ -1,17 +1,8 @@
-
-import 'dart:io';
-
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:flutter/material.dart' as flutterMaterial;
 import 'package:tinterapp/Logic/models/associatif/association.dart';
-import 'package:tinterapp/Logic/models/scolaire/user_scolaire.dart';
 import 'package:tinterapp/Logic/models/serializers.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:tinterapp/Logic/models/shared/token.dart';
-import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
-import 'package:tinterapp/Network/tinter_api_client.dart';
-import 'package:meta/meta.dart';
 
 part 'user.g.dart';
 
@@ -58,18 +49,18 @@ abstract class User extends Object {
 
   double get organisationEvenements;
 
-  List<String> get goutsMusicaux;
+  BuiltList<String> get goutsMusicaux;
 
   // Attributes relative to the scolaire part of the app
   TSPYear get year;
 
-  GroupeOuSeul get groupeOuSeul;
-
   LieuDeVie get lieuDeVie;
+
+  double get groupeOuSeul;
 
   BuiltList<HoraireDeTravail> get horairesDeTravail;
 
-  OutilDeTravail get enligneOuNon;
+  double get enligneOuNon;
 
   BuiltList<String> get matieresPreferees;
 }
@@ -97,7 +88,71 @@ class School extends EnumClass {
 }
 
 
+class TSPYear extends EnumClass {
+  static const TSPYear TSP1A = _$TSP1A;
+  static const TSPYear TSP2A = _$TSP2A;
+  static const TSPYear TSP3A = _$TSP3A;
 
+  const TSPYear._(String name) : super(name);
+
+  static BuiltSet<TSPYear> get values => _$tSPYearValues;
+
+  static TSPYear valueOf(String name) => _$tSPYearValueOf(name);
+
+  String serialize() {
+    return serializers.serializeWith(TSPYear.serializer, this);
+  }
+
+  static TSPYear deserialize(String string) {
+    return serializers.deserializeWith(TSPYear.serializer, string);
+  }
+
+  static Serializer<TSPYear> get serializer => _$tSPYearSerializer;
+}
+
+class LieuDeVie extends EnumClass {
+  static const LieuDeVie maisel = _$maisel;
+  static const LieuDeVie other = _$other;
+
+  const LieuDeVie._(String name) : super(name);
+
+  static BuiltSet<LieuDeVie> get values => _$lieuDeVieValues;
+
+  static LieuDeVie valueOf(String name) => _$lieuDeVieValueOf(name);
+
+  String serialize() {
+    return serializers.serializeWith(LieuDeVie.serializer, this);
+  }
+
+  static LieuDeVie deserialize(String string) {
+    return serializers.deserializeWith(LieuDeVie.serializer, string);
+  }
+
+  static Serializer<LieuDeVie> get serializer => _$lieuDeVieSerializer;
+}
+
+class HoraireDeTravail extends EnumClass {
+  static const HoraireDeTravail morning = _$morning;
+  static const HoraireDeTravail afternoon = _$afternoon;
+  static const HoraireDeTravail evening = _$evening;
+  static const HoraireDeTravail night = _$night;
+
+  const HoraireDeTravail._(String name) : super(name);
+
+  static BuiltSet<HoraireDeTravail> get values => _$horaireDeTravailValues;
+
+  static HoraireDeTravail valueOf(String name) => _$horaireDeTravailValueOf(name);
+
+  String serialize() {
+    return serializers.serializeWith(HoraireDeTravail.serializer, this);
+  }
+
+  static HoraireDeTravail deserialize(String string) {
+    return serializers.deserializeWith(HoraireDeTravail.serializer, string);
+  }
+
+  static Serializer<HoraireDeTravail> get serializer => _$horaireDeTravailSerializer;
+}
 
 //enum School { TSP, IMTBS }
 //abstract class User implements Built<User, UserBuilder> {

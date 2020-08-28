@@ -3,34 +3,34 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
-import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
-import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';
-import 'package:tinterapp/Logic/models/associatif/match.dart';
+import 'package:tinterapp/Logic/models/scolaire/binome.dart';
+import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
+import 'package:tinterapp/Logic/repository/scolaire/matched_binomes_repository.dart';
 
-part 'matches_event.dart';
+part 'binomes_event.dart';
 
-part 'matches_state.dart';
+part 'binomes_state.dart';
 
-class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> {
-  MatchedMatchesRepository matchedMatchesRepository;
+class MatchedBinomesBloc extends Bloc<MatchedBinomesEvent, MatchedBinomesState> {
+  MatchedBinomesRepository matchedBinomesRepository;
   AuthenticationBloc authenticationBloc;
 
-  MatchedMatchesBloc(
-      {@required this.matchedMatchesRepository, @required this.authenticationBloc})
-      : assert(matchedMatchesRepository != null),
-        super(MatchedMatchesInitialState());
+  MatchedBinomesBloc(
+      {@required this.matchedBinomesRepository, @required this.authenticationBloc})
+      : assert(matchedBinomesRepository != null),
+        super(MatchedBinomesInitialState());
 
   @override
-  Stream<MatchedMatchesState> mapEventToState(MatchedMatchesEvent event) async* {
-    if (event is MatchedMatchesRequestedEvent) {
-      yield* _mapMatchedMatchesRequestedEventToState();
+  Stream<MatchedBinomesState> mapEventToState(MatchedBinomesEvent event) async* {
+    if (event is MatchedBinomesRequestedEvent) {
+      yield* _mapMatchedBinomesRequestedEventToState();
       return;
-    } else if (event is ChangeStatusMatchedMatchesEvent) {
-      if (state is MatchedMatchesLoadSuccessState) {
-        yield* _mapChangeMatchStatusEventToState(event);
+    } else if (event is ChangeStatusMatchedBinomesEvent) {
+      if (state is MatchedBinomesLoadSuccessState) {
+        yield* _mapChangeBinomeStatusEventToState(event);
       } else {
         _addError(
-            'ChangeStatusMatchedMatchesEvent was called while state is not MatchedMatchesLoadSuccessState');
+            'ChangeStatusMatchedBinomesEvent was called while state is not MatchedBinomesLoadSuccessState');
       }
       return;
     }
@@ -38,54 +38,54 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
     print('event: ' + event.toString() + ' no treated');
   }
 
-  Stream<MatchedMatchesState> _mapMatchedMatchesRequestedEventToState() async* {
-    yield MatchedMatchesInitializingState();
+  Stream<MatchedBinomesState> _mapMatchedBinomesRequestedEventToState() async* {
+    yield MatchedBinomesInitializingState();
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
-      yield MatchedMatchesInitialState();
+      yield MatchedBinomesInitialState();
       return;
     }
 
-    List<BuildMatch> matches;
+    List<BuildBinome> binomes;
     try {
-      matches = await matchedMatchesRepository.getMatches();
+      binomes = await matchedBinomesRepository.getBinomes();
     } catch (error) {
       print(error);
-      yield MatchedMatchesInitializingFailedState();
+      yield MatchedBinomesInitializingFailedState();
       return;
     }
-    yield MatchedMatchesLoadSuccessState(matches: matches);
+    yield MatchedBinomesLoadSuccessState(binomes: binomes);
   }
 
-  Stream<MatchedMatchesState> _mapChangeMatchStatusEventToState(
-      ChangeStatusMatchedMatchesEvent event) async* {
-    BuildMatch newMatch = event.match.rebuild((b) => b..status = event.matchStatus);
+  Stream<MatchedBinomesState> _mapChangeBinomeStatusEventToState(
+      ChangeStatusMatchedBinomesEvent event) async* {
+    BuildBinome newBinome = event.binome.rebuild((b) => b..statusScolaire = event.binomeStatus);
 
-    MatchedMatchesLoadSuccessState successState = MatchedMatchesLoadSuccessState(
-        matches:
-            (state as MatchedMatchesLoadSuccessState).withUpdatedMatch(event.match, newMatch));
+    MatchedBinomesLoadSuccessState successState = MatchedBinomesLoadSuccessState(
+        binomes:
+            (state as MatchedBinomesLoadSuccessState).withUpdatedBinome(event.binome, newBinome));
 
-    yield MatchedMatchesSavingNewStatusState(
-        matches: (state as MatchedMatchesLoadSuccessState).matches);
+    yield MatchedBinomesSavingNewStatusState(
+        binomes: (state as MatchedBinomesLoadSuccessState).binomes);
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
-      yield MatchedMatchesInitialState();
+      yield MatchedBinomesInitialState();
       return;
     }
 
     try {
-      matchedMatchesRepository.updateMatchStatus(
-        relationStatus: RelationStatusAssociatif(
+      matchedBinomesRepository.updateBinomeStatus(
+        relationStatus: RelationStatusScolaire(
           (r) => r
             ..login = null
-            ..otherLogin = event.match.login
-            ..status = event.enumRelationStatusAssociatif,
+            ..otherLogin = event.binome.login
+            ..statusScolaire = event.enumRelationStatusScolaire,
         ),
       );
     } catch (error) {
       print(error);
-      yield MatchedMatchesLoadFailureState(
-          matches: (state as MatchedMatchesLoadSuccessState).matches);
+      yield MatchedBinomesLoadFailureState(
+          binomes: (state as MatchedBinomesLoadSuccessState).binomes);
     }
 
     yield successState;

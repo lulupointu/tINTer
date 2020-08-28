@@ -1,137 +1,137 @@
 part of 'user_shared_bloc.dart';
 
-abstract class UserSharedPartState extends Equatable {
-  const UserSharedPartState();
+abstract class UserState extends Equatable {
+  const UserState();
 
   @override
   List<Object> get props => [];
 }
 
-class UserSharedPartInitialState extends UserSharedPartState {}
+class UserInitialState extends UserState {}
 
-class UserSharedPartInitializingState extends UserSharedPartState {}
+class UserInitializingState extends UserState {}
 
-class UserSharedPartInitializingFailedState extends UserSharedPartState {}
+class UserInitializingFailedState extends UserState {}
 
-abstract class UserSharedPartLoadSuccessState extends UserSharedPartState {
-  final BuildUserSharedPart user;
+abstract class UserLoadSuccessState extends UserState {
+  final BuildUser user;
 
-  UserSharedPartLoadSuccessState({@required this.user})
+  UserLoadSuccessState({@required this.user})
       : assert(user != null);
 
   @override
   List<Object> get props => [user];
 
-  UserSharedPartLoadSuccessState createNewState({BuildUserSharedPart newUserSharedPart});
+  UserLoadSuccessState createNewState({BuildUser newUser});
 
-  UserSharedPartLoadSuccessState withNewState({
-    @required BuildUserSharedPart newState,
+  UserLoadSuccessState withNewState({
+    @required BuildUser newState,
   }) {
     return createNewState(
-        newUserSharedPart: newState);
+        newUser: newState);
   }
 }
 
-abstract class NewUserSharedPartState extends UserSharedPartLoadSuccessState {
-  NewUserSharedPartState({@required userSharedPart}) : super(user: userSharedPart);
+abstract class NewUserState extends UserLoadSuccessState {
+  NewUserState({@required user}) : super(user: user);
 }
 
-class NewUserSharedPartCreatingProfileState extends NewUserSharedPartState {
-  NewUserSharedPartCreatingProfileState({@required userSharedPart})
-      : super(userSharedPart: userSharedPart);
+class NewUserCreatingProfileState extends NewUserState {
+  NewUserCreatingProfileState({@required user})
+      : super(user: user);
 
-  NewUserSharedPartCreatingProfileState createNewState({BuildUserSharedPart newUserSharedPart}) {
-    return NewUserSharedPartCreatingProfileState(userSharedPart: newUserSharedPart);
+  NewUserCreatingProfileState createNewState({BuildUser newUser}) {
+    return NewUserCreatingProfileState(user: newUser);
   }
 }
 
-class NewUserSharedPartLoadingState extends NewUserSharedPartState {
+class NewUserLoadingState extends NewUserState {
   @override
-  UserSharedPartLoadSuccessState createNewState({BuildUserSharedPart newUserSharedPart}) {
+  UserLoadSuccessState createNewState({BuildUser newUser}) {
     throw UnimplementedError();
   }
 }
 
-class NewUserSharedPartSavingState extends NewUserSharedPartState {
-  NewUserSharedPartSavingState({@required userSharedPart})
-      : super(userSharedPart: userSharedPart);
+class NewUserSavingState extends NewUserState {
+  NewUserSavingState({@required user})
+      : super(user: user);
 
   @override
-  UserSharedPartLoadSuccessState createNewState({BuildUserSharedPart newUserSharedPart}) {
+  UserLoadSuccessState createNewState({BuildUser newUser}) {
     throw UnimplementedError();
   }
 }
 
-abstract class KnownUserSharedPartState extends UserSharedPartLoadSuccessState {
-  KnownUserSharedPartState({@required userSharedPart}) : super(user: userSharedPart);
+abstract class KnownUserState extends UserLoadSuccessState {
+  KnownUserState({@required user}) : super(user: user);
 }
 
-class KnownUserSharedPartRefreshingState extends KnownUserSharedPartState {
-  KnownUserSharedPartRefreshingState({@required userSharedPart})
-      : super(userSharedPart: userSharedPart);
+class KnownUserRefreshingState extends KnownUserState {
+  KnownUserRefreshingState({@required user})
+      : super(user: user);
 
   @override
-  KnownUserSharedPartState createNewState({BuildUserSharedPart newUserSharedPart}) =>
-      (newUserSharedPart != this.user)
-          ? KnownUserSharedPartUnsavedState(
-              userSharedPart: newUserSharedPart, oldSavedUserSharedPart: this.user)
-          : KnownUserSharedPartSavedState(userSharedPart: this.user);
+  KnownUserState createNewState({BuildUser newUser}) =>
+      (newUser != this.user)
+          ? KnownUserUnsavedState(
+              user: newUser, oldSavedUser: this.user)
+          : KnownUserSavedState(user: this.user);
 }
 
-class KnownUserSharedPartSavedState extends KnownUserSharedPartState {
-  KnownUserSharedPartSavedState({@required userSharedPart})
-      : super(userSharedPart: userSharedPart);
+class KnownUserSavedState extends KnownUserState {
+  KnownUserSavedState({@required user})
+      : super(user: user);
 
   @override
-  KnownUserSharedPartState createNewState({BuildUserSharedPart newUserSharedPart}) =>
-      (newUserSharedPart != this.user)
-          ? KnownUserSharedPartUnsavedState(
-              userSharedPart: newUserSharedPart, oldSavedUserSharedPart: this.user)
-          : KnownUserSharedPartSavedState(userSharedPart: this.user);
+  KnownUserState createNewState({BuildUser newUser}) =>
+      (newUser != this.user)
+          ? KnownUserUnsavedState(
+              user: newUser, oldSavedUser: this.user)
+          : KnownUserSavedState(user: this.user);
 }
 
-class KnownUserSharedPartUnsavedState extends KnownUserSharedPartState {
-  final BuildUserSharedPart oldSavedUserSharedPart;
+class KnownUserUnsavedState extends KnownUserState {
+  final BuildUser oldSavedUser;
 
-  KnownUserSharedPartUnsavedState(
-      {@required userSharedPart, @required this.oldSavedUserSharedPart})
-      : super(userSharedPart: userSharedPart);
+  KnownUserUnsavedState(
+      {@required user, @required this.oldSavedUser})
+      : super(user: user);
 
   @override
-  KnownUserSharedPartState createNewState({BuildUserSharedPart newUserSharedPart}) =>
-      (newUserSharedPart != this.oldSavedUserSharedPart)
-          ? KnownUserSharedPartUnsavedState(
-              userSharedPart: newUserSharedPart,
-              oldSavedUserSharedPart: this.oldSavedUserSharedPart)
-          : KnownUserSharedPartSavedState(userSharedPart: this.oldSavedUserSharedPart);
+  KnownUserState createNewState({BuildUser newUser}) =>
+      (newUser != this.oldSavedUser)
+          ? KnownUserUnsavedState(
+              user: newUser,
+              oldSavedUser: this.oldSavedUser)
+          : KnownUserSavedState(user: this.oldSavedUser);
 }
 
-class KnownUserSharedPartSavingState extends KnownUserSharedPartUnsavedState {
-  // This userSharedPart is the one we are trying to save
-  KnownUserSharedPartSavingState({@required userSharedPart, @required oldSavedUserSharedPart})
-      : super(userSharedPart: userSharedPart, oldSavedUserSharedPart: oldSavedUserSharedPart);
+class KnownUserSavingState extends KnownUserUnsavedState {
+  // This user is the one we are trying to save
+  KnownUserSavingState({@required user, @required oldSavedUser})
+      : super(user: user, oldSavedUser: oldSavedUser);
 
   @override
-  KnownUserSharedPartState createNewState({BuildUserSharedPart newUserSharedPart}) {
+  KnownUserState createNewState({BuildUser newUser}) {
     throw UnimplementedError();
   }
 }
 
-class KnownUserSharedPartSavingFailedState extends KnownUserSharedPartUnsavedState {
-  // This userSharedPart is the one we are trying to save
-  KnownUserSharedPartSavingFailedState(
-      {@required userSharedPart, @required oldSavedUserSharedPart})
-      : super(userSharedPart: userSharedPart, oldSavedUserSharedPart: oldSavedUserSharedPart);
+class KnownUserSavingFailedState extends KnownUserUnsavedState {
+  // This user is the one we are trying to save
+  KnownUserSavingFailedState(
+      {@required user, @required oldSavedUser})
+      : super(user: user, oldSavedUser: oldSavedUser);
 }
 
-class KnownUserSharedPartRefreshingFailedState extends KnownUserSharedPartState {
-  KnownUserSharedPartRefreshingFailedState({@required userSharedPart})
-      : super(userSharedPart: userSharedPart);
+class KnownUserRefreshingFailedState extends KnownUserState {
+  KnownUserRefreshingFailedState({@required user})
+      : super(user: user);
 
   @override
-  KnownUserSharedPartState createNewState({BuildUserSharedPart newUserSharedPart}) =>
-      (newUserSharedPart != this.user)
-          ? KnownUserSharedPartUnsavedState(
-              userSharedPart: newUserSharedPart, oldSavedUserSharedPart: this.user)
-          : KnownUserSharedPartSavedState(userSharedPart: this.user);
+  KnownUserState createNewState({BuildUser newUser}) =>
+      (newUser != this.user)
+          ? KnownUserUnsavedState(
+              user: newUser, oldSavedUser: this.user)
+          : KnownUserSavedState(user: this.user);
 }

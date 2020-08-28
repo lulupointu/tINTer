@@ -5,9 +5,10 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
-import 'package:tinterapp/UI/shared_element/const.dart';
-import 'package:tinterapp/UI/splash_screen/splash_screen.dart';
+import 'package:tinterapp/UI/shared/shared_element/const.dart';
+import 'package:tinterapp/UI/shared/splash_screen/splash_screen.dart';
 
 main() {
   runApp(
@@ -39,72 +40,79 @@ class _TinterAuthenticationTabState extends State<TinterAuthenticationTab> {
 
   @override
   void initState() {
-    KeyboardVisibility.onChange.listen((bool visible) {
-    });
+    KeyboardVisibility.onChange.listen((bool visible) {});
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: TinterColors.background,
-      body: Theme(
-        data: ThemeData(
-          brightness: Brightness.light,
-          primaryColor: TinterColors.background,
-        ),
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return Stack(
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height:
-                        constraints.maxHeight * (1 - TinterAuthenticationTab.fractions['top']),
-                    child: LoginFormAndLogo(),
-                  ),
-                ),
+    return Consumer<TinterTheme>(
+      builder: (context, tinterTheme, child) {
+        if (tinterTheme.theme == MyTheme.light)
+          Provider.of<TinterTheme>(context, listen: false).changeTheme();
 
-                // Top Part
-                Positioned(
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 100),
-                    height: constraints.maxHeight * TinterAuthenticationTab.fractions['top'],
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: SvgPicture.asset(
+        return Scaffold(
+          backgroundColor: tinterTheme.colors.background,
+          body: child,
+        );
+      },
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height:
+                      constraints.maxHeight * (1 - TinterAuthenticationTab.fractions['top']),
+                  child: LoginFormAndLogo(),
+                ),
+              ),
+
+              // Top Part
+              Positioned(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 100),
+                  height: constraints.maxHeight * TinterAuthenticationTab.fractions['top'],
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                          return SvgPicture.asset(
                             'assets/profile/topProfile.svg',
-                            color: TinterColors.primaryLight,
+                            color: tinterTheme.colors.primary,
                             fit: BoxFit.fill,
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: Center(
-                              child: AutoSizeText(
-                                'tINTer',
-                                style: TextStyle(
-                                  fontFamily: 'Podkova',
-                                  fontSize: 75,
-                                  fontWeight: FontWeight.w600,
-                                  color: TinterColors.grey,
-                                  letterSpacing: 1,
-                                ),
-                              ),
+                          );
+                        }),
+                      ),
+                      Positioned.fill(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Center(
+                            child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                                return AutoSizeText(
+                                  'tINTer',
+                                  style: TextStyle(
+                                    fontFamily: 'Podkova',
+                                    fontSize: 75,
+                                    fontWeight: FontWeight.w600,
+                                    color: tinterTheme.colors.secondary,
+                                    letterSpacing: 1,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -119,40 +127,46 @@ class HelpOnLogin extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) => SimpleDialog(
-            title: Text(
-              'Aide',
-              textAlign: TextAlign.center,
-              style: TinterTextStyle.dialogTitle,
-            ),
+            title: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+              return Text(
+                'Aide',
+                textAlign: TextAlign.center,
+                style: tinterTheme.textStyle.dialogTitle,
+              );
+            }),
             contentPadding: EdgeInsets.all(24.0),
             children: [
-              Text(
-                "Le login et le mot de passe à utiliser sont ceux de l'école.",
-                textAlign: TextAlign.center,
-                style: TinterTextStyle.dialogContent,
-              ),
+              Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Text(
+                  "Le login et le mot de passe à utiliser sont ceux de l'école.",
+                  textAlign: TextAlign.center,
+                  style: tinterTheme.textStyle.dialogContent,
+                );
+              }),
             ],
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: TinterColors.white, width: 2),
-          color: Colors.transparent,
-        ),
-        height: 20,
-        width: 20,
-        child: Center(
-          child: Text(
-            '?',
-            style: TextStyle(
-              color: TinterColors.white,
-              fontWeight: FontWeight.w900,
+      child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: tinterTheme.colors.defaultTextColor, width: 2),
+            color: Colors.transparent,
+          ),
+          height: 20,
+          width: 20,
+          child: Center(
+            child: Text(
+              '?',
+              style: TextStyle(
+                color: tinterTheme.colors.defaultTextColor,
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
@@ -198,12 +212,17 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
           flex: KeyboardVisibility.isVisible ? 1 : 0,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 40, bottom: 20.0),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              decoration: BoxDecoration(
-                color: TinterColors.grey,
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              ),
+            child: Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  decoration: BoxDecoration(
+                    color: tinterTheme.colors.primary,
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  ),
+                  child: child,
+                );
+              },
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -212,48 +231,53 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                     builder: (BuildContext context, AuthenticationState state) {
                       final hasError = state is AuthenticationFailureState;
 
-                      return AnimatedContainer(
-                        duration: Duration(milliseconds: 150),
-                        decoration: BoxDecoration(
-                          color: TinterColors.secondaryAccent.withAlpha(150),
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                          border: Border.all(
-                              color: TinterColors.secondaryAccent.withAlpha(170), width: 1),
-                        ),
-                        height: hasError && displayError ? 40 : 0,
-                        margin: EdgeInsets.only(bottom: hasError && displayError ? 20 : 0),
-                        padding: EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                  hasError && displayError
-                                      ? (state as AuthenticationFailureState)
-                                          .error
-                                          .getMessage()
-                                      : '',
-                                  style: TinterTextStyle.loginError),
+                      return Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                          return AnimatedContainer(
+                            duration: Duration(milliseconds: 150),
+                            decoration: BoxDecoration(
+                              color: tinterTheme.colors.secondary.withAlpha(150),
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                              border: Border.all(
+                                  color: tinterTheme.colors.secondary.withAlpha(170),
+                                  width: 1),
                             ),
-                            InkWell(
-                              onTap: () => setState(
-                                () => displayError = false,
-                              ),
-                              child: SizedBox(
-                                width: hasError && displayError ? 40 : 0,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.close,
-                                    size: hasError && displayError ? 20 : 0,
-                                    color: TinterColors.white,
-                                  ),
+                            height: hasError && displayError ? 40 : 0,
+                            margin: EdgeInsets.only(bottom: hasError && displayError ? 20 : 0),
+                            padding: EdgeInsets.only(
+                              left: 10,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                      hasError && displayError
+                                          ? (state as AuthenticationFailureState)
+                                              .error
+                                              .getMessage()
+                                          : '',
+                                      style: tinterTheme.textStyle.loginError),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
+                                InkWell(
+                                  onTap: () => setState(
+                                    () => displayError = false,
+                                  ),
+                                  child: SizedBox(
+                                    width: hasError && displayError ? 40 : 0,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.close,
+                                        size: hasError && displayError ? 20 : 0,
+                                        color: tinterTheme.colors.defaultTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
@@ -265,22 +289,29 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Login',
-                            style: TinterTextStyle.loginFormLabel,
-                          ),
+                          Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                            return Text(
+                              'Login',
+                              style: tinterTheme.textStyle.loginFormLabel,
+                            );
+                          }),
                           HelpOnLogin(),
                         ],
                       ),
                       SizedBox(
                         height: 8,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: TinterColors.primaryAccent,
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        ),
-                        height: 40,
+                      Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: tinterTheme.colors.primaryAccent,
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                            ),
+                            height: 40,
+                            child: child,
+                          );
+                        },
                         child: TextField(
                           focusNode: _loginFocusNode,
                           controller: _loginController,
@@ -316,22 +347,29 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Mot de passe',
-                            style: TinterTextStyle.loginFormLabel,
-                          ),
+                          Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                            return Text(
+                              'Mot de passe',
+                              style: tinterTheme.textStyle.loginFormLabel,
+                            );
+                          }),
                           HelpOnLogin(),
                         ],
                       ),
                       SizedBox(
                         height: 8,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: TinterColors.primaryAccent,
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        ),
-                        height: 40,
+                      Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: tinterTheme.colors.primaryAccent,
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                            ),
+                            height: 40,
+                            child: child,
+                          );
+                        },
                         child: TextField(
                           focusNode: _passwordFocusNode,
                           controller: _passwordController,
@@ -346,7 +384,9 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                               icon: Icon(
-                                  _passwordVisible ? Icons.visibility : Icons.visibility_off),
+                                _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                color: Colors.black,
+                              ),
                               onPressed: () {
                                 setState(() {
                                   _passwordVisible = !_passwordVisible;
@@ -385,34 +425,37 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                                 return FlatButton(
                                   onPressed: isLoading ? null : _onAuthenticationTry,
                                   padding: EdgeInsets.all(0.0),
-                                  child: AnimatedContainer(
-                                    duration: Duration(milliseconds: 150),
-                                    decoration: BoxDecoration(
-                                      color: TinterColors.secondaryAccent,
-                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                    ),
-                                    height: 40,
-                                    width: isLoading ? 40 : constraints.maxWidth,
-                                    child: AnimatedSwitcher(
+                                  child: Consumer<TinterTheme>(
+                                      builder: (context, tinterTheme, child) {
+                                    return AnimatedContainer(
                                       duration: Duration(milliseconds: 150),
-                                      child: isLoading
-                                          ? SizedBox(
-                                              height: 23,
-                                              width: 23,
-                                              child: CircularProgressIndicator(
-                                                valueColor: AlwaysStoppedAnimation<Color>(
-                                                  TinterColors.white,
+                                      decoration: BoxDecoration(
+                                        color: tinterTheme.colors.secondary,
+                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                      ),
+                                      height: 40,
+                                      width: isLoading ? 40 : constraints.maxWidth,
+                                      child: AnimatedSwitcher(
+                                        duration: Duration(milliseconds: 150),
+                                        child: isLoading
+                                            ? SizedBox(
+                                                height: 23,
+                                                width: 23,
+                                                child: CircularProgressIndicator(
+                                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                                    tinterTheme.colors.defaultTextColor,
+                                                  ),
+                                                  strokeWidth: 3,
                                                 ),
-                                                strokeWidth: 3,
+                                              )
+                                            : Text(
+                                                'Se connecter',
+                                                style: tinterTheme.textStyle.loginFormButton,
+                                                textAlign: TextAlign.center,
                                               ),
-                                            )
-                                          : Text(
-                                            'Se connecter',
-                                            style: TinterTextStyle.loginFormButton,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                    ),
-                                  ),
+                                      ),
+                                    );
+                                  }),
                                 );
                               },
                             );
@@ -448,10 +491,12 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                     ),
                     Container(
                       padding: EdgeInsets.only(bottom: 5),
-                      child: AutoSizeText(
-                        'Developpé par Lucas Delsol',
-                        style: TinterTextStyle.developedBy,
-                      ),
+                      child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                        return AutoSizeText(
+                          'Developpé par Lucas Delsol',
+                          style: tinterTheme.textStyle.developedBy,
+                        );
+                      }),
                     )
                   ],
                 ),

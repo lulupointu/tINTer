@@ -1,83 +1,118 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'binome.dart';
+part of 'user.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-const BinomeStatus _$heIgnoredYou = const BinomeStatus._('heIgnoredYou');
-const BinomeStatus _$ignored = const BinomeStatus._('ignored');
-const BinomeStatus _$none = const BinomeStatus._('none');
-const BinomeStatus _$liked = const BinomeStatus._('liked');
-const BinomeStatus _$matched = const BinomeStatus._('matched');
-const BinomeStatus _$youAskedBinome = const BinomeStatus._('youAskedBinome');
-const BinomeStatus _$heAskedBinome = const BinomeStatus._('heAskedBinome');
-const BinomeStatus _$binomeAccepted = const BinomeStatus._('binomeAccepted');
-const BinomeStatus _$binomeHeRefused = const BinomeStatus._('binomeHeRefused');
-const BinomeStatus _$binomeYouRefused =
-    const BinomeStatus._('binomeYouRefused');
+const School _$TSP = const School._('TSP');
+const School _$IMTBS = const School._('IMTBS');
 
-BinomeStatus _$binomeStatusValueOf(String name) {
+School _$schoolValueOf(String name) {
   switch (name) {
-    case 'heIgnoredYou':
-      return _$heIgnoredYou;
-    case 'ignored':
-      return _$ignored;
-    case 'none':
-      return _$none;
-    case 'liked':
-      return _$liked;
-    case 'matched':
-      return _$matched;
-    case 'youAskedBinome':
-      return _$youAskedBinome;
-    case 'heAskedBinome':
-      return _$heAskedBinome;
-    case 'binomeAccepted':
-      return _$binomeAccepted;
-    case 'binomeHeRefused':
-      return _$binomeHeRefused;
-    case 'binomeYouRefused':
-      return _$binomeYouRefused;
+    case 'TSP':
+      return _$TSP;
+    case 'IMTBS':
+      return _$IMTBS;
     default:
       throw new ArgumentError(name);
   }
 }
 
-final BuiltSet<BinomeStatus> _$binomeStatusValues =
-    new BuiltSet<BinomeStatus>(const <BinomeStatus>[
-  _$heIgnoredYou,
-  _$ignored,
-  _$none,
-  _$liked,
-  _$matched,
-  _$youAskedBinome,
-  _$heAskedBinome,
-  _$binomeAccepted,
-  _$binomeHeRefused,
-  _$binomeYouRefused,
+final BuiltSet<School> _$schoolValues = new BuiltSet<School>(const <School>[
+  _$TSP,
+  _$IMTBS,
 ]);
 
-Serializer<BuildBinome> _$buildBinomeSerializer = new _$BuildBinomeSerializer();
-Serializer<BinomeStatus> _$binomeStatusSerializer =
-    new _$BinomeStatusSerializer();
+const TSPYear _$TSP1A = const TSPYear._('TSP1A');
+const TSPYear _$TSP2A = const TSPYear._('TSP2A');
+const TSPYear _$TSP3A = const TSPYear._('TSP3A');
 
-class _$BuildBinomeSerializer implements StructuredSerializer<BuildBinome> {
+TSPYear _$tSPYearValueOf(String name) {
+  switch (name) {
+    case 'TSP1A':
+      return _$TSP1A;
+    case 'TSP2A':
+      return _$TSP2A;
+    case 'TSP3A':
+      return _$TSP3A;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<TSPYear> _$tSPYearValues = new BuiltSet<TSPYear>(const <TSPYear>[
+  _$TSP1A,
+  _$TSP2A,
+  _$TSP3A,
+]);
+
+const LieuDeVie _$maisel = const LieuDeVie._('maisel');
+const LieuDeVie _$other = const LieuDeVie._('other');
+
+LieuDeVie _$lieuDeVieValueOf(String name) {
+  switch (name) {
+    case 'maisel':
+      return _$maisel;
+    case 'other':
+      return _$other;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<LieuDeVie> _$lieuDeVieValues =
+    new BuiltSet<LieuDeVie>(const <LieuDeVie>[
+  _$maisel,
+  _$other,
+]);
+
+const HoraireDeTravail _$morning = const HoraireDeTravail._('morning');
+const HoraireDeTravail _$afternoon = const HoraireDeTravail._('afternoon');
+const HoraireDeTravail _$evening = const HoraireDeTravail._('evening');
+const HoraireDeTravail _$night = const HoraireDeTravail._('night');
+
+HoraireDeTravail _$horaireDeTravailValueOf(String name) {
+  switch (name) {
+    case 'morning':
+      return _$morning;
+    case 'afternoon':
+      return _$afternoon;
+    case 'evening':
+      return _$evening;
+    case 'night':
+      return _$night;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<HoraireDeTravail> _$horaireDeTravailValues =
+    new BuiltSet<HoraireDeTravail>(const <HoraireDeTravail>[
+  _$morning,
+  _$afternoon,
+  _$evening,
+  _$night,
+]);
+
+Serializer<BuildUser> _$buildUserSerializer = new _$BuildUserSerializer();
+Serializer<School> _$schoolSerializer = new _$SchoolSerializer();
+Serializer<TSPYear> _$tSPYearSerializer = new _$TSPYearSerializer();
+Serializer<LieuDeVie> _$lieuDeVieSerializer = new _$LieuDeVieSerializer();
+Serializer<HoraireDeTravail> _$horaireDeTravailSerializer =
+    new _$HoraireDeTravailSerializer();
+
+class _$BuildUserSerializer implements StructuredSerializer<BuildUser> {
   @override
-  final Iterable<Type> types = const [BuildBinome, _$BuildBinome];
+  final Iterable<Type> types = const [BuildUser, _$BuildUser];
   @override
-  final String wireName = 'BuildBinome';
+  final String wireName = 'BuildUser';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, BuildBinome object,
+  Iterable<Object> serialize(Serializers serializers, BuildUser object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'statusScolaire',
-      serializers.serialize(object.statusScolaire,
-          specifiedType: const FullType(BinomeStatus)),
-      'score',
-      serializers.serialize(object.score, specifiedType: const FullType(int)),
       'login',
       serializers.serialize(object.login,
           specifiedType: const FullType(String)),
@@ -146,9 +181,9 @@ class _$BuildBinomeSerializer implements StructuredSerializer<BuildBinome> {
   }
 
   @override
-  BuildBinome deserialize(Serializers serializers, Iterable<Object> serialized,
+  BuildUser deserialize(Serializers serializers, Iterable<Object> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new BuildBinomeBuilder();
+    final result = new BuildUserBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -156,14 +191,6 @@ class _$BuildBinomeSerializer implements StructuredSerializer<BuildBinome> {
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
-        case 'statusScolaire':
-          result.statusScolaire = serializers.deserialize(value,
-              specifiedType: const FullType(BinomeStatus)) as BinomeStatus;
-          break;
-        case 'score':
-          result.score = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
         case 'login':
           result.login = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -255,28 +282,76 @@ class _$BuildBinomeSerializer implements StructuredSerializer<BuildBinome> {
   }
 }
 
-class _$BinomeStatusSerializer implements PrimitiveSerializer<BinomeStatus> {
+class _$SchoolSerializer implements PrimitiveSerializer<School> {
   @override
-  final Iterable<Type> types = const <Type>[BinomeStatus];
+  final Iterable<Type> types = const <Type>[School];
   @override
-  final String wireName = 'BinomeStatus';
+  final String wireName = 'School';
 
   @override
-  Object serialize(Serializers serializers, BinomeStatus object,
+  Object serialize(Serializers serializers, School object,
           {FullType specifiedType = FullType.unspecified}) =>
       object.name;
 
   @override
-  BinomeStatus deserialize(Serializers serializers, Object serialized,
+  School deserialize(Serializers serializers, Object serialized,
           {FullType specifiedType = FullType.unspecified}) =>
-      BinomeStatus.valueOf(serialized as String);
+      School.valueOf(serialized as String);
 }
 
-class _$BuildBinome extends BuildBinome {
+class _$TSPYearSerializer implements PrimitiveSerializer<TSPYear> {
   @override
-  final BinomeStatus statusScolaire;
+  final Iterable<Type> types = const <Type>[TSPYear];
   @override
-  final int score;
+  final String wireName = 'TSPYear';
+
+  @override
+  Object serialize(Serializers serializers, TSPYear object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  TSPYear deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      TSPYear.valueOf(serialized as String);
+}
+
+class _$LieuDeVieSerializer implements PrimitiveSerializer<LieuDeVie> {
+  @override
+  final Iterable<Type> types = const <Type>[LieuDeVie];
+  @override
+  final String wireName = 'LieuDeVie';
+
+  @override
+  Object serialize(Serializers serializers, LieuDeVie object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  LieuDeVie deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      LieuDeVie.valueOf(serialized as String);
+}
+
+class _$HoraireDeTravailSerializer
+    implements PrimitiveSerializer<HoraireDeTravail> {
+  @override
+  final Iterable<Type> types = const <Type>[HoraireDeTravail];
+  @override
+  final String wireName = 'HoraireDeTravail';
+
+  @override
+  Object serialize(Serializers serializers, HoraireDeTravail object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  HoraireDeTravail deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      HoraireDeTravail.valueOf(serialized as String);
+}
+
+class _$BuildUser extends BuildUser {
   @override
   final String login;
   @override
@@ -316,13 +391,11 @@ class _$BuildBinome extends BuildBinome {
   @override
   final BuiltList<String> matieresPreferees;
 
-  factory _$BuildBinome([void Function(BuildBinomeBuilder) updates]) =>
-      (new BuildBinomeBuilder()..update(updates)).build();
+  factory _$BuildUser([void Function(BuildUserBuilder) updates]) =>
+      (new BuildUserBuilder()..update(updates)).build();
 
-  _$BuildBinome._(
-      {this.statusScolaire,
-      this.score,
-      this.login,
+  _$BuildUser._(
+      {this.login,
       this.name,
       this.surname,
       this.email,
@@ -342,82 +415,73 @@ class _$BuildBinome extends BuildBinome {
       this.enligneOuNon,
       this.matieresPreferees})
       : super._() {
-    if (statusScolaire == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'statusScolaire');
-    }
-    if (score == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'score');
-    }
     if (login == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'login');
+      throw new BuiltValueNullFieldError('BuildUser', 'login');
     }
     if (name == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'name');
+      throw new BuiltValueNullFieldError('BuildUser', 'name');
     }
     if (surname == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'surname');
+      throw new BuiltValueNullFieldError('BuildUser', 'surname');
     }
     if (email == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'email');
+      throw new BuiltValueNullFieldError('BuildUser', 'email');
     }
     if (school == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'school');
+      throw new BuiltValueNullFieldError('BuildUser', 'school');
     }
     if (associations == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'associations');
+      throw new BuiltValueNullFieldError('BuildUser', 'associations');
     }
     if (primoEntrant == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'primoEntrant');
+      throw new BuiltValueNullFieldError('BuildUser', 'primoEntrant');
     }
     if (attiranceVieAsso == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'attiranceVieAsso');
+      throw new BuiltValueNullFieldError('BuildUser', 'attiranceVieAsso');
     }
     if (feteOuCours == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'feteOuCours');
+      throw new BuiltValueNullFieldError('BuildUser', 'feteOuCours');
     }
     if (aideOuSortir == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'aideOuSortir');
+      throw new BuiltValueNullFieldError('BuildUser', 'aideOuSortir');
     }
     if (organisationEvenements == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinome', 'organisationEvenements');
+      throw new BuiltValueNullFieldError('BuildUser', 'organisationEvenements');
     }
     if (goutsMusicaux == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'goutsMusicaux');
+      throw new BuiltValueNullFieldError('BuildUser', 'goutsMusicaux');
     }
     if (year == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'year');
+      throw new BuiltValueNullFieldError('BuildUser', 'year');
     }
     if (lieuDeVie == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'lieuDeVie');
+      throw new BuiltValueNullFieldError('BuildUser', 'lieuDeVie');
     }
     if (groupeOuSeul == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'groupeOuSeul');
+      throw new BuiltValueNullFieldError('BuildUser', 'groupeOuSeul');
     }
     if (horairesDeTravail == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'horairesDeTravail');
+      throw new BuiltValueNullFieldError('BuildUser', 'horairesDeTravail');
     }
     if (enligneOuNon == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'enligneOuNon');
+      throw new BuiltValueNullFieldError('BuildUser', 'enligneOuNon');
     }
     if (matieresPreferees == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'matieresPreferees');
+      throw new BuiltValueNullFieldError('BuildUser', 'matieresPreferees');
     }
   }
 
   @override
-  BuildBinome rebuild(void Function(BuildBinomeBuilder) updates) =>
+  BuildUser rebuild(void Function(BuildUserBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  BuildBinomeBuilder toBuilder() => new BuildBinomeBuilder()..replace(this);
+  BuildUserBuilder toBuilder() => new BuildUserBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is BuildBinome &&
-        statusScolaire == other.statusScolaire &&
-        score == other.score &&
+    return other is BuildUser &&
         login == other.login &&
         name == other.name &&
         surname == other.surname &&
@@ -459,13 +523,20 @@ class _$BuildBinome extends BuildBinome {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc(0, statusScolaire.hashCode), score.hashCode),
-                                                                                login.hashCode),
-                                                                            name.hashCode),
-                                                                        surname.hashCode),
-                                                                    email.hashCode),
-                                                                school.hashCode),
-                                                            profilePictureLocalPath.hashCode),
+                                                                            $jc(
+                                                                                0,
+                                                                                login
+                                                                                    .hashCode),
+                                                                            name
+                                                                                .hashCode),
+                                                                        surname
+                                                                            .hashCode),
+                                                                    email
+                                                                        .hashCode),
+                                                                school
+                                                                    .hashCode),
+                                                            profilePictureLocalPath
+                                                                .hashCode),
                                                         associations.hashCode),
                                                     primoEntrant.hashCode),
                                                 attiranceVieAsso.hashCode),
@@ -483,9 +554,7 @@ class _$BuildBinome extends BuildBinome {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('BuildBinome')
-          ..add('statusScolaire', statusScolaire)
-          ..add('score', score)
+    return (newBuiltValueToStringHelper('BuildUser')
           ..add('login', login)
           ..add('name', name)
           ..add('surname', surname)
@@ -509,17 +578,8 @@ class _$BuildBinome extends BuildBinome {
   }
 }
 
-class BuildBinomeBuilder implements Builder<BuildBinome, BuildBinomeBuilder> {
-  _$BuildBinome _$v;
-
-  BinomeStatus _statusScolaire;
-  BinomeStatus get statusScolaire => _$this._statusScolaire;
-  set statusScolaire(BinomeStatus statusScolaire) =>
-      _$this._statusScolaire = statusScolaire;
-
-  int _score;
-  int get score => _$this._score;
-  set score(int score) => _$this._score = score;
+class BuildUserBuilder implements Builder<BuildUser, BuildUserBuilder> {
+  _$BuildUser _$v;
 
   String _login;
   String get login => _$this._login;
@@ -608,12 +668,10 @@ class BuildBinomeBuilder implements Builder<BuildBinome, BuildBinomeBuilder> {
   set matieresPreferees(ListBuilder<String> matieresPreferees) =>
       _$this._matieresPreferees = matieresPreferees;
 
-  BuildBinomeBuilder();
+  BuildUserBuilder();
 
-  BuildBinomeBuilder get _$this {
+  BuildUserBuilder get _$this {
     if (_$v != null) {
-      _statusScolaire = _$v.statusScolaire;
-      _score = _$v.score;
       _login = _$v.login;
       _name = _$v.name;
       _surname = _$v.surname;
@@ -639,26 +697,24 @@ class BuildBinomeBuilder implements Builder<BuildBinome, BuildBinomeBuilder> {
   }
 
   @override
-  void replace(BuildBinome other) {
+  void replace(BuildUser other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$BuildBinome;
+    _$v = other as _$BuildUser;
   }
 
   @override
-  void update(void Function(BuildBinomeBuilder) updates) {
+  void update(void Function(BuildUserBuilder) updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$BuildBinome build() {
-    _$BuildBinome _$result;
+  _$BuildUser build() {
+    _$BuildUser _$result;
     try {
       _$result = _$v ??
-          new _$BuildBinome._(
-              statusScolaire: statusScolaire,
-              score: score,
+          new _$BuildUser._(
               login: login,
               name: name,
               surname: surname,
@@ -694,7 +750,7 @@ class BuildBinomeBuilder implements Builder<BuildBinome, BuildBinomeBuilder> {
         matieresPreferees.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'BuildBinome', _$failedField, e.toString());
+            'BuildUser', _$failedField, e.toString());
       }
       rethrow;
     }
