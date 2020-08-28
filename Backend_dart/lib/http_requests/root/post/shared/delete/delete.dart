@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';

@@ -2,13 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/associatif/users_associatifs_table.dart';
-import 'package:tinter_backend/database_interface/shared/user_shared_part_table.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
-import 'package:tinter_backend/models/associatif/user_associatif.dart';
-import 'package:tinter_backend/models/shared/user_shared_part.dart';
-import 'package:tinter_backend/test.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 Future<void> userSharedInfoGet(HttpRequest req, List<String> segments, String login) async {
   printReceivedSegments('userSharedInfoGet', segments);
@@ -20,10 +17,10 @@ Future<void> userSharedInfoGet(HttpRequest req, List<String> segments, String lo
   TinterDatabase tinterDatabase = TinterDatabase();
   await tinterDatabase.open();
 
-  UsersSharedPartTable usersSharedPartTable = UsersSharedPartTable(database: tinterDatabase.connection);
+  UsersManagementTable usersManagementTable = UsersManagementTable(database: tinterDatabase.connection);
 
   try {
-    BuildUserSharedPart user = await usersSharedPartTable.getFromLogin(login: login);
+    BuildUser user = await usersManagementTable.getFromLogin(login: login);
 
     await req.response
       ..statusCode = HttpStatus.ok

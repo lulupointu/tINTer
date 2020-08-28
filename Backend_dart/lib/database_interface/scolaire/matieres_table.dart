@@ -1,7 +1,6 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
-import 'package:tinter_backend/models/associatif/gouts_musicaux.dart';
 import 'package:tinter_backend/models/scolaire/matieres.dart';
 
 class MatieresTable {

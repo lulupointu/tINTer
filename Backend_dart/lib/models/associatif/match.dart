@@ -1,23 +1,20 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
-import 'package:tinter_backend/models/associatif/user_associatif.dart';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinter_backend/models/serializers.dart';
-import 'package:tinter_backend/models/shared/user_shared_part.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 part 'match.g.dart';
 
-abstract class Match extends Object implements UserAssociatif {
-  MatchStatus get status;
+abstract class Match extends Object implements User {
+  MatchStatus get statusAssociatif;
   int get score;
 }
 
 abstract class BuildMatch
-//    with UserAssociatif
+//    with User
     implements Match, Built<BuildMatch, BuildMatchBuilder> {
 
 
@@ -80,7 +77,7 @@ class MatchStatus extends EnumClass {
 //
 //@JsonSerializable(explicitToJson: true)
 //@immutable
-//class Match extends UserAssociatif {
+//class Match extends User {
 //  final MatchStatus _status;
 //  final int _score;
 //

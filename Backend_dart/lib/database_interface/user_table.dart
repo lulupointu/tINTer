@@ -1,23 +1,20 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
-import 'package:tinter_backend/models/shared/user_shared_part.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 class UsersTable {
   // WARNING: the name must have only lower case letter.
   static final String name = 'users';
   final PostgreSQLConnection database;
 
-  UsersTable({
-    @required this.database,
-  });
+  UsersTable({@required this.database});
+
 
   Future<void> create() async {
     final List<Future> createTypeQueries = [
       database.query("CREATE TYPE School AS ENUM ('TSP', 'IMTBS');"),
-      database.query("CREATE TYPE GroupeOuSeul AS ENUM ('groupe', 'seul');"),
       database.query("CREATE TYPE LieuDeVie AS ENUM ('maisel', 'other');"),
-      database.query("CREATE TYPE OutilDeTravail AS ENUM ('online', 'faceToFace');"),
       database.query("CREATE TYPE TSPYear AS ENUM ('TSP1A', 'TSP2A', 'TSP3A');"),
     ];
 
@@ -37,10 +34,13 @@ class UsersTable {
         IF OLD.email != NEW.email THEN
             RAISE EXCEPTION 'email cannot be changed.';
         END IF;
-        IF (NOT old.\"primoEntrant\" IS NULL) AND (old.\"primoEntrant\" != new.\"primoEntrant\") THEN
+        IF (new.\"isAccountCreationFinished\" = false) THEN
+            RAISE EXCEPTION 'isAccountCreationFinished cannot be changed to false.';
+        END IF;
+        IF (old.\"isAccountCreationFinished\" = true) AND (old.\"primoEntrant\" != new.\"primoEntrant\") THEN
             RAISE EXCEPTION 'primoEntrant cannot be changed after having been set once.';
         END IF;
-        IF (NOT old.year IS NULL) AND (old.year != new.year) THEN
+        IF (old.\"isAccountCreationFinished\" = true) AND (old.\"year\" != new.\"year\") THEN
             RAISE EXCEPTION 'year cannot be changed after having been set once.';
         END IF;
 
@@ -56,15 +56,16 @@ class UsersTable {
       surname Text NOT NULL,
       email Text NOT NULL,
       school School NOT NULL,
-      \"primoEntrant\" Boolean,
-      year TSPYear,
-      \"attiranceVieAsso\" DOUBLE PRECISION CHECK (\"attiranceVieAsso\" >= 0 AND \"attiranceVieAsso\" <= 1),
-      \"feteOuCours\" DOUBLE PRECISION CHECK (\"feteOuCours\" >= 0 AND \"feteOuCours\" <= 1),
-      \"aideOuSortir\" DOUBLE PRECISION CHECK (\"aideOuSortir\" >= 0 AND \"aideOuSortir\" <= 1),
-      \"organisationEvenements\" DOUBLE PRECISION CHECK (\"organisationEvenements\" >= 0 AND \"organisationEvenements\" <= 1),
-      \"groupeOuSeul\" GroupeOuSeul,
-      \"lieuDeVie\" LieuDeVie,
-      \"enligneOuNon\" OutilDeTravail
+      \"primoEntrant\" Boolean DEFAULT true NOT NULL,
+      year TSPYear DEFAULT 'TSP1A' NOT NULL,
+      \"attiranceVieAsso\" Double PRECISION DEFAULT 0.5 NOT NULL CHECK (\"attiranceVieAsso\" >= 0 AND \"attiranceVieAsso\" <= 1),
+      \"feteOuCours\" Double PRECISION DEFAULT 0.5 NOT NULL CHECK (\"feteOuCours\" >= 0 AND \"feteOuCours\" <= 1),
+      \"aideOuSortir\" Double PRECISION DEFAULT 0.5 NOT NULL CHECK (\"aideOuSortir\" >= 0 AND \"aideOuSortir\" <= 1),
+      \"organisationEvenements\" DOUBLE PRECISION DEFAULT 0.5 NOT NULL CHECK (\"organisationEvenements\" >= 0 AND \"organisationEvenements\" <= 1),
+      \"groupeOuSeul\" Double PRECISION DEFAULT 0.5 NOT NULL CHECK (\"groupeOuSeul\" >= 0 AND \"groupeOuSeul\" <= 1),
+      \"lieuDeVie\" LieuDeVie DEFAULT 'maisel' NOT NULL,
+      \"enligneOuNon\" Double PRECISION DEFAULT 0.5 NOT NULL CHECK (\"enligneOuNon\" >= 0 AND \"enligneOuNon\" <= 1),
+      \"isAccountCreationFinished\" Boolean DEFAULT false NOT NULL
       );
     """;
 
@@ -80,9 +81,7 @@ class UsersTable {
     final List<Future> queries = [
       database.query("DROP FUNCTION IF EXISTS constraints_check"),
       database.query("DROP TYPE IF EXISTS School CASCADE;"),
-      database.query("DROP TYPE IF EXISTS GroupeOuSeul CASCADE;"),
       database.query("DROP TYPE IF EXISTS LieuDeVie CASCADE;"),
-      database.query("DROP TYPE IF EXISTS OutilDeTravail CASCADE;"),
       database.query("DROP TYPE IF EXISTS TSPYear CASCADE;"),
     ];
 
@@ -91,8 +90,7 @@ class UsersTable {
     return Future.wait(queries);
   }
 
-  Future<void> add({@required Map<String, dynamic> userJson}) async {
-    // Login is needed to identify the user
+  Future<void> addBasicInfo({@required Map<String, dynamic> userJson}) async {
     assert(userJson.containsKey('login'));
 
     // Remove any useless input
@@ -102,7 +100,7 @@ class UsersTable {
       database.query(
           "INSERT INTO $name "
                   "(" +
-              userJson.keys.join(', ') +
+              [for (String key in userJson.keys) '\"$key\"'].join(', ') +
               ") "
                   "VALUES (" +
               [for (String key in userJson.keys) '@$key'].join(', ') +
@@ -113,12 +111,31 @@ class UsersTable {
     return Future.wait(queries);
   }
 
-  Future<void> update({@required Map<String, dynamic> userJson}) async {
-    // Login is needed to identify the user
-    assert(userJson.containsKey('login'));
+  Future<bool> isKnown({@required String login}) {
+    final String query = "SELECT \"isAccountCreationFinished\" FROM $name "
+        "WHERE $name.login=@login;";
+
+    return database.mappedResultsQuery(query, substitutionValues: {
+      'login': login,
+    }).then((queriesResults) {
+      if (queriesResults.length == 0) {
+        throw EmptyResponseToDatabaseQuery(
+            error: 'One profile requested (${login}) but got 0');
+      }
+
+      return queriesResults[0][name]['isAccountCreationFinished'];
+    });
+  }
+
+  Future<void> update({@required BuildUser user}) async {
+    Map<String, dynamic> userJson = user.toJson();
 
     // Remove any useless input
     userJson.removeWhere((String key, dynamic value) => value == null || value is List);
+    userJson.remove('profilePictureLocalPath');
+
+    // Set isAccountCreationFinished to true to avoid updating wrong attributes in the future
+    userJson['isAccountCreationFinished'] = true;
 
     final List<Future> queries = [
       database.query(
@@ -139,7 +156,7 @@ class UsersTable {
     return database.mappedResultsQuery(query, substitutionValues: {
       'login': login,
     }).then((queriesResults) {
-      if (queriesResults[0].length == 0) {
+      if (queriesResults.length == 0) {
         throw EmptyResponseToDatabaseQuery(
             error: 'One profile requested (${login}) but got 0');
       }

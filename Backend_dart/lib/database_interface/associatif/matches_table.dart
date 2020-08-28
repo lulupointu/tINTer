@@ -1,31 +1,32 @@
 import 'package:postgres/postgres.dart';
-import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_score_associatif_table.dart';
-import 'package:tinter_backend/database_interface/user_table.dart';
+import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/models/associatif/match.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 class MatchesTable {
-  final UsersTable usersTable;
+  final UsersManagementTable usersManagementTable;
   final RelationsScoreAssociatifTable relationsScoreTable;
   final RelationsStatusAssociatifTable relationsStatusTable;
   final PostgreSQLConnection database;
 
   MatchesTable({
     @required this.database,
-  })  : usersTable = UsersTable(database: database),
+  })  : usersManagementTable = UsersManagementTable(database: database),
         relationsScoreTable = RelationsScoreAssociatifTable(database: database),
         relationsStatusTable = RelationsStatusAssociatifTable(database: database);
 
   Future<List<BuildMatch>> getXDiscoverMatchesFromLogin(
       {@required String login, @required int limit, int offset = 0}) async {
     String getDiscoverMatchesQuery =
-        "SELECT ${RelationsStatusAssociatifTable.name}.\"otherLogin\", score, status FROM ${RelationsScoreAssociatifTable.name} JOIN "
-        "(SELECT \"myRelationStatusAssociatif\".login, \"myRelationStatusAssociatif\".\"otherLogin\", \"myRelationStatusAssociatif\".status, \"otherRelationStatusAssociatif\".status AS \"otherStatus\" "
+        "SELECT ${RelationsStatusAssociatifTable.name}.\"otherLogin\", score, \"statusAssociatif\" FROM ${RelationsScoreAssociatifTable.name} JOIN "
+        "(SELECT \"myRelationStatusAssociatif\".login, \"myRelationStatusAssociatif\".\"otherLogin\", \"myRelationStatusAssociatif\".\"statusAssociatif\", \"otherRelationStatusAssociatif\".\"statusAssociatif\" AS \"otherStatus\" "
         "FROM "
         "(SELECT * FROM ${RelationsStatusAssociatifTable.name} "
-        "WHERE login=@login AND status='none' "
+        "WHERE login=@login AND \"statusAssociatif\"='none' "
         ") AS \"myRelationStatusAssociatif\" "
         "JOIN ${RelationsStatusAssociatifTable.name} AS \"otherRelationStatusAssociatif\" "
         "ON \"myRelationStatusAssociatif\".login = \"otherRelationStatusAssociatif\".\"otherLogin\" AND \"myRelationStatusAssociatif\".\"otherLogin\" = \"otherRelationStatusAssociatif\".login "
@@ -39,21 +40,23 @@ class MatchesTable {
       'limit': limit,
       'offset': offset,
     }).then((sqlResults) {
-      return usersTable
-          .getMultipleFromLogin(
+      return usersManagementTable
+          .getMultipleFromLogins(
               logins: sqlResults
                   .map((Map<String, Map<String, dynamic>> result) =>
                       result[RelationsStatusAssociatifTable.name]['otherLogin'].toString())
                   .toList())
-          .then((Map<String, Map<String, dynamic>> otherUsers) {
+          .then((Map<String, BuildUser> otherUsers) {
         return [
-//          for (int index = 0; index < otherUsers.length; index++)
-//            BuildMatch.fromJson({
-//              ...otherUsers[index][result[RelationsStatusAssociatifTable.name]['otherLogin']].toJson(),
-//              'score': result[RelationsScoreAssociatifTable.name]['score'],
-//              'status': MatchStatus.none,
-//               Since we search for discover, we know that the status is none.
-//            })
+          for (int index = 0; index < sqlResults.length; index++)
+            BuildMatch.fromJson({
+              ...otherUsers[sqlResults[index][RelationsStatusAssociatifTable.name]
+                      ['otherLogin']]
+                  .toJson(),
+              'score': sqlResults[index][RelationsScoreAssociatifTable.name]['score'],
+              'statusAssociatif': MatchStatus.none.serialize(),
+              // Since we search for discover, we know that the status is none.
+            })
         ];
       });
     });
@@ -61,11 +64,11 @@ class MatchesTable {
 
   Future<List<BuildMatch>> getMatchedMatchesFromLogin({@required String login}) async {
     String getDiscoverMatchesQuery =
-        "SELECT ${RelationsStatusAssociatifTable.name}.\"otherLogin\", score, status, \"otherStatus\" FROM ${RelationsScoreAssociatifTable.name} JOIN "
-        "(SELECT \"myRelationStatusAssociatif\".login, \"myRelationStatusAssociatif\".\"otherLogin\", \"myRelationStatusAssociatif\".status, \"otherRelationStatusAssociatif\".status AS \"otherStatus\" "
+        "SELECT ${RelationsStatusAssociatifTable.name}.\"otherLogin\", score, \"statusAssociatif\", \"otherStatus\" FROM ${RelationsScoreAssociatifTable.name} JOIN "
+        "(SELECT \"myRelationStatusAssociatif\".login, \"myRelationStatusAssociatif\".\"otherLogin\", \"myRelationStatusAssociatif\".\"statusAssociatif\", \"otherRelationStatusAssociatif\".\"statusAssociatif\" AS \"otherStatus\" "
         "FROM "
         "(SELECT * FROM ${RelationsStatusAssociatifTable.name} "
-        "WHERE login=@login AND status<>'none' AND status<>'ignored' "
+        "WHERE login=@login AND \"statusAssociatif\"<>'none' AND \"statusAssociatif\"<>'ignored' "
         ") AS \"myRelationStatusAssociatif\" "
         "JOIN ${RelationsStatusAssociatifTable.name} AS \"otherRelationStatusAssociatif\" "
         "ON \"myRelationStatusAssociatif\".login = \"otherRelationStatusAssociatif\".\"otherLogin\" AND \"myRelationStatusAssociatif\".\"otherLogin\" = \"otherRelationStatusAssociatif\".login "
@@ -76,25 +79,27 @@ class MatchesTable {
     return database.mappedResultsQuery(getDiscoverMatchesQuery, substitutionValues: {
       'login': login,
     }).then((sqlResults) {
-      print(sqlResults);
-      return usersTable
-          .getMultipleFromLogin(
+      return usersManagementTable
+          .getMultipleFromLogins(
               logins: sqlResults
                   .map((Map<String, Map<String, dynamic>> result) =>
                       result[RelationsStatusAssociatifTable.name]['otherLogin'].toString())
                   .toList())
-          .then((Map<String, Map<String, dynamic>> otherUsers) {
+          .then((Map<String, BuildUser> otherUsers) {
         return [
-//          for (Map<String, Map<String, dynamic>> result in sqlResults)
-//            BuildMatch.fromJson({
-//              ...otherUsers[result[RelationsStatusAssociatifTable.name]['otherLogin']].toJson(),
-//              'score': result[RelationsScoreAssociatifTable.name]['score'],
-//              'status': getMatchStatusFromRelationStatusAssociatif(
-//                  status: getEnumRelationStatusAssociatifFromString(
-//                      result[RelationsStatusAssociatifTable.name]['status']),
-//                  otherStatus: getEnumRelationStatusAssociatifFromString(
-//                      result[RelationsStatusAssociatifTable.name]['otherStatus'])),
-//            })
+          for (int index = 0; index < sqlResults.length; index++)
+            BuildMatch.fromJson({
+              ...otherUsers[sqlResults[index][RelationsStatusAssociatifTable.name]
+                      ['otherLogin']]
+                  .toJson(),
+              'score': sqlResults[index][RelationsScoreAssociatifTable.name]['score'],
+              'statusAssociatif': getMatchStatusFromRelationStatusAssociatif(
+                      status: EnumRelationStatusAssociatif.valueOf(sqlResults[index]
+                          [RelationsStatusAssociatifTable.name]['statusAssociatif']),
+                      otherStatus: EnumRelationStatusAssociatif.valueOf(sqlResults[index]
+                          [RelationsStatusAssociatifTable.name]['otherStatus']))
+                  .serialize(),
+            })
         ];
       });
     });
@@ -158,7 +163,8 @@ class MatchesTable {
 class UnauthorizedRelationStatusAssociatifCombination implements Exception {
   final EnumRelationStatusAssociatif status, otherStatus;
 
-  UnauthorizedRelationStatusAssociatifCombination({@required this.status, @required this.otherStatus});
+  UnauthorizedRelationStatusAssociatifCombination(
+      {@required this.status, @required this.otherStatus});
 
   @override
   String toString() =>

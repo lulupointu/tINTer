@@ -6,11 +6,9 @@ import 'package:tinter_backend/database_interface/scolaire/binomes_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
-import 'package:tinter_backend/models/associatif/match.dart';
-import 'package:tinter_backend/test.dart';
 
 Future<void> matchedBinomesGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('matchedBinomesGet', segments);
+  printReceivedSegments('MatchedBinomesGet', segments);
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

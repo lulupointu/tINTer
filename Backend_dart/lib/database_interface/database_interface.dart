@@ -1,24 +1,16 @@
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
+import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/matieres_table.dart';
-import 'package:tinter_backend/database_interface/scolaire/users_horaires_de_travail.dart';
-import 'package:tinter_backend/database_interface/scolaire/users_matieres_table.dart';
-import 'package:tinter_backend/database_interface/scolaire/users_scolaire_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/relation_score_scolaire_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/associatif/gouts_musicaux_table.dart';
 import 'package:tinter_backend/database_interface/associatif/matches_table.dart';
-import 'package:tinter_backend/database_interface/associatif/users_associatifs_table.dart';
-import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_score_associatif_table.dart';
 import 'package:tinter_backend/database_interface/shared/sessions.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
-import 'package:tinter_backend/database_interface/shared/user_shared_part_table.dart';
-import 'package:tinter_backend/database_interface/shared/users_associations_table.dart';
-import 'package:tinter_backend/database_interface/associatif/users_gouts_musicaux_table.dart';
-import 'package:tinter_backend/database_interface/user_table.dart';
-import 'package:tinter_backend/models/associatif/user_associatif.dart';
-import 'package:tinter_backend/models/scolaire/user_scolaire.dart';
-import 'package:tinter_backend/models/shared/user_shared_part.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 import 'package:tinter_backend/secret.dart';
 
 class TinterDatabase {
@@ -70,93 +62,82 @@ main() async {
   final TinterDatabase tinterDatabase = TinterDatabase();
   await tinterDatabase.open();
 
-  final UsersTable usersTable = UsersTable(database: tinterDatabase.connection);
+  final UsersManagementTable usersManagementTable =
+      UsersManagementTable(database: tinterDatabase.connection);
   final AssociationsTable associationsTable =
       AssociationsTable(database: tinterDatabase.connection);
   final GoutsMusicauxTable goutsMusicauxTable =
       GoutsMusicauxTable(database: tinterDatabase.connection);
   final MatieresTable matieresTable = MatieresTable(database: tinterDatabase.connection);
-  final UsersAssociationsTable usersAssociationsTable =
-      UsersAssociationsTable(database: tinterDatabase.connection);
-  final UsersHorairesDeTravailTable usersHorairesDeTravailTable =
-      UsersHorairesDeTravailTable(database: tinterDatabase.connection);
-  final UsersMatieresTable usersMatieresTable =
-      UsersMatieresTable(database: tinterDatabase.connection);
-  final UsersGoutsMusicauxTable usersGoutsMusicauxTable =
-      UsersGoutsMusicauxTable(database: tinterDatabase.connection);
-  final UsersAssociatifsTable usersAssociatifsTable =
-      UsersAssociatifsTable(database: tinterDatabase.connection);
-  final UsersSharedPartTable usersSharedPartTable =
-      UsersSharedPartTable(database: tinterDatabase.connection);
-  final UsersScolairesTable usersScolairesTable =
-      UsersScolairesTable(database: tinterDatabase.connection);
-  final RelationsScoreAssociatifTable relationsScoreTable =
-      RelationsScoreAssociatifTable(database: tinterDatabase.connection);
-  final RelationsStatusAssociatifTable relationsStatusTable =
-      RelationsStatusAssociatifTable(database: tinterDatabase.connection);
+  final RelationsScoreAssociatifTable relationsScoreAssociatifTable =
+  RelationsScoreAssociatifTable(database: tinterDatabase.connection);
+  final RelationsStatusAssociatifTable relationsStatusAssociatifTable =
+  RelationsStatusAssociatifTable(database: tinterDatabase.connection);
+  final RelationsScoreScolaireTable relationsScoreScolaireTable =
+  RelationsScoreScolaireTable(database: tinterDatabase.connection);
+  final RelationsStatusScolaireTable relationsStatusScolaireTable =
+  RelationsStatusScolaireTable(database: tinterDatabase.connection);
   final MatchesTable matchesTable = MatchesTable(database: tinterDatabase.connection);
   final SessionsTable sessionsTable = SessionsTable(database: tinterDatabase.connection);
 
   // Delete
   await sessionsTable.delete();
-  await usersAssociationsTable.delete();
-  await usersGoutsMusicauxTable.delete();
-  await usersMatieresTable.delete();
-  await usersHorairesDeTravailTable.delete();
-  await usersTable.delete();
+  await usersManagementTable.delete();
   await associationsTable.delete();
   await goutsMusicauxTable.delete();
   await matieresTable.delete();
-  await relationsStatusTable.delete();
-  await relationsScoreTable.delete();
+  await relationsStatusAssociatifTable.delete();
+  await relationsScoreAssociatifTable.delete();
+  await relationsStatusScolaireTable.delete();
+  await relationsScoreScolaireTable.delete();
 
-  // Create
-  await usersTable.create();
+  // Create;
   await associationsTable.create();
   await goutsMusicauxTable.create();
   await matieresTable.create();
-  await usersAssociationsTable.create();
-  await usersGoutsMusicauxTable.create();
-  await usersMatieresTable.create();
-  await usersHorairesDeTravailTable.create();
-  await relationsStatusTable.create();
-  await relationsScoreTable.create();
+  await usersManagementTable.create();
+  await relationsStatusAssociatifTable.create();
+  await relationsScoreAssociatifTable.create();
+  await relationsStatusScolaireTable.create();
+  await relationsScoreScolaireTable.create();
   await sessionsTable.create();
 
   // Populate
   await goutsMusicauxTable.populate();
   await associationsTable.populate();
   await matieresTable.populate();
-  await usersSharedPartTable.populate();
-  await relationsStatusTable.populate();
-  await relationsScoreTable.populate();
+  await usersManagementTable.populate();
+  await relationsStatusAssociatifTable.populate();
+  await relationsScoreAssociatifTable.populate();
+  await relationsStatusScolaireTable.populate();
+  await relationsScoreScolaireTable.populate();
   await sessionsTable.populate();
-  await usersTable.update(userJson: {
-    'login': fakeUsersSharedPart[0].login,
-    'primoEntrant': true,
-  });
-  await usersTable.update(userJson: {
-    'login': fakeUsersSharedPart[1].login,
-    'primoEntrant': true,
-  });
-  await usersTable.update(userJson: {
-    'login': fakeUsersSharedPart[2].login,
-    'primoEntrant': false,
-  });
-  await usersTable.update(userJson: {
-    'login': fakeUsersSharedPart[3].login,
-    'primoEntrant': true,
-  });
-  await usersTable.update(userJson: {
-    'login': fakeUsersSharedPart[4].login,
-    'primoEntrant': false,
-  });
-  await usersAssociatifsTable.populate();
-  await usersScolairesTable.populate();
+  await usersManagementTable.update(
+      user: fakeUsers[0].rebuild(
+    (b) => b
+      ..primoEntrant = true
+      ..year = TSPYear.TSP2A,
+  ));
+  await usersManagementTable.update(
+      user: fakeUsers[0].rebuild(
+    (b) => b
+      ..primoEntrant = false
+      ..year = TSPYear.TSP1A,
+  ));
+  await usersManagementTable.update(
+      user: fakeUsers[0].rebuild(
+    (b) => b
+      ..primoEntrant = false
+      ..year = TSPYear.TSP3A,
+  ));
+  await usersManagementTable.update(
+      user: fakeUsers[0].rebuild(
+    (b) => b
+      ..primoEntrant = true
+      ..year = TSPYear.TSP2A,
+  ));
 
   // Tests
-  print(await usersScolairesTable.getAllExceptOneFromLogin(
-      login: fakeUsersScolaires[0].login, year: TSPYear.TSP3A));
 //  await relationsStatusTable.update(
 //    relationStatus: RelationStatusAssociatif(
 //      login: fakeListRelationStatusAssociatif[0].login,

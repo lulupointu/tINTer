@@ -2,17 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
-import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:postgres/src/connection.dart';
 import 'package:tinter_backend/models/shared/internal_errors.dart';
 
-Future<void> matchUpdateRelationStatusScolaire(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('matchUpdateRelationStatusScolaire', segments);
+Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> segments, String login) async {
+  printReceivedSegments('binomeUpdateRelationStatusScolaire', segments);
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

@@ -17,7 +17,7 @@ class UsersAssociationsTable {
     final String query = """
     CREATE TABLE $name (
       user_login Text NOT NULL REFERENCES ${UsersTable.name} (login) ON DELETE CASCADE,
-      association_id int NOT NULL REFERENCES associations (id),
+      association_id int NOT NULL REFERENCES ${AssociationsTable.name} (id),
       PRIMARY KEY (user_login, association_id)
     );
     """;

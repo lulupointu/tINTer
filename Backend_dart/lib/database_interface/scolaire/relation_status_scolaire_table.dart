@@ -1,53 +1,59 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
 import 'package:meta/meta.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
-import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 
-//List<RelationStatusScolaire> fakeListRelationStatusScolaire = [
-//  RelationStatusScolaire(
-//    login: fakeStaticStudents[0].login,
-//    otherLogin: fakeStaticStudents[1].login,
-//    status: EnumRelationStatusScolaire.liked,
-//  ),
-//  RelationStatusScolaire(
-//    login: fakeStaticStudents[0].login,
-//    otherLogin: fakeStaticStudents[2].login,
-//    status: EnumRelationStatusScolaire.none,
-//  ),
-//  RelationStatusScolaire(
-//    login: fakeStaticStudents[0].login,
-//    otherLogin: fakeStaticStudents[3].login,
-//    status: EnumRelationStatusScolaire.ignored,
-//  ),
-//  RelationStatusScolaire(
-//    login: fakeStaticStudents[0].login,
-//    otherLogin: fakeStaticStudents[4].login,
-//    status: EnumRelationStatusScolaire.askedBinome,
-//  ),
-//  RelationStatusScolaire(
-//    login: fakeStaticStudents[1].login,
-//    otherLogin: fakeStaticStudents[0].login,
-//    status: EnumRelationStatusScolaire.askedBinome,
-//  ),
-//  RelationStatusScolaire(
-//    login: fakeStaticStudents[2].login,
-//    otherLogin: fakeStaticStudents[0].login,
-//    status: EnumRelationStatusScolaire.ignored,
-//  ),
-//  RelationStatusScolaire(
-//    login: fakeStaticStudents[3].login,
-//    otherLogin: fakeStaticStudents[0].login,
-//    status: EnumRelationStatusScolaire.acceptedBinome,
-//  ),
-//  RelationStatusScolaire(
-//    login: fakeStaticStudents[4].login,
-//    otherLogin: fakeStaticStudents[0].login,
-//    status: EnumRelationStatusScolaire.refusedBinome,
-//  ),
-//];
+List<RelationStatusScolaire> fakeListRelationStatusScolaire = [
+  RelationStatusScolaire((r) => r
+    ..login = fakeUsers[0].login
+    ..otherLogin = fakeUsers[1].login
+    ..statusScolaire = EnumRelationStatusScolaire.liked,
+  ),
+  RelationStatusScolaire(
+        (r) => r
+      ..login =  fakeUsers[0].login
+      ..otherLogin = fakeUsers[2].login
+      ..statusScolaire = EnumRelationStatusScolaire.none,
+  ),
+  RelationStatusScolaire(
+        (r) => r
+      ..login =  fakeUsers[0].login
+      ..otherLogin = fakeUsers[3].login
+      ..statusScolaire = EnumRelationStatusScolaire.ignored,
+  ),
+  RelationStatusScolaire(
+        (r) => r
+      ..login =  fakeUsers[0].login
+      ..otherLogin = fakeUsers[4].login
+      ..statusScolaire = EnumRelationStatusScolaire.askedBinome,
+  ),
+  RelationStatusScolaire(
+        (r) => r
+      ..login =  fakeUsers[1].login
+      ..otherLogin = fakeUsers[0].login
+      ..statusScolaire = EnumRelationStatusScolaire.askedBinome,
+  ),
+  RelationStatusScolaire(
+        (r) => r
+      ..login =  fakeUsers[2].login
+      ..otherLogin = fakeUsers[0].login
+      ..statusScolaire = EnumRelationStatusScolaire.ignored,
+  ),
+  RelationStatusScolaire(
+        (r) => r
+      ..login =  fakeUsers[3].login
+      ..otherLogin = fakeUsers[0].login
+      ..statusScolaire = EnumRelationStatusScolaire.acceptedBinome,
+  ),
+  RelationStatusScolaire(
+        (r) => r
+      ..login =  fakeUsers[4].login
+      ..otherLogin = fakeUsers[0].login
+      ..statusScolaire = EnumRelationStatusScolaire.refusedBinome,
+  ),
+];
 
 class RelationsStatusScolaireTable {
   // WARNING: the name must have only lower case letter.
@@ -58,14 +64,14 @@ class RelationsStatusScolaireTable {
 
   Future<void> create() async {
     final String statusTypeCreateQuery = """
-    CREATE TYPE status 
+    CREATE TYPE \"statusScolaire\" 
     AS ENUM ('none', 'ignored', 'liked', 'askedBinome', 'acceptedBinome', 'refusedBinome')
     """;
     final String createTableQuery = """
     CREATE TABLE $name (
       login Text NOT NULL REFERENCES ${UsersTable.name} (login) ON DELETE CASCADE,
       \"otherLogin\" Text NOT NULL REFERENCES ${UsersTable.name} (login) ON DELETE CASCADE,
-      status Text NOT NULL,
+      \"statusScolaire\" Text NOT NULL,
       PRIMARY KEY (login, \"otherLogin\"),
       CHECK (login <> \"otherLogin\")
     );
@@ -74,60 +80,60 @@ class RelationsStatusScolaireTable {
     // This functions prevent anyone from modifying any field except
     // isValid which can only be changed from true to false.
     final String createConstraintFunctionQuery = """
-    CREATE FUNCTION relation_status_check() RETURNS trigger AS \$relation_status_check\$
+    CREATE FUNCTION relation_status_scolaire_check() RETURNS trigger AS \$relation_status_scolaire_check\$
     DECLARE
       \"otherStatus\" Text;
     BEGIN
     
-        SELECT status INTO \"otherStatus\" FROM ${RelationsStatusScolaireTable.name} 
+        SELECT \"statusScolaire\" INTO \"otherStatus\" FROM ${RelationsStatusScolaireTable.name} 
             WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
             
             
-        IF NEW.status = 'ignored' THEN
+        IF NEW.\"statusScolaire\" = 'ignored' THEN
           
           IF \"otherStatus\" = 'askedBinome' 
             OR \"otherStatus\" = 'acceptedBinome' 
             OR \"otherStatus\" = 'refusedBinome' 
             THEN
-            UPDATE ${RelationsStatusScolaireTable.name} SET status='liked' WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
+            UPDATE ${RelationsStatusScolaireTable.name} SET \"statusScolaire\"='liked' WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
           END IF;
           
           RETURN NEW;
         END IF;
             
-        IF OLD.status = 'none' AND NEW.status = 'liked' THEN
+        IF OLD.\"statusScolaire\" = 'none' AND NEW.\"statusScolaire\" = 'liked' THEN
           RETURN NEW;
         END IF;
             
-        IF OLD.status = 'ignored' AND NEW.status = 'liked' THEN
+        IF OLD.\"statusScolaire\" = 'ignored' AND NEW.\"statusScolaire\" = 'liked' THEN
           RETURN NEW;
         END IF;
         
-        IF OLD.status = 'liked' AND \"otherStatus\" = 'liked' AND NEW.status = 'askedBinome' THEN
+        IF OLD.\"statusScolaire\" = 'liked' AND \"otherStatus\" = 'liked' AND NEW.\"statusScolaire\" = 'askedBinome' THEN
           RETURN NEW;
         END IF;
         
-        IF OLD.status = 'liked' AND \"otherStatus\" = 'askedBinome' AND
-          (NEW.status = 'acceptedBinome' OR NEW.status = 'refusedBinome') THEN
+        IF OLD.\"statusScolaire\" = 'liked' AND \"otherStatus\" = 'askedBinome' AND
+          (NEW.\"statusScolaire\" = 'acceptedBinome' OR NEW.\"statusScolaire\" = 'refusedBinome') THEN
           RETURN NEW;
         END IF;
         
-        IF OLD.status = 'askBinome' AND \"otherStatus\" = 'liked' AND NEW.status = 'liked' THEN
+        IF OLD.\"statusScolaire\" = 'askBinome' AND \"otherStatus\" = 'liked' AND NEW.\"statusScolaire\" = 'liked' THEN
           RETURN NEW;
         END IF;
         
-        RAISE EXCEPTION 'Status % cannot be changed to % (the other status is %).', 
-          OLD.status, NEW.status, \"otherStatus\"
+        RAISE EXCEPTION 'Status % cannot be changed to % (the other \"statusScolaire\" is %).', 
+          OLD.\"statusScolaire\", NEW.\"statusScolaire\", \"otherStatus\"
           USING errcode='invalid_parameter_value';
     END;
-    \$relation_status_check\$ LANGUAGE plpgsql;
+    \$relation_status_scolaire_check\$ LANGUAGE plpgsql;
     """;
 
     final String applyTableConstraintQuery = """
-    CREATE TRIGGER relation_status_check BEFORE UPDATE ON $name
+    CREATE TRIGGER relation_status_scolaire_check BEFORE UPDATE ON $name
     FOR EACH ROW
     WHEN (pg_trigger_depth() < 1)
-    EXECUTE FUNCTION relation_status_check();
+    EXECUTE FUNCTION relation_status_scolaire_check();
     """;
 
     await database.query(statusTypeCreateQuery);
@@ -136,28 +142,28 @@ class RelationsStatusScolaireTable {
     return database.query(applyTableConstraintQuery);
   }
 
-//  Future<void> populate() {
-//    var queries = <Future>[
-//      for (RelationStatusScolaire relationStatus in fakeListRelationStatusScolaire)
-//        database.query("INSERT INTO $name VALUES (@login, @otherLogin, @status);",
-//            substitutionValues: relationStatus.toJson())
-//    ];
-//
-//    return Future.wait(queries);
-//  }
+  Future<void> populate() {
+    var queries = <Future>[
+      for (RelationStatusScolaire relationStatus in fakeListRelationStatusScolaire)
+        database.query("INSERT INTO $name VALUES (@login, @otherLogin, @statusScolaire);",
+            substitutionValues: relationStatus.toJson())
+    ];
+
+    return Future.wait(queries);
+  }
 
   Future<void> delete() {
     final List<Future> queries = [
       database.query("DROP TABLE IF EXISTS $name;"),
-      database.query("DROP TYPE IF EXISTS status;"),
-      database.query("DROP FUNCTION IF EXISTS relation_status_check;")
+      database.query("DROP TYPE IF EXISTS \"statusScolaire\";"),
+      database.query("DROP FUNCTION IF EXISTS relation_status_scolaire_check;")
     ];
 
     return Future.wait(queries);
   }
 
   Future<void> add({@required RelationStatusScolaire relationStatus}) async {
-    final String query = "INSERT INTO $name VALUES (@login, @otherLogin, @status);";
+    final String query = "INSERT INTO $name VALUES (@login, @otherLogin, @statusScolaire);";
 
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
@@ -167,7 +173,7 @@ class RelationsStatusScolaireTable {
     final String query = "INSERT INTO $name VALUES" +
         [
           for (int index = 0; index < listRelationStatusScolaire.length; index++)
-            "(@login$index, @otherLogin$index, @status$index)"
+            "(@login$index, @otherLogin$index, @statusScolaire$index)"
         ].join(',') +
         ';';
 
@@ -181,20 +187,20 @@ class RelationsStatusScolaireTable {
 
   Future<void> update({@required RelationStatusScolaire relationStatus}) async {
     final String query =
-        "UPDATE $name SET status=@status WHERE login=@login AND \"otherLogin\"=@otherLogin;";
+        "UPDATE $name SET \"statusScolaire\"=@statusScolaire WHERE login=@login AND \"otherLogin\"=@otherLogin;";
 
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
 
   Future<void> updateMultiple({@required List<RelationStatusScolaire> listRelationStatusScolaire}) async {
     if (listRelationStatusScolaire.length == 0) return;
-    final String query = "UPDATE $name AS old SET status=new.status "
+    final String query = "UPDATE $name AS old SET \"statusScolaire\"=new.\"statusScolaire\" "
             "FROM (VALUES " +
         [
           for (int index = 0; index < listRelationStatusScolaire.length; index++)
-            "(@login$index, @otherLogin$index, @status$index)"
+            "(@login$index, @otherLogin$index, @statusScolaire$index)"
         ].join(',') +
-        ") AS new(login, \"otherLogin\", status)"
+        ") AS new(login, \"otherLogin\", \"statusScolaire\")"
             "WHERE (old.login=new.login AND old.\"otherLogin\"=new.\"otherLogin\");";
 
     return database.query(query, substitutionValues: {

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dartdap/dartdap.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:meta/meta.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required password}) async {
   Map<String, String> userJson;
@@ -32,6 +33,8 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
         'name': entry.attributes['givenName'].values.first.toString().capitalized,
         'surname': entry.attributes['sn'].values.first.toString().capitalized,
         'email': entry.attributes['mail'].values.first,
+        'school': (entry.attributes['mail'].values.first.substring(entry.attributes['mail'].values.first.length - 19) == 'telecom-sudparis.eu'
+        ? School.TSP : School.IMTBS).serialize()
       };
     }
   } on LdapResultInvalidCredentialsException {

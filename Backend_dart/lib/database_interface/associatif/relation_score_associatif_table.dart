@@ -1,52 +1,51 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
 import 'package:meta/meta.dart';
-import 'package:tinter_backend/database_interface/shared/user_shared_part_table.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/associatif/relation_score_associatif.dart';
 
 List<RelationScoreAssociatif> fakeListRelationScoreAssociatif = [
   RelationScoreAssociatif(
     (r) => r
-      ..login = fakeUsersSharedPart[0].login
-      ..otherLogin = fakeUsersSharedPart[1].login
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[1].login
       ..score = 78,
   ),
   RelationScoreAssociatif(
     (r) => r
-      ..login = fakeUsersSharedPart[0].login
-      ..otherLogin = fakeUsersSharedPart[2].login
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[2].login
       ..score = 98,
   ),
   RelationScoreAssociatif(
     (r) => r
-      ..login = fakeUsersSharedPart[0].login
-      ..otherLogin = fakeUsersSharedPart[3].login
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[3].login
       ..score = 74,
   ),
   RelationScoreAssociatif(
     (r) => r
-      ..login = fakeUsersSharedPart[0].login
-      ..otherLogin = fakeUsersSharedPart[4].login
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[4].login
       ..score = 45,
   ),
   RelationScoreAssociatif(
     (r) => r
-      ..login = fakeUsersSharedPart[1].login
-      ..otherLogin = fakeUsersSharedPart[2].login
+      ..login = fakeUsers[1].login
+      ..otherLogin = fakeUsers[2].login
       ..score = 98,
   ),
   RelationScoreAssociatif(
     (r) => r
-      ..login = fakeUsersSharedPart[1].login
-      ..otherLogin = fakeUsersSharedPart[3].login
+      ..login = fakeUsers[1].login
+      ..otherLogin = fakeUsers[3].login
       ..score = 74,
   ),
   RelationScoreAssociatif(
     (r) => r
-      ..login = fakeUsersSharedPart[1].login
-      ..otherLogin = fakeUsersSharedPart[4].login
+      ..login = fakeUsers[1].login
+      ..otherLogin = fakeUsers[4].login
       ..score = 25,
   ),
 ];

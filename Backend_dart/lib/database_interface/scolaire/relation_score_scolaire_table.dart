@@ -1,47 +1,54 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
 import 'package:meta/meta.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
 
-//List<RelationScoreScolaire> fakeListRelationScoreScolaire = [
-//  RelationScoreScolaire(
-//    login: fakeStaticStudents[0].login,
-//    otherLogin: fakeStaticStudents[1].login,
-//    score: 78,
-//  ),
-//  RelationScoreScolaire(
-//    login: fakeStaticStudents[0].login,
-//    otherLogin: fakeStaticStudents[2].login,
-//    score: 98,
-//  ),
-//  RelationScoreScolaire(
-//    login: fakeStaticStudents[0].login,
-//    otherLogin: fakeStaticStudents[3].login,
-//    score: 74,
-//  ),
-//  RelationScoreScolaire(
-//    login: fakeStaticStudents[0].login,
-//    otherLogin: fakeStaticStudents[4].login,
-//    score: 45,
-//  ),
-//  RelationScoreScolaire(
-//    login: fakeStaticStudents[1].login,
-//    otherLogin: fakeStaticStudents[2].login,
-//    score: 98,
-//  ),
-//  RelationScoreScolaire(
-//    login: fakeStaticStudents[1].login,
-//    otherLogin: fakeStaticStudents[3].login,
-//    score: 74,
-//  ),
-//  RelationScoreScolaire(
-//    login: fakeStaticStudents[1].login,
-//    otherLogin: fakeStaticStudents[4].login,
-//    score: 25,
-//  ),
-//];
+List<RelationScoreScolaire> fakeListRelationScoreScolaire = [
+  RelationScoreScolaire(
+        (r) => r
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[1].login
+      ..score = 78,
+  ),
+  RelationScoreScolaire(
+        (r) => r
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[2].login
+      ..score = 98,
+  ),
+  RelationScoreScolaire(
+        (r) => r
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[3].login
+      ..score = 74,
+  ),
+  RelationScoreScolaire(
+        (r) => r
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[4].login
+      ..score = 45,
+  ),
+  RelationScoreScolaire(
+        (r) => r
+      ..login = fakeUsers[1].login
+      ..otherLogin = fakeUsers[2].login
+      ..score = 98,
+  ),
+  RelationScoreScolaire(
+        (r) => r
+      ..login = fakeUsers[1].login
+      ..otherLogin = fakeUsers[3].login
+      ..score = 74,
+  ),
+  RelationScoreScolaire(
+        (r) => r
+      ..login = fakeUsers[1].login
+      ..otherLogin = fakeUsers[4].login
+      ..score = 25,
+  ),
+];
 
 class RelationsScoreScolaireTable {
   // WARNING: the name must have only lower case letter.
@@ -64,25 +71,25 @@ class RelationsScoreScolaireTable {
     return database.query(query);
   }
 
-//  Future<void> populate() {
-//    var queries = <Future>[
-//      for (RelationScoreScolaire relationScore in fakeListRelationScoreScolaire)
-//        database.query("INSERT INTO $name VALUES (@loginA, @loginB, @score);",
-//            substitutionValues: (relationScore.login.compareTo(relationScore.otherLogin) < 0)
-//                ? {
-//                    'loginA': relationScore.login,
-//                    'loginB': relationScore.otherLogin,
-//                    'score': relationScore.score,
-//                  }
-//                : {
-//                    'loginA': relationScore.otherLogin,
-//                    'loginB': relationScore.login,
-//                    'score': relationScore.score,
-//                  })
-//    ];
-//
-//    return Future.wait(queries);
-//  }
+  Future<void> populate() {
+    var queries = <Future>[
+      for (RelationScoreScolaire relationScore in fakeListRelationScoreScolaire)
+        database.query("INSERT INTO $name VALUES (@loginA, @loginB, @score);",
+            substitutionValues: (relationScore.login.compareTo(relationScore.otherLogin) < 0)
+                ? {
+                    'loginA': relationScore.login,
+                    'loginB': relationScore.otherLogin,
+                    'score': relationScore.score,
+                  }
+                : {
+                    'loginA': relationScore.otherLogin,
+                    'loginB': relationScore.login,
+                    'score': relationScore.score,
+                  })
+    ];
+
+    return Future.wait(queries);
+  }
 
   Future<void> delete() {
     final String query = """

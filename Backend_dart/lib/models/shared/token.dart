@@ -1,4 +1,3 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinter_backend/models/serializers.dart';
@@ -7,6 +6,9 @@ part 'token.g.dart';
 
 abstract class Token implements Built<Token, TokenBuilder> {
   String get token;
+  String get login;
+  DateTime get creationDate;
+  bool get isValid;
 
   Token._();
   factory Token([void Function(TokenBuilder) updates]) = _$Token;

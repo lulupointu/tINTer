@@ -1,10 +1,6 @@
-import 'dart:io';
-
-import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinter_backend/models/serializers.dart';
-import 'package:tinter_backend/models/shared/token.dart';
 
 part 'association.g.dart';
 
@@ -60,6 +56,7 @@ abstract class Association implements Built<Association, AssociationBuilder> {
 //
 //}
 
+// TODO: Change to real asso descriptions
 List<Association> allAssociations = [
   Association((a) => a
     ..name = "AbsINThe"

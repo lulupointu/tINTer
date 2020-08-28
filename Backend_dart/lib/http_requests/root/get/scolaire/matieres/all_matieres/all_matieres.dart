@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:tinter_backend/database_interface/scolaire/matieres_table.dart';
-import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
-import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';

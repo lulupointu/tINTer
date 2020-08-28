@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:image/image.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 
 main() async {

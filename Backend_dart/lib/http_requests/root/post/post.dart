@@ -6,8 +6,6 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
 
-import 'package:tinter_backend/test.dart';
-
 Future<void> postToNextSegment(HttpRequest req, List<String> segments, String login) async {
   printReceivedSegments('postToNextSegment', segments);
 

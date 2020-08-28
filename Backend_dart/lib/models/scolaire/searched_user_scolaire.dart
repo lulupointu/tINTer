@@ -1,4 +1,3 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinter_backend/models/serializers.dart';
@@ -6,7 +5,6 @@ import 'package:tinter_backend/models/serializers.dart';
 part 'searched_user_scolaire.g.dart';
 
 abstract class SearchedUserScolaire implements Built<SearchedUserScolaire, SearchedUserScolaireBuilder> {
-
   String get login;
   String get name;
   String get surname;
@@ -29,13 +27,13 @@ abstract class SearchedUserScolaire implements Built<SearchedUserScolaire, Searc
 //@JsonSerializable(explicitToJson: true)
 ///// This is the static part of every student
 ///// Meaning the part they can't change.
-//class SearchedUserScolaire extends Equatable {
+//class SearchedUser extends Equatable {
 //  final String _login;
 //  final String _name;
 //  final String _surname;
 //  final bool _liked;
 //
-//  SearchedUserScolaire({
+//  SearchedUser({
 //    @required login,
 //    @required name,
 //    @required surname,
@@ -49,9 +47,9 @@ abstract class SearchedUserScolaire implements Built<SearchedUserScolaire, Searc
 //        _surname = surname,
 //        _liked = liked;
 //
-//  factory SearchedUserScolaire.fromJson(Map<String, dynamic> json) => _$SearchedUserScolaireFromJson(json);
+//  factory SearchedUser.fromJson(Map<String, dynamic> json) => _$SearchedUserFromJson(json);
 //
-//  Map<String, dynamic> toJson() => _$SearchedUserScolaireToJson(this);
+//  Map<String, dynamic> toJson() => _$SearchedUserToJson(this);
 //
 //  // Define all getter for the user info
 //  String get login => _login;

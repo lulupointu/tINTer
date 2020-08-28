@@ -6,7 +6,6 @@ import 'package:tinter_backend/database_interface/associatif/matches_table.dart'
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/associatif/match.dart';
-import 'package:tinter_backend/test.dart';
 
 Future<void> matchedMatchesGet(HttpRequest req, List<String> segments, String login) async {
   printReceivedSegments('MatchedMatchesGet', segments);

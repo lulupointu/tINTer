@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 class InternalError implements Exception {
   final Exception error;
 

@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:image/image.dart';
 import 'package:tinter_backend/database_interface/shared/ldap_connection.dart' as ldap;
 import 'package:tinter_backend/database_interface/shared/sessions.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/http_requests/root/root.dart';
@@ -119,7 +117,7 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
 
     // If the token is more than Session.MaximumLifeTime old, the token is expired and should not be used
     // So we set isValid to false and throw an ExpiredTokenError.
-    if (session.creationDate.add(Session.MaximumLifeTime).compareTo(DateTime.now()) < 0) {
+    if (session.creationDate.add(Session.MaximumLifeTime).compareTo(DateTime.now().toUtc()) < 0) {
       await sessionsTable.update(
           session: Session(
         (b) => b
@@ -146,7 +144,7 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
       // Else we accept and send back the same token.
       if (session.creationDate
               .add(Session.MaximumTimeBeforeRefresh)
-              .compareTo(DateTime.now()) <
+              .compareTo(DateTime.now().toUtc()) <
           0) {
         final String _newToken = generateNewToken();
         await sessionsTable.update(
@@ -162,7 +160,7 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
           (b) => b
             ..token = _newToken
             ..login = session.login
-            ..creationDate = DateTime.now()
+            ..creationDate = DateTime.now().toUtc()
             ..isValid = true,
         ));
         await httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
@@ -212,28 +210,40 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
 
   Map<String, String> userBasicInfoJson;
   try {
+    print('Try authenticating with LDAP');
+
     // Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised
     userBasicInfoJson = await ldap.getUserInfoFromLDAP(login: _login, password: _password);
+
+    print('Authentication with LDAP successful');
 
     // Get static student info from database, If unknown EmptyResponseToDatabaseQuery is raised
     await usersTable.getFromLogin(login: _login);
 
+    print('User gotten from table');
+
     // Generate a new token, store it, and send it in the header
     String _newToken = generateNewToken();
+    print('SAVING SESSION');
     await sessionsTable.add(
         session: Session(
       (b) => b
         ..token = _newToken
         ..login = _login
-        ..creationDate = DateTime.now()
+        ..creationDate = DateTime.now().toUtc()
         ..isValid = true,
     ));
+    print('SESSION Saved');
     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
   } on InvalidCredentialsException catch (error) {
     throw error;
   } on EmptyResponseToDatabaseQuery {
+
+    print('Adding new user to table');
     // This means that it is the first authentication, therefore we save the static profile
-    await usersTable.add(userJson: userBasicInfoJson);
+    await usersTable.addBasicInfo(userJson: userBasicInfoJson);
+
+    print('User added');
 
     // Generate a new token, store it, and send it in the header
     String _newToken = generateNewToken();
@@ -242,7 +252,7 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
       (b) => b
         ..token = _newToken
         ..login = _login
-        ..creationDate = DateTime.now()
+        ..creationDate = DateTime.now().toUtc()
         ..isValid = true,
     ));
     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);

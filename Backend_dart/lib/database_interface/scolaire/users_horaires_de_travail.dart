@@ -1,11 +1,7 @@
 import 'package:postgres/postgres.dart';
-import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
-import 'package:tinter_backend/models/associatif/gouts_musicaux.dart';
-import 'package:tinter_backend/models/scolaire/matieres.dart';
-import 'package:tinter_backend/models/scolaire/user_scolaire.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 class UsersHorairesDeTravailTable {
   // WARNING: the name must have only lower case letter.
@@ -53,6 +49,7 @@ class UsersHorairesDeTravailTable {
 
   Future<void> addMultipleFromLogin(
       {@required String login, @required List<HoraireDeTravail> horairesDeTravail}) async {
+    if (horairesDeTravail.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
           for (int index = 0; index < horairesDeTravail.length; index++)

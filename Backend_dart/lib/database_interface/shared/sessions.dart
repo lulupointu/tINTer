@@ -1,80 +1,77 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/associatif/users_associatifs_table.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
-import 'package:tinter_backend/database_interface/shared/user_shared_part_table.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
-import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/shared/session.dart';
 
 List<Session> fakeSessions = [
   Session((b) => b 
     ..token= 'fsdfnldsjflqm54fq64654F6Q4F654F566sf'
-    ..login = fakeUsersSharedPart[0].login
+    ..login = fakeUsers[0].login
     ..creationDate = DateTime.utc(2020, DateTime.april, 1)
     ..isValid = false,
   ),
   Session(
     (b) => b 
     ..token= 'fsfsd54fsd124a65321aze564132xwc'
-    ..login = fakeUsersSharedPart[0].login
+    ..login = fakeUsers[0].login
     ..creationDate = DateTime.utc(2020, DateTime.august, 1)
     ..isValid = true,
   ),
   Session(
     (b) => b 
     ..token= 'geh4fg65128DS94G132DF'
-    ..login = fakeUsersSharedPart[1].login
+    ..login = fakeUsers[1].login
     ..creationDate = DateTime.utc(2020, DateTime.may, 1)
     ..isValid = false,
   ),
   Session(
     (b) => b 
     ..token= 'AZ78GDF1312HGFJ984U1538g6df7g9'
-    ..login = fakeUsersSharedPart[1].login
+    ..login = fakeUsers[1].login
     ..creationDate = DateTime.utc(2020, DateTime.july, 1)
     ..isValid = true,
   ),
   Session(
     (b) => b 
     ..token= 'e8a7z9812b3vn216k79uh8153dqs'
-    ..login = fakeUsersSharedPart[1].login
+    ..login = fakeUsers[1].login
     ..creationDate = DateTime.utc(2020, DateTime.april, 1)
     ..isValid = true,
   ),
   Session(
     (b) => b 
     ..token= 'd8z79g15df31gf68b79gn1654o3h15'
-    ..login = fakeUsersSharedPart[2].login
+    ..login = fakeUsers[2].login
     ..creationDate = DateTime.utc(2020, DateTime.june, 1)
     ..isValid = false,
   ),
   Session(
     (b) => b 
     ..token= 'qd5468t4y1654TER98Y415345f68dsdf'
-    ..login = fakeUsersSharedPart[2].login
+    ..login = fakeUsers[2].login
     ..creationDate = DateTime.utc(2020, DateTime.july, 1)
     ..isValid = true,
   ),
   Session(
     (b) => b 
     ..token= 'dsqd43153D4QSD46Q23d4sq6sd41q23s0d2D1SQ'
-    ..login = fakeUsersSharedPart[3].login
+    ..login = fakeUsers[3].login
     ..creationDate = DateTime.utc(2020, DateTime.april, 1)
     ..isValid = false,
   ),
   Session(
     (b) => b 
     ..token= '8R7ZE965GF4B132886IK513521D3231xw13d64'
-    ..login = fakeUsersSharedPart[4].login
+    ..login = fakeUsers[4].login
     ..creationDate = DateTime.utc(2020, DateTime.june, 1)
     ..isValid = true,
   ),
   Session(
     (b) => b 
     ..token= 'ds564g84u120cvb1n6846545645654C6XW54C8DS98451'
-    ..login = fakeUsersSharedPart[4].login
+    ..login = fakeUsers[4].login
     ..creationDate = DateTime.utc(2020, DateTime.august, 1)
     ..isValid = true,
   ),
@@ -223,7 +220,10 @@ class SessionsTable {
             error: 'No session associated with the token $token');
       }
 
-      return Session.fromJson(sqlResults[0][name]);
+      return Session.fromJson({
+        ...sqlResults[0][name],
+        'creationDate': int.parse(sqlResults[0][name]['creationDate'])
+      });
     });
   }
 

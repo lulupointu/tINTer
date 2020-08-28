@@ -1,31 +1,32 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_score_scolaire_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
-import 'package:tinter_backend/database_interface/user_table.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 class BinomesTable {
-  final UsersTable usersTable;
+  final UsersManagementTable usersManagementTable;
   final RelationsScoreScolaireTable relationsScoreTable;
   final RelationsStatusScolaireTable relationsStatusTable;
   final PostgreSQLConnection database;
 
   BinomesTable({
     @required this.database,
-  })  : usersTable = UsersTable(database: database),
+  })  : usersManagementTable = UsersManagementTable(database: database),
         relationsScoreTable = RelationsScoreScolaireTable(database: database),
         relationsStatusTable = RelationsStatusScolaireTable(database: database);
 
   Future<List<BuildBinome>> getXDiscoverBinomesFromLogin(
       {@required String login, @required int limit, int offset = 0}) async {
     String getDiscoverBinomesQuery =
-        "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, status FROM ${RelationsScoreScolaireTable.name} JOIN "
-        "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".status, \"otherRelationStatusScolaire\".status AS \"otherStatus\" "
+        "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, \"statusScolaire\" FROM ${RelationsScoreScolaireTable.name} JOIN "
+        "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
         "FROM "
         "(SELECT * FROM ${RelationsStatusScolaireTable.name} "
-        "WHERE login=@login AND status='none' "
+        "WHERE login=@login AND \"statusScolaire\"='none' "
         ") AS \"myRelationStatusScolaire\" "
         "JOIN ${RelationsStatusScolaireTable.name} AS \"otherRelationStatusScolaire\" "
         "ON \"myRelationStatusScolaire\".login = \"otherRelationStatusScolaire\".\"otherLogin\" AND \"myRelationStatusScolaire\".\"otherLogin\" = \"otherRelationStatusScolaire\".login "
@@ -39,21 +40,22 @@ class BinomesTable {
       'limit': limit,
       'offset': offset,
     }).then((sqlResults) {
-      return usersTable
-          .getMultipleFromLogin(
+      return usersManagementTable
+          .getMultipleFromLogins(
               logins: sqlResults
                   .map((Map<String, Map<String, dynamic>> result) =>
                       result[RelationsStatusScolaireTable.name]['otherLogin'].toString())
                   .toList())
-          .then((Map<String, Map<String, dynamic>> otherUsers) {
+          .then((Map<String, BuildUser> otherUsers) {
         return [
-//          for (int index = 0; index < otherUsers.length; index++)
-//            BuildBinome.fromJson({
-//              ...otherUsers[index]['otherLogin'].toJson(),
-//              'score': sqlResults[index][RelationsScoreScolaireTable.name]['score'],
-//              'status': BinomeStatus.none,
-//              // Since we search for discover, we know that the status is none.
-//            })
+          for (int index = 0; index < otherUsers.length; index++)
+            BuildBinome.fromJson({
+              ...otherUsers[sqlResults[index][RelationsStatusScolaireTable.name]['otherLogin']]
+                  .toJson(),
+              'score': sqlResults[index][RelationsScoreScolaireTable.name]['score'],
+              'statusScolaire': BinomeStatus.none.serialize(),
+              // Since we search for discover, we know that the status is none.
+            })
         ];
       });
     });
@@ -61,11 +63,11 @@ class BinomesTable {
 
   Future<List<BuildBinome>> getMatchedBinomesFromLogin({@required String login}) async {
     String getDiscoverBinomesQuery =
-        "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, status, \"otherStatus\" FROM ${RelationsScoreScolaireTable.name} JOIN "
-        "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".status, \"otherRelationStatusScolaire\".status AS \"otherStatus\" "
+        "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, \"statusScolaire\", \"otherStatus\" FROM ${RelationsScoreScolaireTable.name} JOIN "
+        "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
         "FROM "
         "(SELECT * FROM ${RelationsStatusScolaireTable.name} "
-        "WHERE login=@login AND status<>'none' AND status<>'ignored' "
+        "WHERE login=@login AND \"statusScolaire\"<>'none' AND \"statusScolaire\"<>'ignored' "
         ") AS \"myRelationStatusScolaire\" "
         "JOIN ${RelationsStatusScolaireTable.name} AS \"otherRelationStatusScolaire\" "
         "ON \"myRelationStatusScolaire\".login = \"otherRelationStatusScolaire\".\"otherLogin\" AND \"myRelationStatusScolaire\".\"otherLogin\" = \"otherRelationStatusScolaire\".login "
@@ -76,25 +78,27 @@ class BinomesTable {
     return database.mappedResultsQuery(getDiscoverBinomesQuery, substitutionValues: {
       'login': login,
     }).then((sqlResults) {
-      print(sqlResults);
-      return usersTable
-          .getMultipleFromLogin(
+      return usersManagementTable
+          .getMultipleFromLogins(
               logins: sqlResults
                   .map((Map<String, Map<String, dynamic>> result) =>
                       result[RelationsStatusScolaireTable.name]['otherLogin'].toString())
                   .toList())
-          .then((Map<String, Map<String, dynamic>> otherUsers) {
+          .then((Map<String, BuildUser> otherUsers) {
         return [
-//          for (Map<String, Map<String, dynamic>> result in sqlResults)
-//            BuildBinome.fromJson({
-//              ...otherUsers[result[RelationsStatusScolaireTable.name]['otherLogin']].toJson(),
-//              'score': result[RelationsScoreScolaireTable.name]['score'],
-//              'status': getBinomeStatusFromRelationStatusScolaire(
-//                  status: getEnumRelationStatusScolaireFromString(
-//                      result[RelationsStatusScolaireTable.name]['status']),
-//                  otherStatus: getEnumRelationStatusScolaireFromString(
-//                      result[RelationsStatusScolaireTable.name]['otherStatus'])),
-//            })
+          for (int index = 0; index < otherUsers.length; index++)
+            BuildBinome.fromJson({
+              ...otherUsers[sqlResults[index][RelationsStatusScolaireTable.name]['otherLogin']]
+                  .toJson(),
+              'score': sqlResults[index][RelationsScoreScolaireTable.name]['score'],
+              'statusScolaire': getBinomeStatusFromRelationStatusScolaire(
+                      status: EnumRelationStatusScolaire.valueOf(sqlResults[index]
+                          [RelationsStatusScolaireTable.name]['statusScolaire']),
+                      otherStatus: EnumRelationStatusScolaire.valueOf(
+                          sqlResults[index][RelationsStatusScolaireTable.name]['otherStatus']))
+                  .serialize(),
+              // Since we search for discover, we know that the status is none.
+            })
         ];
       });
     });
@@ -158,7 +162,8 @@ class BinomesTable {
 class UnauthorizedRelationStatusScolaireCombination implements Exception {
   final EnumRelationStatusScolaire status, otherStatus;
 
-  UnauthorizedRelationStatusScolaireCombination({@required this.status, @required this.otherStatus});
+  UnauthorizedRelationStatusScolaireCombination(
+      {@required this.status, @required this.otherStatus});
 
   @override
   String toString() =>

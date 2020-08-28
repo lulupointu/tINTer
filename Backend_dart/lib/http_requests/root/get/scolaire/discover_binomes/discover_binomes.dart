@@ -6,9 +6,6 @@ import 'package:tinter_backend/database_interface/scolaire/binomes_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
-import 'package:tinter_backend/models/associatif/match.dart';
-import 'package:tinter_backend/test.dart';
-import 'package:meta/meta.dart';
 
 Future<void> discoverBinomesGet(HttpRequest req, List<String> segments, String login) async {
   printReceivedSegments('DiscoverBinomesGet', segments);

@@ -1,11 +1,7 @@
 import 'package:postgres/postgres.dart';
-import 'package:tinter_backend/database_interface/associatif/gouts_musicaux_table.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/scolaire/matieres_table.dart';
-import 'package:tinter_backend/database_interface/shared/static_profile_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
-import 'package:tinter_backend/models/associatif/user_associatif.dart';
-import 'package:tinter_backend/models/scolaire/user_scolaire.dart';
 
 class UsersMatieresTable {
   // WARNING: the name must have only lower case letter.

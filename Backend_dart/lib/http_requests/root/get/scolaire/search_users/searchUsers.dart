@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/associatif/searched_user_associatif_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/searched_user_scolaire_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
-import 'package:tinter_backend/models/shared/searched_user.dart';
 
-Future<void> searchUsersGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('SearchUsersGet', segments);
+Future<void> searchUsersScolairesGet(HttpRequest req, List<String> segments, String login) async {
+  printReceivedSegments('SearchUsersScolairesGet', segments);
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);
@@ -17,14 +17,14 @@ Future<void> searchUsersGet(HttpRequest req, List<String> segments, String login
   TinterDatabase tinterDatabase = TinterDatabase();
   await tinterDatabase.open();
 
-  SearchedUserAssociatifTable searchedUserTable = SearchedUserAssociatifTable(database: tinterDatabase.connection);
+  SearchedUserScolaireTable searchedUserTable = SearchedUserScolaireTable(database: tinterDatabase.connection);
 
   try {
-    Map<String, SearchedUserAssociatif> searchedUsers = await searchedUserTable.getAllExceptOneFromLogin(login: login);
+    Map<String, SearchedUserScolaire> searchedUsers = await searchedUserTable.getAllExceptOneFromLogin(login: login);
 
     await req.response
       ..statusCode = HttpStatus.ok
-      ..write(json.encode([for (SearchedUserAssociatif searchedUser in searchedUsers.values) searchedUser.toJson()]))
+      ..write(json.encode([for (SearchedUserScolaire searchedUser in searchedUsers.values) searchedUser.toJson()]))
       ..close();
   } finally {
     await tinterDatabase.close();

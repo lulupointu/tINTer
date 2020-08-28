@@ -21,6 +21,15 @@ class _$TokenSerializer implements StructuredSerializer<Token> {
       'token',
       serializers.serialize(object.token,
           specifiedType: const FullType(String)),
+      'login',
+      serializers.serialize(object.login,
+          specifiedType: const FullType(String)),
+      'creationDate',
+      serializers.serialize(object.creationDate,
+          specifiedType: const FullType(DateTime)),
+      'isValid',
+      serializers.serialize(object.isValid,
+          specifiedType: const FullType(bool)),
     ];
 
     return result;
@@ -41,6 +50,18 @@ class _$TokenSerializer implements StructuredSerializer<Token> {
           result.token = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'login':
+          result.login = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'creationDate':
+          result.creationDate = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime;
+          break;
+        case 'isValid':
+          result.isValid = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
       }
     }
 
@@ -51,13 +72,29 @@ class _$TokenSerializer implements StructuredSerializer<Token> {
 class _$Token extends Token {
   @override
   final String token;
+  @override
+  final String login;
+  @override
+  final DateTime creationDate;
+  @override
+  final bool isValid;
 
   factory _$Token([void Function(TokenBuilder) updates]) =>
       (new TokenBuilder()..update(updates)).build();
 
-  _$Token._({this.token}) : super._() {
+  _$Token._({this.token, this.login, this.creationDate, this.isValid})
+      : super._() {
     if (token == null) {
       throw new BuiltValueNullFieldError('Token', 'token');
+    }
+    if (login == null) {
+      throw new BuiltValueNullFieldError('Token', 'login');
+    }
+    if (creationDate == null) {
+      throw new BuiltValueNullFieldError('Token', 'creationDate');
+    }
+    if (isValid == null) {
+      throw new BuiltValueNullFieldError('Token', 'isValid');
     }
   }
 
@@ -71,17 +108,27 @@ class _$Token extends Token {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Token && token == other.token;
+    return other is Token &&
+        token == other.token &&
+        login == other.login &&
+        creationDate == other.creationDate &&
+        isValid == other.isValid;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, token.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, token.hashCode), login.hashCode), creationDate.hashCode),
+        isValid.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Token')..add('token', token))
+    return (newBuiltValueToStringHelper('Token')
+          ..add('token', token)
+          ..add('login', login)
+          ..add('creationDate', creationDate)
+          ..add('isValid', isValid))
         .toString();
   }
 }
@@ -93,11 +140,27 @@ class TokenBuilder implements Builder<Token, TokenBuilder> {
   String get token => _$this._token;
   set token(String token) => _$this._token = token;
 
+  String _login;
+  String get login => _$this._login;
+  set login(String login) => _$this._login = login;
+
+  DateTime _creationDate;
+  DateTime get creationDate => _$this._creationDate;
+  set creationDate(DateTime creationDate) =>
+      _$this._creationDate = creationDate;
+
+  bool _isValid;
+  bool get isValid => _$this._isValid;
+  set isValid(bool isValid) => _$this._isValid = isValid;
+
   TokenBuilder();
 
   TokenBuilder get _$this {
     if (_$v != null) {
       _token = _$v.token;
+      _login = _$v.login;
+      _creationDate = _$v.creationDate;
+      _isValid = _$v.isValid;
       _$v = null;
     }
     return this;
@@ -118,7 +181,12 @@ class TokenBuilder implements Builder<Token, TokenBuilder> {
 
   @override
   _$Token build() {
-    final _$result = _$v ?? new _$Token._(token: token);
+    final _$result = _$v ??
+        new _$Token._(
+            token: token,
+            login: login,
+            creationDate: creationDate,
+            isValid: isValid);
     replace(_$result);
     return _$result;
   }

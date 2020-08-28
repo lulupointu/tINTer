@@ -2,19 +2,18 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
-import 'package:tinter_backend/models/scolaire/user_scolaire.dart';
 import 'package:tinter_backend/models/serializers.dart';
-import 'package:tinter_backend/models/shared/user_shared_part.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 part 'binome.g.dart';
 
-abstract class Binome extends Object implements UserScolaire {
-  BinomeStatus get status;
+abstract class Binome extends Object implements User {
+  BinomeStatus get statusScolaire;
   int get score;
 }
 
 abstract class BuildBinome
-//    with UserSharedPart, UserScolaire
+//    with User, User
     implements Binome, Built<BuildBinome, BuildBinomeBuilder> {
 
 
@@ -77,7 +76,7 @@ class BinomeStatus extends EnumClass {
 
 //@JsonSerializable(explicitToJson: true)
 //@immutable
-//class Binome extends UserScolaire {
+//class Binome extends User {
 //  final BinomeStatus _status;
 //  int _score;
 //

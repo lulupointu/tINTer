@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/http_requests/root/post/shared/create/create.dart';
 import 'package:tinter_backend/http_requests/root/post/shared/delete/delete.dart';
+import 'package:tinter_backend/http_requests/root/post/shared/update/update.dart';
 import 'package:tinter_backend/http_requests/root/post/shared/updateProfilePicture/user_update_profile_picture.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
@@ -16,6 +17,8 @@ Future<void> sharedPostToNextSegment(HttpRequest req, List<String> segments, Str
       return userDelete(req, segments, login);
     case 'create':
       return userCreate(req, segments, login);
+    case 'update':
+      return userUpdate(req, segments, login);
     default:
       throw UnknownRequestedPathError(req.uri.path);
   }

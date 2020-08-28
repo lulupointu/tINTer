@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/associatif/searched_user_associatif_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/models/associatif/searched_user_associatif.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
-import 'package:tinter_backend/models/shared/searched_user.dart';
 
-Future<void> searchUsersGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('SearchUsersGet', segments);
+Future<void> searchUsersAssociatifsGet(HttpRequest req, List<String> segments, String login) async {
+  printReceivedSegments('SearchUsersAssociatifsGet', segments);
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);
