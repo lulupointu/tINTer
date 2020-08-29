@@ -16,11 +16,11 @@ class SearchedBinomePairsTable {
   Future<Map<String, SearchedBinomePair>> getAllExceptOneFromBinomePairId({@required int binomePairId}) async {
     final Future query = database.mappedResultsQuery(
         "SELECT ${UsersTable.name}.\"binomePairId\", name, surname, \"statusBinomePair\" FROM "
-            "(SELECT * FROM ${RelationsStatusBinomePairsTable.name} "
+            "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
             "WHERE \"binomePairId\"=@binomePairId "
-            ") AS ${RelationsStatusBinomePairsTable.name} "
+            ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
             "JOIN ${UsersTable.name} "
-            "ON ${RelationsStatusBinomePairsTable.name}.\"otherBinomePairId\"=${UsersTable.name}.\"binomePairId\" ",
+            "ON ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\"=${UsersTable.name}.\"binomePairId\" ",
         substitutionValues: {
           'binomePairId': binomePairId,
         });
@@ -31,7 +31,7 @@ class SearchedBinomePairsTable {
           queryResult[UsersTable.name]['binomePairId']: SearchedBinomePair.fromJson({
             ...queryResult[UsersTable.name],
             'liked': _getLikeOrNotFromRelationStatusBinomePair(
-                EnumRelationStatusBinomePair.valueOf(queryResult[RelationsStatusBinomePairsTable.name]['statusBinomePair']))
+                EnumRelationStatusBinomePair.valueOf(queryResult[RelationsStatusBinomePairsMatchesTable.name]['statusBinomePair']))
           })
       };
     });

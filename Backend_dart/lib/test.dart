@@ -5,9 +5,9 @@ Future<void> main() async {
   Stream<HttpRequest> server;
 
   try {
-    server = await HttpServer.bind(InternetAddress.anyIPv4, 4044);
+    server = await HttpServer.bind(InternetAddress.anyIPv4, 443);
   } catch (e) {
-    print("Couldn't bind to port 4044: $e");
+    print("Couldn't bind to port 443: $e");
     exit(-1);
   }
 

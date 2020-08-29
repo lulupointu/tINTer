@@ -54,12 +54,12 @@ import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart'
 //  ),
 //];
 
-class RelationsStatusBinomePairsTable {
+class RelationsStatusBinomePairsMatchesTable {
   // WARNING: the name must have only lower case letter.
   static final String name = 'relations_status_binome_pair';
   final PostgreSQLConnection database;
 
-  RelationsStatusBinomePairsTable({@required this.database});
+  RelationsStatusBinomePairsMatchesTable({@required this.database});
 
   Future<void> create() async {
     final String statusTypeCreateQuery = """
@@ -83,7 +83,7 @@ class RelationsStatusBinomePairsTable {
       \"otherStatus\" Text;
     BEGIN
     
-        SELECT \"status\" INTO \"otherStatus\" FROM ${RelationsStatusBinomePairsTable.name} 
+        SELECT \"status\" INTO \"otherStatus\" FROM ${RelationsStatusBinomePairsMatchesTable.name} 
             WHERE \"binomePairId\"=OLD.\"otherBinomePairId\" AND \"otherBinomePairId\"=OLD.\"binomePairId\";
             
             
@@ -93,7 +93,7 @@ class RelationsStatusBinomePairsTable {
             OR \"otherStatus\" = 'acceptedBinomePair' 
             OR \"otherStatus\" = 'refusedBinomePair' 
             THEN
-            UPDATE ${RelationsStatusBinomePairsTable.name} SET \"status\"='liked' WHERE \"binomePairId\"=OLD.\"otherBinomePairId\" AND \"otherBinomePairId\"=OLD.\"binomePairId\";
+            UPDATE ${RelationsStatusBinomePairsMatchesTable.name} SET \"status\"='liked' WHERE \"binomePairId\"=OLD.\"otherBinomePairId\" AND \"otherBinomePairId\"=OLD.\"binomePairId\";
           END IF;
           
           RETURN NEW;

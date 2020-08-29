@@ -1,6 +1,6 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:tinter_backend/models/serializers.dart';
+import 'package:tinterapp/Logic//models/serializers.dart';
 
 part 'relation_score_binome_pair.g.dart';
 

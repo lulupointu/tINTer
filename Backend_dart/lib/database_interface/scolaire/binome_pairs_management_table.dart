@@ -140,7 +140,7 @@ class BinomePairsManagementTable {
     };
   }
 
-  Future<Map<int, BuildBinomePair>> getMultipleFromBinomePairIds(
+Future<Map<int, BuildBinomePair>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
     if (binomePairsId.length == 0) return {};
 

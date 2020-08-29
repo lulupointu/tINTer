@@ -1,13 +1,13 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:tinter_backend/models/associatif/association.dart';
-import 'package:tinter_backend/models/serializers.dart';
-import 'package:tinter_backend/models/shared/user.dart';
+import 'package:tinterapp/Logic//models/associatif/association.dart';
+import 'package:tinterapp/Logic//models/serializers.dart';
+import 'package:tinterapp/Logic//models/shared/user.dart';
 
 part 'binome_pair.g.dart';
 
-abstract class BinomePair extends Object implements User {
+abstract class BinomePair extends Object {
   int get binomePairId;
 
   // We store basic info from both user of the binome

@@ -3,15 +3,15 @@ from functools import lru_cache
 from flask_login import LoginManager
 from ldap3 import Server, Connection, SUBTREE, ALL_ATTRIBUTES, Entry
 
-from utils.config import config
-from utils.models import LdapUser
+# from utils.config import config
+# from utils.models import LdapUser
 
 login_manager = LoginManager()
 
 
 # Pour ton info, dans la config du prog
-#     ldap_provider = '157.159.10.70'
-#     ldap_use_ssl = True
+ldap_provider = '127.0.0.1'
+ldap_use_ssl = True
 # au moins quand tu es sur place
 # Sinon tu peux utiliser un pont ssh 
 # sudo ssh -L 389:157.159.10.70:389 jovart_a@ssh1.imtbs-tsp.eu -i ./.ssh/id_rsa
@@ -19,7 +19,7 @@ login_manager = LoginManager()
 # remplaces jovart_a par ton login, et le chemin vers ta clé ssh si besoin
 
 
-server = Server(config.ldap_provider, use_ssl=config.ldap_use_ssl)
+server = Server(ldap_provider, use_ssl=ldap_use_ssl)
 
 
 def func_authenticate(username, password, use_password=True):
@@ -34,7 +34,7 @@ def func_authenticate(username, password, use_password=True):
 
     if use_password:
         conn = Connection(server, user='uid={},ou=People,dc=int-evry,dc=fr'.format(username), password=password)
-        if not conn.bind():
+        if not conn.bind(("", 389)):
             return None
     else:
         conn = Connection(server, auto_bind=True)
