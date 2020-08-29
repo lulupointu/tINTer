@@ -64,17 +64,17 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
     return;
   }
 
-  if (segments[0] == 'picture.png') {
-    print('SERVE IMAGE');
-    var file = File('/home/lulupointu/Desktop/logo_tinter.png');
-
-    Future<Uint8List> picture = file.readAsBytes();
-    req.response.statusCode = HttpStatus.ok;
-    req.response.headers.contentType = ContentType.parse("image/png");
-    await req.response.addStream(picture.asStream());
-    await req.response.close();
-    return;
-  }
+//  if (segments[0] == 'picture.png') {
+//    print('SERVE IMAGE');
+//    var file = File('/home/df/tINTerPictures/logo_tinter.png');
+//
+//    Future<Uint8List> picture = file.readAsBytes();
+//    req.response.statusCode = HttpStatus.ok;
+//    req.response.headers.contentType = ContentType.parse("image/png");
+//    await req.response.addStream(picture.asStream());
+//    await req.response.close();
+//    return;
+//  }
 
   try {
     await rootToGetOrPost(req, segments, login);

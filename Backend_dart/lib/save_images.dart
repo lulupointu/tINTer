@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 
 main() async {
-  var file = File('/home/lulupointu/Desktop/SmallerLogoImages\ jpg/AbsINThe.jpg');
+  var file = File('/home/df/tINTerPictures/SmallerLogoImages\ jpg/AbsINThe.jpg');
   String picture = base64UrlEncode(await file.readAsBytes());
 
 

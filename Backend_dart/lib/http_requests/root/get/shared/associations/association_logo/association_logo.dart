@@ -8,7 +8,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'dart:io';
 
 Future<void> associationLogoGet(HttpRequest req, List<String> segments, String login) async {
-  String associationLogoBasePath = '/home/lulupointu/Desktop/AssociationsLogoById';
+  String associationLogoBasePath = '/home/df/tINTerPictures/AssociationsLogoById';
 
   printReceivedSegments('AssociationLogoGet', segments);
 

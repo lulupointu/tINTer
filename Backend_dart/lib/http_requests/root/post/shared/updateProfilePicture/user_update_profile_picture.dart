@@ -5,7 +5,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 Future<void> userUpdateProfilePicture(
     HttpRequest req, List<String> segments, String login) async {
-  final String profilePictureBasePath = '/home/lulupointu/Desktop/ProfilePictures';
+  final String profilePictureBasePath = '/home/df/tINTerPictures/ProfilePictures';
   printReceivedSegments('UserUpdateProfilePicture', segments);
 
   if (segments.length != 0) {
