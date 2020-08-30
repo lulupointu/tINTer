@@ -98,7 +98,7 @@ Future<void> userCreate(HttpRequest req, List<String> segments, String login) as
   try {
     // Grab all other users
     Map<String, BuildUser> otherUsersScolaire= await usersManagementTable.getAllExceptOneFromLogin(
-        login: login, year: user.year);
+        login: login, year: user.year, school: School.TSP);
 
     // Get the number of associations and gouts musicaux
     int numberMaxOfAssociations =
