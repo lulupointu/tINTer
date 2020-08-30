@@ -53,7 +53,7 @@ import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
 
 class RelationsScoreBinomePairsMatchesTable {
   // WARNING: the name must have only lower case letter.
-  static final String name = 'relations_scores_scolaire';
+  static final String name = 'relations_scores_binome_pairs';
   final PostgreSQLConnection database;
 
   RelationsScoreBinomePairsMatchesTable({@required this.database});
