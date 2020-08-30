@@ -129,9 +129,13 @@ class BinomePairsMatchesTable {
         "ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
         ";";
 
+    print(0);
+
     return database.mappedResultsQuery(getDiscoverBinomesQuery, substitutionValues: {
       'login': login,
     }).then((sqlResults) {
+      print(1);
+      print(sqlResults);
       return binomePairsManagementTable
           .getMultipleFromBinomePairsId(
           binomePairsId: sqlResults
@@ -139,6 +143,8 @@ class BinomePairsMatchesTable {
               int.parse(result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']))
               .toList())
           .then((Map<int, BuildBinomePairMatch> otherUsers) {
+            print(2);
+            print(otherUsers);
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({
