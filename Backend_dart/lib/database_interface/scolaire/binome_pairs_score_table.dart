@@ -1,10 +1,8 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
-import 'package:tinter_backend/database_interface/user_management_table.dart';
-import 'package:tinter_backend/database_interface/user_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_binome_pair.dart';
-import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
 
 //List<RelationScoreBinomePair> fakeListRelationScoreBinomePair = [
 //  RelationScoreBinomePair(
@@ -61,8 +59,8 @@ class RelationsScoreBinomePairsMatchesTable {
   Future<void> create() {
     final String query = """
     CREATE TABLE $name (
-      binomePairIdA int NOT NULL REFERENCES ${UsersTable.name} (\"binomePairId\") ON DELETE CASCADE,
-      binomePairIdB int NOT NULL REFERENCES ${UsersTable.name} (\"binomePairId\") ON DELETE CASCADE,
+      binomePairIdA int NOT NULL REFERENCES ${BinomePairsProfilesTable.name} (\"binomePairId\") ON DELETE CASCADE,
+      binomePairIdB int NOT NULL REFERENCES ${BinomePairsProfilesTable.name} (\"binomePairId\") ON DELETE CASCADE,
       score INTEGER NOT NULL CHECK (score >= 0 AND score <= 100),
       PRIMARY KEY (binomePairIdA, binomePairIdB),
       CHECK (binomePairIdA < binomePairIdB)
