@@ -90,6 +90,23 @@ class BinomePairsMatieresTable {
     });
   }
 
+  Future<List<String>> getFromLogin({@required String login}) async {
+    final String query = "SELECT * "
+        "FROM ("
+        "SELECT * FROM $name WHERE login=@login OR \"otherLogin\"=@login "
+        ") AS $name JOIN ${MatieresTable.name} "
+        "ON (${MatieresTable.name}.id = $name.matiere_id);";
+
+    return database.mappedResultsQuery(query, substitutionValues: {
+      'login': login,
+    }).then((sqlResults) {
+      return [
+        for (int index = 0; index < sqlResults.length; index++)
+          sqlResults[index][MatieresTable.name]['name']
+      ];
+    });
+  }
+
   Future<Map<int, List<String>>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
     if (binomePairsId.length == 0) return {};

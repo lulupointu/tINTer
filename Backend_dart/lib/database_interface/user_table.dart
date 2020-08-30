@@ -1,6 +1,7 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
+import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/models/shared/user.dart';
 
 class UsersTable {

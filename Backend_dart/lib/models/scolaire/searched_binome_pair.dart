@@ -8,13 +8,13 @@ abstract class SearchedBinomePair implements Built<SearchedBinomePair, SearchedB
 
   int get binomePairId;
 
-  String get nameA;
+  String get name;
 
-  String get surnameA;
+  String get surname;
 
-  String get nameB;
+  String get otherName;
 
-  String get surnameB;
+  String get otherSurname;
 
   bool get liked;
 

@@ -8,6 +8,7 @@ import 'package:tinter_backend/models/shared/user.dart';
 part 'binome_pair.g.dart';
 
 abstract class BinomePair extends Object {
+  @nullable
   int get binomePairId;
 
   // We store basic info from both user of the binome
@@ -32,6 +33,7 @@ abstract class BinomePair extends Object {
   // two users composing the binome
   BuiltList<Association> get associations;
 
+  @nullable
   LieuDeVie get lieuDeVie;
 
   double get groupeOuSeul;
@@ -58,4 +60,33 @@ abstract class BuildBinomePair
   }
 
   static Serializer<BuildBinomePair> get serializer => _$buildBinomePairSerializer;
+
+  static BuildBinomePair getFromUsers(BuildUser userA, BuildUser userB) {
+    BuildUser user, otherUser;
+    if (userA.login.compareTo(userB.login) < 0) {
+      user = userA;
+      otherUser = userB;
+    } else {
+      user = userB;
+      otherUser = userA;
+    }
+
+    return BuildBinomePair((b) => b
+      ..login = user.login
+      ..name = user.name
+      ..surname = user.surname
+      ..email = user.email
+      ..otherLogin = otherUser.login
+      ..otherName = otherUser.name
+      ..otherSurname = otherUser.surname
+      ..otherEmail = otherUser.email
+      ..associations = [...user.associations, ...otherUser.associations].toSet().toBuiltList().toBuilder()
+      ..lieuDeVie = user.lieuDeVie == otherUser.lieuDeVie ? user.lieuDeVie : null
+      ..groupeOuSeul = (user.groupeOuSeul + otherUser.groupeOuSeul)/2
+      ..horairesDeTravail = user.horairesDeTravail.toSet().intersection(otherUser.horairesDeTravail.toSet()).toBuiltList().toBuilder()
+      ..enligneOuNon = (user.enligneOuNon + otherUser.enligneOuNon)/2
+      ..matieresPreferees = [...user.matieresPreferees, ...otherUser.matieresPreferees].toSet().toBuiltList().toBuilder()
+    );
+  }
+
 }

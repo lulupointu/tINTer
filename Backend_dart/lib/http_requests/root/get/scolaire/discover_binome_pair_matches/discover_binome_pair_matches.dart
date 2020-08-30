@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:tinter_backend/database_interface/database_interface.dart';
-import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
-import 'package:tinter_backend/database_interface/scolaire/binomes_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/binome_pairs_matches_table.dart';
+import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
-import 'package:tinter_backend/models/scolaire/binome.dart';
+import 'package:tinter_backend/models/scolaire/binome_pair_match.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
-Future<void> discoverBinomePairsGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('DiscoverBinomePairsGet', segments);
+Future<void> discoverBinomePairsMatchesGet(HttpRequest req, List<String> segments, String login) async {
+  printReceivedSegments('DiscoverBinomePairsMatchesGet', segments);
 
   // There should be only one segment left
   if (segments.length != 0) {
@@ -42,8 +42,8 @@ Future<void> discoverBinomePairsGet(HttpRequest req, List<String> segments, Stri
     TinterDatabase tinterDatabase = TinterDatabase();
     await tinterDatabase.open();
 
-    BinomePairsProfilesTable binomesTable = BinomePairsTable(database: tinterDatabase.connection);
-    List<BuildBinome> matchedBinomePairs = await binomesTable.getXDiscoverBinomePairsFromLogin(
+    BinomePairsMatchesTable binomePairsMatchesTable = BinomePairsMatchesTable(database: tinterDatabase.connection);
+    List<BuildBinomePairMatch> binomePairMatches = await binomePairsMatchesTable.getXDiscoverBinomesFromLogin(
       login: login,
       limit: limit,
       offset: offset,
@@ -51,7 +51,7 @@ Future<void> discoverBinomePairsGet(HttpRequest req, List<String> segments, Stri
 
     await req.response
       ..statusCode = HttpStatus.ok
-      ..write(json.encode(matchedBinomePairs.map((BuildBinome binome) => binome.toJson()).toList()))
+      ..write(json.encode(binomePairMatches.map((BuildBinomePairMatch binomePairMatch) => binomePairMatch.toJson()).toList()))
       ..close();
 
     await tinterDatabase.close();

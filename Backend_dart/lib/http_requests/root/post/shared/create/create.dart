@@ -16,6 +16,7 @@ import 'package:tinter_backend/models/associatif/relation_status_associatif.dart
 import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
+import 'package:tinter_backend/models/shared/internal_errors.dart';
 import 'package:tinter_backend/models/shared/user.dart';
 
 Future<void> userCreate(HttpRequest req, List<String> segments, String login) async {
@@ -89,7 +90,7 @@ Future<void> userCreate(HttpRequest req, List<String> segments, String login) as
       ]
     ]);
   } catch (error) {
-    throw error;
+    throw InternalDatabaseError(error);
   }
 
 
@@ -132,7 +133,7 @@ Future<void> userCreate(HttpRequest req, List<String> segments, String login) as
       ]
     ]);
   } catch (error) {
-    throw error;
+    throw InternalDatabaseError(error);
   }
 
   await req.response

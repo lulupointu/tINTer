@@ -18,7 +18,7 @@ class BinomePairsAssociationsTable {
     final String query = """
     CREATE TABLE $name (
       \"binomePairId\" int NOT NULL REFERENCES ${BinomePairsProfilesTable.name} (\"binomePairId\") ON DELETE CASCADE,
-      association_id int NOT NULL REFERENCES ${AssociationsTable.name} (id),
+      association_id int NOT NULL REFERENCES ${AssociationsTable.name} (id) ON DELETE CASCADE,
       PRIMARY KEY (\"binomePairId\", association_id)
     );
     """;
@@ -85,6 +85,23 @@ class BinomePairsAssociationsTable {
 
     return database.mappedResultsQuery(query, substitutionValues: {
       'binomePairId': binomePairId,
+    }).then((sqlResults) {
+      return [
+        for (int index = 0; index < sqlResults.length; index++)
+          Association.fromJson(sqlResults[index][AssociationsTable.name])
+      ];
+    });
+  }
+
+  Future<List<Association>> getFromLogin({@required String login}) async {
+    final String query = "SELECT * "
+        "FROM ("
+        "SELECT * FROM $name WHERE login=@login OR \"otherLogin\"=@login "
+        ") AS $name JOIN ${AssociationsTable.name} "
+        "ON (${AssociationsTable.name}.id = $name.association_id);";
+
+    return database.mappedResultsQuery(query, substitutionValues: {
+      'login': login,
     }).then((sqlResults) {
       return [
         for (int index = 0; index < sqlResults.length; index++)

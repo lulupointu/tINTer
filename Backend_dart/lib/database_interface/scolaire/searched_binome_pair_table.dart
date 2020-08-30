@@ -1,4 +1,5 @@
 import 'package:postgres/postgres.dart';
+import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_status_table.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
@@ -13,16 +14,16 @@ class SearchedBinomePairsTable {
     @required this.database,
   });
 
-  Future<Map<String, SearchedBinomePair>> getAllExceptOneFromBinomePairId({@required int binomePairId}) async {
+  Future<Map<String, SearchedBinomePair>> getAllExceptOneFromLogin({@required String login}) async {
     final Future query = database.mappedResultsQuery(
-        "SELECT ${UsersTable.name}.\"binomePairId\", name, surname, \"statusBinomePair\" FROM "
-            "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
-            "WHERE \"binomePairId\"=@binomePairId "
-            ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
-            "JOIN ${UsersTable.name} "
-            "ON ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\"=${UsersTable.name}.\"binomePairId\" ",
+        "SELECT ${BinomePairsProfilesTable.name}.\"binomePairId\", name, surname, \"otherName\", \"otherSurname\", \"status\" FROM "
+            "${RelationsStatusBinomePairsMatchesTable.name} "
+            "JOIN ("
+            " SELECT * FROM ${BinomePairsProfilesTable.name} "
+            "WHERE login=@login OR \"otherLogin\"=@login"
+            "ON  ${RelationsStatusBinomePairsMatchesTable.name}",
         substitutionValues: {
-          'binomePairId': binomePairId,
+          'login': login,
         });
 
     return query.then((queryResults) {
@@ -36,6 +37,7 @@ class SearchedBinomePairsTable {
       };
     });
   }
+
 
   bool _getLikeOrNotFromRelationStatusBinomePair(EnumRelationStatusBinomePair relationStatus) {
     return (relationStatus == EnumRelationStatusBinomePair.ignored || relationStatus == EnumRelationStatusBinomePair.none)

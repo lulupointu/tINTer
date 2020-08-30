@@ -44,7 +44,7 @@ part 'serializers.g.dart';
   TSPYear,
   LieuDeVie,
   School,
-  BinomePair,
+  BuildBinomePair,
   RelationScoreBinomePair,
   RelationStatusBinomePair,
   EnumRelationStatusBinomePair,

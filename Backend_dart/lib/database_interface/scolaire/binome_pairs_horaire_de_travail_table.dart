@@ -12,10 +12,6 @@ class BinomePairsHorairesDeTravailTable {
   BinomePairsHorairesDeTravailTable({@required this.database});
 
   Future<void> create() async {
-    final String createType = """
-        CREATE TYPE HorairesDeTravail AS ENUM ('morning', 'afternoon', 'evening', 'night');
-        """;
-
     final String query = """
     CREATE TABLE $name (
       \"binomePairId\" int NOT NULL REFERENCES ${BinomePairsProfilesTable.name} (\"binomePairId\") ON DELETE CASCADE,
@@ -23,16 +19,12 @@ class BinomePairsHorairesDeTravailTable {
       PRIMARY KEY (\"binomePairId\", \"horairesDeTravail\")
     );
     """;
-
-    await database.query(createType);
-
     return database.query(query);
   }
 
   Future<void> delete() {
     final List<Future> queries = [
       database.query("DROP TABLE IF EXISTS $name CASCADE;"),
-      database.query("DROP TYPE IF EXISTS HorairesDeTravail CASCADE;"),
     ];
 
     return Future.wait(queries);
@@ -78,6 +70,19 @@ class BinomePairsHorairesDeTravailTable {
 
     return database.mappedResultsQuery(query, substitutionValues: {
       'binomePairId': binomePairId,
+    }).then((sqlResults) {
+      return [
+        for (int index = 0; index < sqlResults.length; index++)
+          sqlResults[index][name]['horairesDeTravail']
+      ];
+    });
+  }
+
+  Future<List<String>> getFromLogin({@required String login}) async {
+    final String query = "SELECT * FROM $name WHERE login=@login OR \"otherLogin\"=@login ";
+
+    return database.mappedResultsQuery(query, substitutionValues: {
+      'login': login,
     }).then((sqlResults) {
       return [
         for (int index = 0; index < sqlResults.length; index++)

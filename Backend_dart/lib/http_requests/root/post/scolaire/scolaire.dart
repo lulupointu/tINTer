@@ -1,5 +1,6 @@
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/http_requests/root/post/scolaire/binome/binome.dart';
+import 'package:tinter_backend/http_requests/root/post/scolaire/binome_pair_match/binome_pair_match.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
@@ -10,6 +11,8 @@ Future<void> scolairePostToNextSegment(HttpRequest req, List<String> segments, S
   switch (segments.removeAt(0)) {
     case 'binomeUpdateRelationStatus':
       return binomeUpdateRelationStatusScolaire(req, segments, login);
+    case 'binomePairMatchUpdateRelationStatus':
+      return binomePairMatchUpdateRelationStatus(req, segments, login);
     default:
       throw UnknownRequestedPathError(req.uri.path);
   }

@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/binome_pairs_management_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/matieres_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_score_scolaire_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
@@ -79,8 +80,10 @@ main() async {
   RelationsStatusScolaireTable(database: tinterDatabase.connection);
   final MatchesTable matchesTable = MatchesTable(database: tinterDatabase.connection);
   final SessionsTable sessionsTable = SessionsTable(database: tinterDatabase.connection);
+  final BinomePairsManagementTable binomePairsManagementTable = BinomePairsManagementTable(database: tinterDatabase.connection);
 
   // Delete
+  await binomePairsManagementTable.delete();
   await sessionsTable.delete();
   await usersManagementTable.delete();
   await associationsTable.delete();
@@ -101,6 +104,7 @@ main() async {
   await relationsStatusScolaireTable.create();
   await relationsScoreScolaireTable.create();
   await sessionsTable.create();
+  await binomePairsManagementTable.create();
 
   // Populate
   await goutsMusicauxTable.populate();
@@ -116,26 +120,27 @@ main() async {
       user: fakeUsers[0].rebuild(
     (b) => b
       ..primoEntrant = true
-      ..year = TSPYear.TSP2A,
+      ..year = TSPYear.TSP1A,
   ));
   await usersManagementTable.update(
-      user: fakeUsers[0].rebuild(
+      user: fakeUsers[1].rebuild(
     (b) => b
       ..primoEntrant = false
       ..year = TSPYear.TSP1A,
   ));
   await usersManagementTable.update(
-      user: fakeUsers[0].rebuild(
+      user: fakeUsers[2].rebuild(
     (b) => b
       ..primoEntrant = false
       ..year = TSPYear.TSP3A,
   ));
   await usersManagementTable.update(
-      user: fakeUsers[0].rebuild(
+      user: fakeUsers[3].rebuild(
     (b) => b
       ..primoEntrant = true
       ..year = TSPYear.TSP2A,
   ));
+  await binomePairsManagementTable.populate();
 
   // Tests
 //  await relationsStatusTable.update(

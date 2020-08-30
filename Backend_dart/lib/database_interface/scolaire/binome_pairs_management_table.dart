@@ -3,9 +3,12 @@ import 'package:tinter_backend/database_interface/scolaire/binome_pairs_associat
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_horaire_de_travail_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_matieres_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
+import 'package:tinter_backend/database_interface/user_management_table.dart';
+import 'package:tinter_backend/http_requests/root/post/scolaire/binome/binome.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
+import 'package:tinter_backend/models/scolaire/binome_pair_match.dart';
 
 class BinomePairsManagementTable {
   final BinomePairsProfilesTable binomePairsTable;
@@ -20,13 +23,13 @@ class BinomePairsManagementTable {
         binomePairsMatieresTable = BinomePairsMatieresTable(database: database),
         binomePairsHorairesDeTravailTable = BinomePairsHorairesDeTravailTable(database: database);
 
-//  Future<void> populate() {
-//    final List<Future> queries = [
-//      for (BuildBinomePair binomePair in fakeBinomePairs) ...[add(binomePair: binomePair)]
-//    ];
-//
-//    return Future.wait(queries);
-//  }
+  Future<void> populate() {
+    final List<Future> queries = [
+      for (BuildBinomePair binomePair in fakeBinomePairs) ...[add(binomePair: binomePair)]
+    ];
+
+    return Future.wait(queries);
+  }
 
   Future<void> create() async {
     await binomePairsTable.create();
@@ -53,6 +56,12 @@ class BinomePairsManagementTable {
 
   Future<void> add({@required BuildBinomePair binomePair}) async {
     await binomePairsTable.add(binomePairJson: binomePair.toJson());
+
+    // Get the binome pair id
+    int binomePairId = await binomePairsTable.getBinomePairIdFromLogin(login: binomePair.login);
+
+    // Add the binome pair id to the binome pair
+    binomePair = binomePair.rebuild((b) => b..binomePairId = binomePairId);
 
     final List<Future> queries = [
       binomePairsTable.update(binomePair: binomePair),
@@ -104,6 +113,24 @@ class BinomePairsManagementTable {
     });
   }
 
+  Future<BuildBinomePair> getFromLogin({@required String login}) async {
+    final List<Future> queries = [
+      binomePairsTable.getFromLogin(login: login),
+      binomePairsAssociationsTable.getFromLogin(login: login),
+      binomePairsMatieresTable.getFromLogin(login: login),
+      binomePairsHorairesDeTravailTable.getFromLogin(login: login),
+    ];
+
+    List queriesResults = await Future.wait(queries);
+
+    return BuildBinomePair.fromJson({
+      ...queriesResults[0],
+      'associations': queriesResults[1].map((Association association) => association.toJson()),
+      'matieresPreferees': queriesResults[2],
+      'horairesDeTravail': queriesResults[3],
+    });
+  }
+
   Future<Map<int, BuildBinomePair>> getAllExceptOneFromBinomePairId(
       {@required int binomePairId}) async {
     final Map<int, Map<String, dynamic>> otherBinomePairsJson = await database.mappedResultsQuery(
@@ -140,7 +167,43 @@ class BinomePairsManagementTable {
     };
   }
 
-Future<Map<int, BuildBinomePair>> getMultipleFromBinomePairsId(
+  Future<Map<int, BuildBinomePair>> getAllExceptOneFromLogin(
+      {@required String login}) async {
+    final Map<int, Map<String, dynamic>> otherBinomePairsJson = await database.mappedResultsQuery(
+        "SELECT * FROM ${BinomePairsProfilesTable.name} "
+            "WHERE login<>@login AND \"otherLogin\"<>@login "
+            ";",
+        substitutionValues: {
+          'login': login,
+        }).then((queriesResults) {
+      return {
+        for (int index = 0; index < queriesResults.length; index++)
+          queriesResults[index][BinomePairsProfilesTable.name]['binomePairId']: queriesResults[index]
+          [BinomePairsProfilesTable.name]
+      };
+    });
+
+    final List<Future> queries = [
+      binomePairsAssociationsTable.getMultipleFromBinomePairsId(binomePairsId: otherBinomePairsJson.keys.toList()),
+      binomePairsMatieresTable.getMultipleFromBinomePairsId(binomePairsId: otherBinomePairsJson.keys.toList()),
+      binomePairsHorairesDeTravailTable.getMultipleFromBinomePairsId(binomePairsId: otherBinomePairsJson.keys.toList()),
+    ];
+
+    List queriesResults = await Future.wait(queries);
+
+    return {
+      for (int binomePairId in otherBinomePairsJson.keys)
+        binomePairId: BuildBinomePair.fromJson({
+          ...otherBinomePairsJson[binomePairId],
+          'associations':
+          queriesResults[0][binomePairId].map((Association association) => association.toJson()),
+          'matieresPreferees': queriesResults[1][binomePairId],
+          'horairesDeTravail': queriesResults[2][binomePairId],
+        })
+    };
+  }
+
+Future<Map<int, BuildBinomePairMatch>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
     if (binomePairsId.length == 0) return {};
 
@@ -155,7 +218,7 @@ Future<Map<int, BuildBinomePair>> getMultipleFromBinomePairsId(
 
     return {
       for (int binomePairId in queriesResults[2].keys)
-        binomePairId: BuildBinomePair.fromJson({
+        binomePairId: BuildBinomePairMatch.fromJson({
           ...queriesResults[0][binomePairId],
           'associations':
           queriesResults[1][binomePairId].map((Association association) => association.toJson()),
@@ -165,6 +228,11 @@ Future<Map<int, BuildBinomePair>> getMultipleFromBinomePairsId(
     };
   }
 }
+
+List<BuildBinomePair> fakeBinomePairs = [
+  BuildBinomePair.getFromUsers(fakeUsers[1], fakeUsers[2]),
+  BuildBinomePair.getFromUsers(fakeUsers[3], fakeUsers[4]),
+];
 
 //List<BuildBinomePair> fakeBinomePairs = [
 //  BuildBinomePair.fromJson({

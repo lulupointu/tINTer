@@ -10,6 +10,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Association.serializer)
       ..add(BinomeStatus.serializer)
       ..add(BuildBinome.serializer)
+      ..add(BuildBinomePair.serializer)
       ..add(BuildMatch.serializer)
       ..add(BuildUser.serializer)
       ..add(EnumRelationStatusAssociatif.serializer)
@@ -31,6 +32,15 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Session.serializer)
       ..add(TSPYear.serializer)
       ..add(Token.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Association)]),
+          () => new ListBuilder<Association>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(HoraireDeTravail)]),
+          () => new ListBuilder<HoraireDeTravail>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Association)]),
           () => new ListBuilder<Association>())

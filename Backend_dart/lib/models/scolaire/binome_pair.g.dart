@@ -20,9 +20,6 @@ class _$BuildBinomePairSerializer
   Iterable<Object> serialize(Serializers serializers, BuildBinomePair object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'binomePairId',
-      serializers.serialize(object.binomePairId,
-          specifiedType: const FullType(int)),
       'login',
       serializers.serialize(object.login,
           specifiedType: const FullType(String)),
@@ -50,9 +47,6 @@ class _$BuildBinomePairSerializer
       serializers.serialize(object.associations,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Association)])),
-      'lieuDeVie',
-      serializers.serialize(object.lieuDeVie,
-          specifiedType: const FullType(LieuDeVie)),
       'groupeOuSeul',
       serializers.serialize(object.groupeOuSeul,
           specifiedType: const FullType(double)),
@@ -68,7 +62,18 @@ class _$BuildBinomePairSerializer
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])),
     ];
-
+    if (object.binomePairId != null) {
+      result
+        ..add('binomePairId')
+        ..add(serializers.serialize(object.binomePairId,
+            specifiedType: const FullType(int)));
+    }
+    if (object.lieuDeVie != null) {
+      result
+        ..add('lieuDeVie')
+        ..add(serializers.serialize(object.lieuDeVie,
+            specifiedType: const FullType(LieuDeVie)));
+    }
     return result;
   }
 
@@ -209,9 +214,6 @@ class _$BuildBinomePair extends BuildBinomePair {
       this.enligneOuNon,
       this.matieresPreferees})
       : super._() {
-    if (binomePairId == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'binomePairId');
-    }
     if (login == null) {
       throw new BuiltValueNullFieldError('BuildBinomePair', 'login');
     }
@@ -238,9 +240,6 @@ class _$BuildBinomePair extends BuildBinomePair {
     }
     if (associations == null) {
       throw new BuiltValueNullFieldError('BuildBinomePair', 'associations');
-    }
-    if (lieuDeVie == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'lieuDeVie');
     }
     if (groupeOuSeul == null) {
       throw new BuiltValueNullFieldError('BuildBinomePair', 'groupeOuSeul');
