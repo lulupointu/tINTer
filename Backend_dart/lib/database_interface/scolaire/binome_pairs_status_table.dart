@@ -70,7 +70,7 @@ class RelationsStatusBinomePairsMatchesTable {
     CREATE TABLE $name (
       \"binomePairId\" int NOT NULL REFERENCES ${BinomePairsProfilesTable.name} (\"binomePairId\") ON DELETE CASCADE,
       \"otherBinomePairId\" int NOT NULL REFERENCES ${BinomePairsProfilesTable.name} (\"binomePairId\") ON DELETE CASCADE,
-      \"status\" statusBinomePair NOT NULL,
+      \"status\" \"statusBinomePair\" NOT NULL,
       PRIMARY KEY (\"binomePairId\", \"otherBinomePairId\"),
       CHECK (\"binomePairId\" <> \"otherBinomePairId\")
     );
