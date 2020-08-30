@@ -94,47 +94,51 @@ Future<void> userCreate(HttpRequest req, List<String> segments, String login) as
   }
 
 
-  // Create scolaire relation (score and status) tables
-  try {
-    // Grab all other users
-    Map<String, BuildUser> otherUsersScolaire= await usersManagementTable.getAllExceptOneFromLogin(
-        login: login, year: user.year, school: School.TSP);
+  // If user is in 1A TSP, create a scolaire profile
+  if (user.school == School.TSP && user.year == TSPYear.TSP1A) {
+    // Create scolaire relation (score and status) tables
+    try {
+      // Grab all other users
+      Map<String, BuildUser> otherUsersScolaire= await usersManagementTable.getAllExceptOneFromLogin(
+          login: login, year: user.year, school: School.TSP);
 
-    // Get the number of associations and gouts musicaux
-    int numberMaxOfAssociations =
-        (await AssociationsTable(database: tinterDatabase.connection).getAll()).length;
-    int numberMaxOfMatieres =
-        (await MatieresTable(database: tinterDatabase.connection).getAll()).length;
+      // Get the number of associations and gouts musicaux
+      int numberMaxOfAssociations =
+          (await AssociationsTable(database: tinterDatabase.connection).getAll()).length;
+      int numberMaxOfMatieres =
+          (await MatieresTable(database: tinterDatabase.connection).getAll()).length;
 
-    // Get the scores
-    Map<String, RelationScoreScolaire> scores =
-    RelationScoreScolaire.getScoreBetweenMultiple(user, otherUsersScolaire.values.toList(),
-        numberMaxOfAssociations, numberMaxOfMatieres);
+      // Get the scores
+      Map<String, RelationScoreScolaire> scores =
+      RelationScoreScolaire.getScoreBetweenMultiple(user, otherUsersScolaire.values.toList(),
+          numberMaxOfAssociations, numberMaxOfMatieres);
 
-    // Update the database with all relevant scores
-    RelationsScoreScolaireTable relationsScoreScolaireTable =
-    RelationsScoreScolaireTable(database: tinterDatabase.connection);
-    await relationsScoreScolaireTable.addMultiple(
-        listRelationScoreScolaire: scores.values.toList());
+      // Update the database with all relevant scores
+      RelationsScoreScolaireTable relationsScoreScolaireTable =
+      RelationsScoreScolaireTable(database: tinterDatabase.connection);
+      await relationsScoreScolaireTable.addMultiple(
+          listRelationScoreScolaire: scores.values.toList());
 
-    // Update the database with status none
-    RelationsStatusScolaireTable relationsStatusScolaireTable =
-    RelationsStatusScolaireTable(database: tinterDatabase.connection);
-    await relationsStatusScolaireTable.addMultiple(listRelationStatusScolaire: [
-      for (String otherLogin in otherUsersScolaire.keys) ...[
-        RelationStatusScolaire((b) => b
-          ..login = login
-          ..otherLogin = otherLogin
-          ..statusScolaire = EnumRelationStatusScolaire.none),
-        RelationStatusScolaire((b) => b
-          ..login = otherLogin
-          ..otherLogin = login
-          ..statusScolaire = EnumRelationStatusScolaire.none)
-      ]
-    ]);
-  } catch (error) {
-    throw InternalDatabaseError(error);
+      // Update the database with status none
+      RelationsStatusScolaireTable relationsStatusScolaireTable =
+      RelationsStatusScolaireTable(database: tinterDatabase.connection);
+      await relationsStatusScolaireTable.addMultiple(listRelationStatusScolaire: [
+        for (String otherLogin in otherUsersScolaire.keys) ...[
+          RelationStatusScolaire((b) => b
+            ..login = login
+            ..otherLogin = otherLogin
+            ..statusScolaire = EnumRelationStatusScolaire.none),
+          RelationStatusScolaire((b) => b
+            ..login = otherLogin
+            ..otherLogin = login
+            ..statusScolaire = EnumRelationStatusScolaire.none)
+        ]
+      ]);
+    } catch (error) {
+      throw InternalDatabaseError(error);
+    }
   }
+
 
   await req.response
     ..statusCode = HttpStatus.ok
