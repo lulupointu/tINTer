@@ -79,7 +79,7 @@ Future<void> setupBinomeOfBinomeTables({@required PostgreSQLConnection database,
   // Get the users composing the binome
   UsersManagementTable usersManagementTable = UsersManagementTable(database: database);
   Map<String, BuildUser> users = await usersManagementTable.getMultipleFromLogins(logins: [relationStatusScolaire.login, relationStatusScolaire.otherLogin]);
-  print("Got both users");
+  print("Got both users $users");
 
   // Calculate the BinomePair profile
   // It is a union and intersection of the attributes
