@@ -34,7 +34,6 @@ class SearchedBinomePairsTable {
 
     return query.then((queryResults) {
       print("""first relation statusJson: ${{
-          ...queryResults[0][BinomePairsProfilesTable.name],
           'liked': _getLikeOrNotFromRelationStatusBinomePair(
           EnumRelationStatusBinomePair.valueOf(queryResults[0][RelationsStatusBinomePairsMatchesTable.name]['statusBinomePair']))
       }}""");
