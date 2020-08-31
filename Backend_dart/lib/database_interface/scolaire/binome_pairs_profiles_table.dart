@@ -200,6 +200,14 @@ class BinomePairsProfilesTable {
     });
   }
 
+  Future<void> removeFromLogin({@required String login}) async {
+    final String query = "DELETE FROM $name WHERE \"login\"=@login OR \"otherLogin\"=@login;";
+
+    return database.query(query, substitutionValues: {
+      'login': login,
+    });
+  }
+
   Future<void> removeAll() {
     final String query = "DELETE FROM $name;";
 

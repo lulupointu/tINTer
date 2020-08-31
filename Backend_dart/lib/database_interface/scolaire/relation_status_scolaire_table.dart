@@ -1,6 +1,7 @@
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
+import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
@@ -96,6 +97,7 @@ class RelationsStatusScolaireTable {
             OR \"otherStatus\" = 'refusedBinome' 
             THEN
             UPDATE ${RelationsStatusScolaireTable.name} SET \"statusScolaire\"='liked' WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
+            DELETE FROM ${BinomePairsProfilesTable.name} WHERE \"login\"=@login OR \"otherLogin\"=@login;
           END IF;
           
           RETURN NEW;
