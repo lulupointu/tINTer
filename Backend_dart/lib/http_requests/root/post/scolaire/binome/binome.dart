@@ -24,7 +24,7 @@ import 'package:built_collection/built_collection.dart';
 
 
 Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('binomeUpdateRelationStatusScolaire', segments);
+  printReceivedSegments('BinomeUpdateRelationStatusScolaire', segments);
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);
@@ -79,45 +79,54 @@ Future<void> setupBinomeOfBinomeTables({@required PostgreSQLConnection database,
   // Get the users composing the binome
   UsersManagementTable usersManagementTable = UsersManagementTable(database: database);
   Map<String, BuildUser> users = await usersManagementTable.getMultipleFromLogins(logins: [relationStatusScolaire.login, relationStatusScolaire.otherLogin]);
+  print("Got both users");
 
   // Calculate the BinomePair profile
   // It is a union and intersection of the attributes
   // of the two user composing the binome
   BuildBinomePair binomePair = BuildBinomePair.getFromUsers(users[0], users[1]);
+  print("Got binome pair from binome");
 
 
   BinomePairsManagementTable binomePairsManagementTable = BinomePairsManagementTable(database: database);
 
   // Save the binome pair to its table
   await binomePairsManagementTable.add(binomePair: binomePair);
+  print("Save the binome pair to its table");
 
   // Get the binome pair id
   BinomePairsProfilesTable binomePairsProfilesTable = BinomePairsProfilesTable(database: database);
   int binomePairId = await binomePairsProfilesTable.getBinomePairIdFromLogin(login: relationStatusScolaire.login);
+  print("Get the binome pair id");
 
   // Add the binome pair id to the binome pair
   binomePair = binomePair.rebuild((b) => b..binomePairId = binomePairId);
+  print("Add the binome pair id to the binome pair");
 
   // Grab all other binome paire
   Map<int, BuildBinomePair> otherBinomePairs= await binomePairsManagementTable.getAllExceptOneFromLogin(
       login: relationStatusScolaire.login);
+  print("Grab all other binome paire");
 
   // Get the number of associations and matieres
   int numberMaxOfAssociations =
       (await AssociationsTable(database: database).getAll()).length;
   int numberMaxOfMatieres =
       (await MatieresTable(database: database).getAll()).length;
+  print('Get the number of associations and matieres');
 
   // Get the scores
   Map<int, RelationScoreBinomePair> scores =
   RelationScoreBinomePair.getScoreBetweenMultiple(binomePair, otherBinomePairs.values.toList(),
       numberMaxOfAssociations, numberMaxOfMatieres);
+  print('Get the scores');
 
   // Update the database with all relevant scores
   RelationsScoreBinomePairsMatchesTable relationsScoreScolaireTable =
   RelationsScoreBinomePairsMatchesTable(database: database);
   await relationsScoreScolaireTable.addMultiple(
       listRelationScoreBinomePair: scores.values.toList());
+  print('Update the database with all relevant scores');
 
   // Update the database with status none
   RelationsStatusBinomePairsMatchesTable relationsStatusScolaireTable =
@@ -134,6 +143,7 @@ Future<void> setupBinomeOfBinomeTables({@required PostgreSQLConnection database,
         ..status = EnumRelationStatusBinomePair.none),
     ]
   ]);
+  print("Update the database with status none");
 
 }
 
