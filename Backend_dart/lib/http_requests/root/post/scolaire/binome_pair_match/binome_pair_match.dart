@@ -27,10 +27,8 @@ Future<void> binomePairMatchUpdateRelationStatus(HttpRequest req, List<String> s
     Map<String, dynamic> relationStatusJson = jsonDecode(await utf8.decodeStream(req));
     BinomePairsProfilesTable binomePairsProfilesTable = BinomePairsProfilesTable(database: tinterDatabase.connection);
     int binomePairId = await binomePairsProfilesTable.getBinomePairIdFromLogin(login: login);
-    print('Got binomePairId from login');
     relationStatusJson['binomePairId'] = binomePairId;
     relationStatus = RelationStatusBinomePair.fromJson(relationStatusJson);
-    print('got relationStatus from json: $relationStatus');
   } catch(error) {
     throw error;
   }

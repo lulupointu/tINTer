@@ -64,7 +64,7 @@ class RelationsStatusBinomePairsMatchesTable {
   Future<void> create() async {
     final String statusTypeCreateQuery = """
     CREATE TYPE \"statusBinomePair\" 
-    AS ENUM ('none', 'ignored', 'liked', 'askedBinomePairMatch', 'acceptedBinomePairMatchMatch', 'refusedBinomePairMatchMatch')
+    AS ENUM ('none', 'ignored', 'liked', 'askedBinomePairMatch', 'acceptedBinomePairMatch', 'refusedBinomePairMatch')
     """;
     final String createTableQuery = """
     CREATE TABLE $name (
@@ -187,7 +187,6 @@ class RelationsStatusBinomePairsMatchesTable {
     final String query =
         "UPDATE $name SET \"status\"=@status WHERE \"binomePairId\"=@binomePairId AND \"otherBinomePairId\"=@otherBinomePairId;";
 
-    print('Try updating with $relationStatus');
 
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
