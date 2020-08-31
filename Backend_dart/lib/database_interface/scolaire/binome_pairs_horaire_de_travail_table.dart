@@ -106,7 +106,7 @@ class BinomePairsHorairesDeTravailTable {
       };
 
       for (Map<String, Map<String, dynamic>> result in sqlResults) {
-        mapHorairesDeTravailTobinomePairs[result[name]['\"binomePairId\"']]
+        mapHorairesDeTravailTobinomePairs[result[name]['binomePairId']]
             .add(result[name]['horairesDeTravail']);
       }
 
@@ -123,10 +123,10 @@ class BinomePairsHorairesDeTravailTable {
       Map<String, List<String>> mapHorairesDeTravailTobinomePairs = {};
 
       for (Map<String, Map<String, dynamic>> result in sqlResults) {
-        if (!mapHorairesDeTravailTobinomePairs.keys.contains(result[name]['\"binomePairId\"'])) {
-          mapHorairesDeTravailTobinomePairs[result[name]['\"binomePairId\"']] = [];
+        if (!mapHorairesDeTravailTobinomePairs.keys.contains(result[name]['binomePairId'])) {
+          mapHorairesDeTravailTobinomePairs[result[name]['binomePairId']] = [];
         }
-        mapHorairesDeTravailTobinomePairs[result[name]['\"binomePairId\"']]
+        mapHorairesDeTravailTobinomePairs[result[name]['binomePairId']]
             .add(result[name]['horairesDeTravail']);
       }
 

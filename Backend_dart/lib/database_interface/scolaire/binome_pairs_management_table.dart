@@ -183,8 +183,6 @@ class BinomePairsManagementTable {
       };
     });
 
-    print('otherBinomePairsJson $otherBinomePairsJson');
-
     final List<Future> queries = [
       binomePairsAssociationsTable.getMultipleFromBinomePairsId(binomePairsId: otherBinomePairsJson.keys.toList()),
       binomePairsMatieresTable.getMultipleFromBinomePairsId(binomePairsId: otherBinomePairsJson.keys.toList()),

@@ -126,7 +126,7 @@ class BinomePairsMatieresTable {
       };
 
       for (Map<String, Map<String, dynamic>> result in sqlResults) {
-        mapGoutMusicauxToBinomePairs[result[name]['\"binomePairId\"']]
+        mapGoutMusicauxToBinomePairs[result[name]['binomePairId']]
             .add(result[MatieresTable.name]['name']);
       }
 
@@ -147,10 +147,10 @@ class BinomePairsMatieresTable {
       Map<String, List<String>> mapGoutMusicauxToBinomePairs = {};
 
       for (Map<String, Map<String, dynamic>> result in sqlResults) {
-        if (!mapGoutMusicauxToBinomePairs.keys.contains(result[name]['\"binomePairId\"'])) {
-          mapGoutMusicauxToBinomePairs[result[name]['\"binomePairId\"']] = [];
+        if (!mapGoutMusicauxToBinomePairs.keys.contains(result[name]['binomePairId'])) {
+          mapGoutMusicauxToBinomePairs[result[name]['binomePairId']] = [];
         }
-        mapGoutMusicauxToBinomePairs[result[name]['\"binomePairId\"']]
+        mapGoutMusicauxToBinomePairs[result[name]['binomePairId']]
             .add(result[MatieresTable.name]['name']);
       }
 

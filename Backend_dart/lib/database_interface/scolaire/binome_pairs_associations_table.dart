@@ -129,7 +129,7 @@ class BinomePairsAssociationsTable {
       };
 
       for (Map<String, Map<String, dynamic>> result in sqlResults) {
-        mapListAssociationToBinomePairs[result[name]['\"binomePairId\"']]
+        mapListAssociationToBinomePairs[result[name]['binomePairId']]
             .add(Association.fromJson(result[AssociationsTable.name]));
       }
 
@@ -151,10 +151,10 @@ class BinomePairsAssociationsTable {
       Map<String, List<Association>> mapListAssociationToBinomePairs = {};
 
       for (Map<String, Map<String, dynamic>> result in sqlResults) {
-        if (!mapListAssociationToBinomePairs.keys.contains(result[name]['\"binomePairId\"'])) {
-          mapListAssociationToBinomePairs[result[name]['\"binomePairId\"']] = [];
+        if (!mapListAssociationToBinomePairs.keys.contains(result[name]['binomePairId'])) {
+          mapListAssociationToBinomePairs[result[name]['binomePairId']] = [];
         }
-        mapListAssociationToBinomePairs[result[name]['\"binomePairId\"']]
+        mapListAssociationToBinomePairs[result[name]['binomePairId']]
             .add(Association.fromJson(result[AssociationsTable.name]));
       }
 
