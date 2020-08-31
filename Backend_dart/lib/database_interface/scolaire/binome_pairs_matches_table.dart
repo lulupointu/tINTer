@@ -95,10 +95,11 @@ class BinomePairsMatchesTable {
       return binomePairsManagementTable
           .getMultipleFromBinomePairsId(
           binomePairsId: sqlResults
-              .map((Map<String, Map<String, dynamic>> result) =>
-              int.parse(result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']))
+              .map<int>((Map<String, Map<String, dynamic>> result) =>
+          result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
               .toList())
           .then((Map<int, BuildBinomePair> otherUsers) {
+
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({
@@ -141,10 +142,11 @@ class BinomePairsMatchesTable {
       return binomePairsManagementTable
           .getMultipleFromBinomePairsId(
           binomePairsId: sqlResults
-              .map((Map<String, Map<String, dynamic>> result) =>
-              int.parse(result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']))
+              .map<int>((Map<String, Map<String, dynamic>> result) =>
+          result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
               .toList())
           .then((Map<int, BuildBinomePair> otherUsers) {
+
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({
@@ -163,6 +165,8 @@ class BinomePairsMatchesTable {
       });
     });
   }
+
+
 
   Future<List<BuildBinomePairMatch>> getMatchedBinomesFromBinomePairId({@required int binomePairId}) async {
     String getDiscoverBinomesQuery =
@@ -184,10 +188,11 @@ class BinomePairsMatchesTable {
       return binomePairsManagementTable
           .getMultipleFromBinomePairsId(
           binomePairsId: sqlResults
-              .map((Map<String, Map<String, dynamic>> result) =>
-              int.parse(result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']))
+              .map<int>((Map<String, Map<String, dynamic>> result) =>
+          result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
               .toList())
           .then((Map<int, BuildBinomePair> otherUsers) {
+
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({
