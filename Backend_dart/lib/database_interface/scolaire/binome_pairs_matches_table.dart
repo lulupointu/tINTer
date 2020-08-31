@@ -48,7 +48,10 @@ class BinomePairsMatchesTable {
       'limit': limit,
       'offset': offset,
     }).then((sqlResults) {
-      print('sqlResults: $sqlResults');
+      print('mapped arg: ${sqlResults
+          .map<int>((Map<String, Map<String, dynamic>> result) =>
+      result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
+          .toList()}');
 
       return binomePairsManagementTable
           .getMultipleFromBinomePairsId(
