@@ -10,6 +10,7 @@ import 'package:tinter_backend/models/associatif/relation_status_associatif.dart
 import 'package:tinter_backend/models/associatif/searched_user_associatif.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
+import 'package:tinter_backend/models/scolaire/binome_pair_match.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
@@ -45,6 +46,7 @@ part 'serializers.g.dart';
   LieuDeVie,
   School,
   BuildBinomePair,
+  BuildBinomePairMatch,
   RelationScoreBinomePair,
   RelationStatusBinomePair,
   EnumRelationStatusBinomePair,
