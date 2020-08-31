@@ -37,7 +37,7 @@ class SearchedBinomePairsTable {
       return {
         for (Map<String, Map<String, dynamic>> queryResult in queryResults)
           queryResult[BinomePairsProfilesTable.name]['binomePairId']: SearchedBinomePair.fromJson({
-            ...queryResult[UsersTable.name],
+            ...queryResult[BinomePairsProfilesTable.name],
             'liked': _getLikeOrNotFromRelationStatusBinomePair(
                 EnumRelationStatusBinomePair.valueOf(queryResult[RelationsStatusBinomePairsMatchesTable.name]['statusBinomePair']))
           })
