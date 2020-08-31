@@ -172,7 +172,7 @@ class BinomePairsProfilesTable {
     });
   }
 
-  Future<Map<String, Map<String, dynamic>>> getMultipleFromBinomePairsId(
+  Future<Map<int, Map<String, dynamic>>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
     if (binomePairsId.length == 0) return {};
     final String query = "SELECT * FROM $name "

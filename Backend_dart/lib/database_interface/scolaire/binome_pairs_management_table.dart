@@ -207,8 +207,6 @@ Future<Map<int, BuildBinomePairMatch>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
     if (binomePairsId.length == 0) return {};
 
-    print("getMultipleFromBinomePairsId $binomePairsId");
-
     final List<Future> queries = [
       binomePairsTable.getMultipleFromBinomePairsId(binomePairsId: binomePairsId),
       binomePairsAssociationsTable.getMultipleFromBinomePairsId(binomePairsId: binomePairsId),
