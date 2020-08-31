@@ -187,6 +187,8 @@ class RelationsStatusBinomePairsMatchesTable {
     final String query =
         "UPDATE $name SET \"status\"=@status WHERE \"binomePairId\"=@binomePairId AND \"otherBinomePairId\"=@otherBinomePairId;";
 
+    print('Try updating with $relationStatus');
+
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
 

@@ -46,6 +46,7 @@ Future<void> binomePairMatchUpdateRelationStatus(HttpRequest req, List<String> s
     if (error.code == 22023) {
       throw InvalidQueryParameterError(error.message, true);
     } else {
+      print(error);
       throw InternalDatabaseError(error);
     }
   }
