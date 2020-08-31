@@ -64,7 +64,7 @@ class RelationsStatusBinomePairsMatchesTable {
   Future<void> create() async {
     final String statusTypeCreateQuery = """
     CREATE TYPE \"statusBinomePair\" 
-    AS ENUM ('none', 'ignored', 'liked', 'askedBinomePair', 'acceptedBinomePair', 'refusedBinomePair')
+    AS ENUM ('none', 'ignored', 'liked', 'askedBinomePairMatch', 'acceptedBinomePairMatch', 'refusedBinomePairMatch')
     """;
     final String createTableQuery = """
     CREATE TABLE $name (
