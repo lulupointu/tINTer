@@ -183,6 +183,8 @@ class BinomePairsManagementTable {
       };
     });
 
+    print('otherBinomePairsJson $otherBinomePairsJson');
+
     final List<Future> queries = [
       binomePairsAssociationsTable.getMultipleFromBinomePairsId(binomePairsId: otherBinomePairsJson.keys.toList()),
       binomePairsMatieresTable.getMultipleFromBinomePairsId(binomePairsId: otherBinomePairsJson.keys.toList()),
@@ -190,6 +192,8 @@ class BinomePairsManagementTable {
     ];
 
     List queriesResults = await Future.wait(queries);
+
+    print("queriesResults $queriesResults");
 
     return {
       for (int binomePairId in otherBinomePairsJson.keys)
