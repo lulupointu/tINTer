@@ -6,6 +6,7 @@ import 'package:tinter_backend/models/serializers.dart';
 part 'relation_status_binome_pair.g.dart';
 
 abstract class RelationStatusBinomePair implements Built<RelationStatusBinomePair, RelationStatusBinomePairBuilder> {
+  @nullable
   int get binomePairId;
 
   int get otherBinomePairId;

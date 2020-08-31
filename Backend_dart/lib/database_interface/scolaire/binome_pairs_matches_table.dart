@@ -58,8 +58,6 @@ class BinomePairsMatchesTable {
               .toList())
           .then((Map<int, BuildBinomePair> otherUsers) {
 
-            print('otherUsers: $otherUsers');
-
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({

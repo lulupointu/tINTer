@@ -71,9 +71,6 @@ class _$RelationStatusBinomePairSerializer
       Serializers serializers, RelationStatusBinomePair object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'binomePairId',
-      serializers.serialize(object.binomePairId,
-          specifiedType: const FullType(int)),
       'otherBinomePairId',
       serializers.serialize(object.otherBinomePairId,
           specifiedType: const FullType(int)),
@@ -81,7 +78,12 @@ class _$RelationStatusBinomePairSerializer
       serializers.serialize(object.status,
           specifiedType: const FullType(EnumRelationStatusBinomePair)),
     ];
-
+    if (object.binomePairId != null) {
+      result
+        ..add('binomePairId')
+        ..add(serializers.serialize(object.binomePairId,
+            specifiedType: const FullType(int)));
+    }
     return result;
   }
 
@@ -151,10 +153,6 @@ class _$RelationStatusBinomePair extends RelationStatusBinomePair {
   _$RelationStatusBinomePair._(
       {this.binomePairId, this.otherBinomePairId, this.status})
       : super._() {
-    if (binomePairId == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationStatusBinomePair', 'binomePairId');
-    }
     if (otherBinomePairId == null) {
       throw new BuiltValueNullFieldError(
           'RelationStatusBinomePair', 'otherBinomePairId');
