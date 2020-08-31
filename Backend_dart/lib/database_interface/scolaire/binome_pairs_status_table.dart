@@ -64,7 +64,7 @@ class RelationsStatusBinomePairsMatchesTable {
   Future<void> create() async {
     final String statusTypeCreateQuery = """
     CREATE TYPE \"statusBinomePair\" 
-    AS ENUM ('none', 'ignored', 'liked', 'askedBinomePairMatch', 'acceptedBinomePairMatch', 'refusedBinomePairMatch')
+    AS ENUM ('none', 'ignored', 'liked', 'askedBinomePairMatch', 'acceptedBinomePairMatchMatch', 'refusedBinomePairMatchMatch')
     """;
     final String createTableQuery = """
     CREATE TABLE $name (
@@ -89,9 +89,9 @@ class RelationsStatusBinomePairsMatchesTable {
             
         IF NEW.\"status\" = 'ignored' THEN
           
-          IF \"otherStatus\" = 'askedBinomePair' 
-            OR \"otherStatus\" = 'acceptedBinomePair' 
-            OR \"otherStatus\" = 'refusedBinomePair' 
+          IF \"otherStatus\" = 'askedBinomePairMatch' 
+            OR \"otherStatus\" = 'acceptedBinomePairMatch' 
+            OR \"otherStatus\" = 'refusedBinomePairMatch' 
             THEN
             UPDATE ${RelationsStatusBinomePairsMatchesTable.name} SET \"status\"='liked' WHERE \"binomePairId\"=OLD.\"otherBinomePairId\" AND \"otherBinomePairId\"=OLD.\"binomePairId\";
           END IF;
@@ -107,12 +107,12 @@ class RelationsStatusBinomePairsMatchesTable {
           RETURN NEW;
         END IF;
         
-        IF OLD.\"status\" = 'liked' AND \"otherStatus\" = 'liked' AND NEW.\"status\" = 'askedBinomePair' THEN
+        IF OLD.\"status\" = 'liked' AND \"otherStatus\" = 'liked' AND NEW.\"status\" = 'askedBinomePairMatch' THEN
           RETURN NEW;
         END IF;
         
-        IF OLD.\"status\" = 'liked' AND \"otherStatus\" = 'askedBinomePair' AND
-          (NEW.\"status\" = 'acceptedBinomePair' OR NEW.\"status\" = 'refusedBinomePair') THEN
+        IF OLD.\"status\" = 'liked' AND \"otherStatus\" = 'askedBinomePairMatch' AND
+          (NEW.\"status\" = 'acceptedBinomePairMatch' OR NEW.\"status\" = 'refusedBinomePairMatch') THEN
           RETURN NEW;
         END IF;
         
