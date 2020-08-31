@@ -11,6 +11,8 @@ Future<void> main() async {
     exit(-1);
   }
 
+  print('Binded successfully on port 433');
+
   await for (HttpRequest req in server) {
 
       await authenticationCheckThenRoute(req);
