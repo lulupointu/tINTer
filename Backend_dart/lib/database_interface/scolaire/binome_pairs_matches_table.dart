@@ -5,6 +5,7 @@ import 'package:tinter_backend/database_interface/scolaire/binome_pairs_score_ta
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_status_table.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
+import 'package:tinter_backend/models/scolaire/binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair_match.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
 
@@ -99,7 +100,7 @@ class BinomePairsMatchesTable {
               .map((Map<String, Map<String, dynamic>> result) =>
               int.parse(result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']))
               .toList())
-          .then((Map<int, BuildBinomePairMatch> otherUsers) {
+          .then((Map<int, BuildBinomePair> otherUsers) {
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({
@@ -145,7 +146,7 @@ class BinomePairsMatchesTable {
               .map((Map<String, Map<String, dynamic>> result) =>
               int.parse(result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']))
               .toList())
-          .then((Map<int, BuildBinomePairMatch> otherUsers) {
+          .then((Map<int, BuildBinomePair> otherUsers) {
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({
@@ -188,7 +189,7 @@ class BinomePairsMatchesTable {
               .map((Map<String, Map<String, dynamic>> result) =>
               int.parse(result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']))
               .toList())
-          .then((Map<int, BuildBinomePairMatch> otherUsers) {
+          .then((Map<int, BuildBinomePair> otherUsers) {
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({
