@@ -85,7 +85,7 @@ Future<void> setupBinomeOfBinomeTables({@required PostgreSQLConnection database,
   // Calculate the BinomePair profile
   // It is a union and intersection of the attributes
   // of the two user composing the binome
-  BuildBinomePair binomePair = BuildBinomePair.getFromUsers(users[0], users[1]);
+  BuildBinomePair binomePair = BuildBinomePair.getFromUsers(users.values.toList()[0], users.values.toList()[1]);
   print("Got binome pair from binome");
 
 
