@@ -114,20 +114,22 @@ class BinomePairsManagementTable {
   }
 
   Future<BuildBinomePair> getFromLogin({@required String login}) async {
+
+    Map<String, dynamic> binomePairJson = await binomePairsTable.getFromLogin(login: login);
+
     final List<Future> queries = [
-      binomePairsTable.getFromLogin(login: login),
-      binomePairsAssociationsTable.getFromLogin(login: login),
-      binomePairsMatieresTable.getFromLogin(login: login),
-      binomePairsHorairesDeTravailTable.getFromLogin(login: login),
+      binomePairsAssociationsTable.getFromBinomePairId(binomePairId: binomePairJson['binomePairId']),
+      binomePairsMatieresTable.getFromBinomePairId(binomePairId: binomePairJson['binomePairId']),
+      binomePairsHorairesDeTravailTable.getFromBinomePairId(binomePairId: binomePairJson['binomePairId']),
     ];
 
     List queriesResults = await Future.wait(queries);
 
     return BuildBinomePair.fromJson({
-      ...queriesResults[0],
-      'associations': queriesResults[1].map((Association association) => association.toJson()),
-      'matieresPreferees': queriesResults[2],
-      'horairesDeTravail': queriesResults[3],
+      ...binomePairJson,
+      'associations': queriesResults[0].map((Association association) => association.toJson()),
+      'matieresPreferees': queriesResults[1],
+      'horairesDeTravail': queriesResults[2],
     });
   }
 
