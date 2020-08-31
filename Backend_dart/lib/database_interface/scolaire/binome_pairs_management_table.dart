@@ -191,8 +191,6 @@ class BinomePairsManagementTable {
 
     List queriesResults = await Future.wait(queries);
 
-    print("queriesResults $queriesResults");
-
     return {
       for (int binomePairId in otherBinomePairsJson.keys)
         binomePairId: BuildBinomePair.fromJson({
