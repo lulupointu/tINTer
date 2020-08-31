@@ -65,6 +65,7 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
           database: tinterDatabase.connection, relationStatusScolaire: relationStatus);
     }
   } catch(error) {
+    print(error);
     throw InternalDatabaseError(error);
   }
 
