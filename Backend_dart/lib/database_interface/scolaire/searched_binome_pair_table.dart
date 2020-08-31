@@ -27,7 +27,7 @@ class SearchedBinomePairsTable {
             "USING (\"binomePairId\") "
             ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
             "JOIN ${BinomePairsProfilesTable.name} "
-            "USING (\"binomePairId\") ",
+            "USING (\"binomePairId\") ;",
         substitutionValues: {
           'login': login,
         });
