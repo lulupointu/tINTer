@@ -52,7 +52,7 @@ class BinomePairsMatchesTable {
           .getMultipleFromBinomePairsId(
           binomePairsId: sqlResults
               .map((Map<String, Map<String, dynamic>> result) =>
-              int.parse(result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']))
+              result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
               .toList())
           .then((Map<int, BuildBinomePairMatch> otherUsers) {
         return [
