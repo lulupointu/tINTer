@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:tinter_backend/database_interface/database_interface.dart';
+import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_status_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
@@ -18,17 +19,19 @@ Future<void> binomePairMatchUpdateRelationStatus(HttpRequest req, List<String> s
     throw UnknownRequestedPathError(req.uri.path);
   }
 
+  TinterDatabase tinterDatabase = TinterDatabase();
+  await tinterDatabase.open();
+
   RelationStatusBinomePair relationStatus;
   try {
     Map<String, dynamic> relationStatusJson = jsonDecode(await utf8.decodeStream(req));
-    relationStatusJson['login'] = login;
+    BinomePairsProfilesTable binomePairsProfilesTable = BinomePairsProfilesTable(database: tinterDatabase.connection);
+    int binomePairId = await binomePairsProfilesTable.getBinomePairIdFromLogin(login: login);
+    relationStatusJson['binomePairId'] = binomePairId;
     relationStatus = RelationStatusBinomePair.fromJson(relationStatusJson);
   } catch(error) {
     throw error;
   }
-
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
 
   RelationsStatusBinomePairsMatchesTable relationsStatusTable =
   RelationsStatusBinomePairsMatchesTable(database: tinterDatabase.connection);
