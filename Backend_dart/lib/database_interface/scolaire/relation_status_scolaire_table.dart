@@ -97,7 +97,7 @@ class RelationsStatusScolaireTable {
             OR \"otherStatus\" = 'refusedBinome' 
             THEN
             UPDATE ${RelationsStatusScolaireTable.name} SET \"statusScolaire\"='liked' WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
-            DELETE FROM ${BinomePairsProfilesTable.name} WHERE \"login\"=@login OR \"otherLogin\"=@login;
+            DELETE FROM ${BinomePairsProfilesTable.name} WHERE \"login\"=NEW.login OR \"otherLogin\"=NEW.login;
           END IF;
           
           RETURN NEW;
