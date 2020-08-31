@@ -16,7 +16,7 @@ class SearchedBinomePairsTable {
 
   Future<Map<String, SearchedBinomePair>> getAllExceptOneFromLogin({@required String login}) async {
     final Future query = database.mappedResultsQuery(
-        "SELECT \"binomePairId\", name, surname, \"otherName\", \"otherSurname\", \"status\" "
+        "SELECT \"binomePairId\", login, name, surname, \"otherLogin\", \"otherName\", \"otherSurname\", \"status\" "
             " FROM "
             "( SELECT \"otherBinomePairId\" AS \"binomePairId\", status FROM "
             " ${RelationsStatusBinomePairsMatchesTable.name} "

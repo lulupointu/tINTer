@@ -8,9 +8,13 @@ abstract class SearchedBinomePair implements Built<SearchedBinomePair, SearchedB
 
   int get binomePairId;
 
+  String get login;
+
   String get name;
 
   String get surname;
+
+  String get otherLogin;
 
   String get otherName;
 
