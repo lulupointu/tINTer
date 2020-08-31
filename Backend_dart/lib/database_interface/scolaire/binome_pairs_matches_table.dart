@@ -48,6 +48,8 @@ class BinomePairsMatchesTable {
       'limit': limit,
       'offset': offset,
     }).then((sqlResults) {
+      print('sqlResults: $sqlResults');
+
       return binomePairsManagementTable
           .getMultipleFromBinomePairsId(
           binomePairsId: sqlResults
@@ -55,6 +57,9 @@ class BinomePairsMatchesTable {
               result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
               .toList())
           .then((Map<int, BuildBinomePairMatch> otherUsers) {
+
+            print('otherUsers: $otherUsers');
+
         return [
           for (int index = 0; index < otherUsers.length; index++)
             BuildBinomePairMatch.fromJson({
