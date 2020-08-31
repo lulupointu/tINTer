@@ -1,4 +1,5 @@
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/http_requests/root/get/scolaire/binome_pair/binome_pair.dart';
 import 'package:tinter_backend/http_requests/root/get/scolaire/discover_binome_pair_matches/discover_binome_pair_matches.dart';
 import 'package:tinter_backend/http_requests/root/get/scolaire/discover_binomes/discover_binomes.dart';
 import 'package:tinter_backend/http_requests/root/get/scolaire/has_binome_pair/has_binome_pair.dart';
@@ -23,6 +24,8 @@ Future<void> scolaireGetToNextSegment(HttpRequest req, List<String> segments, St
       return matchedBinomesGet(req, segments, login);
     case 'hasBinomePair':
       return hasBinomePairGet(req, segments, login);
+    case 'binomePair':
+      return binomePairGet(req, segments, login);
     case 'searchBinomePair':
       return searchBinomePairGet(req, segments, login);
     case 'discoverBinomesPairMatches':
