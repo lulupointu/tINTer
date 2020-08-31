@@ -22,7 +22,9 @@ Future<void> searchBinomePairGet(HttpRequest req, List<String> segments, String 
   SearchedBinomePairsTable searchedBinomePairsTable = SearchedBinomePairsTable(database: tinterDatabase.connection);
 
   try {
-    Map<String, SearchedBinomePair> searchedBinomePairs = await searchedBinomePairsTable.getAllExceptOneFromLogin(login: login);
+    Map<int, SearchedBinomePair> searchedBinomePairs = await searchedBinomePairsTable.getAllExceptOneFromLogin(login: login);
+
+    print(searchedBinomePairs);
 
     await req.response
       ..statusCode = HttpStatus.ok

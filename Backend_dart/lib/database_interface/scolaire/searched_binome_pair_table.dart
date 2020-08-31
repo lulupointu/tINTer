@@ -14,7 +14,7 @@ class SearchedBinomePairsTable {
     @required this.database,
   });
 
-  Future<Map<String, SearchedBinomePair>> getAllExceptOneFromLogin({@required String login}) async {
+  Future<Map<int, SearchedBinomePair>> getAllExceptOneFromLogin({@required String login}) async {
     final Future query = database.mappedResultsQuery(
         "SELECT \"binomePairId\", login, name, surname, \"otherLogin\", \"otherName\", \"otherSurname\", \"status\" "
             " FROM "
@@ -33,7 +33,7 @@ class SearchedBinomePairsTable {
         });
 
     return query.then((queryResults) {
-      print(queryResults[0]);
+      print(queryResults);
       return {
         for (Map<String, Map<String, dynamic>> queryResult in queryResults)
           queryResult[BinomePairsProfilesTable.name]['binomePairId']: SearchedBinomePair.fromJson({
