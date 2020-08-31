@@ -55,7 +55,7 @@ class BinomePairsMatchesTable {
               .map<int>((Map<String, Map<String, dynamic>> result) =>
               result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
               .toList())
-          .then((Map<int, BuildBinomePairMatch> otherUsers) {
+          .then((Map<int, BuildBinomePair> otherUsers) {
 
             print('otherUsers: $otherUsers');
 

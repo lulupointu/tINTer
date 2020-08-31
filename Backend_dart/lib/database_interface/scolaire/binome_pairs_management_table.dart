@@ -203,7 +203,7 @@ class BinomePairsManagementTable {
     };
   }
 
-Future<Map<int, BuildBinomePairMatch>> getMultipleFromBinomePairsId(
+Future<Map<int, BuildBinomePair>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
     if (binomePairsId.length == 0) return {};
 
@@ -218,7 +218,7 @@ Future<Map<int, BuildBinomePairMatch>> getMultipleFromBinomePairsId(
 
     return {
       for (int binomePairId in queriesResults[2].keys)
-        binomePairId: BuildBinomePairMatch.fromJson({
+        binomePairId: BuildBinomePair.fromJson({
           ...queriesResults[0][binomePairId],
           'associations':
           queriesResults[1][binomePairId].map((Association association) => association.toJson()),
