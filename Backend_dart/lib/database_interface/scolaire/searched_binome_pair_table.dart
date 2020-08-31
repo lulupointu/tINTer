@@ -33,7 +33,12 @@ class SearchedBinomePairsTable {
         });
 
     return query.then((queryResults) {
-      print(queryResults);
+      print("first relation status: ${SearchedBinomePair.fromJson({
+        ...queryResults[0][BinomePairsProfilesTable.name],
+        'liked': _getLikeOrNotFromRelationStatusBinomePair(
+            EnumRelationStatusBinomePair.valueOf(queryResults[0][RelationsStatusBinomePairsMatchesTable.name]['statusBinomePair']))
+      })
+      }");
       return {
         for (Map<String, Map<String, dynamic>> queryResult in queryResults)
           queryResult[BinomePairsProfilesTable.name]['binomePairId']: SearchedBinomePair.fromJson({
