@@ -30,7 +30,7 @@ Future<void> binomePairMatchUpdateRelationStatus(HttpRequest req, List<String> s
     print('Got binomePairId from login');
     relationStatusJson['binomePairId'] = binomePairId;
     relationStatus = RelationStatusBinomePair.fromJson(relationStatusJson);
-    print('got relationStatus from json');
+    print('got relationStatus from json: $relationStatus');
   } catch(error) {
     throw error;
   }
