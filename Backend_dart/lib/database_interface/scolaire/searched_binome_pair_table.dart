@@ -33,6 +33,7 @@ class SearchedBinomePairsTable {
         });
 
     return query.then((queryResults) {
+      print(queryResults[0][BinomePairsProfilesTable.name]);
       return {
         for (Map<String, Map<String, dynamic>> queryResult in queryResults)
           queryResult[BinomePairsProfilesTable.name]['binomePairId']: SearchedBinomePair.fromJson({
