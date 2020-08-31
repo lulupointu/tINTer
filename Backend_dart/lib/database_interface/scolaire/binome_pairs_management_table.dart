@@ -9,6 +9,7 @@ import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair_match.dart';
+import 'package:tinter_backend/models/shared/user.dart';
 
 class BinomePairsManagementTable {
   final BinomePairsProfilesTable binomePairsTable;
@@ -216,8 +217,6 @@ Future<Map<int, BuildBinomePairMatch>> getMultipleFromBinomePairsId(
 
     List queriesResults = await Future.wait(queries);
 
-    print('RESULTS: $queriesResults');
-
     return {
       for (int binomePairId in queriesResults[2].keys)
         binomePairId: BuildBinomePairMatch.fromJson({
@@ -225,7 +224,7 @@ Future<Map<int, BuildBinomePairMatch>> getMultipleFromBinomePairsId(
           'associations':
           queriesResults[1][binomePairId].map((Association association) => association.toJson()),
           'matieresPreferees': queriesResults[2][binomePairId],
-          'horairesDeTravail': queriesResults[3][binomePairId],
+          'horairesDeTravail': queriesResults[3][binomePairId].map((HoraireDeTravail horaireDeTravail) => horaireDeTravail.serialize()),
         })
     };
   }
