@@ -24,8 +24,6 @@ Future<void> searchBinomePairGet(HttpRequest req, List<String> segments, String 
   try {
     Map<int, SearchedBinomePair> searchedBinomePairs = await searchedBinomePairsTable.getAllExceptOneFromLogin(login: login);
 
-    print(searchedBinomePairs);
-
     await req.response
       ..statusCode = HttpStatus.ok
       ..write(json.encode([for (SearchedBinomePair searchedUser in searchedBinomePairs.values) searchedUser.toJson()]))
