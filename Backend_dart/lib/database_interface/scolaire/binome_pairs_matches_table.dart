@@ -25,8 +25,8 @@ class BinomePairsMatchesTable {
     String getDiscoverBinomePairMatchesQuery =
         " SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
         " (SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
-        " FROM ("
-        " SELECT * FROM ( "
+        " FROM "
+        " (SELECT * FROM "
         " (SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
         " WHERE \"status\"='none' "
         " ) AS \"myRelationStatusBinomePair\" "
