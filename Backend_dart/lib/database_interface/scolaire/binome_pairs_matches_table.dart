@@ -51,7 +51,7 @@ class BinomePairsMatchesTable {
       return binomePairsManagementTable
           .getMultipleFromBinomePairsId(
           binomePairsId: sqlResults
-              .map((Map<String, Map<String, dynamic>> result) =>
+              .map<int>((Map<String, Map<String, dynamic>> result) =>
               result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
               .toList())
           .then((Map<int, BuildBinomePairMatch> otherUsers) {
