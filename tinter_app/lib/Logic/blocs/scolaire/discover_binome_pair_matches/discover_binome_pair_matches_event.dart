@@ -10,6 +10,8 @@ abstract class DiscoverBinomePairMatchesEvent extends Equatable {
 
 class DiscoverBinomePairMatchesRequestedEvent extends DiscoverBinomePairMatchesEvent {}
 
+class DiscoverBinomePairMatchesRefreshEvent extends DiscoverBinomePairMatchesEvent {}
+
 abstract class DiscoverBinomePairMatchesLoadInSuccessEvent extends DiscoverBinomePairMatchesEvent {
   final BuildBinomePairMatch binomePairMatch;
 
@@ -30,6 +32,6 @@ class DiscoverBinomePairMatchesChangeStatusEvent extends DiscoverBinomePairMatch
   List<Object> get props => [binomePairMatch, newStatus];
 }
 
-class DiscoverBinomeLikeEvent extends DiscoverBinomePairMatchesLoadInSuccessEvent {}
+class DiscoverBinomePairMatchesLikeEvent extends DiscoverBinomePairMatchesLoadInSuccessEvent {}
 
-class DiscoverBinomeIgnoreEvent extends DiscoverBinomePairMatchesLoadInSuccessEvent {}
+class DiscoverBinomePairMatchesIgnoreEvent extends DiscoverBinomePairMatchesLoadInSuccessEvent {}

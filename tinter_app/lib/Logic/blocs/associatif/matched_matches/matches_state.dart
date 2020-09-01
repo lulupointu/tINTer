@@ -30,6 +30,20 @@ class MatchedMatchesLoadSuccessState extends MatchedMatchesState {
   List<Object> get props => [matches];
 }
 
+class MatchedMatchesRefreshingState extends MatchedMatchesLoadSuccessState {
+  const MatchedMatchesRefreshingState({@required matches}):super(matches: matches);
+
+  List<BuildMatch> withUpdatedMatch(BuildMatch oldMatch, BuildMatch updatedMatch) {
+    List<BuildMatch> newMatches = List.from(matches);
+    newMatches.remove(oldMatch);
+    newMatches.add(updatedMatch);
+    return newMatches;
+  }
+
+  @override
+  List<Object> get props => [matches];
+}
+
 class MatchedMatchesSavingNewStatusState extends MatchedMatchesLoadSuccessState {
 
   MatchedMatchesSavingNewStatusState({@required List<BuildMatch> matches}) : super(matches: matches);

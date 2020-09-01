@@ -1,10 +1,10 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:tinter_backend/models/associatif/association.dart';
-import 'package:tinter_backend/models/scolaire/binome_pair.dart';
-import 'package:tinter_backend/models/serializers.dart';
-import 'package:tinter_backend/models/shared/user.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
+import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
+import 'package:tinterapp/Logic/models/serializers.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 
 part 'binome_pair_match.g.dart';
 
@@ -36,11 +36,11 @@ class BinomePairMatchStatus extends EnumClass {
   static const BinomePairMatchStatus none = _$none;
   static const BinomePairMatchStatus liked = _$liked;
   static const BinomePairMatchStatus matched = _$matched;
-  static const BinomePairMatchStatus youAskedBinomePair = _$youAskedBinomePair;
-  static const BinomePairMatchStatus heAskedBinomePair = _$heAskedBinomePair;
-  static const BinomePairMatchStatus binomePairAccepted = _$binomePairAccepted;
-  static const BinomePairMatchStatus binomePairHeRefused = _$binomePairHeRefused;
-  static const BinomePairMatchStatus binomePairYouRefused = _$binomePairYouRefused;
+  static const BinomePairMatchStatus youAskedBinomePairMatch = _$youAskedBinomePairMatch;
+  static const BinomePairMatchStatus heAskedBinomePairMatch = _$heAskedBinomePairMatch;
+  static const BinomePairMatchStatus binomePairMatchAccepted = _$binomePairMatchAccepted;
+  static const BinomePairMatchStatus binomePairMatchHeRefused = _$binomePairMatchHeRefused;
+  static const BinomePairMatchStatus binomePairMatchYouRefused = _$binomePairMatchYouRefused;
 
 
   const BinomePairMatchStatus._(String name) : super(name);

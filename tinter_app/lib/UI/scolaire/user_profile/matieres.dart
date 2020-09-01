@@ -58,7 +58,7 @@ class MatieresTab extends StatelessWidget {
                               child: Consumer<TinterTheme>(
                                   builder: (context, tinterTheme, child) {
                                     return Text(
-                                    'Goûts Musicaux',
+                                    'Matières',
                                     maxLines: 1,
                                     style: tinterTheme.textStyle.headline1,
                                   );
@@ -117,7 +117,7 @@ class MatieresTab extends StatelessWidget {
     return BlocBuilder<UserBloc, UserState>(
       builder: (BuildContext context, UserState userState) {
         if (!(userState is UserLoadSuccessState)) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator(),);
         }
         bool isLiked = (userState as UserLoadSuccessState).user.matieresPreferees.contains(matiere);
         return InkWell(

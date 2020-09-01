@@ -16,8 +16,10 @@ main() {
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final ValueChanged<int> onTap;
+  final int selectedIndex;
+  final GlobalKey discoverIconKey;
 
-  CustomBottomNavigationBar({@required this.onTap});
+  CustomBottomNavigationBar({@required this.onTap, @required this.selectedIndex, this.discoverIconKey});
 
   @override
   _CustomBottomNavigationBarState createState() => _CustomBottomNavigationBarState();
@@ -45,6 +47,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    selection = [0, 0, 0];
+    selection[widget.selectedIndex] = 1;
+
     fractions['spacingBetweenIcons'] = (1 -
             ((1 - selection[0]) * fractions['match'] +
                 (1 - selection[1]) * fractions['discover'] +
@@ -303,6 +308,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
       // discover Icon
       AnimatedPositioned(
+        key: widget.discoverIconKey,
         duration: duration,
         curve: curve,
         left: parentWidth *

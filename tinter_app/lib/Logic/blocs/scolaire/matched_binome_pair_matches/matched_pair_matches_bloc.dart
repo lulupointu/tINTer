@@ -5,14 +5,14 @@ import 'package:equatable/equatable.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_status_binome_pair.dart';
-import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinterapp/Logic/repository/scolaire/matched_binome_pair_matches_repository.dart';
 
 part 'matched_pair_matches_event.dart';
 
 part 'matched_pair_matches_state.dart';
 
-class MatchedBinomePairMatchesBloc extends Bloc<MatchedBinomePairMatchesEvent, MatchedBinomePairMatchesState> {
+class MatchedBinomePairMatchesBloc
+    extends Bloc<MatchedBinomePairMatchesEvent, MatchedBinomePairMatchesState> {
   MatchedBinomePairMatchesRepository matchedBinomePairMatchesRepository;
   AuthenticationBloc authenticationBloc;
 
@@ -22,9 +22,18 @@ class MatchedBinomePairMatchesBloc extends Bloc<MatchedBinomePairMatchesEvent, M
         super(MatchedBinomePairMatchesInitialState());
 
   @override
-  Stream<MatchedBinomePairMatchesState> mapEventToState(MatchedBinomePairMatchesEvent event) async* {
+  Stream<MatchedBinomePairMatchesState> mapEventToState(
+      MatchedBinomePairMatchesEvent event) async* {
     if (event is MatchedBinomePairMatchesRequestedEvent) {
       yield* _mapMatchedBinomePairMatchesRequestedEventToState();
+      return;
+    } else if (event is MatchedBinomePairRefreshingEvent) {
+      if (state is MatchedBinomePairMatchesLoadSuccessState) {
+        yield* _mapMatchedBinomePairRefreshingEventToState();
+      } else {
+        _addError(
+            'ChangeStatusMatchedBinomePairMatchesEvent was called while state is not MatchedBinomePairMatchesLoadSuccessState');
+      }
       return;
     } else if (event is ChangeStatusMatchedBinomePairMatchesEvent) {
       if (state is MatchedBinomePairMatchesLoadSuccessState) {
@@ -39,8 +48,9 @@ class MatchedBinomePairMatchesBloc extends Bloc<MatchedBinomePairMatchesEvent, M
     print('event: ' + event.toString() + ' no treated');
   }
 
-  Stream<MatchedBinomePairMatchesState> _mapMatchedBinomePairMatchesRequestedEventToState() async* {
-    yield MatchedBinomePairMatchesInitializingState();
+  Stream<MatchedBinomePairMatchesState>
+      _mapMatchedBinomePairMatchesRequestedEventToState() async* {
+    yield MatchedBinomePairMatchesLoadingState();
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield MatchedBinomePairMatchesInitialState();
@@ -52,22 +62,50 @@ class MatchedBinomePairMatchesBloc extends Bloc<MatchedBinomePairMatchesEvent, M
       binomePairMatches = await matchedBinomePairMatchesRepository.getBinomePairMatches();
     } catch (error) {
       print(error);
-      yield MatchedBinomePairMatchesInitializingFailedState();
+      yield MatchedBinomePairMatchesLoadingFailedState();
       return;
     }
     yield MatchedBinomePairMatchesLoadSuccessState(binomePairMatches: binomePairMatches);
   }
 
+  Stream<MatchedBinomePairMatchesState> _mapMatchedBinomePairRefreshingEventToState() async* {
+    yield MatchedBinomePairMatchesRefreshingState(
+        binomePairMatches:
+            (state as MatchedBinomePairMatchesLoadSuccessState).binomePairMatches);
+    if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
+      authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
+      yield MatchedBinomePairMatchesInitialState();
+      return;
+    }
+
+    List<BuildBinomePairMatch> binomePairMatches;
+    try {
+      binomePairMatches = await matchedBinomePairMatchesRepository.getBinomePairMatches();
+    } catch (error) {
+      print(error);
+      yield MatchedBinomePairMatchesLoadingFailedState();
+      return;
+    }
+
+    // if state did not change
+    if (state is MatchedBinomePairMatchesLoadSuccessState) {
+      yield MatchedBinomePairMatchesLoadSuccessState(binomePairMatches: binomePairMatches);
+    }
+  }
+
   Stream<MatchedBinomePairMatchesState> _mapChangeBinomePairMatchStatusEventToState(
       ChangeStatusMatchedBinomePairMatchesEvent event) async* {
-    BuildBinomePairMatch newBinomePairMatch = event.binomePairMatch.rebuild((b) => b..status = event.binomePairMatchStatus);
+    BuildBinomePairMatch newBinomePairMatch =
+        event.binomePairMatch.rebuild((b) => b..status = event.binomePairMatchStatus);
 
-    MatchedBinomePairMatchesLoadSuccessState successState = MatchedBinomePairMatchesLoadSuccessState(
-        binomePairMatches:
-            (state as MatchedBinomePairMatchesLoadSuccessState).withUpdatedBinomePairMatch(event.binomePairMatch, newBinomePairMatch));
+    MatchedBinomePairMatchesLoadSuccessState successState =
+        MatchedBinomePairMatchesLoadSuccessState(
+            binomePairMatches: (state as MatchedBinomePairMatchesLoadSuccessState)
+                .withUpdatedBinomePairMatch(event.binomePairMatch, newBinomePairMatch));
 
     yield MatchedBinomePairMatchesSavingNewStatusState(
-        binomePairMatches: (state as MatchedBinomePairMatchesLoadSuccessState).binomePairMatches);
+        binomePairMatches:
+            (state as MatchedBinomePairMatchesLoadSuccessState).binomePairMatches);
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield MatchedBinomePairMatchesInitialState();
@@ -86,7 +124,8 @@ class MatchedBinomePairMatchesBloc extends Bloc<MatchedBinomePairMatchesEvent, M
     } catch (error) {
       print(error);
       yield MatchedBinomePairMatchesLoadFailureState(
-          binomePairMatches: (state as MatchedBinomePairMatchesLoadSuccessState).binomePairMatches);
+          binomePairMatches:
+              (state as MatchedBinomePairMatchesLoadSuccessState).binomePairMatches);
     }
 
     yield successState;

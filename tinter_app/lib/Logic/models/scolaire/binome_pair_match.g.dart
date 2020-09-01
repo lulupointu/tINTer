@@ -1,25 +1,96 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'binome_pair.dart';
+part of 'binome_pair_match.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<BuildBinomePair> _$buildBinomePairSerializer =
-    new _$BuildBinomePairSerializer();
+const BinomePairMatchStatus _$heIgnoredYou =
+    const BinomePairMatchStatus._('heIgnoredYou');
+const BinomePairMatchStatus _$ignored =
+    const BinomePairMatchStatus._('ignored');
+const BinomePairMatchStatus _$none = const BinomePairMatchStatus._('none');
+const BinomePairMatchStatus _$liked = const BinomePairMatchStatus._('liked');
+const BinomePairMatchStatus _$matched =
+    const BinomePairMatchStatus._('matched');
+const BinomePairMatchStatus _$youAskedBinomePairMatch =
+    const BinomePairMatchStatus._('youAskedBinomePairMatch');
+const BinomePairMatchStatus _$heAskedBinomePairMatch =
+    const BinomePairMatchStatus._('heAskedBinomePairMatch');
+const BinomePairMatchStatus _$binomePairMatchAccepted =
+    const BinomePairMatchStatus._('binomePairMatchAccepted');
+const BinomePairMatchStatus _$binomePairMatchHeRefused =
+    const BinomePairMatchStatus._('binomePairMatchHeRefused');
+const BinomePairMatchStatus _$binomePairMatchYouRefused =
+    const BinomePairMatchStatus._('binomePairMatchYouRefused');
 
-class _$BuildBinomePairSerializer
-    implements StructuredSerializer<BuildBinomePair> {
+BinomePairMatchStatus _$binomePairMatchStatusValueOf(String name) {
+  switch (name) {
+    case 'heIgnoredYou':
+      return _$heIgnoredYou;
+    case 'ignored':
+      return _$ignored;
+    case 'none':
+      return _$none;
+    case 'liked':
+      return _$liked;
+    case 'matched':
+      return _$matched;
+    case 'youAskedBinomePairMatch':
+      return _$youAskedBinomePairMatch;
+    case 'heAskedBinomePairMatch':
+      return _$heAskedBinomePairMatch;
+    case 'binomePairMatchAccepted':
+      return _$binomePairMatchAccepted;
+    case 'binomePairMatchHeRefused':
+      return _$binomePairMatchHeRefused;
+    case 'binomePairMatchYouRefused':
+      return _$binomePairMatchYouRefused;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<BinomePairMatchStatus> _$binomePairMatchStatusValues =
+    new BuiltSet<BinomePairMatchStatus>(const <BinomePairMatchStatus>[
+  _$heIgnoredYou,
+  _$ignored,
+  _$none,
+  _$liked,
+  _$matched,
+  _$youAskedBinomePairMatch,
+  _$heAskedBinomePairMatch,
+  _$binomePairMatchAccepted,
+  _$binomePairMatchHeRefused,
+  _$binomePairMatchYouRefused,
+]);
+
+Serializer<BuildBinomePairMatch> _$buildBinomePairMatchSerializer =
+    new _$BuildBinomePairMatchSerializer();
+Serializer<BinomePairMatchStatus> _$binomePairMatchStatusSerializer =
+    new _$BinomePairMatchStatusSerializer();
+
+class _$BuildBinomePairMatchSerializer
+    implements StructuredSerializer<BuildBinomePairMatch> {
   @override
-  final Iterable<Type> types = const [BuildBinomePair, _$BuildBinomePair];
+  final Iterable<Type> types = const [
+    BuildBinomePairMatch,
+    _$BuildBinomePairMatch
+  ];
   @override
-  final String wireName = 'BuildBinomePair';
+  final String wireName = 'BuildBinomePairMatch';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, BuildBinomePair object,
+  Iterable<Object> serialize(
+      Serializers serializers, BuildBinomePairMatch object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
+      'status',
+      serializers.serialize(object.status,
+          specifiedType: const FullType(BinomePairMatchStatus)),
+      'score',
+      serializers.serialize(object.score, specifiedType: const FullType(int)),
       'binomePairId',
       serializers.serialize(object.binomePairId,
           specifiedType: const FullType(int)),
@@ -50,9 +121,6 @@ class _$BuildBinomePairSerializer
       serializers.serialize(object.associations,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Association)])),
-      'lieuDeVie',
-      serializers.serialize(object.lieuDeVie,
-          specifiedType: const FullType(LieuDeVie)),
       'groupeOuSeul',
       serializers.serialize(object.groupeOuSeul,
           specifiedType: const FullType(double)),
@@ -68,15 +136,20 @@ class _$BuildBinomePairSerializer
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])),
     ];
-
+    if (object.lieuDeVie != null) {
+      result
+        ..add('lieuDeVie')
+        ..add(serializers.serialize(object.lieuDeVie,
+            specifiedType: const FullType(LieuDeVie)));
+    }
     return result;
   }
 
   @override
-  BuildBinomePair deserialize(
+  BuildBinomePairMatch deserialize(
       Serializers serializers, Iterable<Object> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new BuildBinomePairBuilder();
+    final result = new BuildBinomePairMatchBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -84,6 +157,15 @@ class _$BuildBinomePairSerializer
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
+        case 'status':
+          result.status = serializers.deserialize(value,
+                  specifiedType: const FullType(BinomePairMatchStatus))
+              as BinomePairMatchStatus;
+          break;
+        case 'score':
+          result.score = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
         case 'binomePairId':
           result.binomePairId = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
@@ -157,7 +239,29 @@ class _$BuildBinomePairSerializer
   }
 }
 
-class _$BuildBinomePair extends BuildBinomePair {
+class _$BinomePairMatchStatusSerializer
+    implements PrimitiveSerializer<BinomePairMatchStatus> {
+  @override
+  final Iterable<Type> types = const <Type>[BinomePairMatchStatus];
+  @override
+  final String wireName = 'BinomePairMatchStatus';
+
+  @override
+  Object serialize(Serializers serializers, BinomePairMatchStatus object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  BinomePairMatchStatus deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      BinomePairMatchStatus.valueOf(serialized as String);
+}
+
+class _$BuildBinomePairMatch extends BuildBinomePairMatch {
+  @override
+  final BinomePairMatchStatus status;
+  @override
+  final int score;
   @override
   final int binomePairId;
   @override
@@ -189,11 +293,14 @@ class _$BuildBinomePair extends BuildBinomePair {
   @override
   final BuiltList<String> matieresPreferees;
 
-  factory _$BuildBinomePair([void Function(BuildBinomePairBuilder) updates]) =>
-      (new BuildBinomePairBuilder()..update(updates)).build();
+  factory _$BuildBinomePairMatch(
+          [void Function(BuildBinomePairMatchBuilder) updates]) =>
+      (new BuildBinomePairMatchBuilder()..update(updates)).build();
 
-  _$BuildBinomePair._(
-      {this.binomePairId,
+  _$BuildBinomePairMatch._(
+      {this.status,
+      this.score,
+      this.binomePairId,
       this.login,
       this.name,
       this.surname,
@@ -209,67 +316,78 @@ class _$BuildBinomePair extends BuildBinomePair {
       this.enligneOuNon,
       this.matieresPreferees})
       : super._() {
+    if (status == null) {
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'status');
+    }
+    if (score == null) {
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'score');
+    }
     if (binomePairId == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'binomePairId');
+      throw new BuiltValueNullFieldError(
+          'BuildBinomePairMatch', 'binomePairId');
     }
     if (login == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'login');
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'login');
     }
     if (name == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'name');
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'name');
     }
     if (surname == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'surname');
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'surname');
     }
     if (email == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'email');
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'email');
     }
     if (otherLogin == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'otherLogin');
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'otherLogin');
     }
     if (otherName == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'otherName');
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'otherName');
     }
     if (otherSurname == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'otherSurname');
+      throw new BuiltValueNullFieldError(
+          'BuildBinomePairMatch', 'otherSurname');
     }
     if (otherEmail == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'otherEmail');
+      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'otherEmail');
     }
     if (associations == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'associations');
-    }
-    if (lieuDeVie == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'lieuDeVie');
+      throw new BuiltValueNullFieldError(
+          'BuildBinomePairMatch', 'associations');
     }
     if (groupeOuSeul == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'groupeOuSeul');
+      throw new BuiltValueNullFieldError(
+          'BuildBinomePairMatch', 'groupeOuSeul');
     }
     if (horairesDeTravail == null) {
       throw new BuiltValueNullFieldError(
-          'BuildBinomePair', 'horairesDeTravail');
+          'BuildBinomePairMatch', 'horairesDeTravail');
     }
     if (enligneOuNon == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePair', 'enligneOuNon');
+      throw new BuiltValueNullFieldError(
+          'BuildBinomePairMatch', 'enligneOuNon');
     }
     if (matieresPreferees == null) {
       throw new BuiltValueNullFieldError(
-          'BuildBinomePair', 'matieresPreferees');
+          'BuildBinomePairMatch', 'matieresPreferees');
     }
   }
 
   @override
-  BuildBinomePair rebuild(void Function(BuildBinomePairBuilder) updates) =>
+  BuildBinomePairMatch rebuild(
+          void Function(BuildBinomePairMatchBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  BuildBinomePairBuilder toBuilder() =>
-      new BuildBinomePairBuilder()..replace(this);
+  BuildBinomePairMatchBuilder toBuilder() =>
+      new BuildBinomePairMatchBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is BuildBinomePair &&
+    return other is BuildBinomePairMatch &&
+        status == other.status &&
+        score == other.score &&
         binomePairId == other.binomePairId &&
         login == other.login &&
         name == other.name &&
@@ -304,7 +422,13 @@ class _$BuildBinomePair extends BuildBinomePair {
                                                     $jc(
                                                         $jc(
                                                             $jc(
-                                                                0,
+                                                                $jc(
+                                                                    $jc(
+                                                                        0,
+                                                                        status
+                                                                            .hashCode),
+                                                                    score
+                                                                        .hashCode),
                                                                 binomePairId
                                                                     .hashCode),
                                                             login.hashCode),
@@ -325,7 +449,9 @@ class _$BuildBinomePair extends BuildBinomePair {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('BuildBinomePair')
+    return (newBuiltValueToStringHelper('BuildBinomePairMatch')
+          ..add('status', status)
+          ..add('score', score)
           ..add('binomePairId', binomePairId)
           ..add('login', login)
           ..add('name', name)
@@ -345,9 +471,17 @@ class _$BuildBinomePair extends BuildBinomePair {
   }
 }
 
-class BuildBinomePairBuilder
-    implements Builder<BuildBinomePair, BuildBinomePairBuilder> {
-  _$BuildBinomePair _$v;
+class BuildBinomePairMatchBuilder
+    implements Builder<BuildBinomePairMatch, BuildBinomePairMatchBuilder> {
+  _$BuildBinomePairMatch _$v;
+
+  BinomePairMatchStatus _status;
+  BinomePairMatchStatus get status => _$this._status;
+  set status(BinomePairMatchStatus status) => _$this._status = status;
+
+  int _score;
+  int get score => _$this._score;
+  set score(int score) => _$this._score = score;
 
   int _binomePairId;
   int get binomePairId => _$this._binomePairId;
@@ -415,10 +549,12 @@ class BuildBinomePairBuilder
   set matieresPreferees(ListBuilder<String> matieresPreferees) =>
       _$this._matieresPreferees = matieresPreferees;
 
-  BuildBinomePairBuilder();
+  BuildBinomePairMatchBuilder();
 
-  BuildBinomePairBuilder get _$this {
+  BuildBinomePairMatchBuilder get _$this {
     if (_$v != null) {
+      _status = _$v.status;
+      _score = _$v.score;
       _binomePairId = _$v.binomePairId;
       _login = _$v.login;
       _name = _$v.name;
@@ -440,24 +576,26 @@ class BuildBinomePairBuilder
   }
 
   @override
-  void replace(BuildBinomePair other) {
+  void replace(BuildBinomePairMatch other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$BuildBinomePair;
+    _$v = other as _$BuildBinomePairMatch;
   }
 
   @override
-  void update(void Function(BuildBinomePairBuilder) updates) {
+  void update(void Function(BuildBinomePairMatchBuilder) updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$BuildBinomePair build() {
-    _$BuildBinomePair _$result;
+  _$BuildBinomePairMatch build() {
+    _$BuildBinomePairMatch _$result;
     try {
       _$result = _$v ??
-          new _$BuildBinomePair._(
+          new _$BuildBinomePairMatch._(
+              status: status,
+              score: score,
               binomePairId: binomePairId,
               login: login,
               name: name,
@@ -486,7 +624,7 @@ class BuildBinomePairBuilder
         matieresPreferees.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'BuildBinomePair', _$failedField, e.toString());
+            'BuildBinomePairMatch', _$failedField, e.toString());
       }
       rethrow;
     }

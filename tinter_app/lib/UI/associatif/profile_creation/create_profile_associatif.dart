@@ -125,7 +125,7 @@ class PrimoEntrantRectangle extends StatelessWidget {
                 child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
                     if (!(userState is NewUserState)) {
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator(),);
                     }
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -233,7 +233,7 @@ class YearRectangle extends StatelessWidget {
                 child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
                     if (!(userState is NewUserState)) {
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator(),);
                     }
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),

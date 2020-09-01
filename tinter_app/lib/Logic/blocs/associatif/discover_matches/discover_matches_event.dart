@@ -10,6 +10,8 @@ abstract class DiscoverMatchesEvent extends Equatable {
 
 class DiscoverMatchesRequestedEvent extends DiscoverMatchesEvent {}
 
+class DiscoverMatchesRefreshEvent extends DiscoverMatchesEvent {}
+
 abstract class DiscoverMatchesLoadInSuccessEvent extends DiscoverMatchesEvent {
   final BuildMatch match;
 

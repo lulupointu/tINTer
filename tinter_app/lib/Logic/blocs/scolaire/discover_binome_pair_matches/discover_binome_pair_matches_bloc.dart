@@ -11,19 +11,30 @@ part 'discover_binome_pair_matches_event.dart';
 
 part 'discover_binome_pair_matches_state.dart';
 
-class DiscoverBinomePairMatchesBloc extends Bloc<DiscoverBinomePairMatchesEvent, DiscoverBinomePairMatchesState> {
+class DiscoverBinomePairMatchesBloc
+    extends Bloc<DiscoverBinomePairMatchesEvent, DiscoverBinomePairMatchesState> {
   final DiscoverBinomePairMatchesRepository discoverBinomePairMatchesRepository;
   final AuthenticationBloc authenticationBloc;
 
-  DiscoverBinomePairMatchesBloc({@required this.discoverBinomePairMatchesRepository, @required this.authenticationBloc})
+  DiscoverBinomePairMatchesBloc(
+      {@required this.discoverBinomePairMatchesRepository, @required this.authenticationBloc})
       : assert(discoverBinomePairMatchesRepository != null),
         super(DiscoverBinomePairMatchesInitialState());
 
   @override
-  Stream<DiscoverBinomePairMatchesState> mapEventToState(DiscoverBinomePairMatchesEvent event) async* {
+  Stream<DiscoverBinomePairMatchesState> mapEventToState(
+      DiscoverBinomePairMatchesEvent event) async* {
     switch (event.runtimeType) {
       case DiscoverBinomePairMatchesRequestedEvent:
         yield* _mapDiscoverBinomePairMatchesRequestedEventToState();
+        return;
+      case DiscoverBinomePairMatchesRefreshEvent:
+        if (state is DiscoverBinomePairMatchesLoadSuccessState) {
+          yield* _mapDiscoverBinomePairMatchesRefreshEventToState();
+        } else {
+          _addError(
+              'DiscoverBinomePairMatchesRefreshEvent was called while state is not DiscoverBinomePairMatchesLoadSuccessState');
+        }
         return;
       case DiscoverBinomePairMatchesChangeStatusEvent:
         if (state is DiscoverBinomePairMatchesWaitingStatusChangeState) {
@@ -33,7 +44,7 @@ class DiscoverBinomePairMatchesBloc extends Bloc<DiscoverBinomePairMatchesEvent,
               'ChangeStatusDiscoverBinomePairMatchesEvent was called while state is not DiscoverBinomePairMatchesLoadSuccessState');
         }
         return;
-      case DiscoverBinomeLikeEvent:
+      case DiscoverBinomePairMatchesLikeEvent:
         if (state is DiscoverBinomePairMatchesWaitingStatusChangeState) {
           _mapDiscoverBinomeLikeEventToState();
         } else {
@@ -41,7 +52,7 @@ class DiscoverBinomePairMatchesBloc extends Bloc<DiscoverBinomePairMatchesEvent,
               'DiscoverBinomeLikeEvent was called while state is not DiscoverBinomePairMatchesLoadSuccessState');
         }
         return;
-      case DiscoverBinomeIgnoreEvent:
+      case DiscoverBinomePairMatchesIgnoreEvent:
         if (state is DiscoverBinomePairMatchesWaitingStatusChangeState) {
           _mapDiscoverBinomeIgnoreEventToState();
         } else {
@@ -54,7 +65,8 @@ class DiscoverBinomePairMatchesBloc extends Bloc<DiscoverBinomePairMatchesEvent,
     print('event: ' + event.toString() + ' no treated');
   }
 
-  Stream<DiscoverBinomePairMatchesState> _mapDiscoverBinomePairMatchesRequestedEventToState() async* {
+  Stream<DiscoverBinomePairMatchesState>
+      _mapDiscoverBinomePairMatchesRequestedEventToState() async* {
     yield DiscoverBinomePairMatchesLoadInProgressState();
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
@@ -64,43 +76,77 @@ class DiscoverBinomePairMatchesBloc extends Bloc<DiscoverBinomePairMatchesEvent,
 
     List<BuildBinomePairMatch> binomePairMatchPairMatches;
     try {
-      binomePairMatchPairMatches = await discoverBinomePairMatchesRepository.getBinomePairMatches(limit: 5, offset: 0);
+      binomePairMatchPairMatches =
+          await discoverBinomePairMatchesRepository.getBinomePairMatches(limit: 5, offset: 0);
     } catch (error) {
       print(error);
       yield DiscoverBinomePairMatchesLoadFailureState();
       return;
     }
 
-    yield DiscoverBinomePairMatchesWaitingStatusChangeState(binomePairMatches: binomePairMatchPairMatches);
+    yield DiscoverBinomePairMatchesWaitingStatusChangeState(
+        binomePairMatches: binomePairMatchPairMatches);
   }
 
-  Stream<DiscoverBinomePairMatchesState> _mapChangeStatusDiscoverBinomePairMatchesEventToState(
-      DiscoverBinomePairMatchesChangeStatusEvent event) async* {
-    List<BuildBinomePairMatch> oldBinomePairMatches = (state as DiscoverBinomePairMatchesWaitingStatusChangeState).binomePairMatches;
+  Stream<DiscoverBinomePairMatchesState>
+      _mapDiscoverBinomePairMatchesRefreshEventToState() async* {
+    yield DiscoverBinomePairMatchesRefreshingState(
+        binomePairMatches:
+            (state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches);
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield DiscoverBinomePairMatchesInitialState();
       return;
     }
 
-    List<BuildBinomePairMatch> newBinomePairMatches = List<BuildBinomePairMatch>.from(oldBinomePairMatches);
+    List<BuildBinomePairMatch> binomePairMatchPairMatches;
+    try {
+      binomePairMatchPairMatches =
+          await discoverBinomePairMatchesRepository.getBinomePairMatches(limit: 5, offset: 0);
+    } catch (error) {
+      print(error);
+      yield DiscoverBinomePairMatchesLoadFailureState();
+      return;
+    }
+
+    // If state did not change while loading
+    if (state is DiscoverBinomePairMatchesRefreshingState) {
+      yield DiscoverBinomePairMatchesWaitingStatusChangeState(
+          binomePairMatches: binomePairMatchPairMatches);
+    }
+  }
+
+  Stream<DiscoverBinomePairMatchesState> _mapChangeStatusDiscoverBinomePairMatchesEventToState(
+      DiscoverBinomePairMatchesChangeStatusEvent event) async* {
+    List<BuildBinomePairMatch> oldBinomePairMatches =
+        (state as DiscoverBinomePairMatchesWaitingStatusChangeState).binomePairMatches;
+    if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
+      authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
+      yield DiscoverBinomePairMatchesInitialState();
+      return;
+    }
+
+    List<BuildBinomePairMatch> newBinomePairMatches =
+        List<BuildBinomePairMatch>.from(oldBinomePairMatches);
     newBinomePairMatches.remove(event.binomePairMatch);
 
-
-    yield DiscoverBinomePairMatchesSavingNewStatusState(binomePairMatches: newBinomePairMatches);
+    yield DiscoverBinomePairMatchesSavingNewStatusState(
+        binomePairMatches: newBinomePairMatches);
 
     // Update database
     try {
       await discoverBinomePairMatchesRepository.updateBinomePairMatchStatus(
-        relationStatus: RelationStatusBinomePair((r) => r
-          ..binomePairId = null
-          ..otherBinomePairId = event.binomePairMatch.binomePairId
-          ..status = event.enumRelationStatusBinomePair,
+        relationStatus: RelationStatusBinomePair(
+          (r) => r
+            ..binomePairId = null
+            ..otherBinomePairId = event.binomePairMatch.binomePairId
+            ..status = event.enumRelationStatusBinomePair,
         ),
       );
     } catch (error) {
       print(error);
-      yield DiscoverBinomePairMatchesWaitingStatusChangeState(binomePairMatches: oldBinomePairMatches);
+      yield DiscoverBinomePairMatchesWaitingStatusChangeState(
+          binomePairMatches: oldBinomePairMatches);
     }
 
     // Get next discovery user
@@ -112,19 +158,22 @@ class DiscoverBinomePairMatchesBloc extends Bloc<DiscoverBinomePairMatchesEvent,
       ))[0];
     } catch (error) {
       print(error);
-      yield DiscoverBinomePairMatchesWaitingStatusChangeState(binomePairMatches: oldBinomePairMatches);
+      yield DiscoverBinomePairMatchesWaitingStatusChangeState(
+          binomePairMatches: oldBinomePairMatches);
     }
 
     if (newBinome != null) {
       newBinomePairMatches.add(newBinome);
     }
 
-    yield DiscoverBinomePairMatchesWaitingStatusChangeState(binomePairMatches: newBinomePairMatches);
+    yield DiscoverBinomePairMatchesWaitingStatusChangeState(
+        binomePairMatches: newBinomePairMatches);
   }
 
   void _mapDiscoverBinomeLikeEventToState() {
     /// Grab the current displayed binomePairMatch, we know it's the first in the list
-    final BuildBinomePairMatch displayedBinome = (state as DiscoverBinomePairMatchesWaitingStatusChangeState).binomePairMatches[0];
+    final BuildBinomePairMatch displayedBinome =
+        (state as DiscoverBinomePairMatchesWaitingStatusChangeState).binomePairMatches[0];
     add(DiscoverBinomePairMatchesChangeStatusEvent(
         binomePairMatch: displayedBinome,
         newStatus: BinomePairMatchStatus.liked,
@@ -133,7 +182,8 @@ class DiscoverBinomePairMatchesBloc extends Bloc<DiscoverBinomePairMatchesEvent,
 
   void _mapDiscoverBinomeIgnoreEventToState() {
     /// Grab the current displayed binomePairMatch, we know it's the first in the list
-    final BuildBinomePairMatch displayedBinome = (state as DiscoverBinomePairMatchesWaitingStatusChangeState).binomePairMatches[0];
+    final BuildBinomePairMatch displayedBinome =
+        (state as DiscoverBinomePairMatchesWaitingStatusChangeState).binomePairMatches[0];
     add(DiscoverBinomePairMatchesChangeStatusEvent(
         binomePairMatch: displayedBinome,
         newStatus: BinomePairMatchStatus.ignored,

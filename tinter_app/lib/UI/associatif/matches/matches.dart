@@ -41,8 +41,11 @@ class _MatchsTabState extends State<MatchsTab> {
   @override
   void initState() {
     // Update to last information
-    BlocProvider.of<MatchedMatchesBloc>(context).add(MatchedMatchesRequestedEvent());
-
+    if (BlocProvider.of<MatchedMatchesBloc>(context).state is MatchedMatchesLoadSuccessState) {
+      BlocProvider.of<MatchedMatchesBloc>(context).add(MatchedMatchesRefreshEvent());
+    } else {
+      BlocProvider.of<MatchedMatchesBloc>(context).add(MatchedMatchesRequestedEvent());
+    }
     super.initState();
   }
 
@@ -142,54 +145,52 @@ class _MatchsTabState extends State<MatchsTab> {
   }
 
   Widget noMatchSelected(appHeight) {
-    return Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: appHeight * 0.1,
-            ),
-            Icon(
-              Icons.face,
-              color: tinterTheme.colors.defaultTextColor,
-              size: 70,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
-              buildWhen: (MatchedMatchesState previousState, MatchedMatchesState state) {
-                if (previousState.runtimeType != state.runtimeType) {
+    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: appHeight * 0.1,
+          ),
+          Icon(
+            Icons.face,
+            color: tinterTheme.colors.defaultTextColor,
+            size: 70,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
+            buildWhen: (MatchedMatchesState previousState, MatchedMatchesState state) {
+              if (previousState.runtimeType != state.runtimeType) {
+                return true;
+              }
+              if (previousState is MatchedMatchesLoadSuccessState &&
+                  state is MatchedMatchesLoadSuccessState) {
+                if (previousState.matches.length != state.matches.length) {
                   return true;
                 }
-                if (previousState is MatchedMatchesLoadSuccessState &&
-                    state is MatchedMatchesLoadSuccessState) {
-                  if (previousState.matches.length != state.matches.length) {
-                    return true;
-                  }
-                }
-                return false;
-              },
-              builder: (BuildContext context, MatchedMatchesState state) {
-                if (!(state is MatchedMatchesLoadSuccessState)) {
-                  return CircularProgressIndicator();
-                }
-                return ((state as MatchedMatchesLoadSuccessState).matches.length == 0)
-                    ? Text(
-                        "Aucun match pour l'instant",
-                        style: tinterTheme.textStyle.headline2,
-                      )
-                    : Text(
-                        'Selectionnez un match.',
-                        style: tinterTheme.textStyle.headline2,
-                      );
-              },
-            ),
-          ],
-        );
-      }
-    );
+              }
+              return false;
+            },
+            builder: (BuildContext context, MatchedMatchesState state) {
+              if (!(state is MatchedMatchesLoadSuccessState)) {
+                return Center(child: CircularProgressIndicator(),);
+              }
+              return ((state as MatchedMatchesLoadSuccessState).matches.length == 0)
+                  ? Text(
+                      "Aucun match pour l'instant",
+                      style: tinterTheme.textStyle.headline2,
+                    )
+                  : Text(
+                      'Selectionnez un match.',
+                      style: tinterTheme.textStyle.headline2,
+                    );
+            },
+          ),
+        ],
+      );
+    });
   }
 
   void matchSelected(BuildMatch match) {
@@ -244,7 +245,7 @@ class CompareView extends StatelessWidget {
                 BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator(),);
                   }
                   return userPicture(
                       getProfilePicture: ({@required height, @required width}) =>
@@ -287,21 +288,19 @@ class CompareView extends StatelessWidget {
 
   /// Displays either your face text or your match face text
   Widget userPictureText({String title}) {
-    return Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-          height: appHeight * 0.1,
-          child: Center(
-            child: AutoSizeText(
-              title,
-              textAlign: TextAlign.center,
-              style: tinterTheme.textStyle.headline2,
-              maxFontSize: 18,
-            ),
+    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+      return Container(
+        height: appHeight * 0.1,
+        child: Center(
+          child: AutoSizeText(
+            title,
+            textAlign: TextAlign.center,
+            style: tinterTheme.textStyle.headline2,
+            maxFontSize: 18,
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   /// Displays either your face or your match face
@@ -328,57 +327,53 @@ class CompareView extends StatelessWidget {
           children: <Widget>[
             Align(
               alignment: AlignmentDirectional.center,
-              child: Consumer<TinterTheme>(
-                  builder: (context, tinterTheme, child) {
-                    return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        'Score',
-                        style: tinterTheme.textStyle.headline1,
-                      ),
-                      Stack(
-                        children: <Widget>[
-                          Text(
-                            _match.score.toString(),
-                            style: TextStyle(
-                              fontSize: 50,
-                              fontWeight: FontWeight.bold,
-                              color: tinterTheme.textStyle.headline1.color,
-                            ),
+              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      'Score',
+                      style: tinterTheme.textStyle.headline1,
+                    ),
+                    Stack(
+                      children: <Widget>[
+                        Text(
+                          _match.score.toString(),
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: tinterTheme.textStyle.headline1.color,
                           ),
-                        ],
-                      ),
-                    ],
-                  );
-                }
-              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
             ),
             Align(
               alignment: AlignmentDirectional.bottomEnd,
               child: InkWell(
                 onTap: () => showWhatIsScore(context),
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                      return Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: 2,
-                          color: tinterTheme.colors.defaultTextColor,
-                        ),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 2,
+                        color: tinterTheme.colors.defaultTextColor,
                       ),
-                      height: 20,
-                      width: 20,
-                      child: Center(
-                        child: Text(
-                          '?',
-                          style: TextStyle(color: tinterTheme.colors.defaultTextColor),
-                        ),
+                    ),
+                    height: 20,
+                    width: 20,
+                    child: Center(
+                      child: Text(
+                        '?',
+                        style: TextStyle(color: tinterTheme.colors.defaultTextColor),
                       ),
-                    );
-                  }
-                ),
+                    ),
+                  );
+                }),
               ),
             )
           ],
@@ -401,40 +396,39 @@ class CompareView extends StatelessWidget {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                        return AutoSizeText(
-                        (_match.statusAssociatif == MatchStatus.liked ||
-                                _match.statusAssociatif == MatchStatus.heIgnoredYou)
-                            ? "Cette personne ne t'a pas encore liker"
-                            : (_match.statusAssociatif == MatchStatus.matched)
-                                ? (_match.primoEntrant)
-                                    ? "Demande lui de te parrainer"
-                                    : "Propose lui d'être ton parrain"
-                                : (_match.statusAssociatif == MatchStatus.youAskedParrain)
-                                    ? "Demande de parrainage envoyée"
-                                    : (_match.statusAssociatif == MatchStatus.heAskedParrain)
-                                        ? (_match.primoEntrant)
-                                            ? "Cette personne veut te parrainer"
-                                            : "Cette personne veut que tu la parraine"
-                                        : (_match.statusAssociatif == MatchStatus.parrainAccepted)
-                                            ? (_match.primoEntrant)
-                                                ? "Cette personne te parraine!"
-                                                : 'Tu parraine cette personne!'
-                                            : (_match.statusAssociatif ==
-                                                    MatchStatus.parrainHeRefused)
-                                                ? 'Cette personne à refusée ta demande'
-                                                : (_match.statusAssociatif ==
-                                                        MatchStatus.parrainYouRefused)
-                                                    ? (_match.primoEntrant)
-                                                        ? "Tu as refusé de parrainer cette personne."
-                                                        : "Tu as refusé que cette personne te parraine."
-                                                    : 'ERROR: the status should not be ${_match.statusAssociatif}',
-                        style: tinterTheme.textStyle.headline2,
-                        maxLines: 1,
-                      );
-                    }
-                  ),
+                  child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return AutoSizeText(
+                      (_match.statusAssociatif == MatchStatus.liked ||
+                              _match.statusAssociatif == MatchStatus.heIgnoredYou)
+                          ? "Cette personne ne t'a pas encore liker"
+                          : (_match.statusAssociatif == MatchStatus.matched)
+                              ? (_match.primoEntrant)
+                                  ? "Demande lui de te parrainer"
+                                  : "Propose lui d'être ton parrain"
+                              : (_match.statusAssociatif == MatchStatus.youAskedParrain)
+                                  ? "Demande de parrainage envoyée"
+                                  : (_match.statusAssociatif == MatchStatus.heAskedParrain)
+                                      ? (_match.primoEntrant)
+                                          ? "Cette personne veut te parrainer"
+                                          : "Cette personne veut que tu la parraine"
+                                      : (_match.statusAssociatif ==
+                                              MatchStatus.parrainAccepted)
+                                          ? (_match.primoEntrant)
+                                              ? "Cette personne te parraine!"
+                                              : 'Tu parraine cette personne!'
+                                          : (_match.statusAssociatif ==
+                                                  MatchStatus.parrainHeRefused)
+                                              ? 'Cette personne à refusée ta demande'
+                                              : (_match.statusAssociatif ==
+                                                      MatchStatus.parrainYouRefused)
+                                                  ? (_match.primoEntrant)
+                                                      ? "Tu as refusé de parrainer cette personne."
+                                                      : "Tu as refusé que cette personne te parraine."
+                                                  : 'ERROR: the status should not be ${_match.statusAssociatif}',
+                      style: tinterTheme.textStyle.headline2,
+                      maxLines: 1,
+                    );
+                  }),
                 ),
               ),
             ),
@@ -455,21 +449,19 @@ class CompareView extends StatelessWidget {
                             BlocProvider.of<MatchedMatchesBloc>(context)
                                 .add(AskParrainEvent(match: _match));
                           },
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                                return Container(
-                                padding: EdgeInsets.all(5.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                                  color: tinterTheme.colors.secondary,
-                                ),
-                                child: AutoSizeText(
-                                  "Envoyer une demande",
-                                  style: tinterTheme.textStyle.headline2,
-                                ),
-                              );
-                            }
-                          ),
+                          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                            return Container(
+                              padding: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                                color: tinterTheme.colors.secondary,
+                              ),
+                              child: AutoSizeText(
+                                "Envoyer une demande",
+                                style: tinterTheme.textStyle.headline2,
+                              ),
+                            );
+                          }),
                         ),
                       )
                     : (_match.statusAssociatif == MatchStatus.heAskedParrain)
@@ -484,19 +476,18 @@ class CompareView extends StatelessWidget {
                                 },
                                 child: Consumer<TinterTheme>(
                                     builder: (context, tinterTheme, child) {
-                                      return Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                                        color: tinterTheme.colors.secondary,
-                                      ),
-                                      child: AutoSizeText(
-                                        "Accepter",
-                                        style: tinterTheme.textStyle.headline2,
-                                      ),
-                                    );
-                                  }
-                                ),
+                                  return Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                                      color: tinterTheme.colors.secondary,
+                                    ),
+                                    child: AutoSizeText(
+                                      "Accepter",
+                                      style: tinterTheme.textStyle.headline2,
+                                    ),
+                                  );
+                                }),
                               ),
                               SizedBox(
                                 width: 30,
@@ -509,19 +500,18 @@ class CompareView extends StatelessWidget {
                                 },
                                 child: Consumer<TinterTheme>(
                                     builder: (context, tinterTheme, child) {
-                                      return Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                                        color: tinterTheme.colors.secondary,
-                                      ),
-                                      child: AutoSizeText(
-                                        "Refuser",
-                                        style: tinterTheme.textStyle.headline2,
-                                      ),
-                                    );
-                                  }
-                                ),
+                                  return Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                                      color: tinterTheme.colors.secondary,
+                                    ),
+                                    child: AutoSizeText(
+                                      "Refuser",
+                                      style: tinterTheme.textStyle.headline2,
+                                    ),
+                                  );
+                                }),
                               ),
                             ],
                           )
@@ -544,24 +534,22 @@ class CompareView extends StatelessWidget {
                     onTap: () {
                       onCompareTapped(appHeight);
                     },
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                          return Container(
-                          padding: EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                            color: tinterTheme.colors.background.withOpacity(0.8),
-                          ),
-                          child: AutoSizeText(
-                            'Compare vos profils',
-                            style: tinterTheme.textStyle.chipNotLiked,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            maxFontSize: 15,
-                          ),
-                        );
-                      }
-                    ),
+                    child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                      return Container(
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                          color: tinterTheme.colors.background.withOpacity(0.8),
+                        ),
+                        child: AutoSizeText(
+                          'Compare vos profils',
+                          style: tinterTheme.textStyle.chipNotLiked,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          maxFontSize: 15,
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ),
@@ -576,8 +564,8 @@ class CompareView extends StatelessWidget {
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return Container(
+        builder: (context, tinterTheme, child) {
+          return Container(
             padding: padding,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -594,14 +582,12 @@ class CompareView extends StatelessWidget {
   }
 
   Widget verticalSeparator() {
-    return Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-          width: 1.0,
-          color: tinterTheme.colors.secondaryAccent,
-        );
-      }
-    );
+    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+      return Container(
+        width: 1.0,
+        color: tinterTheme.colors.secondaryAccent,
+      );
+    });
   }
 
   Widget informationComparison() {
@@ -615,7 +601,7 @@ class CompareView extends StatelessWidget {
                 builder: (BuildContext context, UserState state) {
               if (!(state is KnownUserState)) {
                 BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator(),);
               }
               return ProfileInformation(user: (state as KnownUserState).user);
             }),
@@ -656,14 +642,12 @@ class ProfileInformation extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                        return Text(
-                        'Associations',
-                        style: tinterTheme.textStyle.headline2,
-                      );
-                    }
-                  ),
+                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return Text(
+                      'Associations',
+                      style: tinterTheme.textStyle.headline2,
+                    );
+                  }),
                   SizedBox(
                     height: 10,
                   ),
@@ -689,117 +673,109 @@ class ProfileInformation extends StatelessWidget {
             context: context,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Consumer<TinterTheme>(
-                  builder: (context, tinterTheme, child) {
-                    return Column(
-                    children: <Widget>[
-                      Text(
-                        'Attirance pour la vie associative',
-                        textAlign: TextAlign.center,
-                        style: tinterTheme.textStyle.headline2,
+              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      'Attirance pour la vie associative',
+                      textAlign: TextAlign.center,
+                      style: tinterTheme.textStyle.headline2,
+                    ),
+                    SliderTheme(
+                      data: tinterTheme.slider.disabled,
+                      child: Slider(
+                        value: user.attiranceVieAsso,
+                        onChanged: null,
                       ),
-                      SliderTheme(
-                        data: tinterTheme.slider.disabled,
-                        child: Slider(
-                          value: user.attiranceVieAsso,
-                          onChanged: null,
+                    ),
+                  ],
+                );
+              }),
+            ),
+          ),
+          informationRectangle(
+            context: context,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      'Cours ou soirée?',
+                      style: tinterTheme.textStyle.headline2,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    discoverSlider(
+                        context,
+                        SliderTheme(
+                          data: tinterTheme.slider.disabled,
+                          child: Slider(
+                            value: user.feteOuCours,
+                            onChanged: null,
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }
-              ),
+                        leftLabel: 'Cours',
+                        rightLabel: 'Soirée'),
+                  ],
+                );
+              }),
             ),
           ),
           informationRectangle(
             context: context,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-              child: Consumer<TinterTheme>(
-                  builder: (context, tinterTheme, child) {
-                    return Column(
-                    children: <Widget>[
-                      Text(
-                        'Cours ou soirée?',
-                        style: tinterTheme.textStyle.headline2,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      discoverSlider(
-                          context,
-                          SliderTheme(
-                            data: tinterTheme.slider.disabled,
-                            child: Slider(
-                              value: user.feteOuCours,
-                              onChanged: null,
-                            ),
+              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      'Parrain qui aide ou avec qui sortir?',
+                      style: tinterTheme.textStyle.headline2,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    discoverSlider(
+                        context,
+                        SliderTheme(
+                          data: tinterTheme.slider.disabled,
+                          child: Slider(
+                            value: user.aideOuSortir,
+                            onChanged: null,
                           ),
-                          leftLabel: 'Cours',
-                          rightLabel: 'Soirée'),
-                    ],
-                  );
-                }
-              ),
-            ),
-          ),
-          informationRectangle(
-            context: context,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-              child: Consumer<TinterTheme>(
-                  builder: (context, tinterTheme, child) {
-                    return Column(
-                    children: <Widget>[
-                      Text(
-                        'Parrain qui aide ou avec qui sortir?',
-                        style: tinterTheme.textStyle.headline2,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      discoverSlider(
-                          context,
-                          SliderTheme(
-                            data: tinterTheme.slider.disabled,
-                            child: Slider(
-                              value: user.aideOuSortir,
-                              onChanged: null,
-                            ),
-                          ),
-                          leftLabel: 'Aide',
-                          rightLabel: 'Sortir'),
-                    ],
-                  );
-                }
-              ),
+                        ),
+                        leftLabel: 'Aide',
+                        rightLabel: 'Sortir'),
+                  ],
+                );
+              }),
             ),
           ),
           informationRectangle(
             context: context,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Consumer<TinterTheme>(
-                  builder: (context, tinterTheme, child) {
-                    return Column(
-                    children: <Widget>[
-                      Text(
-                        'Aime organiser les événements?',
-                        style: tinterTheme.textStyle.headline2,
-                        textAlign: TextAlign.center,
+              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      'Aime organiser les événements?',
+                      style: tinterTheme.textStyle.headline2,
+                      textAlign: TextAlign.center,
+                    ),
+                    SliderTheme(
+                      data: tinterTheme.slider.disabled,
+                      child: Slider(
+                        value: user.organisationEvenements,
+                        onChanged: null,
                       ),
-                      SliderTheme(
-                        data: tinterTheme.slider.disabled,
-                        child: Slider(
-                          value: user.organisationEvenements,
-                          onChanged: null,
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              ),
+                    ),
+                  ],
+                );
+              }),
             ),
           ),
           Padding(
@@ -807,29 +783,27 @@ class ProfileInformation extends StatelessWidget {
             child: informationRectangle(
               context: context,
               width: double.infinity,
-              child: Consumer<TinterTheme>(
-                  builder: (context, tinterTheme, child) {
-                    return Column(
-                    children: <Widget>[
-                      Text(
-                        'Goûts musicaux',
-                        style: tinterTheme.textStyle.headline2,
-                      ),
-                      Wrap(
-                        spacing: 15,
-                        children: <Widget>[
-                          for (String musicStyle in user.goutsMusicaux)
-                            Chip(
-                              label: Text(musicStyle),
-                              labelStyle: tinterTheme.textStyle.chipLiked,
-                              backgroundColor: tinterTheme.colors.primaryAccent,
-                            )
-                        ],
-                      )
-                    ],
-                  );
-                }
-              ),
+              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      'Goûts musicaux',
+                      style: tinterTheme.textStyle.headline2,
+                    ),
+                    Wrap(
+                      spacing: 15,
+                      children: <Widget>[
+                        for (String musicStyle in user.goutsMusicaux)
+                          Chip(
+                            label: Text(musicStyle),
+                            labelStyle: tinterTheme.textStyle.chipLiked,
+                            backgroundColor: tinterTheme.colors.primaryAccent,
+                          )
+                      ],
+                    )
+                  ],
+                );
+              }),
             ),
           ),
         ],
@@ -840,8 +814,8 @@ class ProfileInformation extends StatelessWidget {
   Widget informationRectangle(
       {@required BuildContext context, @required Widget child, double width, double height}) {
     return Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
+      builder: (context, tinterTheme, child) {
+        return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(8.0)),
             color: tinterTheme.colors.primary,
@@ -883,37 +857,35 @@ class ProfileInformation extends StatelessWidget {
       {String leftLabel, String rightLabel}) {
     return Stack(
       children: <Widget>[
-        Consumer<TinterTheme>(
-            builder: (context, tinterTheme, child) {
-              return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SliderLabel(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                    child: Text(
-                      leftLabel,
-                      style: tinterTheme.textStyle.smallLabel,
-                    ),
+        Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              SliderLabel(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                  child: Text(
+                    leftLabel,
+                    style: tinterTheme.textStyle.smallLabel,
                   ),
-                  side: Side.Left,
-                  triangleSize: 14,
                 ),
-                SliderLabel(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                    child: Text(
-                      rightLabel,
-                      style: tinterTheme.textStyle.smallLabel,
-                    ),
+                side: Side.Left,
+                triangleSize: 14,
+              ),
+              SliderLabel(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                  child: Text(
+                    rightLabel,
+                    style: tinterTheme.textStyle.smallLabel,
                   ),
-                  side: Side.Right,
-                  triangleSize: 14,
                 ),
-              ],
-            );
-          }
-        ),
+                side: Side.Right,
+                triangleSize: 14,
+              ),
+            ],
+          );
+        }),
         Padding(
           padding: const EdgeInsets.only(top: 13.0, left: 4, right: 4),
           child: slider,
@@ -961,14 +933,12 @@ class MatchSelectionMenu extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-          child: Consumer<TinterTheme>(
-              builder: (context, tinterTheme, child) {
-                return Text(
-                title,
-                style: tinterTheme.textStyle.headline2,
-              );
-            }
-          ),
+          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+            return Text(
+              title,
+              style: tinterTheme.textStyle.headline2,
+            );
+          }),
         ),
         Flexible(
           child: ListView(
@@ -981,16 +951,14 @@ class MatchSelectionMenu extends StatelessWidget {
                   onTap: () => _onTap(match),
                   child: Center(
                     child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                          return Container(
+                      builder: (context, tinterTheme, child) {
+                        return Container(
                           margin: EdgeInsets.only(
                             right: 20.0,
                             left: match == matches[0] ? 20.0 : 0.0,
                           ),
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: tinterTheme.colors.background
-                          ),
+                              shape: BoxShape.circle, color: tinterTheme.colors.background),
                           height: 50,
                           width: 50,
                           child: child,
@@ -1014,14 +982,12 @@ class MatchSelectionMenu extends StatelessWidget {
   }
 
   Widget separator() {
-    return Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-          margin: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-          height: 0.5,
-          color: tinterTheme.colors.secondaryAccent,
-        );
-      }
-    );
+    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+      return Container(
+        margin: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+        height: 0.5,
+        color: tinterTheme.colors.secondaryAccent,
+      );
+    });
   }
 }

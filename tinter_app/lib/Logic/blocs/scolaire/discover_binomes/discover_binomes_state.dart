@@ -28,6 +28,20 @@ class DiscoverBinomesLoadSuccessState extends DiscoverBinomesState {
   List<Object> get props => [binomes];
 }
 
+class DiscoverBinomesRefreshingState extends DiscoverBinomesLoadSuccessState {
+  const DiscoverBinomesRefreshingState({@required binomes}):super(binomes: binomes);
+
+  List<BuildBinome> getUpdatedBinomes(BuildBinome oldBinome, BuildBinome updatedBinome) {
+    List<BuildBinome> newBinomes = List.from(binomes);
+    newBinomes.remove(oldBinome);
+    newBinomes.add(updatedBinome);
+    return newBinomes;
+  }
+
+  @override
+  List<Object> get props => [binomes];
+}
+
 class DiscoverBinomesWaitingStatusChangeState extends DiscoverBinomesLoadSuccessState {
   const DiscoverBinomesWaitingStatusChangeState({@required List<BuildBinome> binomes})
       : super(binomes: binomes);

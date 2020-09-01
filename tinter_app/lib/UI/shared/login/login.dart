@@ -441,11 +441,13 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                                             ? SizedBox(
                                                 height: 23,
                                                 width: 23,
-                                                child: CircularProgressIndicator(
-                                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                                    tinterTheme.colors.defaultTextColor,
+                                                child: Center(
+                                                  child: CircularProgressIndicator(
+                                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                                      tinterTheme.colors.defaultTextColor,
+                                                    ),
+                                                    strokeWidth: 3,
                                                   ),
-                                                  strokeWidth: 3,
                                                 ),
                                               )
                                             : Text(

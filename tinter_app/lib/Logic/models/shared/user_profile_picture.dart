@@ -8,8 +8,8 @@ import 'package:tinterapp/Network/tinter_api_client.dart';
 Widget getProfilePictureFromLocalPathOrLogin({
   @required String login,
   @required String localPath,
-  @required double height,
-  @required double width,
+  double height,
+  double width,
 }) {
   if (localPath != null) {
     return ClipOval(
@@ -38,7 +38,7 @@ Widget getProfilePictureFromLogin({
       future: AuthenticationRepository.getAuthenticationToken(),
       builder: (BuildContext context, AsyncSnapshot<Token> snapshot) {
         return (!snapshot.hasData)
-            ? Center(child: CircularProgressIndicator())
+            ? Center(child: Container())
             : Image.network(
                 Uri.http(TinterAPIClient.baseUrl, '/shared/user/profilePicture', {'login': login})
                     .toString(),

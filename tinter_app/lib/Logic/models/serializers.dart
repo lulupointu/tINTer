@@ -8,8 +8,14 @@ import 'package:tinterapp/Logic/models/associatif/relation_score_associatif.dart
 import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
+import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
+import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
+import 'package:tinterapp/Logic/models/scolaire/build_binome_pair.dart';
+import 'package:tinterapp/Logic/models/scolaire/relation_score_binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_score_scolaire.dart';
+import 'package:tinterapp/Logic/models/scolaire/relation_status_binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
+import 'package:tinterapp/Logic/models/scolaire/searched_binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
@@ -38,6 +44,12 @@ part 'serializers.g.dart';
   School,
   TSPYear,
   LieuDeVie,
+  BuildBinomePair,
+  BuildBinomePairMatch,
+  RelationScoreBinomePair,
+  RelationStatusBinomePair,
+  EnumRelationStatusBinomePair,
+  SearchedBinomePair,
 
 ])
 final Serializers serializers =

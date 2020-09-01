@@ -33,6 +33,14 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
             'ChangeStatusMatchedMatchesEvent was called while state is not MatchedMatchesLoadSuccessState');
       }
       return;
+    } else if (event is MatchedMatchesRefreshEvent) {
+      if (state is MatchedMatchesLoadSuccessState) {
+        yield* _mapMatchedMatchesRefreshEventToState();
+      } else {
+        _addError(
+            'MatchedMatchesRefreshEvent was called while state is not MatchedMatchesLoadSuccessState');
+      }
+      return;
     }
 
     print('event: ' + event.toString() + ' no treated');
@@ -54,7 +62,33 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
       yield MatchedMatchesInitializingFailedState();
       return;
     }
+
     yield MatchedMatchesLoadSuccessState(matches: matches);
+  }
+
+  Stream<MatchedMatchesState> _mapMatchedMatchesRefreshEventToState() async* {
+    print((state as MatchedMatchesLoadSuccessState).matches);
+    yield MatchedMatchesRefreshingState(matches: (state as MatchedMatchesLoadSuccessState).matches);
+    if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
+      authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
+      yield MatchedMatchesInitialState();
+      return;
+    }
+
+    List<BuildMatch> matches;
+    try {
+      matches = await matchedMatchesRepository.getMatches();
+    } catch (error) {
+      print(error);
+      yield MatchedMatchesInitializingFailedState();
+      return;
+    }
+
+    // Check if changes where made while refreshing
+    // If not, push the refreshed state
+    if (state is MatchedMatchesRefreshingState) {
+      yield MatchedMatchesLoadSuccessState(matches: matches);
+    }
   }
 
   Stream<MatchedMatchesState> _mapChangeMatchStatusEventToState(

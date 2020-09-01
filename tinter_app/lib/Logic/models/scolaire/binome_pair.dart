@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:tinterapp/Logic//models/associatif/association.dart';
-import 'package:tinterapp/Logic//models/serializers.dart';
-import 'package:tinterapp/Logic//models/shared/user.dart';
-
-part 'binome_pair.g.dart';
+import 'package:flutter/material.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
+import 'package:tinterapp/Logic/models/serializers.dart';
+import 'package:tinterapp/Logic/models/shared/token.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
+import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
+import 'package:tinterapp/Network/tinter_api_client.dart';
 
 abstract class BinomePair extends Object {
   int get binomePairId;
@@ -32,6 +36,7 @@ abstract class BinomePair extends Object {
   // two users composing the binome
   BuiltList<Association> get associations;
 
+  @nullable
   LieuDeVie get lieuDeVie;
 
   double get groupeOuSeul;
@@ -41,21 +46,49 @@ abstract class BinomePair extends Object {
   double get enligneOuNon;
 
   BuiltList<String> get matieresPreferees;
-}
 
-abstract class BuildBinomePair
-    implements BinomePair, Built<BuildBinomePair, BuildBinomePairBuilder> {
-  BuildBinomePair._();
-
-  factory BuildBinomePair([void Function(BuildBinomePairBuilder) updates]) = _$BuildBinomePair;
-
-  Map<String, dynamic> toJson() {
-    return serializers.serializeWith(BuildBinomePair.serializer, this);
+  static Widget getProfilePictureFromBinomePairLogins({
+    @required String loginA,
+    @required String loginB,
+    double height,
+    @required double width,
+  }) {
+    return FutureBuilder(
+      future: AuthenticationRepository.getAuthenticationToken(),
+      builder: (BuildContext context, AsyncSnapshot<Token> snapshot) {
+        return SizedBox(
+          height: height,
+          width: width,
+          child: (!snapshot.hasData)
+              ? Center(child: Container())
+              : Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ClipOval(
+                        child: Image.network(
+                          Uri.http(TinterAPIClient.baseUrl, '/shared/user/profilePicture',
+                              {'login': loginB}).toString(),
+                          headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: ClipOval(
+                        child: Image.network(
+                          Uri.http(TinterAPIClient.baseUrl, '/shared/user/profilePicture',
+                              {'login': loginA}).toString(),
+                          headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        );
+      },
+    );
   }
-
-  static BuildBinomePair fromJson(Map<String, dynamic> json) {
-    return serializers.deserializeWith(BuildBinomePair.serializer, json);
-  }
-
-  static Serializer<BuildBinomePair> get serializer => _$buildBinomePairSerializer;
 }

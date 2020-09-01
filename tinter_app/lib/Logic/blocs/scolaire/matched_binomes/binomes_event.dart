@@ -8,7 +8,11 @@ abstract class MatchedBinomesEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class MatchedBinomesCheckHasBinomePairEvent extends MatchedBinomesEvent {}
+
 class MatchedBinomesRequestedEvent extends MatchedBinomesEvent {}
+
+class MatchedBinomesRefreshingEvent extends MatchedBinomesEvent {}
 
 //abstract class MatchedBinomesLoadInSuccessEvent extends MatchedBinomesEvent {
 //

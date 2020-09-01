@@ -186,7 +186,7 @@ class _RechercheEtudiantAssociatifTabState extends State<RechercheEtudiantAssoci
                                 (BuildContext context, UserAssociatifSearchState userSearchState) {
                           if (!(userSearchState is UserAssociatifSearchLoadSuccessfulState))
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: Center(child: CircularProgressIndicator(),),
                             );
                           List<SearchedUserAssociatif> _allSearchedUsersAssociatifs =
                               (userSearchState as UserAssociatifSearchLoadSuccessfulState)

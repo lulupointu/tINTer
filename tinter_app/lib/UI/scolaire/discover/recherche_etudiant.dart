@@ -162,7 +162,7 @@ class _RechercheEtudiantScolaireTabState extends State<RechercheEtudiantScolaire
                                   builder: (context, tinterTheme, child) {
                                     return Icon(
                                     Icons.search,
-                                    color: tinterTheme.colors.primaryAccent,
+                                    color: Colors.black,
                                   );
                                 }
                               ),
@@ -184,7 +184,7 @@ class _RechercheEtudiantScolaireTabState extends State<RechercheEtudiantScolaire
                                   builder: (context, tinterTheme, child) {
                                     return Icon(
                                     Icons.close,
-                                    color: tinterTheme.colors.background,
+                                    color: Colors.black,
                                   );
                                 }
                               ),
@@ -214,7 +214,7 @@ class _RechercheEtudiantScolaireTabState extends State<RechercheEtudiantScolaire
                             (BuildContext context, UserScolaireSearchState userSearchState) {
                           if (!(userSearchState is UserScolaireSearchLoadSuccessfulState))
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: Center(child: CircularProgressIndicator(),),
                             );
                           List<SearchedUserScolaire> _allSearchedUsersScolaires =
                               (userSearchState as UserScolaireSearchLoadSuccessfulState)

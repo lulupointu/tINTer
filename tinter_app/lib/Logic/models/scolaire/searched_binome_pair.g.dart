@@ -23,17 +23,22 @@ class _$SearchedBinomePairSerializer
       'binomePairId',
       serializers.serialize(object.binomePairId,
           specifiedType: const FullType(int)),
-      'nameA',
-      serializers.serialize(object.nameA,
+      'login',
+      serializers.serialize(object.login,
           specifiedType: const FullType(String)),
-      'surnameA',
-      serializers.serialize(object.surnameA,
+      'name',
+      serializers.serialize(object.name, specifiedType: const FullType(String)),
+      'surname',
+      serializers.serialize(object.surname,
           specifiedType: const FullType(String)),
-      'nameB',
-      serializers.serialize(object.nameB,
+      'otherLogin',
+      serializers.serialize(object.otherLogin,
           specifiedType: const FullType(String)),
-      'surnameB',
-      serializers.serialize(object.surnameB,
+      'otherName',
+      serializers.serialize(object.otherName,
+          specifiedType: const FullType(String)),
+      'otherSurname',
+      serializers.serialize(object.otherSurname,
           specifiedType: const FullType(String)),
       'liked',
       serializers.serialize(object.liked, specifiedType: const FullType(bool)),
@@ -58,20 +63,28 @@ class _$SearchedBinomePairSerializer
           result.binomePairId = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
-        case 'nameA':
-          result.nameA = serializers.deserialize(value,
+        case 'login':
+          result.login = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'surnameA':
-          result.surnameA = serializers.deserialize(value,
+        case 'name':
+          result.name = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'nameB':
-          result.nameB = serializers.deserialize(value,
+        case 'surname':
+          result.surname = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'surnameB':
-          result.surnameB = serializers.deserialize(value,
+        case 'otherLogin':
+          result.otherLogin = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'otherName':
+          result.otherName = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'otherSurname':
+          result.otherSurname = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'liked':
@@ -89,13 +102,17 @@ class _$SearchedBinomePair extends SearchedBinomePair {
   @override
   final int binomePairId;
   @override
-  final String nameA;
+  final String login;
   @override
-  final String surnameA;
+  final String name;
   @override
-  final String nameB;
+  final String surname;
   @override
-  final String surnameB;
+  final String otherLogin;
+  @override
+  final String otherName;
+  @override
+  final String otherSurname;
   @override
   final bool liked;
 
@@ -105,26 +122,34 @@ class _$SearchedBinomePair extends SearchedBinomePair {
 
   _$SearchedBinomePair._(
       {this.binomePairId,
-      this.nameA,
-      this.surnameA,
-      this.nameB,
-      this.surnameB,
+      this.login,
+      this.name,
+      this.surname,
+      this.otherLogin,
+      this.otherName,
+      this.otherSurname,
       this.liked})
       : super._() {
     if (binomePairId == null) {
       throw new BuiltValueNullFieldError('SearchedBinomePair', 'binomePairId');
     }
-    if (nameA == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'nameA');
+    if (login == null) {
+      throw new BuiltValueNullFieldError('SearchedBinomePair', 'login');
     }
-    if (surnameA == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'surnameA');
+    if (name == null) {
+      throw new BuiltValueNullFieldError('SearchedBinomePair', 'name');
     }
-    if (nameB == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'nameB');
+    if (surname == null) {
+      throw new BuiltValueNullFieldError('SearchedBinomePair', 'surname');
     }
-    if (surnameB == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'surnameB');
+    if (otherLogin == null) {
+      throw new BuiltValueNullFieldError('SearchedBinomePair', 'otherLogin');
+    }
+    if (otherName == null) {
+      throw new BuiltValueNullFieldError('SearchedBinomePair', 'otherName');
+    }
+    if (otherSurname == null) {
+      throw new BuiltValueNullFieldError('SearchedBinomePair', 'otherSurname');
     }
     if (liked == null) {
       throw new BuiltValueNullFieldError('SearchedBinomePair', 'liked');
@@ -145,10 +170,12 @@ class _$SearchedBinomePair extends SearchedBinomePair {
     if (identical(other, this)) return true;
     return other is SearchedBinomePair &&
         binomePairId == other.binomePairId &&
-        nameA == other.nameA &&
-        surnameA == other.surnameA &&
-        nameB == other.nameB &&
-        surnameB == other.surnameB &&
+        login == other.login &&
+        name == other.name &&
+        surname == other.surname &&
+        otherLogin == other.otherLogin &&
+        otherName == other.otherName &&
+        otherSurname == other.otherSurname &&
         liked == other.liked;
   }
 
@@ -157,10 +184,14 @@ class _$SearchedBinomePair extends SearchedBinomePair {
     return $jf($jc(
         $jc(
             $jc(
-                $jc($jc($jc(0, binomePairId.hashCode), nameA.hashCode),
-                    surnameA.hashCode),
-                nameB.hashCode),
-            surnameB.hashCode),
+                $jc(
+                    $jc(
+                        $jc($jc($jc(0, binomePairId.hashCode), login.hashCode),
+                            name.hashCode),
+                        surname.hashCode),
+                    otherLogin.hashCode),
+                otherName.hashCode),
+            otherSurname.hashCode),
         liked.hashCode));
   }
 
@@ -168,10 +199,12 @@ class _$SearchedBinomePair extends SearchedBinomePair {
   String toString() {
     return (newBuiltValueToStringHelper('SearchedBinomePair')
           ..add('binomePairId', binomePairId)
-          ..add('nameA', nameA)
-          ..add('surnameA', surnameA)
-          ..add('nameB', nameB)
-          ..add('surnameB', surnameB)
+          ..add('login', login)
+          ..add('name', name)
+          ..add('surname', surname)
+          ..add('otherLogin', otherLogin)
+          ..add('otherName', otherName)
+          ..add('otherSurname', otherSurname)
           ..add('liked', liked))
         .toString();
   }
@@ -185,21 +218,29 @@ class SearchedBinomePairBuilder
   int get binomePairId => _$this._binomePairId;
   set binomePairId(int binomePairId) => _$this._binomePairId = binomePairId;
 
-  String _nameA;
-  String get nameA => _$this._nameA;
-  set nameA(String nameA) => _$this._nameA = nameA;
+  String _login;
+  String get login => _$this._login;
+  set login(String login) => _$this._login = login;
 
-  String _surnameA;
-  String get surnameA => _$this._surnameA;
-  set surnameA(String surnameA) => _$this._surnameA = surnameA;
+  String _name;
+  String get name => _$this._name;
+  set name(String name) => _$this._name = name;
 
-  String _nameB;
-  String get nameB => _$this._nameB;
-  set nameB(String nameB) => _$this._nameB = nameB;
+  String _surname;
+  String get surname => _$this._surname;
+  set surname(String surname) => _$this._surname = surname;
 
-  String _surnameB;
-  String get surnameB => _$this._surnameB;
-  set surnameB(String surnameB) => _$this._surnameB = surnameB;
+  String _otherLogin;
+  String get otherLogin => _$this._otherLogin;
+  set otherLogin(String otherLogin) => _$this._otherLogin = otherLogin;
+
+  String _otherName;
+  String get otherName => _$this._otherName;
+  set otherName(String otherName) => _$this._otherName = otherName;
+
+  String _otherSurname;
+  String get otherSurname => _$this._otherSurname;
+  set otherSurname(String otherSurname) => _$this._otherSurname = otherSurname;
 
   bool _liked;
   bool get liked => _$this._liked;
@@ -210,10 +251,12 @@ class SearchedBinomePairBuilder
   SearchedBinomePairBuilder get _$this {
     if (_$v != null) {
       _binomePairId = _$v.binomePairId;
-      _nameA = _$v.nameA;
-      _surnameA = _$v.surnameA;
-      _nameB = _$v.nameB;
-      _surnameB = _$v.surnameB;
+      _login = _$v.login;
+      _name = _$v.name;
+      _surname = _$v.surname;
+      _otherLogin = _$v.otherLogin;
+      _otherName = _$v.otherName;
+      _otherSurname = _$v.otherSurname;
       _liked = _$v.liked;
       _$v = null;
     }
@@ -238,10 +281,12 @@ class SearchedBinomePairBuilder
     final _$result = _$v ??
         new _$SearchedBinomePair._(
             binomePairId: binomePairId,
-            nameA: nameA,
-            surnameA: surnameA,
-            nameB: nameB,
-            surnameB: surnameB,
+            login: login,
+            name: name,
+            surname: surname,
+            otherLogin: otherLogin,
+            otherName: otherName,
+            otherSurname: otherSurname,
             liked: liked);
     replace(_$result);
     return _$result;

@@ -230,6 +230,8 @@ class _UserCreationTabState extends State<UserCreationTab> {
                 insertAssociatifToScolaireButtonOverlay();
               });
             });
+          } else {
+            BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
           }
         } else {
           _controller.animateTo(0,
@@ -467,7 +469,7 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
         child: BlocBuilder<UserBloc, UserState>(
           builder: (BuildContext context, UserState userState) {
             if (!(userState is NewUserState)) {
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator(),);
             }
             return Stack(
               children: [

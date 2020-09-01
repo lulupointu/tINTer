@@ -86,7 +86,7 @@ class MaiselOuNonRectangle extends StatelessWidget {
                 child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
                     if (!(userState is UserLoadSuccessState)) {
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator(),);
                     }
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -213,7 +213,7 @@ class HoraireDeTravailRectangle extends StatelessWidget {
                 child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
                     if (!(userState is UserLoadSuccessState)) {
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator(),);
                     }
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -457,7 +457,7 @@ class GroupeOuSeulRectangle extends StatelessWidget {
               slider: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator(),);
                   }
                   return Slider(
                     value: (userState as UserLoadSuccessState).user.groupeOuSeul,
@@ -517,7 +517,7 @@ class EnLigneOuPresentielRectangle extends StatelessWidget {
               slider: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator(),);
                   }
                   return Slider(
                     value: (userState as UserLoadSuccessState).user.enligneOuNon,
@@ -569,7 +569,7 @@ class MatieresRectangle extends StatelessWidget {
               BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator(),);
                   }
                   return Wrap(
                     alignment: WrapAlignment.start,

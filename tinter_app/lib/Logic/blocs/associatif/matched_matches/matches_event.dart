@@ -10,13 +10,7 @@ abstract class MatchedMatchesEvent extends Equatable {
 
 class MatchedMatchesRequestedEvent extends MatchedMatchesEvent {}
 
-//abstract class MatchedMatchesLoadInSuccessEvent extends MatchedMatchesEvent {
-//
-//  const MatchedMatchesLoadInSuccessEvent({@required this.match});
-//
-//  @override
-//  List<Object> get props => [match];
-//}
+class MatchedMatchesRefreshEvent extends MatchedMatchesEvent {}
 
 abstract class ChangeStatusMatchedMatchesEvent extends MatchedMatchesEvent {
   final BuildMatch match;

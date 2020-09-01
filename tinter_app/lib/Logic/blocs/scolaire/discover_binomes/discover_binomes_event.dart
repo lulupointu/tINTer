@@ -10,6 +10,8 @@ abstract class DiscoverBinomesEvent extends Equatable {
 
 class DiscoverBinomesRequestedEvent extends DiscoverBinomesEvent {}
 
+class DiscoverBinomesRefreshEvent extends DiscoverBinomesEvent {}
+
 abstract class DiscoverBinomesLoadInSuccessEvent extends DiscoverBinomesEvent {
   final BuildBinome binome;
 

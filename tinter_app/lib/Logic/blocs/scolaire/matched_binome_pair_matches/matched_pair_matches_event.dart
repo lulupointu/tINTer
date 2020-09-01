@@ -10,6 +10,16 @@ abstract class MatchedBinomePairMatchesEvent extends Equatable {
 
 class MatchedBinomePairMatchesRequestedEvent extends MatchedBinomePairMatchesEvent {}
 
+class MatchedBinomePairRefreshingEvent extends MatchedBinomePairMatchesEvent {}
+
+//abstract class MatchedBinomePairMatchesLoadInSuccessEvent extends MatchedBinomePairMatchesEvent {
+//
+//  const MatchedBinomePairMatchesLoadInSuccessEvent({@required this.binomePairMatch});
+//
+//  @override
+//  List<Object> get props => [binomePairMatch];
+//}
+
 abstract class ChangeStatusMatchedBinomePairMatchesEvent extends MatchedBinomePairMatchesEvent {
   final BuildBinomePairMatch binomePairMatch;
   final EnumRelationStatusBinomePair enumRelationStatusBinomePair;
@@ -29,8 +39,8 @@ class AskBinomePairMatchEvent extends ChangeStatusMatchedBinomePairMatchesEvent 
   const AskBinomePairMatchEvent({@required BuildBinomePairMatch binomePairMatch})
       : super(
           binomePairMatch: binomePairMatch,
-          enumRelationStatusBinomePair: EnumRelationStatusBinomePair.askedBinomePair,
-          binomePairMatchStatus: BinomePairMatchStatus.youAskedBinomePair,
+          enumRelationStatusBinomePair: EnumRelationStatusBinomePair.askedBinomePairMatch,
+          binomePairMatchStatus: BinomePairMatchStatus.youAskedBinomePairMatch,
         );
 }
 
@@ -38,8 +48,8 @@ class AcceptBinomePairMatchEvent extends ChangeStatusMatchedBinomePairMatchesEve
   const AcceptBinomePairMatchEvent({@required BuildBinomePairMatch binomePairMatch})
       : super(
           binomePairMatch: binomePairMatch,
-          enumRelationStatusBinomePair: EnumRelationStatusBinomePair.acceptedBinomePair,
-          binomePairMatchStatus: BinomePairMatchStatus.binomePairAccepted,
+          enumRelationStatusBinomePair: EnumRelationStatusBinomePair.acceptedBinomePairMatch,
+          binomePairMatchStatus: BinomePairMatchStatus.binomePairMatchAccepted,
         );
 }
 
@@ -47,7 +57,7 @@ class RefuseBinomePairMatchEvent extends ChangeStatusMatchedBinomePairMatchesEve
   const RefuseBinomePairMatchEvent({@required BuildBinomePairMatch binomePairMatch})
       : super(
           binomePairMatch: binomePairMatch,
-          enumRelationStatusBinomePair: EnumRelationStatusBinomePair.refusedBinomePair,
-          binomePairMatchStatus: BinomePairMatchStatus.binomePairYouRefused,
+          enumRelationStatusBinomePair: EnumRelationStatusBinomePair.refusedBinomePairMatch,
+          binomePairMatchStatus: BinomePairMatchStatus.binomePairMatchYouRefused,
         );
 }

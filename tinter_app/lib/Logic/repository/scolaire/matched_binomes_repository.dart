@@ -14,6 +14,32 @@ class MatchedBinomesRepository {
   MatchedBinomesRepository({@required this.tinterAPIClient, @required this.authenticationRepository}) :
         assert(tinterAPIClient != null);
 
+  Future<bool> hasBinomePair() async {
+    Token token;
+    try {
+      token = await AuthenticationRepository.getAuthenticationToken();
+    } catch (error) {
+      await authenticationRepository.checkIfNewToken(
+          oldToken: token, newToken: error.token);
+      throw error;
+    }
+
+    TinterApiResponse<bool> tinterApiResponse;
+    try {
+      tinterApiResponse = await tinterAPIClient.hasBinomePair(token: token);
+    } on TinterAPIError catch(error) {
+      await authenticationRepository.checkIfNewToken(
+          oldToken: token, newToken: error.token);
+      throw error;
+    }
+
+    await authenticationRepository.checkIfNewToken(
+        oldToken: token, newToken: tinterApiResponse.token);
+
+    return tinterApiResponse.value;
+  }
+
+
   Future<List<BuildBinome>> getBinomes() async {
     Token token;
     try {

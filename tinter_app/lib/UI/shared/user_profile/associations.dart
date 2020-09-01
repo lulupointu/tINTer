@@ -343,7 +343,7 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
         return true;
       }, builder: (BuildContext context, UserState userState) {
         if (!(userState is UserLoadSuccessState)) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator(),);
         }
         if ((userState as UserLoadSuccessState).user.associations.length ==
             0)
@@ -833,7 +833,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
               if (associationsState is AssociationsInitialState) {
                 BlocProvider.of<AssociationsBloc>(context).add(AssociationsLoadEvent());
               }
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator(),);
             }
             final _allAssociations =
                 (associationsState as AssociationsLoadSuccessfulState).associations;

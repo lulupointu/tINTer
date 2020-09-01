@@ -8,24 +8,49 @@ part of serializers;
 
 Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Association.serializer)
+      ..add(BinomePairMatchStatus.serializer)
       ..add(BinomeStatus.serializer)
       ..add(BuildBinome.serializer)
+      ..add(BuildBinomePair.serializer)
+      ..add(BuildBinomePairMatch.serializer)
       ..add(BuildMatch.serializer)
       ..add(BuildUser.serializer)
       ..add(EnumRelationStatusAssociatif.serializer)
+      ..add(EnumRelationStatusBinomePair.serializer)
       ..add(EnumRelationStatusScolaire.serializer)
       ..add(HoraireDeTravail.serializer)
       ..add(LieuDeVie.serializer)
       ..add(MatchStatus.serializer)
       ..add(RelationScoreAssociatif.serializer)
+      ..add(RelationScoreBinomePair.serializer)
       ..add(RelationScoreScolaire.serializer)
       ..add(RelationStatusAssociatif.serializer)
+      ..add(RelationStatusBinomePair.serializer)
       ..add(RelationStatusScolaire.serializer)
       ..add(School.serializer)
+      ..add(SearchedBinomePair.serializer)
       ..add(SearchedUserAssociatif.serializer)
       ..add(SearchedUserScolaire.serializer)
       ..add(TSPYear.serializer)
       ..add(Token.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Association)]),
+          () => new ListBuilder<Association>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(HoraireDeTravail)]),
+          () => new ListBuilder<HoraireDeTravail>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Association)]),
+          () => new ListBuilder<Association>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(HoraireDeTravail)]),
+          () => new ListBuilder<HoraireDeTravail>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Association)]),
           () => new ListBuilder<Association>())

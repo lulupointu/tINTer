@@ -10,14 +10,32 @@ abstract class MatchedBinomePairMatchesState extends Equatable {
 
 class MatchedBinomePairMatchesInitialState extends MatchedBinomePairMatchesState {}
 
-class MatchedBinomePairMatchesInitializingState extends MatchedBinomePairMatchesState {}
+class MatchedBinomePairMatchesLoadingState extends MatchedBinomePairMatchesState {
+  MatchedBinomePairMatchesLoadingState({@required bool hasBinomePair});
+}
 
-class MatchedBinomePairMatchesInitializingFailedState extends MatchedBinomePairMatchesState {}
+class MatchedBinomePairMatchesLoadingFailedState extends MatchedBinomePairMatchesState {
+  MatchedBinomePairMatchesLoadingFailedState({@required bool hasBinomePair});
+}
 
 class MatchedBinomePairMatchesLoadSuccessState extends MatchedBinomePairMatchesState {
   final List<BuildBinomePairMatch> binomePairMatches;
 
   const MatchedBinomePairMatchesLoadSuccessState({@required this.binomePairMatches}):assert(binomePairMatches != null);
+
+  List<BuildBinomePairMatch> withUpdatedBinomePairMatch(BuildBinomePairMatch oldBinomePairMatch, BuildBinomePairMatch updatedBinomePairMatch) {
+    List<BuildBinomePairMatch> newBinomePairMatches = List.from(binomePairMatches);
+    newBinomePairMatches.remove(oldBinomePairMatch);
+    newBinomePairMatches.add(updatedBinomePairMatch);
+    return newBinomePairMatches;
+  }
+
+  @override
+  List<Object> get props => [binomePairMatches];
+}
+
+class MatchedBinomePairMatchesRefreshingState extends MatchedBinomePairMatchesLoadSuccessState {
+  const MatchedBinomePairMatchesRefreshingState({@required binomePairMatches}):super(binomePairMatches: binomePairMatches);
 
   List<BuildBinomePairMatch> withUpdatedBinomePairMatch(BuildBinomePairMatch oldBinomePairMatch, BuildBinomePairMatch updatedBinomePairMatch) {
     List<BuildBinomePairMatch> newBinomePairMatches = List.from(binomePairMatches);

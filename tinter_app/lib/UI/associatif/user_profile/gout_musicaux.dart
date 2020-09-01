@@ -133,7 +133,7 @@ class GoutsMusicauxTab extends StatelessWidget {
     return BlocBuilder<UserBloc, UserState>(
       builder: (BuildContext context, UserState userState) {
         if (!(userState is UserLoadSuccessState)) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator(),);
         }
         bool isLiked =
             (userState as UserLoadSuccessState).user.goutsMusicaux.contains(goutMusical);

@@ -7,6 +7,7 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/binome_pair_search/binome_pair_search_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/user_scolaire_search/user_scolaire_search_bloc.dart';
+import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
@@ -104,7 +105,7 @@ class _RechercheEtudiantBinomePairTabState extends State<RechercheEtudiantBinome
                             child: Consumer<TinterTheme>(
                                 builder: (context, tinterTheme, child) {
                                   return AutoSizeText(
-                                  'Rechercher \n un.e étudiant.e',
+                                  'Rechercher une \n paire de binome',
                                   style: tinterTheme.textStyle.headline1,
                                   textAlign: TextAlign.center,
                                 );
@@ -166,7 +167,7 @@ class _RechercheEtudiantBinomePairTabState extends State<RechercheEtudiantBinome
                                   builder: (context, tinterTheme, child) {
                                     return Icon(
                                     Icons.search,
-                                    color: tinterTheme.colors.primaryAccent,
+                                    color: Colors.black,
                                   );
                                 }
                               ),
@@ -188,7 +189,7 @@ class _RechercheEtudiantBinomePairTabState extends State<RechercheEtudiantBinome
                                   builder: (context, tinterTheme, child) {
                                     return Icon(
                                     Icons.close,
-                                    color: tinterTheme.colors.background,
+                                    color: Colors.black,
                                   );
                                 }
                               ),
@@ -218,23 +219,23 @@ class _RechercheEtudiantBinomePairTabState extends State<RechercheEtudiantBinome
                             (BuildContext context, BinomePairSearchState userSearchState) {
                           if (!(userSearchState is BinomePairSearchLoadSuccessfulState))
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: Center(child: CircularProgressIndicator(),),
                             );
                           List<SearchedBinomePair> _allSearchedBinomePairsBinomePairs =
                               (userSearchState as BinomePairSearchLoadSuccessfulState)
                                   .searchedBinomePairs;
                           _allSearchedBinomePairsBinomePairs.sort((SearchedBinomePair searchedBinomePairA,
                               SearchedBinomePair searchedBinomePairB) =>
-                              searchedBinomePairA.nameA
+                              searchedBinomePairA.name
                                   .toLowerCase()
-                                  .compareTo(searchedBinomePairB.nameA.toLowerCase()));
+                                  .compareTo(searchedBinomePairB.name.toLowerCase()));
                           RegExp searchedStringRegex = RegExp(searchString, caseSensitive: false);
                           List<SearchedBinomePair> _searchedBinomePairs = (searchString == '')
                               ? []
                               : _allSearchedBinomePairsBinomePairs
                               .where((SearchedBinomePair searchedBinomePair) =>
                               searchedStringRegex.hasMatch(
-                                  '${searchedBinomePair.nameA} ${searchedBinomePair.surnameA} ${searchedBinomePair.nameA}'))
+                                  '${searchedBinomePair.name} ${searchedBinomePair.surname} ${searchedBinomePair.name} & ${searchedBinomePair.otherName} ${searchedBinomePair.otherSurname} ${searchedBinomePair.otherName}'))
                               .toList();
                           return Column(
                             children: [
@@ -269,11 +270,11 @@ class _RechercheEtudiantBinomePairTabState extends State<RechercheEtudiantBinome
         leading: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.yellow,
+            color: Colors.transparent,
           ),
           height: 45,
-          width: 45,
-          child: searchedBinomePair.getProfilePicture(),
+          width: 60,
+          child: BinomePair.getProfilePictureFromBinomePairLogins(loginA: searchedBinomePair.login, loginB: searchedBinomePair.otherLogin, width: 45),
         ),
         trailing: IconButton(
           onPressed: () => BlocProvider.of<BinomePairSearchBloc>(context).add(searchedBinomePair
@@ -291,9 +292,10 @@ class _RechercheEtudiantBinomePairTabState extends State<RechercheEtudiantBinome
         ),
         title: Consumer<TinterTheme>(
             builder: (context, tinterTheme, child) {
-              return Text(
-              searchedBinomePair.nameA + ' ' + searchedBinomePair.surnameA,
+              return AutoSizeText(
+              '${searchedBinomePair.name} ${searchedBinomePair.surname} \n${searchedBinomePair.otherName} ${searchedBinomePair.otherSurname}',
               style: tinterTheme.textStyle.headline2,
+                maxLines: 2,
             );
           }
         ),

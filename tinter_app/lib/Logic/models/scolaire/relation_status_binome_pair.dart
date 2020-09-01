@@ -6,6 +6,7 @@ import 'package:tinterapp/Logic//models/serializers.dart';
 part 'relation_status_binome_pair.g.dart';
 
 abstract class RelationStatusBinomePair implements Built<RelationStatusBinomePair, RelationStatusBinomePairBuilder> {
+  @nullable
   int get binomePairId;
 
   int get otherBinomePairId;
@@ -31,9 +32,9 @@ class EnumRelationStatusBinomePair extends EnumClass {
   static const EnumRelationStatusBinomePair none = _$none;
   static const EnumRelationStatusBinomePair ignored = _$ignored;
   static const EnumRelationStatusBinomePair liked = _$liked;
-  static const EnumRelationStatusBinomePair askedBinomePair = _$askedBinomePair;
-  static const EnumRelationStatusBinomePair acceptedBinomePair = _$acceptedBinomePair;
-  static const EnumRelationStatusBinomePair refusedBinomePair = _$refusedBinomePair;
+  static const EnumRelationStatusBinomePair askedBinomePairMatch = _$askedBinomePairMatch;
+  static const EnumRelationStatusBinomePair acceptedBinomePairMatch = _$acceptedBinomePairMatch;
+  static const EnumRelationStatusBinomePair refusedBinomePairMatch = _$refusedBinomePairMatch;
 
 
   const EnumRelationStatusBinomePair._(String name) : super(name);

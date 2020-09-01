@@ -28,6 +28,21 @@ class DiscoverBinomePairMatchesLoadSuccessState extends DiscoverBinomePairMatche
   List<Object> get props => [binomePairMatches];
 }
 
+class DiscoverBinomePairMatchesRefreshingState extends DiscoverBinomePairMatchesLoadSuccessState {
+
+  const DiscoverBinomePairMatchesRefreshingState({@required binomePairMatches}):super(binomePairMatches: binomePairMatches);
+
+  List<BuildBinomePairMatch> getUpdatedBinomePairMatches(BuildBinomePairMatch oldBinome, BuildBinomePairMatch updatedBinome) {
+    List<BuildBinomePairMatch> newBinomePairMatches = List.from(binomePairMatches);
+    newBinomePairMatches.remove(oldBinome);
+    newBinomePairMatches.add(updatedBinome);
+    return newBinomePairMatches;
+  }
+
+  @override
+  List<Object> get props => [binomePairMatches];
+}
+
 class DiscoverBinomePairMatchesWaitingStatusChangeState extends DiscoverBinomePairMatchesLoadSuccessState {
   const DiscoverBinomePairMatchesWaitingStatusChangeState({@required List<BuildBinomePairMatch> binomePairMatches})
       : super(binomePairMatches: binomePairMatches);

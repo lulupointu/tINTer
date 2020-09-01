@@ -1,6 +1,7 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:tinterapp/Logic//models/serializers.dart';
+import 'package:flutter/material.dart' as m;
+import 'package:tinterapp/Logic/models/serializers.dart';
 
 part 'searched_binome_pair.g.dart';
 
@@ -8,13 +9,17 @@ abstract class SearchedBinomePair implements Built<SearchedBinomePair, SearchedB
 
   int get binomePairId;
 
-  String get nameA;
+  String get login;
 
-  String get surnameA;
+  String get name;
 
-  String get nameB;
+  String get surname;
 
-  String get surnameB;
+  String get otherLogin;
+
+  String get otherName;
+
+  String get otherSurname;
 
   bool get liked;
 

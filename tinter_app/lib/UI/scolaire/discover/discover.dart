@@ -25,7 +25,11 @@ class DiscoverScolaireTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Update to last information
-    BlocProvider.of<DiscoverBinomesBloc>(context).add(DiscoverBinomesRequestedEvent());
+    if (BlocProvider.of<DiscoverBinomesBloc>(context).state is DiscoverBinomesLoadSuccessState) {
+      BlocProvider.of<DiscoverBinomesBloc>(context).add(DiscoverBinomesRefreshEvent());
+    } else {
+      BlocProvider.of<DiscoverBinomesBloc>(context).add(DiscoverBinomesRequestedEvent());
+    }
 
     return BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
         builder: (BuildContext context, DiscoverBinomesState discoverBinomesState) {
@@ -34,7 +38,7 @@ class DiscoverScolaireTab extends StatelessWidget {
           if (discoverBinomesState is DiscoverBinomesInitialState ||
               discoverBinomesState is DiscoverBinomesLoadInProgressState)
             return Center(
-              child: CircularProgressIndicator(),
+              child: Center(child: CircularProgressIndicator(),),
             );
           if (discoverBinomesState is DiscoverBinomesLoadSuccessState &&
               discoverBinomesState.binomes.length == 0) return NoMoreDiscoveryBinomesWidget();
@@ -213,7 +217,7 @@ class StudentSearch extends StatelessWidget {
                   child: Consumer<TinterTheme>(
                       builder: (context, tinterTheme, child) {
                         return AutoSizeText(
-                        'Rechercher\nun.e étudiant.e',
+                        'Rechercher\nun.e binome',
                         style: tinterTheme.textStyle.hint,
                         maxLines: 2,
                       );
@@ -382,7 +386,7 @@ class _BinomesFlockState extends State<BinomesFlock> with SingleTickerProviderSt
           return true;
         }, builder: (BuildContext context, DiscoverBinomesState state) {
           if (!(state is DiscoverBinomesLoadSuccessState)) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator(),);
           }
           return Container(
             height: constraints.maxHeight,
@@ -777,7 +781,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                 BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
                                     builder: (BuildContext context, DiscoverBinomesState state) {
                                   if (!(state is DiscoverBinomesLoadSuccessState)) {
-                                    return CircularProgressIndicator();
+                                    return Center(child: CircularProgressIndicator(),);
                                   }
                                   return AnimatedSwitcher(
                                     duration: Duration(milliseconds: 300),
@@ -863,14 +867,13 @@ class _BinomeInformationState extends State<BinomeInformation> {
                           height: 10,
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 10.0),
                           width: double.infinity,
                           child: Container(
                             height: 60,
                             child: BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
                               builder: (BuildContext context, DiscoverBinomesState state) {
                                 if (!(state is DiscoverBinomesLoadSuccessState)) {
-                                  return CircularProgressIndicator();
+                                  return Center(child: CircularProgressIndicator(),);
                                 }
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -974,12 +977,11 @@ class _BinomeInformationState extends State<BinomeInformation> {
                           height: 10,
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 10.0),
                           width: double.infinity,
                           child: BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
                             builder: (BuildContext context, DiscoverBinomesState state) {
                               if (!(state is DiscoverBinomesLoadSuccessState)) {
-                                return CircularProgressIndicator();
+                                return Center(child: CircularProgressIndicator(),);
                               }
                               return Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -1153,7 +1155,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                 child: BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
                                   builder: (BuildContext context, DiscoverBinomesState state) {
                                     if (!(state is DiscoverBinomesLoadSuccessState)) {
-                                      return CircularProgressIndicator();
+                                      return Center(child: CircularProgressIndicator(),);
                                     }
                                     return AnimatedSwitcher(
                                       duration: Duration(milliseconds: 300),
@@ -1195,14 +1197,15 @@ class _BinomeInformationState extends State<BinomeInformation> {
                 informationRectangle(
                   context: context,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                    padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: <Widget>[
                         Consumer<TinterTheme>(
                             builder: (context, tinterTheme, child) {
-                              return Text(
+                              return AutoSizeText(
                               'Seul.e ou en groupe?',
                               style: tinterTheme.textStyle.headline2,
+                                maxLines: 1,
                             );
                           }
                         ),
@@ -1221,7 +1224,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                               child: BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
                                 builder: (BuildContext context, DiscoverBinomesState state) {
                                   if (!(state is DiscoverBinomesLoadSuccessState)) {
-                                    return CircularProgressIndicator();
+                                    return Center(child: CircularProgressIndicator(),);
                                   }
                                   return TweenAnimationBuilder(
                                     tween: Tween<double>(
@@ -1255,10 +1258,11 @@ class _BinomeInformationState extends State<BinomeInformation> {
                       children: <Widget>[
                         Consumer<TinterTheme>(
                             builder: (context, tinterTheme, child) {
-                              return Text(
+                              return AutoSizeText(
                               'En ligne ou à l\'école?',
                               style: tinterTheme.textStyle.headline2,
                               textAlign: TextAlign.center,
+                                maxLines: 1,
                             );
                           }
                         ),
@@ -1277,7 +1281,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                               child: BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
                                 builder: (BuildContext context, DiscoverBinomesState state) {
                                   if (!(state is DiscoverBinomesLoadSuccessState)) {
-                                    return CircularProgressIndicator();
+                                    return Center(child: CircularProgressIndicator(),);
                                   }
                                   return TweenAnimationBuilder(
                                     tween: Tween<double>(
@@ -1323,7 +1327,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                           BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
                             builder: (BuildContext context, DiscoverBinomesState state) {
                               if (!(state is DiscoverBinomesLoadSuccessState)) {
-                                return CircularProgressIndicator();
+                                return Center(child: CircularProgressIndicator(),);
                               }
                               return AnimatedSwitcher(
                                 duration: Duration(milliseconds: 300),
@@ -1589,7 +1593,7 @@ class WideStudentSearch extends StatelessWidget {
                   child: Consumer<TinterTheme>(
                       builder: (context, tinterTheme, child) {
                         return AutoSizeText(
-                        'Rechercher un.e étudiant.e',
+                        'Rechercher un.e binome',
                         style: tinterTheme.textStyle.hintLarge,
                         maxLines: 1,
                       );

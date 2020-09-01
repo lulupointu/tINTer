@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
@@ -195,6 +196,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
 
     authenticationBloc.add(AuthenticationLoggedOutEvent());
+
+    await (await SharedPreferences.getInstance()).setBool('hasEverHadBinome', false);
 
     yield UserInitialState();
   }

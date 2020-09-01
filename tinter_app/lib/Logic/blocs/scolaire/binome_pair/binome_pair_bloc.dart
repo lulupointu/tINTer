@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/build_binome_pair.dart';
-import 'package:tinterapp/Logic/repository/scolaire/binomePair_repository.dart';
 import 'package:tinterapp/Logic/repository/scolaire/binome_pair_repository.dart';
 
 part 'binome_pair_event.dart';

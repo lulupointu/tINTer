@@ -445,7 +445,9 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
         child: BlocBuilder<UserBloc, UserState>(
           builder: (BuildContext context, UserState userState) {
             if (!(userState is UserLoadSuccessState)) {
-              return CircularProgressIndicator();
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
             return Stack(
               children: [
@@ -879,14 +881,16 @@ class SaveModificationsOverlay extends StatelessWidget {
                                                     child: AnimatedSwitcher(
                                                       duration: Duration(milliseconds: 100),
                                                       child: value == 1
-                                                          ? CircularProgressIndicator(
-                                                              valueColor:
-                                                                  AlwaysStoppedAnimation<
-                                                                      Color>(
-                                                                tinterTheme
-                                                                    .colors.defaultTextColor,
+                                                          ? Center(
+                                                              child: CircularProgressIndicator(
+                                                                valueColor:
+                                                                    AlwaysStoppedAnimation<
+                                                                        Color>(
+                                                                  tinterTheme
+                                                                      .colors.defaultTextColor,
+                                                                ),
+                                                                strokeWidth: 3,
                                                               ),
-                                                              strokeWidth: 3,
                                                             )
                                                           : Container(),
                                                     ),
@@ -993,7 +997,9 @@ class AssociationsRectangle extends StatelessWidget {
               child: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
                   return (userState as UserLoadSuccessState).user.associations.length == 0
                       ? Align(

@@ -80,7 +80,7 @@ class AttiranceVieAssoRectangle extends StatelessWidget {
           child: BlocBuilder<UserBloc, UserState>(
             builder: (BuildContext context, UserState userState) {
               if (!(userState is UserLoadSuccessState)) {
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator(),);
               }
               return Slider(
                 value: (userState as UserLoadSuccessState).user.attiranceVieAsso,
@@ -137,7 +137,7 @@ class FeteOuCoursRectangle extends StatelessWidget {
               slider: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator(),);
                   }
                   return Slider(
                     value: (userState as UserLoadSuccessState).user.feteOuCours,
@@ -197,7 +197,7 @@ class AideOuSortirRectangle extends StatelessWidget {
               slider: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator(),);
                   }
                   return Slider(
                     value: (userState as UserLoadSuccessState).user.aideOuSortir,
@@ -253,7 +253,7 @@ class OrganisationEvenementsRectangle extends StatelessWidget {
           child: BlocBuilder<UserBloc, UserState>(
             builder: (BuildContext context, UserState userState) {
               if (!(userState is UserLoadSuccessState)) {
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator(),);
               }
               return Slider(
                 value: (userState as UserLoadSuccessState).user.organisationEvenements,
@@ -302,7 +302,7 @@ class GoutsMusicauxRectangle extends StatelessWidget {
               BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator(),);
                   }
                   return Wrap(
                     alignment: WrapAlignment.start,

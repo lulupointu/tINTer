@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/discover_binome_pair_matches/discover_binome_pair_matches_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
+import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
@@ -20,28 +21,31 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 
-
 class DiscoverBinomePairTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Update to last information
-    if (BlocProvider.of<DiscoverBinomePairMatchesBloc>(context).state is DiscoverBinomePairMatchesLoadSuccessState) {
-      BlocProvider.of<DiscoverBinomePairMatchesBloc>(context).add(DiscoverBinomePairMatchesRefreshEvent());
+    if (BlocProvider.of<DiscoverBinomePairMatchesBloc>(context).state
+        is DiscoverBinomePairMatchesLoadSuccessState) {
+      BlocProvider.of<DiscoverBinomePairMatchesBloc>(context)
+          .add(DiscoverBinomePairMatchesRefreshEvent());
     } else {
-      BlocProvider.of<DiscoverBinomePairMatchesBloc>(context).add(DiscoverBinomePairMatchesRequestedEvent());
+      BlocProvider.of<DiscoverBinomePairMatchesBloc>(context)
+          .add(DiscoverBinomePairMatchesRequestedEvent());
     }
 
-    return BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-        builder: (BuildContext context, DiscoverBinomePairMatchesState discoverBinomePairMatchesState) {
+    return BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(builder:
+        (BuildContext context, DiscoverBinomePairMatchesState discoverBinomePairMatchesState) {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           if (discoverBinomePairMatchesState is DiscoverBinomePairMatchesInitialState ||
               discoverBinomePairMatchesState is DiscoverBinomePairMatchesLoadInProgressState)
             return Center(
-              child: CircularProgressIndicator(),
+              child: Center(child: CircularProgressIndicator(),),
             );
           if (discoverBinomePairMatchesState is DiscoverBinomePairMatchesLoadSuccessState &&
-              discoverBinomePairMatchesState.binomePairMatches.length == 0) return NoMoreDiscoveryBinomePairMatchesWidget();
+              discoverBinomePairMatchesState.binomePairMatches.length == 0)
+            return NoMoreDiscoveryBinomePairMatchesWidget();
           return Stack(
             children: [
               Row(
@@ -58,40 +62,34 @@ class DiscoverBinomePairTab extends StatelessWidget {
               ),
               Positioned(
                 left: constraints.maxWidth * 55 / 100,
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                      return SvgPicture.asset(
-                      'assets/discover/DiscoverBackground.svg',
-                      color: tinterTheme.colors.background,
-                      height: constraints.maxHeight,
-                    );
-                  }
-                ),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return SvgPicture.asset(
+                    'assets/discover/DiscoverBackground.svg',
+                    color: tinterTheme.colors.background,
+                    height: constraints.maxHeight,
+                  );
+                }),
               ),
               Positioned(
                 left: constraints.maxWidth * 55 / 100,
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                      return SvgPicture.asset(
-                      'assets/discover/DiscoverTop.svg',
-                      color: tinterTheme.colors.primaryAccent,
-                      height: constraints.maxHeight / 2,
-                    );
-                  }
-                ),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return SvgPicture.asset(
+                    'assets/discover/DiscoverTop.svg',
+                    color: tinterTheme.colors.primaryAccent,
+                    height: constraints.maxHeight / 2,
+                  );
+                }),
               ),
               Positioned(
                 left: constraints.maxWidth * 55 / 100,
                 bottom: 0,
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                      return SvgPicture.asset(
-                      'assets/discover/DiscoverBottom.svg',
-                      color: tinterTheme.colors.primaryAccent,
-                      height: constraints.maxHeight / 2,
-                    );
-                  }
-                ),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return SvgPicture.asset(
+                    'assets/discover/DiscoverBottom.svg',
+                    color: tinterTheme.colors.primaryAccent,
+                    height: constraints.maxHeight / 2,
+                  );
+                }),
               ),
             ],
           );
@@ -110,9 +108,9 @@ class DiscoverRight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-            color: tinterTheme.colors.background,
+      builder: (context, tinterTheme, child) {
+        return Container(
+          color: tinterTheme.colors.background,
           child: child,
         );
       },
@@ -154,8 +152,8 @@ class StudentSearch extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       child: Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return Container(
+        builder: (context, tinterTheme, child) {
+          return Container(
             height: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
@@ -183,46 +181,42 @@ class StudentSearch extends StatelessWidget {
                     tag: 'studentSearchBar',
                     child: Material(
                       color: Colors.transparent,
-                      child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                            return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                              color: tinterTheme.colors.secondary,
+                      child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5.0),
                             ),
-                            child: TextField(
-                              enabled: false,
-                              textInputAction: TextInputAction.search,
-                              decoration: InputDecoration(
-                                focusedBorder: InputBorder.none,
-                                icon: Padding(
-                                  padding: const EdgeInsets.only(left: 0),
-                                  child: Icon(
-                                    Icons.search,
-                                    color: tinterTheme.colors.primaryAccent,
-                                  ),
+                            color: tinterTheme.colors.secondary,
+                          ),
+                          child: TextField(
+                            enabled: false,
+                            textInputAction: TextInputAction.search,
+                            decoration: InputDecoration(
+                              focusedBorder: InputBorder.none,
+                              icon: Padding(
+                                padding: const EdgeInsets.only(left: 0),
+                                child: Icon(
+                                  Icons.search,
+                                  color: tinterTheme.colors.primaryAccent,
                                 ),
                               ),
                             ),
-                          );
-                        }
-                      ),
+                          ),
+                        );
+                      }),
                     ),
                   ),
                 ),
                 Flexible(
-                  child: Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                        return AutoSizeText(
-                        'Rechercher\nun.e étudiant.e',
-                        style: tinterTheme.textStyle.hint,
-                        maxLines: 2,
-                      );
-                    }
-                  ),
+                  child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return AutoSizeText(
+                      'Rechercher une\n paire de binome',
+                      style: tinterTheme.textStyle.hint,
+                      maxLines: 2,
+                    );
+                  }),
                 ),
               ],
             ),
@@ -276,52 +270,50 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Flexible(
-          child: Consumer<TinterTheme>(
-              builder: (context, tinterTheme, child) {
-                return IconButton(
-                padding: EdgeInsets.all(0.0),
-                iconSize: 60,
+          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+            return IconButton(
+              padding: EdgeInsets.all(0.0),
+              iconSize: 60,
+              color: tinterTheme.colors.secondary,
+              icon: FlareActor(
+                'assets/icons/Heart.flr',
                 color: tinterTheme.colors.secondary,
-                icon: FlareActor(
-                  'assets/icons/Heart.flr',
-                  color: tinterTheme.colors.secondary,
-                  fit: BoxFit.contain,
-                  controller: CustomFlareController(
-                      controller: likeController, forwardAnimationName: 'Validate'),
-                ),
-                onPressed: () {
-                  likeController.forward().whenComplete(
-                      () => likeController.animateTo(0, duration: Duration(seconds: 0)));
-                  BlocProvider.of<DiscoverBinomePairMatchesBloc>(context).add(DiscoverBinomePairMatchesLikeEvent());
-                },
-              );
-            }
-          ),
+                fit: BoxFit.contain,
+                controller: CustomFlareController(
+                    controller: likeController, forwardAnimationName: 'Validate'),
+              ),
+              onPressed: () {
+                likeController.forward().whenComplete(
+                    () => likeController.animateTo(0, duration: Duration(seconds: 0)));
+                BlocProvider.of<DiscoverBinomePairMatchesBloc>(context)
+                    .add(DiscoverBinomePairMatchesLikeEvent());
+              },
+            );
+          }),
         ),
         Flexible(
-          child: Consumer<TinterTheme>(
-              builder: (context, tinterTheme, child) {
-                return IconButton(
-                padding: EdgeInsets.all(0.0),
-                iconSize: 60,
+          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+            return IconButton(
+              padding: EdgeInsets.all(0.0),
+              iconSize: 60,
+              color: tinterTheme.colors.secondary,
+              icon: FlareActor(
+                'assets/icons/Clear.flr',
                 color: tinterTheme.colors.secondary,
-                icon: FlareActor(
-                  'assets/icons/Clear.flr',
-                  color: tinterTheme.colors.secondary,
-                  fit: BoxFit.contain,
-                  controller: CustomFlareController(
-                    controller: ignoreController,
-                    forwardAnimationName: 'Ignore',
-                  ),
+                fit: BoxFit.contain,
+                controller: CustomFlareController(
+                  controller: ignoreController,
+                  forwardAnimationName: 'Ignore',
                 ),
-                onPressed: () {
-                  ignoreController.forward().whenComplete(
-                      () => ignoreController.animateTo(0, duration: Duration(seconds: 0)));
-                  BlocProvider.of<DiscoverBinomePairMatchesBloc>(context).add(DiscoverBinomePairMatchesIgnoreEvent());
-                },
-              );
-            }
-          ),
+              ),
+              onPressed: () {
+                ignoreController.forward().whenComplete(
+                    () => ignoreController.animateTo(0, duration: Duration(seconds: 0)));
+                BlocProvider.of<DiscoverBinomePairMatchesBloc>(context)
+                    .add(DiscoverBinomePairMatchesIgnoreEvent());
+              },
+            );
+          }),
         ),
       ],
     );
@@ -334,7 +326,7 @@ class BinomePairMatchesFlock extends StatefulWidget {
   // fraction describes the proportions
   // of each part of the widget
   static final Map<String, double> fractions = {
-    'nameAndSurname': 14 / 100,
+    'nameAndSurname': 18 / 100,
     'bigHead': 26 / 100,
     'smallHead': 15 / 100,
     'separator': 15 / 100,
@@ -344,7 +336,8 @@ class BinomePairMatchesFlock extends StatefulWidget {
   _BinomePairMatchesFlockState createState() => _BinomePairMatchesFlockState();
 }
 
-class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with SingleTickerProviderStateMixin {
+class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock>
+    with SingleTickerProviderStateMixin {
   final AutoSizeGroup nameAndSurnameAutoSizeGroup = AutoSizeGroup();
   AnimationController animationController;
   BuildBinomePairMatch previousFirstBinomePairMatch;
@@ -375,10 +368,13 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-            buildWhen: (DiscoverBinomePairMatchesState previousState, DiscoverBinomePairMatchesState state) {
+            buildWhen: (DiscoverBinomePairMatchesState previousState,
+                DiscoverBinomePairMatchesState state) {
           if (state is DiscoverBinomePairMatchesSavingNewStatusState) {
             previousFirstBinomePairMatch =
-                (previousState as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches.first;
+                (previousState as DiscoverBinomePairMatchesLoadSuccessState)
+                    .binomePairMatches
+                    .first;
             animationController
                 .animateTo(0, duration: Duration(milliseconds: 0))
                 .whenComplete(() => animationController.forward());
@@ -386,7 +382,7 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
           return true;
         }, builder: (BuildContext context, DiscoverBinomePairMatchesState state) {
           if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator(),);
           }
           return Container(
             height: constraints.maxHeight,
@@ -394,35 +390,45 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
               overflow: Overflow.visible,
               alignment: AlignmentDirectional.topCenter,
               children: <Widget>[
-                if ((state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches.length >= 3) ...[
+                if ((state as DiscoverBinomePairMatchesLoadSuccessState)
+                        .binomePairMatches
+                        .length >=
+                    3) ...[
                   // First head
                   Positioned(
                     top: -50 * (1 - animationController.value),
                     child: Opacity(
                       opacity: animationController.value,
                       child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                            return Container(
+                        builder: (context, tinterTheme, child) {
+                          return Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                width: 2,
-                                color: tinterTheme.colors.primaryAccent,
-                              ),
+//                              border: Border.all(
+//                                width: 2,
+//                                color: tinterTheme.colors.primaryAccent,
+//                              ),
                             ),
-                            height: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'],
-                            width: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'],
+                            height: constraints.maxHeight *
+                                BinomePairMatchesFlock.fractions['smallHead'],
+                            width: constraints.maxHeight *
+                                BinomePairMatchesFlock.fractions['smallHead'],
                             child: child,
                           );
                         },
                         child: Center(
-                          child: getProfilePictureFromLogin(
-                              login:
-                              (state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches[2].login,
-                              height:
-                              constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'],
-                              width:
-                              constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead']),
+                          child: BinomePair.getProfilePictureFromBinomePairLogins(
+                              loginA: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                  .binomePairMatches[2]
+                                  .login,
+                              loginB: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                  .binomePairMatches[2]
+                                  .otherLogin,
+                              height: constraints.maxHeight *
+                                      BinomePairMatchesFlock.fractions['smallHead'] -
+                                  10,
+                              width: constraints.maxHeight *
+                                  BinomePairMatchesFlock.fractions['smallHead']),
                         ),
                       ),
                     ),
@@ -430,25 +436,28 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
 
                   // First separator
                   Positioned(
-                    top: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
-                        10 -
-                        50 * (1 - animationController.value),
+                    top:
+                        constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                            10 -
+                            50 * (1 - animationController.value),
                     child: Opacity(
                       opacity: animationController.value,
-                      child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                            return Container(
-                            height:
-                                constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] - 20,
-                            width: 1.5,
-                            color: tinterTheme.colors.primaryAccent,
-                          );
-                        }
-                      ),
+                      child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                        return Container(
+                          height: constraints.maxHeight *
+                                  BinomePairMatchesFlock.fractions['separator'] -
+                              20,
+                          width: 1.5,
+                          color: tinterTheme.colors.primaryAccent,
+                        );
+                      }),
                     ),
                   ),
                 ],
-                if ((state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches.length >= 2) ...[
+                if ((state as DiscoverBinomePairMatchesLoadSuccessState)
+                        .binomePairMatches
+                        .length >=
+                    2) ...[
                   // Second head
                   Positioned(
                     top: 0 +
@@ -457,75 +466,90 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
                                 BinomePairMatchesFlock.fractions['separator']) *
                             animationController.value,
                     child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                          return Container(
+                      builder: (context, tinterTheme, child) {
+                        return Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 2,
-                              color: tinterTheme.colors.primaryAccent,
-                            ),
+//                            border: Border.all(
+//                              width: 2,
+//                              color: tinterTheme.colors.primaryAccent,
+//                            ),
                           ),
-                          height: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'],
-                          width: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'],
+                          height: constraints.maxHeight *
+                              BinomePairMatchesFlock.fractions['smallHead'],
+                          width: constraints.maxHeight *
+                              BinomePairMatchesFlock.fractions['smallHead'],
                           child: child,
                         );
                       },
                       child: Center(
-                        child: getProfilePictureFromLogin(
-                            login: (state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches[1].login,
-                            height:
-                            constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'],
-                            width:
-                            constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead']),
+                        child: BinomePair.getProfilePictureFromBinomePairLogins(
+                            loginA: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                .binomePairMatches[1]
+                                .login,
+                            loginB: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                .binomePairMatches[1]
+                                .otherLogin,
+                            height: constraints.maxHeight *
+                                    BinomePairMatchesFlock.fractions['smallHead'] -
+                                10,
+                            width: constraints.maxHeight *
+                                BinomePairMatchesFlock.fractions['smallHead']),
                       ),
                     ),
                   ),
 
                   // Second separator
                   Positioned(
-                    top: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
-                        10 +
-                        constraints.maxHeight *
-                            (BinomePairMatchesFlock.fractions['smallHead'] +
-                                BinomePairMatchesFlock.fractions['separator']) *
-                            animationController.value,
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                          return Container(
-                          height: constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] - 20,
-                          width: 1.5,
-                          color: tinterTheme.colors.primaryAccent,
-                        );
-                      }
-                    ),
+                    top:
+                        constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                            10 +
+                            constraints.maxHeight *
+                                (BinomePairMatchesFlock.fractions['smallHead'] +
+                                    BinomePairMatchesFlock.fractions['separator']) *
+                                animationController.value,
+                    child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                      return Container(
+                        height: constraints.maxHeight *
+                                BinomePairMatchesFlock.fractions['separator'] -
+                            20,
+                        width: 1.5,
+                        color: tinterTheme.colors.primaryAccent,
+                      );
+                    }),
                   ),
                 ],
-                if ((state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches.length >= 1) ...[
+                if ((state as DiscoverBinomePairMatchesLoadSuccessState)
+                        .binomePairMatches
+                        .length >=
+                    1) ...[
                   // Third head
                   Positioned(
-                    top: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                    top: constraints.maxHeight *
+                            BinomePairMatchesFlock.fractions['smallHead'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] +
                         constraints.maxHeight *
                             (BinomePairMatchesFlock.fractions['smallHead'] +
                                 BinomePairMatchesFlock.fractions['separator']) *
                             animationController.value,
                     child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                          return Container(
+                      builder: (context, tinterTheme, child) {
+                        return Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 2 + 2 * animationController.value,
-                              color: tinterTheme.colors.primaryAccent,
-                            ),
+//                            border: Border.all(
+//                              width: 2 + 2 * animationController.value,
+//                              color: tinterTheme.colors.primaryAccent,
+//                            ),
                           ),
-                          height: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                          height: constraints.maxHeight *
+                                  BinomePairMatchesFlock.fractions['smallHead'] +
                               constraints.maxHeight *
                                   (BinomePairMatchesFlock.fractions['bigHead'] -
                                       BinomePairMatchesFlock.fractions['smallHead']) *
                                   animationController.value,
-                          width: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                          width: constraints.maxHeight *
+                                  BinomePairMatchesFlock.fractions['smallHead'] +
                               constraints.maxHeight *
                                   (BinomePairMatchesFlock.fractions['bigHead'] -
                                       BinomePairMatchesFlock.fractions['smallHead']) *
@@ -534,16 +558,22 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
                         );
                       },
                       child: Center(
-                        child: getProfilePictureFromLogin(
-                            login: (state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches[0].login,
-                            height:
-                            constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                        child: BinomePair.getProfilePictureFromBinomePairLogins(
+                            loginA: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                .binomePairMatches[0]
+                                .login,
+                            loginB: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                .binomePairMatches[0]
+                                .otherLogin,
+                            height: constraints.maxHeight *
+                                    BinomePairMatchesFlock.fractions['smallHead'] +
                                 constraints.maxHeight *
                                     (BinomePairMatchesFlock.fractions['bigHead'] -
                                         BinomePairMatchesFlock.fractions['smallHead']) *
-                                    animationController.value,
-                            width:
-                            constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                                    animationController.value -
+                                20,
+                            width: constraints.maxHeight *
+                                    BinomePairMatchesFlock.fractions['smallHead'] +
                                 constraints.maxHeight *
                                     (BinomePairMatchesFlock.fractions['bigHead'] -
                                         BinomePairMatchesFlock.fractions['smallHead']) *
@@ -554,61 +584,81 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
 
                   // Third separator
                   Positioned(
-                    top: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                    top: constraints.maxHeight *
+                            BinomePairMatchesFlock.fractions['smallHead'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
                         10 +
                         50 * animationController.value,
                     child: Opacity(
                       opacity: 1 - animationController.value,
-                      child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                            return Container(
-                            height:
-                                constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] - 20,
-                            width: 1.5,
-                            color: tinterTheme.colors.primaryAccent,
-                          );
-                        }
-                      ),
+                      child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                        return Container(
+                          height: constraints.maxHeight *
+                                  BinomePairMatchesFlock.fractions['separator'] -
+                              20,
+                          width: 1.5,
+                          color: tinterTheme.colors.primaryAccent,
+                        );
+                      }),
                     ),
                   ),
 
                   // Name and surname
                   Positioned(
-                    top: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                    top: constraints.maxHeight *
+                            BinomePairMatchesFlock.fractions['smallHead'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['bigHead'] +
                         animationController.value *
-                            (constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
-                                constraints.maxHeight * BinomePairMatchesFlock.fractions['separator']),
+                            (constraints.maxHeight *
+                                    BinomePairMatchesFlock.fractions['smallHead'] +
+                                constraints.maxHeight *
+                                    BinomePairMatchesFlock.fractions['separator']),
                     child: Opacity(
                       opacity: animationController.value,
                       child: Container(
-                        height:
-                            constraints.maxHeight * BinomePairMatchesFlock.fractions['nameAndSurname'],
-                        child: Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                              return Column(
-                              children: <Widget>[
-                                Expanded(
-                                  child: AutoSizeText(
-                                    (state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches[0].name,
-                                    group: nameAndSurnameAutoSizeGroup,
-                                    style: tinterTheme.textStyle.headline2,
-                                  ),
+                        height: constraints.maxHeight *
+                            BinomePairMatchesFlock.fractions['nameAndSurname'],
+                        child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                          return Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: AutoSizeText(
+                                  (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                          .binomePairMatches[0]
+                                          .name +
+                                      ' ' +
+                                      (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                          .binomePairMatches[0]
+                                          .surname,
+                                  group: nameAndSurnameAutoSizeGroup,
+                                  style: tinterTheme.textStyle.headline2,
                                 ),
-                                Expanded(
-                                  child: AutoSizeText(
-                                    (state as DiscoverBinomePairMatchesLoadSuccessState).binomePairMatches[0].surname,
-                                    group: nameAndSurnameAutoSizeGroup,
-                                    style: tinterTheme.textStyle.headline2,
-                                  ),
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  '&',
+                                  group: nameAndSurnameAutoSizeGroup,
+                                  style: tinterTheme.textStyle.headline2,
                                 ),
-                              ],
-                            );
-                          }
-                        ),
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                          .binomePairMatches[0]
+                                          .otherName +
+                                      ' ' +
+                                      (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                          .binomePairMatches[0]
+                                          .otherSurname,
+                                  group: nameAndSurnameAutoSizeGroup,
+                                  style: tinterTheme.textStyle.headline2,
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                       ),
                     ),
                   ),
@@ -616,7 +666,8 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
                 if (previousFirstBinomePairMatch != null) ...[
                   // Third head
                   Positioned(
-                    top: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                    top: constraints.maxHeight *
+                            BinomePairMatchesFlock.fractions['smallHead'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] +
@@ -624,8 +675,8 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
                     child: Opacity(
                       opacity: 1 - animationController.value,
                       child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                            return Container(
+                        builder: (context, tinterTheme, child) {
+                          return Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
@@ -633,16 +684,22 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
                                 color: tinterTheme.colors.primaryAccent,
                               ),
                             ),
-                            height: constraints.maxHeight * BinomePairMatchesFlock.fractions['bigHead'],
-                            width: constraints.maxHeight * BinomePairMatchesFlock.fractions['bigHead'],
+                            height: constraints.maxHeight *
+                                BinomePairMatchesFlock.fractions['bigHead'],
+                            width: constraints.maxHeight *
+                                BinomePairMatchesFlock.fractions['bigHead'],
                             child: child,
                           );
                         },
                         child: Center(
-                          child: getProfilePictureFromLogin(
-                            login: previousFirstBinomePairMatch.login,
-                            height: constraints.maxHeight * BinomePairMatchesFlock.fractions['bigHead'],
-                            width: constraints.maxHeight * BinomePairMatchesFlock.fractions['bigHead'],
+                          child: BinomePair.getProfilePictureFromBinomePairLogins(
+                            loginA: previousFirstBinomePairMatch.login,
+                            loginB: previousFirstBinomePairMatch.otherLogin,
+                            height: constraints.maxHeight *
+                                    BinomePairMatchesFlock.fractions['bigHead'] -
+                                20,
+                            width: constraints.maxHeight *
+                                BinomePairMatchesFlock.fractions['bigHead'],
                           ),
                         ),
                       ),
@@ -651,7 +708,8 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
 
                   // Name and surname of the third head
                   Positioned(
-                    top: constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
+                    top: constraints.maxHeight *
+                            BinomePairMatchesFlock.fractions['smallHead'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['smallHead'] +
                         constraints.maxHeight * BinomePairMatchesFlock.fractions['separator'] +
@@ -660,30 +718,28 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock> with Si
                     child: Opacity(
                       opacity: 1 - animationController.value,
                       child: Container(
-                        height:
-                            constraints.maxHeight * BinomePairMatchesFlock.fractions['nameAndSurname'],
-                        child: Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                              return Column(
-                              children: <Widget>[
-                                Expanded(
-                                  child: AutoSizeText(
-                                    previousFirstBinomePairMatch.name,
-                                    group: nameAndSurnameAutoSizeGroup,
-                                    style: tinterTheme.textStyle.headline2,
-                                  ),
+                        height: constraints.maxHeight *
+                            BinomePairMatchesFlock.fractions['nameAndSurname'],
+                        child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                          return Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: AutoSizeText(
+                                  previousFirstBinomePairMatch.name,
+                                  group: nameAndSurnameAutoSizeGroup,
+                                  style: tinterTheme.textStyle.headline2,
                                 ),
-                                Expanded(
-                                  child: AutoSizeText(
-                                    previousFirstBinomePairMatch.surname,
-                                    group: nameAndSurnameAutoSizeGroup,
-                                    style: tinterTheme.textStyle.headline2,
-                                  ),
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  previousFirstBinomePairMatch.surname,
+                                  group: nameAndSurnameAutoSizeGroup,
+                                  style: tinterTheme.textStyle.headline2,
                                 ),
-                              ],
-                            );
-                          }
-                        ),
+                              ),
+                            ],
+                          );
+                        }),
                       ),
                     ),
                   )
@@ -760,18 +816,18 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                Consumer<TinterTheme>(
-                                    builder: (context, tinterTheme, child) {
-                                      return Text(
-                                      'Score',
-                                      style: tinterTheme.textStyle.headline1,
-                                    );
-                                  }
-                                ),
-                                BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-                                    builder: (BuildContext context, DiscoverBinomePairMatchesState state) {
+                                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                                  return Text(
+                                    'Score',
+                                    style: tinterTheme.textStyle.headline1,
+                                  );
+                                }),
+                                BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                        DiscoverBinomePairMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverBinomePairMatchesState state) {
                                   if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                    return CircularProgressIndicator();
+                                    return Center(child: CircularProgressIndicator(),);
                                   }
                                   return AnimatedSwitcher(
                                     duration: Duration(milliseconds: 300),
@@ -784,20 +840,19 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                                     },
                                     child: Consumer<TinterTheme>(
                                         builder: (context, tinterTheme, child) {
-                                          return Text(
-                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                              .binomePairMatches[0]
-                                              .score
-                                              .toString(),
-                                          key: GlobalKey(),
-                                          style: TextStyle(
-                                            fontSize: 50,
-                                            fontWeight: FontWeight.bold,
-                                            color: tinterTheme.textStyle.headline1.color,
-                                          ),
-                                        );
-                                      }
-                                    ),
+                                      return Text(
+                                        (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                            .binomePairMatches[0]
+                                            .score
+                                            .toString(),
+                                        key: GlobalKey(),
+                                        style: TextStyle(
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.bold,
+                                          color: tinterTheme.textStyle.headline1.color,
+                                        ),
+                                      );
+                                    }),
                                   );
                                 }),
                               ],
@@ -809,25 +864,24 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                               onTap: () => showWhatIsScore(context),
                               child: Consumer<TinterTheme>(
                                   builder: (context, tinterTheme, child) {
-                                    return Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: tinterTheme.colors.defaultTextColor, width: 2),
-                                    ),
-                                    height: 20,
-                                    width: 20,
-                                    child: Center(
-                                      child: Text(
-                                        '?',
-                                        style: TextStyle(
-                                          color: tinterTheme.colors.defaultTextColor,
-                                        ),
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        color: tinterTheme.colors.defaultTextColor, width: 2),
+                                  ),
+                                  height: 20,
+                                  width: 20,
+                                  child: Center(
+                                    child: Text(
+                                      '?',
+                                      style: TextStyle(
+                                        color: tinterTheme.colors.defaultTextColor,
                                       ),
                                     ),
-                                  );
-                                }
-                              ),
+                                  ),
+                                );
+                              }),
                             ),
                           )
                         ],
@@ -844,14 +898,12 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                       children: <Widget>[
                         Align(
                           alignment: AlignmentDirectional.topCenter,
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                                return Text(
-                                'Lieu de vie',
-                                style: tinterTheme.textStyle.headline2,
-                              );
-                            }
-                          ),
+                          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                            return Text(
+                              'Lieu de vie',
+                              style: tinterTheme.textStyle.headline2,
+                            );
+                          }),
                         ),
                         SizedBox(
                           height: 10,
@@ -860,10 +912,12 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                           width: double.infinity,
                           child: Container(
                             height: 60,
-                            child: BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-                              builder: (BuildContext context, DiscoverBinomePairMatchesState state) {
+                            child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                DiscoverBinomePairMatchesState>(
+                              builder: (BuildContext context,
+                                  DiscoverBinomePairMatchesState state) {
                                 if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                  return CircularProgressIndicator();
+                                  return Center(child: CircularProgressIndicator(),);
                                 }
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -872,67 +926,67 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Opacity(
-                                        opacity: (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                    .binomePairMatches[0]
-                                                    .lieuDeVie !=
-                                                LieuDeVie.maisel
-                                            ? 0.5
-                                            : 1,
+                                        opacity:
+                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                        .binomePairMatches[0]
+                                                        .lieuDeVie !=
+                                                    LieuDeVie.maisel
+                                                ? 0.5
+                                                : 1,
                                         child: Consumer<TinterTheme>(
                                             builder: (context, tinterTheme, child) {
-                                              return Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft: Radius.circular(5.0),
-                                                  topLeft: Radius.circular(5.0),
-                                                ),
-                                                color: tinterTheme.colors.primaryAccent,
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(5.0),
+                                                topLeft: Radius.circular(5.0),
                                               ),
-                                              width: 60,
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(4.0),
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'MAISEL',
-                                                    maxLines: 1,
-                                                    minFontSize: 10,
-                                                  ),
+                                              color: tinterTheme.colors.primaryAccent,
+                                            ),
+                                            width: 60,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(4.0),
+                                              child: Center(
+                                                child: AutoSizeText(
+                                                  'MAISEL',
+                                                  maxLines: 1,
+                                                  minFontSize: 10,
                                                 ),
                                               ),
-                                            );
-                                          }
-                                        ),
+                                            ),
+                                          );
+                                        }),
                                       ),
                                       Opacity(
-                                        opacity: (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                    .binomePairMatches[0]
-                                                    .lieuDeVie !=
-                                                LieuDeVie.other
-                                            ? 0.5
-                                            : 1,
+                                        opacity:
+                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                        .binomePairMatches[0]
+                                                        .lieuDeVie !=
+                                                    LieuDeVie.other
+                                                ? 0.5
+                                                : 1,
                                         child: Consumer<TinterTheme>(
                                             builder: (context, tinterTheme, child) {
-                                              return Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  topRight: Radius.circular(5.0),
-                                                  bottomRight: Radius.circular(5.0),
-                                                ),
-                                                color: tinterTheme.colors.primaryAccent,
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(5.0),
+                                                bottomRight: Radius.circular(5.0),
                                               ),
-                                              width: 60,
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(4.0),
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Autre',
-                                                    maxLines: 1,
-                                                  ),
+                                              color: tinterTheme.colors.primaryAccent,
+                                            ),
+                                            width: 60,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(4.0),
+                                              child: Center(
+                                                child: AutoSizeText(
+                                                  'Autre',
+                                                  maxLines: 1,
                                                 ),
                                               ),
-                                            );
-                                          }
-                                        ),
+                                            ),
+                                          );
+                                        }),
                                       ),
                                     ],
                                   ),
@@ -954,24 +1008,24 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                       children: <Widget>[
                         Align(
                           alignment: AlignmentDirectional.topCenter,
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                                return Text(
-                                'Horaires de travail',
-                                style: tinterTheme.textStyle.headline2,
-                              );
-                            }
-                          ),
+                          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                            return Text(
+                              'Horaires de travail',
+                              style: tinterTheme.textStyle.headline2,
+                            );
+                          }),
                         ),
                         SizedBox(
                           height: 10,
                         ),
                         Container(
                           width: double.infinity,
-                          child: BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-                            builder: (BuildContext context, DiscoverBinomePairMatchesState state) {
+                          child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                              DiscoverBinomePairMatchesState>(
+                            builder:
+                                (BuildContext context, DiscoverBinomePairMatchesState state) {
                               if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                return CircularProgressIndicator();
+                                return Center(child: CircularProgressIndicator(),);
                               }
                               return Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -981,131 +1035,131 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                                   runSpacing: 10,
                                   children: [
                                     Opacity(
-                                      opacity: (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                              .binomePairMatches[0]
-                                              .horairesDeTravail
-                                              .contains(HoraireDeTravail.morning)
-                                          ? 1
-                                          : 0.5,
+                                      opacity:
+                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .horairesDeTravail
+                                                  .contains(HoraireDeTravail.morning)
+                                              ? 1
+                                              : 0.5,
                                       child: Consumer<TinterTheme>(
                                           builder: (context, tinterTheme, child) {
-                                            return Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0),
-                                              ),
-                                              color: tinterTheme.colors.primaryAccent,
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
                                             ),
-                                            width: 60,
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 4.0, vertical: 10.0),
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  'Matin',
-                                                  maxLines: 1,
-                                                  minFontSize: 10,
-                                                ),
+                                            color: tinterTheme.colors.primaryAccent,
+                                          ),
+                                          width: 60,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0, vertical: 10.0),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Matin',
+                                                maxLines: 1,
+                                                minFontSize: 10,
                                               ),
                                             ),
-                                          );
-                                        }
-                                      ),
+                                          ),
+                                        );
+                                      }),
                                     ),
                                     Opacity(
-                                      opacity: (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                              .binomePairMatches[0]
-                                              .horairesDeTravail
-                                              .contains(HoraireDeTravail.afternoon)
-                                          ? 1
-                                          : 0.5,
+                                      opacity:
+                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .horairesDeTravail
+                                                  .contains(HoraireDeTravail.afternoon)
+                                              ? 1
+                                              : 0.5,
                                       child: Consumer<TinterTheme>(
                                           builder: (context, tinterTheme, child) {
-                                            return Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0),
-                                              ),
-                                              color: tinterTheme.colors.primaryAccent,
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
                                             ),
-                                            width: 60,
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 4.0, vertical: 10.0),
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  'Aprem',
-                                                  maxLines: 1,
-                                                  minFontSize: 10,
-                                                ),
+                                            color: tinterTheme.colors.primaryAccent,
+                                          ),
+                                          width: 60,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0, vertical: 10.0),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Aprem',
+                                                maxLines: 1,
+                                                minFontSize: 10,
                                               ),
                                             ),
-                                          );
-                                        }
-                                      ),
+                                          ),
+                                        );
+                                      }),
                                     ),
                                     Opacity(
-                                      opacity: (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                              .binomePairMatches[0]
-                                              .horairesDeTravail
-                                              .contains(HoraireDeTravail.evening)
-                                          ? 1
-                                          : 0.5,
+                                      opacity:
+                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .horairesDeTravail
+                                                  .contains(HoraireDeTravail.evening)
+                                              ? 1
+                                              : 0.5,
                                       child: Consumer<TinterTheme>(
                                           builder: (context, tinterTheme, child) {
-                                            return Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0),
-                                              ),
-                                              color: tinterTheme.colors.primaryAccent,
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
                                             ),
-                                            width: 60,
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 4.0, vertical: 10.0),
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  'Soir',
-                                                  maxLines: 1,
-                                                  minFontSize: 10,
-                                                ),
+                                            color: tinterTheme.colors.primaryAccent,
+                                          ),
+                                          width: 60,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0, vertical: 10.0),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Soir',
+                                                maxLines: 1,
+                                                minFontSize: 10,
                                               ),
                                             ),
-                                          );
-                                        }
-                                      ),
+                                          ),
+                                        );
+                                      }),
                                     ),
                                     Opacity(
-                                      opacity: (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                              .binomePairMatches[0]
-                                              .horairesDeTravail
-                                              .contains(HoraireDeTravail.night)
-                                          ? 1
-                                          : 0.5,
+                                      opacity:
+                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .horairesDeTravail
+                                                  .contains(HoraireDeTravail.night)
+                                              ? 1
+                                              : 0.5,
                                       child: Consumer<TinterTheme>(
                                           builder: (context, tinterTheme, child) {
-                                            return Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0),
-                                              ),
-                                              color: tinterTheme.colors.primaryAccent,
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
                                             ),
-                                            width: 60,
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 4.0, vertical: 10.0),
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  'Nuit',
-                                                  maxLines: 1,
-                                                ),
+                                            color: tinterTheme.colors.primaryAccent,
+                                          ),
+                                          width: 60,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0, vertical: 10.0),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Nuit',
+                                                maxLines: 1,
                                               ),
                                             ),
-                                          );
-                                        }
-                                      ),
+                                          ),
+                                        );
+                                      }),
                                     ),
                                   ],
                                 ),
@@ -1124,14 +1178,12 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
                     child: Column(
                       children: <Widget>[
-                        Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                              return Text(
-                              'Associations',
-                              style: tinterTheme.textStyle.headline2,
-                            );
-                          }
-                        ),
+                        Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                          return Text(
+                            'Associations',
+                            style: tinterTheme.textStyle.headline2,
+                          );
+                        }),
                         SizedBox(
                           height: 10,
                         ),
@@ -1142,10 +1194,13 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                             children: <Widget>[
                               Container(
                                 height: 60,
-                                child: BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-                                  builder: (BuildContext context, DiscoverBinomePairMatchesState state) {
-                                    if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                      return CircularProgressIndicator();
+                                child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                    DiscoverBinomePairMatchesState>(
+                                  builder: (BuildContext context,
+                                      DiscoverBinomePairMatchesState state) {
+                                    if (!(state
+                                        is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                      return Center(child: CircularProgressIndicator(),);
                                     }
                                     return AnimatedSwitcher(
                                       duration: Duration(milliseconds: 300),
@@ -1154,7 +1209,8 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                                           key: GlobalKey(),
                                           shrinkWrap: true,
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                          itemCount: (state
+                                                  as DiscoverBinomePairMatchesLoadSuccessState)
                                               .binomePairMatches[0]
                                               .associations
                                               .length,
@@ -1190,36 +1246,37 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: <Widget>[
-                        Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                              return AutoSizeText(
-                              'Seul.e ou en groupe?',
-                              style: tinterTheme.textStyle.headline2,
-                                maxLines: 1,
-                            );
-                          }
-                        ),
+                        Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                          return AutoSizeText(
+                            'Seul.e ou en groupe?',
+                            style: tinterTheme.textStyle.headline2,
+                            maxLines: 1,
+                          );
+                        }),
                         SizedBox(
                           height: 15,
                         ),
                         discoverSlider(
                             context,
                             Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                                  return SliderTheme(
+                              builder: (context, tinterTheme, child) {
+                                return SliderTheme(
                                   data: tinterTheme.slider.disabled,
                                   child: child,
                                 );
                               },
-                              child: BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-                                builder: (BuildContext context, DiscoverBinomePairMatchesState state) {
+                              child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                  DiscoverBinomePairMatchesState>(
+                                builder: (BuildContext context,
+                                    DiscoverBinomePairMatchesState state) {
                                   if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                    return CircularProgressIndicator();
+                                    return Center(child: CircularProgressIndicator(),);
                                   }
                                   return TweenAnimationBuilder(
                                     tween: Tween<double>(
                                         begin: 0.5,
-                                        end: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                        end: (state
+                                                as DiscoverBinomePairMatchesLoadSuccessState)
                                             .binomePairMatches[0]
                                             .groupeOuSeul),
                                     duration: Duration(milliseconds: 300),
@@ -1246,37 +1303,38 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: <Widget>[
-                        Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                              return AutoSizeText(
-                              'En ligne ou à l\'école?',
-                              style: tinterTheme.textStyle.headline2,
-                              textAlign: TextAlign.center,
-                                maxLines: 1,
-                            );
-                          }
-                        ),
+                        Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                          return AutoSizeText(
+                            'En ligne ou à l\'école?',
+                            style: tinterTheme.textStyle.headline2,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                          );
+                        }),
                         SizedBox(
                           height: 15,
                         ),
                         discoverSlider(
                             context,
                             Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                                  return SliderTheme(
+                              builder: (context, tinterTheme, child) {
+                                return SliderTheme(
                                   data: tinterTheme.slider.disabled,
                                   child: child,
                                 );
                               },
-                              child: BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-                                builder: (BuildContext context, DiscoverBinomePairMatchesState state) {
+                              child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                  DiscoverBinomePairMatchesState>(
+                                builder: (BuildContext context,
+                                    DiscoverBinomePairMatchesState state) {
                                   if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                    return CircularProgressIndicator();
+                                    return Center(child: CircularProgressIndicator(),);
                                   }
                                   return TweenAnimationBuilder(
                                     tween: Tween<double>(
                                         begin: 0.5,
-                                        end: (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                        end: (state
+                                                as DiscoverBinomePairMatchesLoadSuccessState)
                                             .binomePairMatches[0]
                                             .enligneOuNon),
                                     duration: Duration(milliseconds: 300),
@@ -1305,19 +1363,19 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Column(
                         children: <Widget>[
-                          Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                                return Text(
-                                'Matières préférées',
-                                style: tinterTheme.textStyle.headline2,
-                              );
-                            }
-                          ),
+                          Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                            return Text(
+                              'Matières préférées',
+                              style: tinterTheme.textStyle.headline2,
+                            );
+                          }),
                           SizedBox(height: 8.0),
-                          BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(
-                            builder: (BuildContext context, DiscoverBinomePairMatchesState state) {
+                          BlocBuilder<DiscoverBinomePairMatchesBloc,
+                              DiscoverBinomePairMatchesState>(
+                            builder:
+                                (BuildContext context, DiscoverBinomePairMatchesState state) {
                               if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                return CircularProgressIndicator();
+                                return Center(child: CircularProgressIndicator(),);
                               }
                               return AnimatedSwitcher(
                                 duration: Duration(milliseconds: 300),
@@ -1332,13 +1390,12 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
                                             .matieresPreferees)
                                       Consumer<TinterTheme>(
                                           builder: (context, tinterTheme, child) {
-                                            return Chip(
-                                            label: Text(matierePreferee),
-                                            labelStyle: tinterTheme.textStyle.chipLiked,
-                                            backgroundColor: tinterTheme.colors.primaryAccent,
-                                          );
-                                        }
-                                      )
+                                        return Chip(
+                                          label: Text(matierePreferee),
+                                          labelStyle: tinterTheme.textStyle.chipLiked,
+                                          backgroundColor: tinterTheme.colors.primaryAccent,
+                                        );
+                                      })
                                   ],
                                 ),
                               );
@@ -1362,8 +1419,8 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return Container(
+        builder: (context, tinterTheme, child) {
+          return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
               color: tinterTheme.colors.primary,
@@ -1380,8 +1437,8 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
 
   Widget associationBubble(BuildContext context, Association association) {
     return Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
+      builder: (context, tinterTheme, child) {
+        return Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(color: tinterTheme.textStyle.headline1.color, width: 3),
@@ -1407,37 +1464,35 @@ class _BinomePairMatchInformationState extends State<BinomePairMatchInformation>
       {String leftLabel, String rightLabel}) {
     return Stack(
       children: <Widget>[
-        Consumer<TinterTheme>(
-            builder: (context, tinterTheme, child) {
-              return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SliderLabel(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                    child: Text(
-                      leftLabel,
-                      style: tinterTheme.textStyle.smallLabel,
-                    ),
+        Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              SliderLabel(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                  child: Text(
+                    leftLabel,
+                    style: tinterTheme.textStyle.smallLabel,
                   ),
-                  side: Side.Left,
-                  triangleSize: 14,
                 ),
-                SliderLabel(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                    child: Text(
-                      rightLabel,
-                      style: tinterTheme.textStyle.smallLabel,
-                    ),
+                side: Side.Left,
+                triangleSize: 14,
+              ),
+              SliderLabel(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                  child: Text(
+                    rightLabel,
+                    style: tinterTheme.textStyle.smallLabel,
                   ),
-                  side: Side.Right,
-                  triangleSize: 14,
                 ),
-              ],
-            );
-          }
-        ),
+                side: Side.Right,
+                triangleSize: 14,
+              ),
+            ],
+          );
+        }),
         Padding(
           padding: const EdgeInsets.only(top: 13.0, left: 4, right: 4),
           child: slider,
@@ -1478,28 +1533,24 @@ class NoMoreDiscoveryBinomePairMatchesWidget extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                        return Icon(
-                        Icons.face,
-                        color: tinterTheme.colors.defaultTextColor,
-                        size: 70,
-                      );
-                    }
-                  ),
+                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return Icon(
+                      Icons.face,
+                      color: tinterTheme.colors.defaultTextColor,
+                      size: 70,
+                    );
+                  }),
                   SizedBox(
                     height: 10,
                   ),
-                  Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                        return AutoSizeText(
-                        "Il n'y a plus de binomePairMatch à découvrir pour l'instant.\nDemande à d'autres étudiants de s'inscrire!",
-                        style: tinterTheme.textStyle.headline2.copyWith(height: 2),
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                      );
-                    }
-                  ),
+                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return AutoSizeText(
+                      "Il n'y a plus de paire de binome à découvrir pour l'instant.\nDemande à d'autres étudiants de s'inscrire!",
+                      style: tinterTheme.textStyle.headline2.copyWith(height: 2),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                    );
+                  }),
                 ],
               ),
             ),
@@ -1520,8 +1571,8 @@ class WideStudentSearch extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       child: Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return Container(
+        builder: (context, tinterTheme, child) {
+          return Container(
             height: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
@@ -1549,46 +1600,42 @@ class WideStudentSearch extends StatelessWidget {
                     tag: 'studentSearchBar',
                     child: Material(
                       color: Colors.transparent,
-                      child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                            return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                              color: tinterTheme.colors.primaryAccent,
+                      child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5.0),
                             ),
-                            child: TextField(
-                              enabled: false,
-                              textInputAction: TextInputAction.search,
-                              decoration: InputDecoration(
-                                focusedBorder: InputBorder.none,
-                                icon: Padding(
-                                  padding: const EdgeInsets.only(left: 0),
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.black,
-                                  ),
+                            color: tinterTheme.colors.primaryAccent,
+                          ),
+                          child: TextField(
+                            enabled: false,
+                            textInputAction: TextInputAction.search,
+                            decoration: InputDecoration(
+                              focusedBorder: InputBorder.none,
+                              icon: Padding(
+                                padding: const EdgeInsets.only(left: 0),
+                                child: Icon(
+                                  Icons.search,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),
-                          );
-                        }
-                      ),
+                          ),
+                        );
+                      }),
                     ),
                   ),
                 ),
                 Flexible(
-                  child: Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                        return AutoSizeText(
-                        'Rechercher un.e étudiant.e',
-                        style: tinterTheme.textStyle.hintLarge,
-                        maxLines: 1,
-                      );
-                    }
-                  ),
+                  child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return AutoSizeText(
+                      'Rechercher une paire de binome',
+                      style: tinterTheme.textStyle.hintLarge,
+                      maxLines: 1,
+                    );
+                  }),
                 ),
               ],
             ),

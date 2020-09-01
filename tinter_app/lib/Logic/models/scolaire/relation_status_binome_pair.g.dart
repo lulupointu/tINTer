@@ -12,12 +12,12 @@ const EnumRelationStatusBinomePair _$ignored =
     const EnumRelationStatusBinomePair._('ignored');
 const EnumRelationStatusBinomePair _$liked =
     const EnumRelationStatusBinomePair._('liked');
-const EnumRelationStatusBinomePair _$askedBinomePair =
-    const EnumRelationStatusBinomePair._('askedBinomePair');
-const EnumRelationStatusBinomePair _$acceptedBinomePair =
-    const EnumRelationStatusBinomePair._('acceptedBinomePair');
-const EnumRelationStatusBinomePair _$refusedBinomePair =
-    const EnumRelationStatusBinomePair._('refusedBinomePair');
+const EnumRelationStatusBinomePair _$askedBinomePairMatch =
+    const EnumRelationStatusBinomePair._('askedBinomePairMatch');
+const EnumRelationStatusBinomePair _$acceptedBinomePairMatch =
+    const EnumRelationStatusBinomePair._('acceptedBinomePairMatch');
+const EnumRelationStatusBinomePair _$refusedBinomePairMatch =
+    const EnumRelationStatusBinomePair._('refusedBinomePairMatch');
 
 EnumRelationStatusBinomePair _$enumRelationStatusBinomePairValueOf(
     String name) {
@@ -28,12 +28,12 @@ EnumRelationStatusBinomePair _$enumRelationStatusBinomePairValueOf(
       return _$ignored;
     case 'liked':
       return _$liked;
-    case 'askedBinomePair':
-      return _$askedBinomePair;
-    case 'acceptedBinomePair':
-      return _$acceptedBinomePair;
-    case 'refusedBinomePair':
-      return _$refusedBinomePair;
+    case 'askedBinomePairMatch':
+      return _$askedBinomePairMatch;
+    case 'acceptedBinomePairMatch':
+      return _$acceptedBinomePairMatch;
+    case 'refusedBinomePairMatch':
+      return _$refusedBinomePairMatch;
     default:
       throw new ArgumentError(name);
   }
@@ -45,9 +45,9 @@ final BuiltSet<EnumRelationStatusBinomePair>
   _$none,
   _$ignored,
   _$liked,
-  _$askedBinomePair,
-  _$acceptedBinomePair,
-  _$refusedBinomePair,
+  _$askedBinomePairMatch,
+  _$acceptedBinomePairMatch,
+  _$refusedBinomePairMatch,
 ]);
 
 Serializer<RelationStatusBinomePair> _$relationStatusBinomePairSerializer =
@@ -71,9 +71,6 @@ class _$RelationStatusBinomePairSerializer
       Serializers serializers, RelationStatusBinomePair object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'binomePairId',
-      serializers.serialize(object.binomePairId,
-          specifiedType: const FullType(int)),
       'otherBinomePairId',
       serializers.serialize(object.otherBinomePairId,
           specifiedType: const FullType(int)),
@@ -81,7 +78,12 @@ class _$RelationStatusBinomePairSerializer
       serializers.serialize(object.status,
           specifiedType: const FullType(EnumRelationStatusBinomePair)),
     ];
-
+    if (object.binomePairId != null) {
+      result
+        ..add('binomePairId')
+        ..add(serializers.serialize(object.binomePairId,
+            specifiedType: const FullType(int)));
+    }
     return result;
   }
 
@@ -151,10 +153,6 @@ class _$RelationStatusBinomePair extends RelationStatusBinomePair {
   _$RelationStatusBinomePair._(
       {this.binomePairId, this.otherBinomePairId, this.status})
       : super._() {
-    if (binomePairId == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationStatusBinomePair', 'binomePairId');
-    }
     if (otherBinomePairId == null) {
       throw new BuiltValueNullFieldError(
           'RelationStatusBinomePair', 'otherBinomePairId');
