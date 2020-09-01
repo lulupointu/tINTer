@@ -22,7 +22,7 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
   try {
     // Perform search operation
 
-    var base = "uid=delsol_l,ou=People,dc=int-evry,dc=fr";
+    var base = "uid=$login,ou=People,dc=int-evry,dc=fr";
     var filter = Filter.present("objectClass");
     var attrs = ["uid", "givenName", "sn", "mail"];
 
