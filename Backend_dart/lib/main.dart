@@ -12,7 +12,7 @@ Future<void> main() async {
 
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
-    _logFileSink.writeln('[${record.loggerName}] | ${record.level.name} | ${record.time} \n ${record.message} \n ${record.error} \n ${record.stackTrace}');
+    _logFileSink.writeln('[${record.loggerName}] | ${record.level.name} | ${record.time} : ${record.message} | ${record.error ?? ''} | ${record.stackTrace ?? ''}');
   });
 
 
