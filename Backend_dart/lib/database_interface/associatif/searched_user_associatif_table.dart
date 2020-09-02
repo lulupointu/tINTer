@@ -26,7 +26,6 @@ class SearchedUserAssociatifTable {
         });
 
     return query.then((queryResults) {
-      print(queryResults);
       return {
         for (Map<String, Map<String, dynamic>> query in queryResults)
           query[RelationsStatusAssociatifTable.name]['otherLogin']: SearchedUserAssociatif.fromJson({
