@@ -100,6 +100,8 @@ class BinomePairsProfilesTable {
             [for (String key in binomePairJson.keys) '\"$key\"=@$key'].join(', ') +
             " WHERE \"binomePairId\"=@binomePairId;");
 
+    print(binomePairJson);
+
     final List<Future> queries = [
       database.query(
           "UPDATE $name "
