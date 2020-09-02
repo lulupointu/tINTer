@@ -27,10 +27,10 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
   Stream<UserScolaireSearchState> mapEventToState(UserScolaireSearchEvent event) async* {
     switch (event.runtimeType) {
       case UserScolaireSearchLoadEvent:
-        yield* _mapAssociationLoadEventToState();
+        yield* _mapUserScolaireSearchLoadEventToState();
         return;
       case UserScolaireSearchRefreshEvent:
-        yield* _mapAssociationRefreshEventToState();
+        yield* _mapUserScolaireRefreshEventToState();
         return;
       case UserScolaireSearchChangeStatusEvent:
         if (state is UserScolaireSearchLoadSuccessfulState) {
@@ -61,7 +61,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
     }
   }
 
-  Stream<UserScolaireSearchState> _mapAssociationLoadEventToState() async* {
+  Stream<UserScolaireSearchState> _mapUserScolaireSearchLoadEventToState() async* {
     yield UserScolaireSearchLoadingState();
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
@@ -71,6 +71,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
     }
 
     List<SearchedUserScolaire> searchedUsers;
+    print('LOADING SEARCH USERS SCOLAIRE');
     try {
       searchedUsers = await userRepository.getAllSearchedUsersScolaire();
     } catch (error) {
@@ -81,7 +82,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
     yield UserScolaireSearchLoadSuccessfulState(searchedUsers: searchedUsers);
   }
 
-  Stream<UserScolaireSearchState> _mapAssociationRefreshEventToState() async* {
+  Stream<UserScolaireSearchState> _mapUserScolaireRefreshEventToState() async* {
     yield UserScolaireSearchRefreshingState(
         searchedUsers: (state as UserScolaireSearchLoadSuccessfulState).searchedUsers);
 

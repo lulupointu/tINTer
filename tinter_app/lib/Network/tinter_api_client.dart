@@ -303,6 +303,8 @@ class TinterAPIClient {
     }
 
     List<SearchedUserAssociatif> searchedUsers;
+    print('USER ASSOCIATIFS ${json
+        .decode(response.body)}');
     try {
       searchedUsers = json
           .decode(response.body)
@@ -338,6 +340,8 @@ class TinterAPIClient {
 
     List<SearchedUserScolaire> searchedUsers;
     try {
+      print('SEARCHED USERS ${json
+          .decode(response.body)}');
       searchedUsers = json
           .decode(response.body)
           .map<SearchedUserScolaire>((dynamic jsonSearchedUserScolaire) =>

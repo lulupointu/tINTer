@@ -150,7 +150,6 @@ class UserRepository {
     } catch (error) {
       throw error;
     }
-    print('getMultipleBasicUsersInfo using token ${token.token}');
 
     TinterApiResponse<List<SearchedUserAssociatif>> tinterApiResponse;
     try {

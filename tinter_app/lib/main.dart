@@ -48,7 +48,7 @@ import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 main() {
-//  Bloc.observer = AllBlocObserver();
+  Bloc.observer = AllBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
 
   final http.Client httpClient = http.Client();

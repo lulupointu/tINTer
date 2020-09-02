@@ -167,7 +167,7 @@ class StudentSearch extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RechercheEtudiantAssociatifTab()),
+              MaterialPageRoute(builder: (context) => RechercheEtudiantBinomePairTab()),
             );
           },
           child: Center(
