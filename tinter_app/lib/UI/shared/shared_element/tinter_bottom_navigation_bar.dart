@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 
 import 'const.dart';
 
-main() {
-  runApp(MaterialApp(
-    home: Material(
-      child: CustomBottomNavigationBar(onTap: (int value) {}),
-    ),
-  ));
-}
+//main() {
+//  runApp(MaterialApp(
+//    home: Material(
+//      child: CustomBottomNavigationBar(onTap: (int value) {}),
+//    ),
+//  ));
+//}
 
 
 class CustomBottomNavigationBar extends StatefulWidget {

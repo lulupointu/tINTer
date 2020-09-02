@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
 import 'package:flutter/material.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
-import 'package:tinterapp/Logic/models/serializers.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';

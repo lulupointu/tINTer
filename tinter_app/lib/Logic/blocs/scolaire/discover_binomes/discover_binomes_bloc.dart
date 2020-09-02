@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:tinterapp/Logic/blocs/associatif/discover_matches/discover_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';

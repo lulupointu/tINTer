@@ -1,6 +1,5 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:flutter/material.dart' as m;
 import 'package:tinterapp/Logic/models/serializers.dart';
 
 part 'searched_binome_pair.g.dart';

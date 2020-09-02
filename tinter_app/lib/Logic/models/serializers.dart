@@ -8,7 +8,6 @@ import 'package:tinterapp/Logic/models/associatif/relation_score_associatif.dart
 import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
-import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/scolaire/build_binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_score_binome_pair.dart';

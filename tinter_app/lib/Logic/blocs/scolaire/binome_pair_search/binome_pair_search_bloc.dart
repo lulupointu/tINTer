@@ -4,12 +4,9 @@ import 'package:meta/meta.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_status_binome_pair.dart';
-import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_binome_pair.dart';
-import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinterapp/Logic/repository/scolaire/binome_pair_repository.dart';
 import 'package:tinterapp/Logic/repository/scolaire/matched_binome_pair_matches_repository.dart';
-import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
 
 part 'binome_pair_search_event.dart';
 

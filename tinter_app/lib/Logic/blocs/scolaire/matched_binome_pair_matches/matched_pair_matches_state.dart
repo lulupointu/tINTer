@@ -11,11 +11,9 @@ abstract class MatchedBinomePairMatchesState extends Equatable {
 class MatchedBinomePairMatchesInitialState extends MatchedBinomePairMatchesState {}
 
 class MatchedBinomePairMatchesLoadingState extends MatchedBinomePairMatchesState {
-  MatchedBinomePairMatchesLoadingState({@required bool hasBinomePair});
 }
 
 class MatchedBinomePairMatchesLoadingFailedState extends MatchedBinomePairMatchesState {
-  MatchedBinomePairMatchesLoadingFailedState({@required bool hasBinomePair});
 }
 
 class MatchedBinomePairMatchesLoadSuccessState extends MatchedBinomePairMatchesState {

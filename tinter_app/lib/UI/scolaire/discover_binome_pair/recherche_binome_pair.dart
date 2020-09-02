@@ -6,11 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/binome_pair_search/binome_pair_search_bloc.dart';
-import 'package:tinterapp/Logic/blocs/scolaire/user_scolaire_search/user_scolaire_search_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_binome_pair.dart';
-import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
-import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 
 

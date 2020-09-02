@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:meta/meta.dart';
-import 'package:tinterapp/Logic/models/scolaire/binome.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_status_binome_pair.dart';
-import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
