@@ -167,7 +167,7 @@ class RelationsScoreBinomePairsMatchesTable {
         "FROM (VALUES " +
         [
           for (int index = 0; index < listRelationScoreBinomePair.length; index++)
-            "(@binomePairIdA$index, @binomePairIdB$index, @score$index)"
+            "(@binomePairIdA$index::integer, @binomePairIdB$index::integer, @score$index::integer)"
         ].join(',') +
         ") AS new(binomePairIdA, binomePairIdB, score)"
             "WHERE old.binomePairIdA=new.binomePairIdA AND old.binomePairIdB=new.binomePairIdB;";
