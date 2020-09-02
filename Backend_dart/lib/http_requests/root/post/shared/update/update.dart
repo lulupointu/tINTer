@@ -81,22 +81,26 @@ Future<void> userUpdate(HttpRequest req, List<String> segments, String login) as
   }
 
   // Update scolaire relation score tables
+  print("Update scolaire relation score tables");
   try {
     // Grab all other users
     Map<String, BuildUser> otherUsersScolaire= await usersManagementTable.getAllExceptOneFromLogin(
         login: login, year: user.year);
 
+    print("Get the number of associations and gouts musicaux");
     // Get the number of associations and gouts musicaux
     int numberMaxOfAssociations =
         (await AssociationsTable(database: tinterDatabase.connection).getAll()).length;
     int numberMaxOfMatieres =
         (await MatieresTable(database: tinterDatabase.connection).getAll()).length;
 
+    print("Get the scores");
     // Get the scores
     Map<String, RelationScoreScolaire> scores =
     RelationScoreScolaire.getScoreBetweenMultiple(user, otherUsersScolaire.values.toList(),
         numberMaxOfAssociations, numberMaxOfMatieres);
 
+    print("Update the database with all relevant scores");
     // Update the database with all relevant scores
     RelationsScoreScolaireTable relationsScoreScolaireTable =
     RelationsScoreScolaireTable(database: tinterDatabase.connection);
@@ -107,41 +111,51 @@ Future<void> userUpdate(HttpRequest req, List<String> segments, String login) as
     throw error;
   }
 
+  print("If user is part of binome pair, update this as well");
   // If user is part of binome pair, update this as well
   BinomePairsProfilesTable binomePairsProfilesTable = BinomePairsProfilesTable(database: tinterDatabase.connection);
   if (await binomePairsProfilesTable.isKnownFromLogin(login: login)) {
+    print("Get the other login");
     // Get the other login
     String otherLogin = await binomePairsProfilesTable.getOtherLoginFromLogin(login: login);
 
+    print("Get the otherLogin profile");
     // Get the otherLogin profile
     UsersManagementTable usersManagementTable = UsersManagementTable(database: tinterDatabase.connection);
     BuildUser otherUser = await usersManagementTable.getFromLogin(login: otherLogin);
 
+    print("Get the binomePair from the two users");
     // Get the binomePair from the two users
     BuildBinomePair binomePair = BuildBinomePair.getFromUsers(user, otherUser);
 
+    print("Update the binomePair");
     // Update the binomePair
     BinomePairsManagementTable binomePairsManagementTable = BinomePairsManagementTable(database: tinterDatabase.connection);
     await binomePairsManagementTable.update(binomePair: binomePair);
 
 
+    print("Update scolaire relation score tables");
     // Update scolaire relation score tables
 
+    print("Grab all other binomePair");
     // Grab all other binomePair
     Map<int, BuildBinomePair> otherBinomePairs = await binomePairsManagementTable.getAllExceptOneFromLogin(
         login: login);
 
+    print("Get the number of associations and gouts musicaux");
     // Get the number of associations and gouts musicaux
     int numberMaxOfAssociations =
         (await AssociationsTable(database: tinterDatabase.connection).getAll()).length;
     int numberMaxOfMatieres =
         (await MatieresTable(database: tinterDatabase.connection).getAll()).length;
 
+    print("Get the scores");
     // Get the scores
     Map<int, RelationScoreBinomePair> scores =
     RelationScoreBinomePair.getScoreBetweenMultiple(binomePair, otherBinomePairs.values.toList(),
         numberMaxOfAssociations, numberMaxOfMatieres);
 
+    print("Update the database with all relevant scores");
     // Update the database with all relevant scores
     RelationsScoreBinomePairsMatchesTable relationsStatusBinomePairsMatchesTable =
     RelationsScoreBinomePairsMatchesTable(database: tinterDatabase.connection);
@@ -149,6 +163,7 @@ Future<void> userUpdate(HttpRequest req, List<String> segments, String login) as
         listRelationScoreBinomePair: scores.values.toList());
   }
 
+  print("UPDATE DONE");
   await req.response
     ..statusCode = HttpStatus.ok
     ..close();

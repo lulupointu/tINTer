@@ -87,10 +87,10 @@ class _MatchsTabState extends State<MatchsTab> {
           if (!_controller.hasListeners) {
             _controller.addListener(() {
               setState(() {
-                topMenuScrolledFraction = min(
+                topMenuScrolledFraction = max(0, min(
                     1,
                     _controller.position.pixels /
-                        (widget.fractions['matchSelectionMenu'] * constraints.maxHeight));
+                        (widget.fractions['matchSelectionMenu'] * constraints.maxHeight)));
               });
             });
           }

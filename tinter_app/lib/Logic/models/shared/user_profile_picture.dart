@@ -45,7 +45,6 @@ Widget getProfilePictureFromLogin({
                 headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
                 height: height,
                 width: width,
-          fit: BoxFit.fitWidth,
               );
       },
     ),

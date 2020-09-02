@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,8 @@ import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 main() {
-  Bloc.observer = AllBlocObserver();
+//  Bloc.observer = AllBlocObserver();
+  WidgetsFlutterBinding.ensureInitialized();
 
   final http.Client httpClient = http.Client();
   TinterAPIClient tinterAPIClient = TinterAPIClient(
@@ -91,110 +93,112 @@ main() {
   final MatieresRepository matieresRepository = MatieresRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  runApp(
-    KeyboardVisibilityProvider(
-      child: KeyboardDismissOnTap(
-        child: BlocProvider(
-          create: (BuildContext context) =>
-              AuthenticationBloc(authenticationRepository: authenticationRepository),
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<UserBloc>(
-                create: (BuildContext context) => UserBloc(
-                  userRepository: userRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+    runApp(
+      KeyboardVisibilityProvider(
+        child: KeyboardDismissOnTap(
+          child: BlocProvider(
+            create: (BuildContext context) =>
+                AuthenticationBloc(authenticationRepository: authenticationRepository),
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<UserBloc>(
+                  create: (BuildContext context) => UserBloc(
+                    userRepository: userRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<BinomePairBloc>(
-                create: (BuildContext context) => BinomePairBloc(
-                  binomePairRepository: binomePairRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<BinomePairBloc>(
+                  create: (BuildContext context) => BinomePairBloc(
+                    binomePairRepository: binomePairRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<MatchedMatchesBloc>(
-                create: (BuildContext context) => MatchedMatchesBloc(
-                  matchedMatchesRepository: matchedMatchesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<MatchedMatchesBloc>(
+                  create: (BuildContext context) => MatchedMatchesBloc(
+                    matchedMatchesRepository: matchedMatchesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<DiscoverMatchesBloc>(
-                create: (BuildContext context) => DiscoverMatchesBloc(
-                  discoverMatchesRepository: discoverMatchesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<DiscoverMatchesBloc>(
+                  create: (BuildContext context) => DiscoverMatchesBloc(
+                    discoverMatchesRepository: discoverMatchesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<MatchedBinomesBloc>(
-                create: (BuildContext context) => MatchedBinomesBloc(
-                  matchedBinomesRepository: matchedBinomesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<MatchedBinomesBloc>(
+                  create: (BuildContext context) => MatchedBinomesBloc(
+                    matchedBinomesRepository: matchedBinomesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<DiscoverBinomesBloc>(
-                create: (BuildContext context) => DiscoverBinomesBloc(
-                  discoverBinomesRepository: discoverBinomesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<DiscoverBinomesBloc>(
+                  create: (BuildContext context) => DiscoverBinomesBloc(
+                    discoverBinomesRepository: discoverBinomesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<MatchedBinomePairMatchesBloc>(
-                create: (BuildContext context) => MatchedBinomePairMatchesBloc(
-                  matchedBinomePairMatchesRepository: matchedBinomePairMatchesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<MatchedBinomePairMatchesBloc>(
+                  create: (BuildContext context) => MatchedBinomePairMatchesBloc(
+                    matchedBinomePairMatchesRepository: matchedBinomePairMatchesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<DiscoverBinomePairMatchesBloc>(
-                create: (BuildContext context) => DiscoverBinomePairMatchesBloc(
-                  discoverBinomePairMatchesRepository: discoverBinomePairMatchesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<DiscoverBinomePairMatchesBloc>(
+                  create: (BuildContext context) => DiscoverBinomePairMatchesBloc(
+                    discoverBinomePairMatchesRepository: discoverBinomePairMatchesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<UserAssociatifSearchBloc>(
-                create: (BuildContext context) => UserAssociatifSearchBloc(
-                  userRepository: userRepository,
-                  matchedMatchesRepository: matchedMatchesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<UserAssociatifSearchBloc>(
+                  create: (BuildContext context) => UserAssociatifSearchBloc(
+                    userRepository: userRepository,
+                    matchedMatchesRepository: matchedMatchesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<UserScolaireSearchBloc>(
-                create: (BuildContext context) => UserScolaireSearchBloc(
-                  userRepository: userRepository,
-                  matchedBinomesRepository: matchedBinomesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<UserScolaireSearchBloc>(
+                  create: (BuildContext context) => UserScolaireSearchBloc(
+                    userRepository: userRepository,
+                    matchedBinomesRepository: matchedBinomesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<BinomePairSearchBloc>(
-                create: (BuildContext context) => BinomePairSearchBloc(
-                  binomePairRepository: binomePairRepository,
-                  matchedBinomePairMatchesRepository: matchedBinomePairMatchesRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<BinomePairSearchBloc>(
+                  create: (BuildContext context) => BinomePairSearchBloc(
+                    binomePairRepository: binomePairRepository,
+                    matchedBinomePairMatchesRepository: matchedBinomePairMatchesRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<AssociationsBloc>(
-                create: (BuildContext context) => AssociationsBloc(
-                  associationsRepository: associationsRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<AssociationsBloc>(
+                  create: (BuildContext context) => AssociationsBloc(
+                    associationsRepository: associationsRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-              BlocProvider<MatieresBloc>(
-                create: (BuildContext context) => MatieresBloc(
-                  matieresRepository: matieresRepository,
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                BlocProvider<MatieresBloc>(
+                  create: (BuildContext context) => MatieresBloc(
+                    matieresRepository: matieresRepository,
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  ),
                 ),
-              ),
-            ],
-            child: ChangeNotifierProvider<TinterTheme>(
-              create: (_) => TinterTheme(),
-              child: MaterialApp(
-                home: SafeArea(
-                  child: Tinter(),
+              ],
+              child: ChangeNotifierProvider<TinterTheme>(
+                create: (_) => TinterTheme(),
+                child: MaterialApp(
+                  home: SafeArea(
+                    child: Tinter(),
+                  ),
+                  navigatorObservers: [routeObserver],
                 ),
-                navigatorObservers: [routeObserver],
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  });
 }
 
 class Tinter extends StatelessWidget {
@@ -294,7 +298,8 @@ class _TinterHomeState extends State<TinterHome> {
           return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
             return BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(builder:
                 (BuildContext context, MatchedBinomesState matchedBinomePairMatchesState) {
-                  bool _hasEverHadBinome = sharedPreferences.data.getBool('hasEverHadBinome') ?? false;
+              bool _hasEverHadBinome =
+                  sharedPreferences.data.getBool('hasEverHadBinome') ?? false;
               if ((matchedBinomePairMatchesState
                           as MatchedBinomesHasBinomePairCheckedSuccessState)
                       .hasBinomePair &&
@@ -381,34 +386,37 @@ class IntroduceBinomeOfBinomeOverlay extends StatelessWidget {
               child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                 return Center(
                   child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                'Nouvelle fonctionnalitée!',
-                                style: tinterTheme.textStyle.headline2.copyWith(color: Colors.black, fontWeight: FontWeight.w500),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Maintenant que tu as trouvé.e ton ou ta binome, la page discover "
-                                    "te propose des binomes de binome afin de former un quadrinome!",
-                                style:
-                                tinterTheme.textStyle.dialogContent.copyWith(color: Colors.black),
-                              ),
-                              SizedBox(height: 20,)
-                            ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            height: 20,
                           ),
-                        ),
+                          Text(
+                            'Nouvelle fonctionnalitée!',
+                            style: tinterTheme.textStyle.headline2
+                                .copyWith(color: Colors.black, fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Maintenant que tu as trouvé.e ton ou ta binome, la page discover "
+                            "te propose des binomes de binome afin de former un quadrinome!",
+                            style: tinterTheme.textStyle.dialogContent
+                                .copyWith(color: Colors.black),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          )
+                        ],
                       ),
+                    ),
+                  ),
                 );
               }),
             ),

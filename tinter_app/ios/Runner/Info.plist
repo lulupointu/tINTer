@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Ajout d&apos;une photo de profile</string>
+	<string>Ajouter une photo de profile</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ajout d&apos;une photo de profile</string>
+	<string>Ajouter une photo de profile</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

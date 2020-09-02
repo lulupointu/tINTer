@@ -147,10 +147,13 @@ class _BinomesTabState extends State<BinomesTab> {
             if (!_controller.hasListeners) {
               _controller.addListener(() {
                 setState(() {
-                  topMenuScrolledFraction = min(
-                      1,
-                      _controller.position.pixels /
-                          (widget.fractions['binomeSelectionMenu'] * constraints.maxHeight));
+                  topMenuScrolledFraction = max(
+                      0,
+                      min(
+                          1,
+                          _controller.position.pixels /
+                              (widget.fractions['binomeSelectionMenu'] *
+                                  constraints.maxHeight)));
                 });
               });
             }
@@ -251,7 +254,9 @@ class _BinomesTabState extends State<BinomesTab> {
           },
           builder: (BuildContext context, MatchedBinomesState state) {
             if (!(state is MatchedBinomesLoadSuccessState)) {
-              return Center(child: CircularProgressIndicator(),);
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
             return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
               return ((state as MatchedBinomesLoadSuccessState).binomes.length == 0)
@@ -304,9 +309,9 @@ class CompareViewBinome extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         facesAroundScore(context),
-        SizedBox(height: appHeight*0.05),
+        SizedBox(height: appHeight * 0.05),
         statusRectangle(context),
-        SizedBox(height: appHeight*0.05),
+        SizedBox(height: appHeight * 0.05),
         Opacity(
           opacity: topMenuScrolledFraction,
           child: informationComparison(),
@@ -330,7 +335,9 @@ class CompareViewBinome extends StatelessWidget {
                 BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return Center(child: CircularProgressIndicator(),);
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
                   return userPicture(
                       getProfilePicture: ({@required height, @required width}) =>
@@ -674,7 +681,9 @@ class CompareViewBinome extends StatelessWidget {
                 builder: (BuildContext context, UserState state) {
               if (!(state is KnownUserState)) {
                 BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
-                return Center(child: CircularProgressIndicator(),);
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               }
               return ProfileInformation(user: (state as KnownUserState).user);
             }),
@@ -708,9 +717,9 @@ class CompareViewBinomePairMatch extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         facesAroundScore(context),
-        SizedBox(height: appHeight*0.05),
+        SizedBox(height: appHeight * 0.05),
         statusRectangle(context),
-        SizedBox(height: appHeight*0.05),
+        SizedBox(height: appHeight * 0.05),
         Opacity(
           opacity: topMenuScrolledFraction,
           child: informationComparison(),
@@ -734,7 +743,9 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                 BlocBuilder<BinomePairBloc, BinomePairState>(
                     builder: (BuildContext context, BinomePairState binomePairState) {
                   if (!(binomePairState is BinomePairLoadSuccessfulState)) {
-                    return Center(child: CircularProgressIndicator(),);
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
                   return userPicture(
                       getProfilePicture: ({@required height, @required width}) =>
@@ -1096,7 +1107,9 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                 builder: (BuildContext context, UserState state) {
               if (!(state is KnownUserState)) {
                 BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
-                return Center(child: CircularProgressIndicator(),);
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               }
               return ProfileInformation(user: (state as KnownUserState).user);
             }),

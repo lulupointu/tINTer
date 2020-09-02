@@ -220,16 +220,22 @@ class _UserCreationTabState extends State<UserCreationTab> {
           if (userState.user.school == School.TSP &&
               userState.user.year == TSPYear.TSP1A &&
               !nextPressed) {
-            _controller.animateTo(0,
-                duration: Duration(milliseconds: 200), curve: Curves.easeIn);
-            Future.delayed(Duration(milliseconds: 200), () {
-              setState(() {
-                nextPressed = true;
-              });
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                insertAssociatifToScolaireButtonOverlay();
-              });
-            });
+            _controller
+                .animateTo(0, duration: Duration(milliseconds: 200), curve: Curves.easeIn)
+                .then(
+                  (value) => _controller
+                      .animateTo(0, duration: Duration(milliseconds: 0), curve: Curves.easeIn)
+                      .then(
+                    (value) {
+                      setState(() {
+                        nextPressed = true;
+                      });
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        insertAssociatifToScolaireButtonOverlay();
+                      });
+                    },
+                  ),
+                );
           } else {
             BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
           }
@@ -469,7 +475,9 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
         child: BlocBuilder<UserBloc, UserState>(
           builder: (BuildContext context, UserState userState) {
             if (!(userState is NewUserState)) {
-              return Center(child: CircularProgressIndicator(),);
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
             return Stack(
               children: [
