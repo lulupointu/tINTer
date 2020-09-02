@@ -8,6 +8,7 @@ dependencies:
   dartdap: ^0.4.5
   image:
   built_value: ^7.1.0
+  logging: ^0.11.4
 
 
 

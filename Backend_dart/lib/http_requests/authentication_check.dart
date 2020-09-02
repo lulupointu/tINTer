@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/shared/ldap_connection.dart' as ldap;
 import 'package:tinter_backend/database_interface/shared/sessions.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
@@ -11,6 +12,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/shared/session.dart';
 import 'package:meta/meta.dart';
 
+Logger _authenticationLogger = Logger('authenticationCheckThenRoute');
 Future<void> authenticationCheckThenRoute(HttpRequest req) async {
   // The segment are the different part of the uri
   List<String> segments = req.uri.path.split('/');
@@ -22,6 +24,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
     try {
       await tryLogin(httpRequest: req);
     } on HttpError catch (error) {
+      _authenticationLogger.fine("", error);
       if (error.shouldSend)
         await req.response
           ..statusCode = error.errorCode ?? HttpStatus.badRequest
@@ -29,7 +32,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
           ..close();
       return;
     } catch (error) {
-      print('Error caught: $error');
+      _authenticationLogger.warning("Unexpected error caught", error);
       await req.response
         ..statusCode = HttpStatus.badRequest
         ..close();
@@ -44,7 +47,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
   try {
     login = await checkSessionTokenAndGetLogin(httpRequest: req);
   } on HttpError catch (error) {
-    print('HttpError caught: $error');
+    _authenticationLogger.fine("", error);
     if (error.shouldSend)
       await req.response
         ..statusCode = error.errorCode ?? HttpStatus.badRequest
@@ -52,7 +55,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
         ..close();
     return;
   } catch (error) {
-    print('Error caught: $error');
+    _authenticationLogger.warning("Unexpected error caught", error);
     await req.response
       ..statusCode = HttpStatus.badRequest
       ..close();
@@ -79,7 +82,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
   try {
     await rootToGetOrPost(req, segments, login);
   } on HttpError catch (error) {
-    print('HttpError caught: $error');
+    _authenticationLogger.fine("", error);
     if (error.shouldSend)
       await req.response
         ..statusCode = error.errorCode ?? HttpStatus.badRequest
@@ -87,7 +90,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
         ..close();
     return;
   } catch (error) {
-    print('An unexpected error happened: $error');
+    _authenticationLogger.warning("Unexpected error caught", error);
     await req.response
       ..statusCode = HttpStatus.badRequest
       ..close();
@@ -95,6 +98,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
   }
 }
 
+Logger _checkSessionLogger = Logger('checkSessionTokenAndGetLogin');
 Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest}) async {
   TinterDatabase tinterDatabase = TinterDatabase();
   await tinterDatabase.open();
@@ -102,7 +106,7 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
   SessionsTable sessionsTable = SessionsTable(database: tinterDatabase.connection);
 
   try {
-    // Check if the token is in the session table, if not a EmptyResponseToDatabaseQuery is raised
+    _checkSessionLogger.info("Check if the token is in the session table, if not a EmptyResponseToDatabaseQuery is raised");
     final String _token = httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader);
 
     final Session session = await sessionsTable.getFromToken(token: _token);
