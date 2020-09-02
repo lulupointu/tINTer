@@ -78,12 +78,6 @@ class BinomePairsManagementTable {
 
   Future<void> update({@required BuildBinomePair binomePair}) async {
 
-    print('UPDATING PROFILES');
-
-    await binomePairsTable.update(binomePair: binomePair);
-
-    print('DONE THIS');
-
     final List<Future> queries = [
       binomePairsTable.update(binomePair: binomePair),
       binomePairsAssociationsTable.updateBinomePair(
