@@ -23,7 +23,6 @@ Future<void> searchUsersAssociatifsGet(HttpRequest req, List<String> segments, S
     Map<String, SearchedUserAssociatif> searchedUsers = await searchedUserTable.getAllExceptOneFromLogin(login: login);
 
 
-    print('SEARCHED USERS: $searchedUsers');
     await req.response
       ..statusCode = HttpStatus.ok
       ..write(json.encode([for (SearchedUserAssociatif searchedUser in searchedUsers.values) searchedUser.toJson()]))
