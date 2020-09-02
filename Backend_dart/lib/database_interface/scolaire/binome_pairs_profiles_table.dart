@@ -94,6 +94,12 @@ class BinomePairsProfilesTable {
     // Remove any useless input
     binomePairJson.removeWhere((String key, dynamic value) => value == null || value is List);
 
+    print(
+        "UPDATE $name "
+            "SET " +
+            [for (String key in binomePairJson.keys) '\"$key\"=@$key'].join(', ') +
+            " WHERE \"binomePairId\"=@binomePairId;");
+
     final List<Future> queries = [
       database.query(
           "UPDATE $name "
@@ -102,6 +108,7 @@ class BinomePairsProfilesTable {
               " WHERE \"binomePairId\"=@binomePairId;",
           substitutionValues: binomePairJson),
     ];
+
 
     return Future.wait(queries);
   }
