@@ -142,10 +142,10 @@ class _UserTabState extends State<UserTab> with RouteAware {
           if (!_controller.hasListeners) {
             _controller.addListener(() {
               setState(() {
-                invisiblyScrollFraction1 = min(
+                invisiblyScrollFraction1 = max(0, min(
                     1,
                     _controller.position.pixels /
-                        (fractions['invisibleRectangle1'] * constraints.maxHeight));
+                        (fractions['invisibleRectangle1'] * constraints.maxHeight)));
                 invisiblyScrollFraction2 = min(
                     1,
                     max(
