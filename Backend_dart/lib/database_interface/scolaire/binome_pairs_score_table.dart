@@ -161,8 +161,6 @@ class RelationsScoreBinomePairsMatchesTable {
   Future<void> updateMultiple({@required List<RelationScoreBinomePair> listRelationScoreBinomePair}) async {
     if (listRelationScoreBinomePair.length == 0) return;
 
-    print(listRelationScoreBinomePair);
-
     final String query = "UPDATE $name AS old SET score=new.score "
         "FROM (VALUES " +
         [
