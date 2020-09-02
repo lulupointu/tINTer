@@ -7,7 +7,7 @@ Logger _serverLogger = Logger('Server');
 Future<void> main() async {
   Stream<HttpRequest> server;
 
-  File _logFile = File('~/logs');
+  File _logFile = File('/home/df/logs');
   IOSink _logFileSink = _logFile.openWrite();
 
   Logger.root.level = Level.ALL; // defaults to Level.INFO
