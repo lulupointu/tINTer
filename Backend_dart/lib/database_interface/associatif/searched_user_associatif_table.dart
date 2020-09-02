@@ -28,7 +28,7 @@ class SearchedUserAssociatifTable {
     return query.then((queryResults) {
       return {
         for (Map<String, Map<String, dynamic>> query in queryResults)
-          query[UsersTable.name]['otherLogin']: SearchedUserAssociatif.fromJson({
+          query[UsersTable.name]['login']: SearchedUserAssociatif.fromJson({
             ...query[UsersTable.name],
             'liked': _getLikeOrNotFromRelationStatusAssociatif(
                 EnumRelationStatusAssociatif.valueOf(query[RelationsStatusAssociatifTable.name]['statusAssociatif']))
