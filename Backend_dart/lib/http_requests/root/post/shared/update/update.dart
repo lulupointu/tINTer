@@ -128,6 +128,14 @@ Future<void> userUpdate(HttpRequest req, List<String> segments, String login) as
     // Get the binomePair from the two users
     BuildBinomePair binomePair = BuildBinomePair.getFromUsers(user, otherUser);
 
+    // Get the binome pair id
+    print("Get the binome pair id");
+    int binomePairId = await binomePairsProfilesTable.getBinomePairIdFromLogin(login: login);
+
+    // Add the binome pair id to the binome pair
+    print("Add the binome pair id to the binome pair");
+    binomePair = binomePair.rebuild((b) => b..binomePairId = binomePairId);
+
     print("Update the binomePair");
     // Update the binomePair
     BinomePairsManagementTable binomePairsManagementTable = BinomePairsManagementTable(database: tinterDatabase.connection);
