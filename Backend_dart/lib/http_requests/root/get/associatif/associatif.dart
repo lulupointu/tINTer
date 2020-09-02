@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/http_requests/root/get/associatif/discover_matches/discover_matches.dart';
 import 'package:tinter_backend/http_requests/root/get/associatif/matched_matches/matched_matches.dart';
@@ -6,8 +7,12 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
 
-Future<void> associatifGetToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('associatifGetToNextSegment', segments);
+final _logger = Logger('associatifGetToNextSegment');
+
+Future<void> associatifGetToNextSegment(
+    HttpRequest req, List<String> segments, String login) async {
+  _logger.info(
+      printReceivedSegments('associatifGetToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'searchUsers':

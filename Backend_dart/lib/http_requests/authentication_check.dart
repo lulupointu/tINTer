@@ -188,6 +188,7 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
   }
 }
 
+Logger _tryLoginLogger = Logger('tryLogin');
 Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   TinterDatabase tinterDatabase = TinterDatabase();
   await tinterDatabase.open();
@@ -199,7 +200,7 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
     database: tinterDatabase.connection,
   );
 
-  // Get login and password from request header
+  _tryLoginLogger.info('Get login and password from request header');
   final String _loginPassword = utf8
       .decode(base64Url.decode(httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader)));
 
@@ -214,21 +215,17 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
 
   Map<String, String> userBasicInfoJson;
   try {
-    print('Try authenticating with LDAP');
+    _tryLoginLogger.info('Try authenticating with LDAP');
 
-    // Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised
+
+    _tryLoginLogger.info('Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised');
     userBasicInfoJson = await ldap.getUserInfoFromLDAP(login: _login, password: _password);
 
-    print('Authentication with LDAP successful');
-
-    // Get static student info from database, If unknown EmptyResponseToDatabaseQuery is raised
+    _tryLoginLogger.info('Get static student info from database, If unknown EmptyResponseToDatabaseQuery is raised');
     await usersTable.getFromLogin(login: _login);
 
-    print('User gotten from table');
-
-    // Generate a new token, store it, and send it in the header
+    _tryLoginLogger.info('Generate a new token, store it, and send it in the header');
     String _newToken = generateNewToken();
-    print('SAVING SESSION');
     await sessionsTable.add(
         session: Session(
       (b) => b
@@ -237,19 +234,15 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
         ..creationDate = DateTime.now().toUtc()
         ..isValid = true,
     ));
-    print('SESSION Saved');
     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
   } on InvalidCredentialsException catch (error) {
     throw error;
   } on EmptyResponseToDatabaseQuery {
 
-    print('Adding new user to table');
-    // This means that it is the first authentication, therefore we save the static profile
+    _tryLoginLogger.info('This means that it is the first authentication, therefore we save the static profile');
     await usersTable.addBasicInfo(userJson: userBasicInfoJson);
 
-    print('User added');
-
-    // Generate a new token, store it, and send it in the header
+    _tryLoginLogger.info('Generate a new token, store it, and send it in the header');
     String _newToken = generateNewToken();
     await sessionsTable.add(
         session: Session(
@@ -265,6 +258,6 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   }
 }
 
-void printReceivedSegments(String functionName, List<String> segments) {
-  print('($functionName) Recieved segment: $segments');
+String printReceivedSegments(String functionName, List<String> segments) {
+  return '($functionName) Recieved segment: $segments';
 }

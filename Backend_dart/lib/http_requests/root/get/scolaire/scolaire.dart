@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/http_requests/root/get/scolaire/binome_pair/binome_pair.dart';
 import 'package:tinter_backend/http_requests/root/get/scolaire/discover_binome_pair_matches/discover_binome_pair_matches.dart';
@@ -12,8 +13,9 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
 
+final _logger = Logger('scolaireGetToNextSegment');
 Future<void> scolaireGetToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('scolaireGetToNextSegment', segments);
+  _logger.info(printReceivedSegments('scolaireGetToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'searchUsers':

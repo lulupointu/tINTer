@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/associatif/matches_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/associatif/match.dart';
 
+final _logger = Logger('scolaireGetToNextSegment');
 Future<void> discoverMatchesGet(HttpRequest req, List<String> segments, String login) async {
   printReceivedSegments('DiscoverMatchesGet', segments);
 

@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
+final _logger = Logger('isUserKnownGet');
 Future<void> isUserKnownGet(HttpRequest req, List<String> segments, String login) async {
   printReceivedSegments('IsUserKnownGet', segments);
 
