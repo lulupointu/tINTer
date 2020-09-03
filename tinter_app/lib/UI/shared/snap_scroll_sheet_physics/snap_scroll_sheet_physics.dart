@@ -70,6 +70,10 @@ class SnapScrollSheetPhysics extends ScrollPhysics {
   Simulation createBallisticSimulation(ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
 
+    if (position.outOfRange) {
+      return super.createBallisticSimulation(position, velocity);
+    }
+
     // If we're out of range and not headed back in range, defer to the parent
     // ballistics, which should put us back in range at a page boundary.
     if ((velocity <= 0.0 && position.pixels <= position.minScrollExtent) ||
