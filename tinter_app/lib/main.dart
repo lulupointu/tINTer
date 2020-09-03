@@ -187,6 +187,7 @@ main() {
               child: ChangeNotifierProvider<TinterTheme>(
                 create: (_) => TinterTheme(),
                 child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
                   home: SafeArea(
                     child: Tinter(),
                   ),
