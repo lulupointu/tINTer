@@ -208,7 +208,7 @@ main() async {
 //    print('match goutsMusicaux: ${match.goutsMusicaux}');
 //  }
 
-  associationsTable.updateMultiple(associations: allAssociations);
+  await associationsTable.updateMultiple(associations: allAssociations);
 
   tinterDatabase.close();
 }
