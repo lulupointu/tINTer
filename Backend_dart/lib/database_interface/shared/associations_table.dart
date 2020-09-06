@@ -88,7 +88,7 @@ class AssociationsTable {
             "FROM (VALUES " +
             [
               for (int index = 0; index < associations.length; index++)
-                "(@name$index, @description$index, @logoUrl$index)"
+                "(@name$index, @description$index)"
             ].join(',') +
             ") AS new(name, description)"
                 "WHERE old.name=new.name;";
