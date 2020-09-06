@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
@@ -13,13 +15,23 @@ part 'user_shared_event.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository userRepository;
   final AuthenticationBloc authenticationBloc;
+  StreamSubscription authenticationSubscription;
 
   UserBloc({@required this.userRepository, @required this.authenticationBloc})
-      : super(UserInitialState());
+      : super(UserInitialState()) {
+    authenticationSubscription = authenticationBloc.listen((AuthenticationState authenticationState) {
+      if (!(authenticationState is AuthenticationSuccessfulState)) {
+        this.add(UserResetEvent());
+      }
+    });
+  }
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
     switch (event.runtimeType) {
+      case UserResetEvent:
+        yield UserInitialState();
+        return;
       case UserInitEvent:
         yield* _mapUserInitEventToState();
         return;
@@ -204,5 +216,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _addError(String error) {
     addError(Exception(error), StackTrace.current);
+  }
+
+  @override
+  Future<void> close() {
+    authenticationSubscription.cancel();
+    return super.close();
   }
 }

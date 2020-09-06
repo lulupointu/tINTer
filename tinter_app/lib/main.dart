@@ -299,6 +299,10 @@ class _TinterHomeState extends State<TinterHome> {
           return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
             return BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(builder:
                 (BuildContext context, MatchedBinomesState matchedBinomePairMatchesState) {
+              // If MatchedBinomesState is in InitState, this means that the user is not a 1A
+                  if (matchedBinomePairMatchesState is MatchedBinomesInitialState) {
+                    return widget.tabsAssociatif[_selectedTab];
+                  }
               bool _hasEverHadBinome =
                   sharedPreferences.data.getBool('hasEverHadBinome') ?? false;
               if ((matchedBinomePairMatchesState
