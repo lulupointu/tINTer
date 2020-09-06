@@ -1,2 +1,3 @@
 Backend/psqlPass.go
 Backend_dart/lib/secret.dart
+tinter_app/android/key.properties

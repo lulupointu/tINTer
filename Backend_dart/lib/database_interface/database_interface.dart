@@ -13,6 +13,7 @@ import 'package:tinter_backend/database_interface/associatif/matches_table.dart'
 import 'package:tinter_backend/database_interface/associatif/relation_score_associatif_table.dart';
 import 'package:tinter_backend/database_interface/shared/sessions.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
+import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
 import 'package:tinter_backend/models/shared/user.dart';
@@ -90,69 +91,69 @@ main() async {
   final RelationsStatusBinomePairsMatchesTable relationsStatusBinomePairsMatchesTable =
   RelationsStatusBinomePairsMatchesTable(database: tinterDatabase.connection);
 
-  // Delete
-  await binomePairsManagementTable.delete();
-  await sessionsTable.delete();
-  await usersManagementTable.delete();
-  await associationsTable.delete();
-  await goutsMusicauxTable.delete();
-  await matieresTable.delete();
-  await relationsStatusAssociatifTable.delete();
-  await relationsScoreAssociatifTable.delete();
-  await relationsStatusScolaireTable.delete();
-  await relationsScoreScolaireTable.delete();
-  await relationsScoreBinomePairsMatchesTable.delete();
-  await relationsStatusBinomePairsMatchesTable.delete();
-
-  // Create;
-  await associationsTable.create();
-  await goutsMusicauxTable.create();
-  await matieresTable.create();
-  await usersManagementTable.create();
-  await relationsStatusAssociatifTable.create();
-  await relationsScoreAssociatifTable.create();
-  await relationsStatusScolaireTable.create();
-  await relationsScoreScolaireTable.create();
-  await sessionsTable.create();
-  await binomePairsManagementTable.create();
-  await relationsScoreBinomePairsMatchesTable.create();
-  await relationsStatusBinomePairsMatchesTable.create();
-
-  // Populate
-  await goutsMusicauxTable.populate();
-  await associationsTable.populate();
-  await matieresTable.populate();
-  await usersManagementTable.populate();
-  await relationsStatusAssociatifTable.populate();
-  await relationsScoreAssociatifTable.populate();
-  await relationsStatusScolaireTable.populate();
-  await relationsScoreScolaireTable.populate();
-  await sessionsTable.populate();
-  await usersManagementTable.update(
-      user: fakeUsers[0].rebuild(
-    (b) => b
-      ..primoEntrant = true
-      ..year = TSPYear.TSP1A,
-  ));
-  await usersManagementTable.update(
-      user: fakeUsers[1].rebuild(
-    (b) => b
-      ..primoEntrant = false
-      ..year = TSPYear.TSP1A,
-  ));
-  await usersManagementTable.update(
-      user: fakeUsers[2].rebuild(
-    (b) => b
-      ..primoEntrant = false
-      ..year = TSPYear.TSP3A,
-  ));
-  await usersManagementTable.update(
-      user: fakeUsers[3].rebuild(
-    (b) => b
-      ..primoEntrant = true
-      ..year = TSPYear.TSP2A,
-  ));
-  await binomePairsManagementTable.populate();
+//  // Delete
+//  await binomePairsManagementTable.delete();
+//  await sessionsTable.delete();
+//  await usersManagementTable.delete();
+//  await associationsTable.delete();
+//  await goutsMusicauxTable.delete();
+//  await matieresTable.delete();
+//  await relationsStatusAssociatifTable.delete();
+//  await relationsScoreAssociatifTable.delete();
+//  await relationsStatusScolaireTable.delete();
+//  await relationsScoreScolaireTable.delete();
+//  await relationsScoreBinomePairsMatchesTable.delete();
+//  await relationsStatusBinomePairsMatchesTable.delete();
+//
+//  // Create;
+//  await associationsTable.create();
+//  await goutsMusicauxTable.create();
+//  await matieresTable.create();
+//  await usersManagementTable.create();
+//  await relationsStatusAssociatifTable.create();
+//  await relationsScoreAssociatifTable.create();
+//  await relationsStatusScolaireTable.create();
+//  await relationsScoreScolaireTable.create();
+//  await sessionsTable.create();
+//  await binomePairsManagementTable.create();
+//  await relationsScoreBinomePairsMatchesTable.create();
+//  await relationsStatusBinomePairsMatchesTable.create();
+//
+//  // Populate
+//  await goutsMusicauxTable.populate();
+//  await associationsTable.populate();
+//  await matieresTable.populate();
+//  await usersManagementTable.populate();
+//  await relationsStatusAssociatifTable.populate();
+//  await relationsScoreAssociatifTable.populate();
+//  await relationsStatusScolaireTable.populate();
+//  await relationsScoreScolaireTable.populate();
+//  await sessionsTable.populate();
+//  await usersManagementTable.update(
+//      user: fakeUsers[0].rebuild(
+//    (b) => b
+//      ..primoEntrant = true
+//      ..year = TSPYear.TSP1A,
+//  ));
+//  await usersManagementTable.update(
+//      user: fakeUsers[1].rebuild(
+//    (b) => b
+//      ..primoEntrant = false
+//      ..year = TSPYear.TSP1A,
+//  ));
+//  await usersManagementTable.update(
+//      user: fakeUsers[2].rebuild(
+//    (b) => b
+//      ..primoEntrant = false
+//      ..year = TSPYear.TSP3A,
+//  ));
+//  await usersManagementTable.update(
+//      user: fakeUsers[3].rebuild(
+//    (b) => b
+//      ..primoEntrant = true
+//      ..year = TSPYear.TSP2A,
+//  ));
+//  await binomePairsManagementTable.populate();
 
   // Tests
 //  await relationsStatusTable.update(
@@ -206,6 +207,8 @@ main() async {
 //    print('match organisationEvenements: ${match.organisationEvenements}');
 //    print('match goutsMusicaux: ${match.goutsMusicaux}');
 //  }
+
+  associationsTable.updateMultiple(associations: allAssociations);
 
   tinterDatabase.close();
 }

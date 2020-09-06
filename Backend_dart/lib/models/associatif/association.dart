@@ -61,233 +61,237 @@ List<Association> allAssociations = [
   Association((a) => a
     ..name = "AbsINThe"
     ..description =
-        "C'est l'association AbsINThe venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
-  Association((a) => a
+        "Gère le bar de l'école"),
+Association((a) => a
     ..name = "AfricanIT"
     ..description =
-        "C'est l'association AfricanIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Découverte de la culture Africaine."),
   Association((a) => a
     ..name = "Agora"
     ..description =
-        "C'est l'association Agora venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Venez apprendre à être le meilleur des orateurs."),
   Association((a) => a
     ..name = "AIESEC"
     ..description =
-        "C'est l'association AIESEC venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Developper vous humainement et professionnalement grace à cette ONG internationnale."),
   Association((a) => a
     ..name = "AnimINT"
     ..description =
-        "C'est l'association AnimINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de diffusion d'animé."),
   Association((a) => a
     ..name = "Aparte"
     ..description =
-        "C'est l'association Aparte venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de théatre. Impro ou non, tout style."),
   Association((a) => a
     ..name = "ASINT"
     ..description =
-        "C'est l'association ASINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Association \"sportive\" (BDS) de l’INT."),
   Association((a) => a
     ..name = "Asphalte"
     ..description =
-        "C'est l'association Asphalte venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Découvre la mécanique et participe à des Monte."),
   Association((a) => a
     ..name = "Band'a michel"
     ..description =
-        "C'est l'association michel venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Fanfare de l'INT. Pas besoin de savoir jouer pour participer!"),
   Association((a) => a
     ..name = "BDA"
     ..description =
-        "C'est l'association BDA venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Le BDA est en charge d'organiser les événements artistiques de l'école."),
   Association((a) => a
     ..name = "Belly Dance"
     ..description =
-        "C'est l'association Dance venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de Danse orientale."),
   Association((a) => a
     ..name = "BollyINT"
     ..description =
-        "C'est l'association BollyINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Association de bolly dance."),
   Association((a) => a
     ..name = "BPM"
     ..description =
-        "C'est l'association BPM venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Apprend à gérer les lumières, le son, les structures et le mix."),
   Association((a) => a
     ..name = "BricolINT"
     ..description =
-        "C'est l'association BricolINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Bricol’INT est le club du bricolage, Réalisation de menuiserie, impression 3D et découpe laser grace au FabLab."),
   Association((a) => a
     ..name = "Bstyle"
     ..description =
-        "C'est l'association Bstyle venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de danse HipHop du campus."),
   Association((a) => a
     ..name = "CELL"
     ..description =
-        "C'est l'association CELL venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de création de jeux sous toutes ses formes : jeux de plateaux, jeux vidéo et même escape games."),
   Association((a) => a
     ..name = "Cine"
     ..description =
-        "C'est l'association Cine venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Venez faire du montage, de la réalisation ou travailler votre jeux d'acteur."),
   Association((a) => a
     ..name = "Club Zik"
     ..description =
-        "C'est l'association Zik venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de musique. Crée ton groupe ou entraine toi en solo."),
   Association((a) => a
     ..name = "CookIT"
     ..description =
-        "C'est l'association CookIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de cuisine."),
   Association((a) => a
     ..name = "Déclic"
     ..description =
-        "C'est l'association Déclic venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Association de photographie. Formation et sorties photos sont organisées."),
   Association((a) => a
     ..name = "DolphINT"
     ..description =
-        "C'est l'association DolphINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de voile du campus."),
   Association((a) => a
     ..name = "Emotys"
     ..description =
-        "C'est l'association Emotys venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "CLub de comédie musicale. Chant, danse, théatre, et même composition sont pratiquées."),
   Association((a) => a
     ..name = "Epicurieux"
     ..description =
-        "C'est l'association Epicurieux venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club d'oenologie du campus"),
   Association((a) => a
     ..name = "EquIT"
     ..description =
-        "C'est l'association EquIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club qui t'emmène tous les jeudi après-midi faire une heure d'équitation dans un centre équestre à proximité des écoles."),
   Association((a) => a
     ..name = "Evryone"
     ..description =
-        "C'est l'association Evryone venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Radio de l'INT."),
   Association((a) => a
     ..name = "FIMTech"
     ..description =
-        "C'est l'association FIMTech venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de finance de l'école"),
   Association((a) => a
     ..name = "Forum"
     ..description =
-        "C'est l'association Forum venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Association qui prépare le forum des Télécommunications."),
   Association((a) => a
     ..name = "GameINT"
     ..description =
-        "C'est l'association GameINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de jeux vidéo du campus. Organisation de LAN et tournois."),
   Association((a) => a
     ..name = "Golf"
     ..description =
-        "C'est l'association Golf venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "CLub de golf."),
   Association((a) => a
     ..name = "HackademINT"
     ..description =
-        "C'est l'association HackademINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de sécurité informatique."),
   Association((a) => a
     ..name = "Heforshe"
     ..description =
-        "C'est l'association Heforshe venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Engagez vous pour l'égalité homme femme."),
   Association((a) => a
     ..name = "INacT"
     ..description =
-        "C'est l'association INacT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Association de prévention et de lutte contre les discriminations du campus."),
   Association((a) => a
     ..name = "INTech"
     ..description =
-        "C'est l'association INTech venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de robotique. Participe à la coupe de France de robotique."),
   Association((a) => a
     ..name = "Interlude"
     ..description =
-        "C'est l'association Interlude venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Orchestre du campus."),
   Association((a) => a
     ..name = "Intervenir"
     ..description =
-        "C'est l'association Intervenir venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Association humanitaire du campus."),
   Association((a) => a
     ..name = "INTimes"
     ..description =
-        "C'est l'association INTimes venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Un journal relatant de la vie sur le campus"),
   Association((a) => a
     ..name = "INTv"
     ..description =
-        "C'est l'association INTv venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club vidéo. Apprend à filmer et monter."),
   Association((a) => a
     ..name = "KpopIT"
     ..description =
-        "C'est l'association KpopIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de KPop."),
   Association((a) => a
     ..name = "KryptoSphère"
     ..description =
-        "C'est l'association KryptoSphère venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "KRYPTOSPHERE® est la première association étudiante de France spécialisée dans la Blockchain, l'Intelligence Artificielle et les Objets Connectés."),
   Association((a) => a
     ..name = "LPE"
     ..description =
-        "C'est l'association LPE venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Association Les Partenariats d'Excellence"),
   Association((a) => a
     ..name = "MINeT"
     ..description =
-        "C'est l'association MINeT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "MiNET est l'assocation réseau de l'école."),
   Association((a) => a
     ..name = "Moov'INT"
     ..description =
-        "C'est l'association Moov'INT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de danse: modern jazz, street jazz, classique, contemporain, cabaret et bien plus encore!"),
   Association((a) => a
     ..name = "MuslimINT"
     ..description =
-        "C'est l'association MuslimINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club qui vous permettra d’en apprendre plus sur la culture musulmane."),
   Association((a) => a
     ..name = "Nihao"
     ..description =
-        "C'est l'association Nihao venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Découvrez et célébrez la culture chinoise."),
   Association((a) => a
     ..name = "PaintIT"
     ..description =
-        "C'est l'association PaintIT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de dessin, de peinture, ou n'importe qu'elle oeuvre physique ou informatique."),
   Association((a) => a
     ..name = "Pomp'int"
     ..description =
-        "C'est l'association Pomp'int venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de cheerleading du campus."),
   Association((a) => a
     ..name = "Promo2Tel"
     ..description =
-        "C'est l'association Promo2Tel venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Organise la présention des écoles dans les prepa et donne des conseil pour le parcour professionel."),
   Association((a) => a
     ..name = "Rock'INT"
     ..description =
-        "C'est l'association Rock'INT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de Rock de l'INT."),
   Association((a) => a
     ..name = "Saint Espr'IT"
     ..description =
-        "C'est l'association Espr'IT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club qui vous permettra d’en apprendre plus sur la culture chrétienne."),
   Association((a) => a
     ..name = "SalsaINT"
     ..description =
-        "C'est l'association SalsaINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de Salsa de l'INT"),
   Association((a) => a
     ..name = "Shalom"
     ..description =
-        "C'est l'association Shalom venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club qui vous permettra d’en apprendre plus sur la culture juive."),
   Association((a) => a
     ..name = "Sing'INT"
     ..description =
-        "C'est l'association Sing'INT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Chorale du campus pour les passionnés de chant."),
   Association((a) => a
     ..name = "Spades"
     ..description =
-        "C'est l'association Spades venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club de carte."),
   Association((a) => a
     ..name = "Sprint"
     ..description =
-        "C'est l'association Sprint venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Micro-entreprise proposant une expérience professionnalisante."),
   Association((a) => a
     ..name = "TrendINT"
     ..description =
-        "C'est l'association TrendINT venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Viens partager ta passion pour la mode."),
   Association((a) => a
     ..name = "Univert"
     ..description =
-        "C'est l'association Univert venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Association menant des actions pour l'écologie sur le campus."),
   Association((a) => a
     ..name = "Welcom"
     ..description =
-        "C'est l'association Welcom venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Club qui participe à l'integration des internationaux au sein de l'INT."),
   Association((a) => a
     ..name = "Xtreme"
     ..description =
-        "C'est l'association Xtreme venez tous on s'y amuse trop. Merci de votre lecture blah blah blah"),
+        "Xtreme est le club de sports nature du campus. Initialement le club de course à pied, le bureau actuel aimerait élargir le panel d'activités proposées."),
+  Association((a) => a
+    ..name = "BDE"
+    ..description =
+        "En charge de la vie associative et festive"),
 ];
