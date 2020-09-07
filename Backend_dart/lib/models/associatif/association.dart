@@ -293,5 +293,9 @@ Association((a) => a
   Association((a) => a
     ..name = "BDE"
     ..description =
-        "En charge de la vie associative et festive"),
+        "En charge de la vie associative et festive."),
+  Association((a) => a
+    ..name = "Club Jeux"
+    ..description =
+        "Jeux de société, billards, BD, console et plus encore."),
 ];
