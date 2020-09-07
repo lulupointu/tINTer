@@ -835,8 +835,9 @@ class AllAssociationsSheetBody extends StatelessWidget {
               }
               return Center(child: CircularProgressIndicator(),);
             }
-            final _allAssociations =
+            List<Association> _allAssociations =
                 (associationsState as AssociationsLoadSuccessfulState).associations;
+            _allAssociations.sort((Association associationA, Association associationB) => associationA.name.compareTo(associationB.name));
             RegExp searchStringRegex = new RegExp(
               searchString,
               caseSensitive: false,
@@ -846,7 +847,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
                 ? _allAssociations
                 : _allAssociations
                     .where((Association association) =>
-                        searchStringRegex.hasMatch(association.name))
+                        searchStringRegex.hasMatch(association.name + ' ' + association.description))
                     .toList();
             return ListView.separated(
               controller: scrollController,
