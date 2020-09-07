@@ -533,8 +533,8 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
 
     authenticationBloc.add(
       AuthenticationLoggedRequestSentEvent(
-        login: _loginController.text.toLowerCase().replaceAll(' ', '').replaceAll(' ', ''),
-        password: _passwordController.text.replaceAll(' ', '').replaceAll(' ', ''),
+        login: _loginController.text.toLowerCase().replaceAll(' ', ''),
+        password: _passwordController.text,
       ),
     );
   }
