@@ -49,7 +49,7 @@ Future<void> main() async {
   final RelationsStatusBinomePairsMatchesTable relationsStatusBinomePairsMatchesTable =
   RelationsStatusBinomePairsMatchesTable(database: tinterDatabase.connection);
 
-  Map<String, BuildUser> allUsers = await usersManagementTable.getAll();
+  Map<String, BuildUser> allUsers = await usersManagementTable.getAll(year: TSPYear.TSP1A, school: School.TSP);
   for (BuildUser user in allUsers.values) {
     try {
       Map<String,

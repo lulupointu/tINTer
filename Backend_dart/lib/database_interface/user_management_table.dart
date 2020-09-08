@@ -118,10 +118,19 @@ class UsersManagementTable {
   }
 
   Future<Map<String, BuildUser>> getAll(
-      ) async {
+      {bool primoEntrant, TSPYear year, School school}) async {
     final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
-        "SELECT * FROM ${UsersTable.name};",
+        "SELECT * FROM ${UsersTable.name} "
+            "WHERE " +
+            ((primoEntrant != null) ? "AND \"primoEntrant\"<>@primoEntrant " : "") +
+            ((year != null) ? "AND \"year\"=@year " : "") +
+            ((school != null) ? "AND \"school\"=@school " : "") +
+            ";",
         substitutionValues: {
+          'login': login,
+          'year': (year != null) ? year.serialize() : null,
+          'school': (school != null) ? school.serialize() : null,
+          'primoEntrant': primoEntrant,
         }).then((queriesResults) {
       return {
         for (int index = 0; index < queriesResults.length; index++)
