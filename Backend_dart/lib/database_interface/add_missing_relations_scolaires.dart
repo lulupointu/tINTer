@@ -22,7 +22,6 @@ import 'package:tinter_backend/models/shared/user.dart';
 import 'package:tinter_backend/secret.dart';
 
 Future<void> main() async {
-
   final TinterDatabase tinterDatabase = TinterDatabase();
   await tinterDatabase.open();
 
@@ -43,7 +42,8 @@ Future<void> main() async {
   RelationsStatusScolaireTable(database: tinterDatabase.connection);
   final MatchesTable matchesTable = MatchesTable(database: tinterDatabase.connection);
   final SessionsTable sessionsTable = SessionsTable(database: tinterDatabase.connection);
-  final BinomePairsManagementTable binomePairsManagementTable = BinomePairsManagementTable(database: tinterDatabase.connection);
+  final BinomePairsManagementTable binomePairsManagementTable = BinomePairsManagementTable(
+      database: tinterDatabase.connection);
   final RelationsScoreBinomePairsMatchesTable relationsScoreBinomePairsMatchesTable =
   RelationsScoreBinomePairsMatchesTable(database: tinterDatabase.connection);
   final RelationsStatusBinomePairsMatchesTable relationsStatusBinomePairsMatchesTable =
@@ -51,8 +51,15 @@ Future<void> main() async {
 
   Map<String, BuildUser> allUsers = await usersManagementTable.getAll();
   for (BuildUser user in allUsers.values) {
-    Map<String, RelationStatusScolaire> relationScolaires = await relationsStatusScolaireTable.getAllFromLogin(login: user.login);
-    List<BuildUser> missingRelationLogins = allUsers.values.where((BuildUser otherUser) => otherUser != user && !relationScolaires.values.contains(otherUser));
-    print(missingRelationLogins);
+    try {
+      Map<String,
+          RelationStatusScolaire> relationScolaires = await relationsStatusScolaireTable
+          .getAllFromLogin(login: user.login);
+      List<BuildUser> missingRelationLogins = allUsers.values.where((BuildUser otherUser) =>
+      otherUser != user && !relationScolaires.values.contains(otherUser));
+      print(missingRelationLogins);
+    } catch (e) {
+      print('Error with user ${user.login}: $e');
+    }
   }
-}
+}}
