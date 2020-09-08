@@ -127,7 +127,6 @@ class UsersManagementTable {
             ((school != null) ? "AND \"school\"=@school " : "") +
             ";",
         substitutionValues: {
-          'login': login,
           'year': (year != null) ? year.serialize() : null,
           'school': (school != null) ? school.serialize() : null,
           'primoEntrant': primoEntrant,
