@@ -117,6 +117,42 @@ class UsersManagementTable {
     });
   }
 
+  Future<Map<String, BuildUser>> getAll(
+      ) async {
+    final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
+        "SELECT * FROM ${UsersTable.name};",
+        substitutionValues: {
+        }).then((queriesResults) {
+      return {
+        for (int index = 0; index < queriesResults.length; index++)
+          queriesResults[index][UsersTable.name]['login']: queriesResults[index]
+          [UsersTable.name]
+      };
+    });
+
+    final List<Future> queries = [
+      usersAssociationsTable.getMultipleFromLogins(logins: otherUsersJson.keys.toList()),
+      usersGoutsMusicauxTable.getMultipleFromLogins(logins: otherUsersJson.keys.toList()),
+      usersMatieresTable.getMultipleFromLogins(logins: otherUsersJson.keys.toList()),
+      usersHorairesDeTravailTable.getMultipleFromLogins(logins: otherUsersJson.keys.toList()),
+    ];
+
+    List queriesResults = await Future.wait(queries);
+
+    return {
+      for (String login in otherUsersJson.keys)
+        login: BuildUser.fromJson({
+          ...otherUsersJson[login],
+          'associations':
+          queriesResults[0][login].map((Association association) => association.toJson()),
+          'goutsMusicaux': queriesResults[1][login],
+          'matieresPreferees': queriesResults[2][login],
+          'horairesDeTravail': queriesResults[3][login],
+        })
+    };
+  }
+
+
   Future<Map<String, BuildUser>> getAllExceptOneFromLogin(
       {@required String login, bool primoEntrant, TSPYear year, School school}) async {
     final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
