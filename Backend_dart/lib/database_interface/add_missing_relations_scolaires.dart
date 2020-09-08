@@ -57,7 +57,7 @@ Future<void> main() async {
           .getAllFromLogin(login: user.login);
       List<BuildUser> missingRelationLogins = allUsers.values.where((BuildUser otherUser) =>
       otherUser != user && !relationScolaires.values.contains(otherUser)).toList();
-      print(missingRelationLogins);
+      print('${user.login} miss ${missingRelationLogins.map((BuildUser user) => user.login)}');
     } catch (e) {
       print('Error with user ${user.login}: $e');
     }
