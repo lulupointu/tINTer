@@ -4,12 +4,15 @@ class InternalError implements Exception {
   InternalError(this.error);
 
   @override
-  String toString() => '(${this.runtimeType}) error';
+  String toString() => '(${this.runtimeType}) $error';
 }
 
 class InternalDatabaseError implements InternalError {
   final Exception error;
 
   InternalDatabaseError(this.error);
+
+  @override
+  String toString() => error.toString();
 }
 

@@ -51,8 +51,10 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
     // Error 22023 is the error intentionally emitted when a
     // change from one status to another is not possible.
     if (error.code == 22023) {
+      await tinterDatabase.close();
       throw InvalidQueryParameterError(error.message, true);
     } else {
+      await tinterDatabase.close();
       throw InternalDatabaseError(error);
     }
   }
@@ -66,6 +68,7 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
     }
   } catch(error) {
     print(error);
+    await tinterDatabase.close();
     throw InternalDatabaseError(error);
   }
 
