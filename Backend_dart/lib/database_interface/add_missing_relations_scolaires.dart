@@ -16,6 +16,7 @@ import 'package:tinter_backend/database_interface/shared/sessions.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_binome_pair.dart';
+import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinter_backend/models/shared/user.dart';
@@ -55,11 +56,44 @@ Future<void> main() async {
       Map<String,
           RelationStatusScolaire> relationScolaires = await relationsStatusScolaireTable
           .getAllFromLogin(login: user.login);
-      List<BuildUser> missingRelationLogins = allUsers.values.where((BuildUser otherUser) =>
+      List<BuildUser> otherUsersScolaireMissing = allUsers.values.where((BuildUser otherUser) =>
       otherUser != user && !relationScolaires.keys.contains(otherUser.login)).toList();
-      print('${user.login} miss ${missingRelationLogins.map((BuildUser user) => user.login)}');
+
+
+      // Get the number of associations and gouts musicaux
+      int numberMaxOfAssociations =
+          (await AssociationsTable(database: tinterDatabase.connection).getAll()).length;
+      int numberMaxOfMatieres =
+          (await MatieresTable(database: tinterDatabase.connection).getAll()).length;
+
+      // Get the scores
+      Map<String, RelationScoreScolaire> scores =
+      RelationScoreScolaire.getScoreBetweenMultiple(user, otherUsersScolaireMissing,
+          numberMaxOfAssociations, numberMaxOfMatieres);
+
+      // Update the database with all relevant scores
+      RelationsScoreScolaireTable relationsScoreScolaireTable =
+      RelationsScoreScolaireTable(database: tinterDatabase.connection);
+      await relationsScoreScolaireTable.addMultiple(
+          listRelationScoreScolaire: scores.values.toList());
+
+      // Update the database with status none
+      await relationsStatusScolaireTable.addMultiple(listRelationStatusScolaire: [
+        for (String otherLogin in otherUsersScolaireMissing.map((BuildUser user) => user.login).toList()) ...[
+          RelationStatusScolaire((b) => b
+            ..login = user.login
+            ..otherLogin = otherLogin
+            ..statusScolaire = EnumRelationStatusScolaire.none),
+          RelationStatusScolaire((b) => b
+            ..login = otherLogin
+            ..otherLogin = user.login
+            ..statusScolaire = EnumRelationStatusScolaire.none)
+        ]
+      ]);
     } catch (e) {
       print('Error with user ${user.login}: $e');
     }
   }
+
+  tinterDatabase.close();
 }
