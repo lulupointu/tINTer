@@ -56,7 +56,7 @@ Future<void> main() async {
           RelationStatusScolaire> relationScolaires = await relationsStatusScolaireTable
           .getAllFromLogin(login: user.login);
       List<BuildUser> missingRelationLogins = allUsers.values.where((BuildUser otherUser) =>
-      otherUser != user && !relationScolaires.values.contains(otherUser));
+      otherUser != user && !relationScolaires.values.contains(otherUser)).toList();
       print(missingRelationLogins);
     } catch (e) {
       print('Error with user ${user.login}: $e');
