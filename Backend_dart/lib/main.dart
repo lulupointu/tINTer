@@ -27,6 +27,7 @@ Future<void> main() async {
 
   _serverLogger.info('Binded successfully on port 433');
 
+  _serverLogger.info('Opening database connexion');
   tinterDatabase.open();
   try {
     await for (HttpRequest req in server) {
@@ -35,7 +36,7 @@ Future<void> main() async {
     }
   } catch (e) {
     _serverLogger.shout('Error crashed the server: $e');
-    _serverLogger.fine('Closing database connexion');
+    _serverLogger.info('Closing database connexion');
     tinterDatabase.close();
   }
 
