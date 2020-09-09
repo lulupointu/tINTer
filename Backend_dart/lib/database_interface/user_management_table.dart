@@ -121,7 +121,7 @@ class UsersManagementTable {
       {bool primoEntrant, TSPYear year, School school}) async {
     final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
         "SELECT * FROM ${UsersTable.name} "
-            "WHERE \"isAccountCreationFinished\"='t' " +
+            "WHERE true " +
             ((primoEntrant != null) ? "AND \"primoEntrant\"<>@primoEntrant " : "") +
             ((year != null) ? "AND \"year\"=@year " : "") +
             ((school != null) ? "AND \"school\"=@school " : "") +
@@ -165,7 +165,7 @@ class UsersManagementTable {
       {@required String login, bool primoEntrant, TSPYear year, School school}) async {
     final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
         "SELECT * FROM ${UsersTable.name} "
-            "WHERE login<>@login AND \"isAccountCreationFinished\"='t' " +
+            "WHERE login<>@login " +
             ((primoEntrant != null) ? "AND \"primoEntrant\"<>@primoEntrant " : "") +
             ((year != null) ? "AND \"year\"=@year " : "") +
             ((school != null) ? "AND \"school\"=@school " : "") +
