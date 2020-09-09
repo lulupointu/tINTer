@@ -91,7 +91,7 @@ Future<void> addMissingAssociatif() async {
   final RelationsStatusAssociatifTable relationsStatusAssociatifTable =
   RelationsStatusAssociatifTable(database: tinterDatabase.connection);
 
-  Map<String, BuildUser> allUsersPrimoEntrant = await usersManagementTable.getAll(primoEntrant: true);
+  Map<String, BuildUser> allUsersPrimoEntrant = await usersManagementTable.getAll(primoEntrant: false);
   print('Adding missing users associatifs primoEntrant');
   for (BuildUser user in allUsersPrimoEntrant.values) {
     try {
@@ -138,7 +138,7 @@ Future<void> addMissingAssociatif() async {
   }
 
 
-  Map<String, BuildUser> allUsersNotPrimoEntrant = await usersManagementTable.getAll(primoEntrant: false);
+  Map<String, BuildUser> allUsersNotPrimoEntrant = await usersManagementTable.getAll(primoEntrant: true);
   print('Adding missing users associatifs not primoEntrant');
   for (BuildUser user in allUsersNotPrimoEntrant.values) {
     try {
