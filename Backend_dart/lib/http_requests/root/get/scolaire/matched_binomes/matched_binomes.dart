@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/scolaire/binomes_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
@@ -14,8 +15,8 @@ Future<void> matchedBinomesGet(HttpRequest req, List<String> segments, String lo
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   BinomesTable binomesTable = BinomesTable(
     database: tinterDatabase.connection,
@@ -28,5 +29,5 @@ Future<void> matchedBinomesGet(HttpRequest req, List<String> segments, String lo
     ..write(jsonEncode(matchedBinomes.map((BuildBinome match) => match.toJson()).toList()))
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

@@ -168,5 +168,5 @@ Future<void> main() async {
   await goutMusicalTable.create();
   await goutMusicalTable.populate();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

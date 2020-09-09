@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
@@ -22,8 +23,8 @@ Future<void> associationLogoGet(HttpRequest req, List<String> segments, String l
 
   String associationName = req.uri.queryParameters['associationName'];
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   AssociationsTable associationsTable = AssociationsTable(database: tinterDatabase.connection);
 
@@ -38,5 +39,5 @@ Future<void> associationLogoGet(HttpRequest req, List<String> segments, String l
   await req.response.close();
 
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

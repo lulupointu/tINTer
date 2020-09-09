@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/associatif/matches_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/associatif/match.dart';
 
@@ -14,8 +15,8 @@ Future<void> matchedMatchesGet(HttpRequest req, List<String> segments, String lo
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   MatchesTable matchesTable = MatchesTable(
     database: tinterDatabase.connection,
@@ -28,5 +29,5 @@ Future<void> matchedMatchesGet(HttpRequest req, List<String> segments, String lo
     ..write(jsonEncode(matchedMatches.map((BuildMatch match) => match.toJson()).toList()))
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

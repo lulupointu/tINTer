@@ -168,5 +168,5 @@ Future<void> main() async {
   await matiereTable.create();
   await matiereTable.populate();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

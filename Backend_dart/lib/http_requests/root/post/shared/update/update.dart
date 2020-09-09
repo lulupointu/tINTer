@@ -14,6 +14,7 @@ import 'package:tinter_backend/database_interface/shared/associations_table.dart
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/http_requests/root/post/scolaire/binome/binome.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/associatif/relation_score_associatif.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_binome_pair.dart';
@@ -41,8 +42,8 @@ Future<void> userUpdate(HttpRequest req, List<String> segments, String login) as
         true);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   UsersManagementTable usersManagementTable =
       UsersManagementTable(database: tinterDatabase.connection);
@@ -159,5 +160,5 @@ Future<void> userUpdate(HttpRequest req, List<String> segments, String login) as
     ..statusCode = HttpStatus.ok
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

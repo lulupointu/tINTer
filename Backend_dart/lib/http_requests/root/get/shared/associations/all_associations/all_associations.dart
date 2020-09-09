@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
@@ -15,8 +16,8 @@ Future<void> allAssociationsGet(HttpRequest req, List<String> segments, String l
     return UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   AssociationsTable associationsTable = AssociationsTable(database: tinterDatabase.connection);
 
@@ -28,5 +29,5 @@ Future<void> allAssociationsGet(HttpRequest req, List<String> segments, String l
     ..close();
 
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

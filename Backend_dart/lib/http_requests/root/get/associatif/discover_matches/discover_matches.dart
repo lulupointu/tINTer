@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/associatif/matches_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/associatif/match.dart';
 
@@ -40,8 +41,8 @@ Future<void> discoverMatchesGet(HttpRequest req, List<String> segments, String l
           shouldSend: true);
     }
 
-    TinterDatabase tinterDatabase = TinterDatabase();
-    await tinterDatabase.open();
+    // TinterDatabase tinterDatabase = TinterDatabase();
+    // await tinterDatabase.open();
 
     MatchesTable matchesTable = MatchesTable(database: tinterDatabase.connection);
     List<BuildMatch> matchedMatches = await matchesTable.getXDiscoverMatchesFromLogin(
@@ -55,7 +56,7 @@ Future<void> discoverMatchesGet(HttpRequest req, List<String> segments, String l
       ..write(json.encode(matchedMatches.map((BuildMatch match) => match.toJson()).toList()))
       ..close();
 
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
   } catch (e) {
     throw e;
   }

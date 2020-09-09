@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_matches_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair_match.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
@@ -14,8 +15,8 @@ Future<void> matchedBinomePairMatchesGet(HttpRequest req, List<String> segments,
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   BinomePairsMatchesTable binomePairsMatchesTable = BinomePairsMatchesTable(
     database: tinterDatabase.connection,
@@ -28,5 +29,5 @@ Future<void> matchedBinomePairMatchesGet(HttpRequest req, List<String> segments,
     ..write(jsonEncode(matchedBinomePairMatches.map((BuildBinomePairMatch match) => match.toJson()).toList()))
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

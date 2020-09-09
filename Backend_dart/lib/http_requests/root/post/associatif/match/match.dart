@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:postgres/src/connection.dart';
@@ -25,8 +26,8 @@ Future<void> matchUpdateRelationStatusAssociatif(HttpRequest req, List<String> s
     throw error;
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   RelationsStatusAssociatifTable relationsStatusTable =
       RelationsStatusAssociatifTable(database: tinterDatabase.connection);
@@ -47,5 +48,5 @@ Future<void> matchUpdateRelationStatusAssociatif(HttpRequest req, List<String> s
     ..statusCode = HttpStatus.ok
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

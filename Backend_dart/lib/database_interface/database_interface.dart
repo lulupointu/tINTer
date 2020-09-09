@@ -14,9 +14,6 @@ import 'package:tinter_backend/database_interface/associatif/relation_score_asso
 import 'package:tinter_backend/database_interface/shared/sessions.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
-import 'package:tinter_backend/models/scolaire/relation_score_binome_pair.dart';
-import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
-import 'package:tinter_backend/models/shared/user.dart';
 import 'package:tinter_backend/secret.dart';
 
 class TinterDatabase {

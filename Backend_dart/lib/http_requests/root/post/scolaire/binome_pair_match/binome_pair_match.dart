@@ -6,6 +6,7 @@ import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_status_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
@@ -19,8 +20,8 @@ Future<void> binomePairMatchUpdateRelationStatus(HttpRequest req, List<String> s
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   RelationStatusBinomePair relationStatus;
   try {
@@ -53,5 +54,5 @@ Future<void> binomePairMatchUpdateRelationStatus(HttpRequest req, List<String> s
     ..statusCode = HttpStatus.ok
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

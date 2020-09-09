@@ -13,5 +13,5 @@ main() async {
 
   await tinterDatabase.connection.query("INSERT INTO associations_pictures VAlUES (1, @picture);", substitutionValues: {'picture': picture});
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

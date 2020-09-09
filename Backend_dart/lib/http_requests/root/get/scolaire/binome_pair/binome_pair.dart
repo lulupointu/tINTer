@@ -6,6 +6,7 @@ import 'package:tinter_backend/database_interface/scolaire/binome_pairs_manageme
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
@@ -16,8 +17,8 @@ Future<void> binomePairGet(HttpRequest req, List<String> segments, String login)
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   BinomePairsManagementTable binomePairsManagementTable = BinomePairsManagementTable(database: tinterDatabase.connection);
   try {
@@ -30,8 +31,8 @@ Future<void> binomePairGet(HttpRequest req, List<String> segments, String login)
   } catch(error) {
     throw error;
   } finally {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
   }
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

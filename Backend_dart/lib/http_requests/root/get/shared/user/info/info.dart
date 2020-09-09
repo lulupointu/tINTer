@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/shared/user.dart';
 
@@ -14,8 +15,8 @@ Future<void> userSharedInfoGet(HttpRequest req, List<String> segments, String lo
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   UsersManagementTable usersManagementTable = UsersManagementTable(database: tinterDatabase.connection);
 
@@ -27,10 +28,10 @@ Future<void> userSharedInfoGet(HttpRequest req, List<String> segments, String lo
       ..write(json.encode(user.toJson()))
       ..close();
   } on EmptyResponseToDatabaseQuery {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
     throw UserNotFound('The user with login $login was not found.', true);
   } finally {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
   }
 }
 

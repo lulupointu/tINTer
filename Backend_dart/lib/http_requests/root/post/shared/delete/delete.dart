@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/shared/internal_errors.dart';
 
@@ -14,8 +15,8 @@ Future<void> userDelete(HttpRequest req, List<String> segments, String login) as
   }
 
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   UsersTable usersTable = UsersTable(database: tinterDatabase.connection);
 
@@ -29,5 +30,5 @@ Future<void> userDelete(HttpRequest req, List<String> segments, String login) as
     ..statusCode = HttpStatus.ok
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

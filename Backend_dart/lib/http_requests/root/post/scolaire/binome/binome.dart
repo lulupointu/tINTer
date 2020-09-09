@@ -12,6 +12,7 @@ import 'package:tinter_backend/database_interface/scolaire/relation_status_scola
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
@@ -39,8 +40,8 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
     throw error;
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   RelationsStatusScolaireTable relationsStatusTable =
   RelationsStatusScolaireTable(database: tinterDatabase.connection);
@@ -51,10 +52,10 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
     // Error 22023 is the error intentionally emitted when a
     // change from one status to another is not possible.
     if (error.code == 22023) {
-      await tinterDatabase.close();
+      // await tinterDatabase.close();
       throw InvalidQueryParameterError(error.message, true);
     } else {
-      await tinterDatabase.close();
+      // await tinterDatabase.close();
       throw InternalDatabaseError(error);
     }
   }
@@ -68,7 +69,7 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
     }
   } catch(error) {
     print(error);
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
     throw InternalDatabaseError(error);
   }
 
@@ -76,7 +77,7 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
     ..statusCode = HttpStatus.ok
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }
 
 Future<void> setupBinomeOfBinomeTables({@required PostgreSQLConnection database, @required RelationStatusScolaire relationStatusScolaire}) async {

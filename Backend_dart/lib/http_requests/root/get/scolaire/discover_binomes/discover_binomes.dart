@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/scolaire/binomes_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
@@ -38,8 +39,8 @@ Future<void> discoverBinomesGet(HttpRequest req, List<String> segments, String l
           shouldSend: true);
     }
 
-    TinterDatabase tinterDatabase = TinterDatabase();
-    await tinterDatabase.open();
+    // TinterDatabase tinterDatabase = TinterDatabase();
+    // await tinterDatabase.open();
 
     BinomesTable binomesTable = BinomesTable(database: tinterDatabase.connection);
     List<BuildBinome> matchedBinomes = await binomesTable.getXDiscoverBinomesFromLogin(
@@ -53,7 +54,7 @@ Future<void> discoverBinomesGet(HttpRequest req, List<String> segments, String l
       ..write(json.encode(matchedBinomes.map((BuildBinome binome) => binome.toJson()).toList()))
       ..close();
 
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
   } catch (e) {
     throw e;
   }

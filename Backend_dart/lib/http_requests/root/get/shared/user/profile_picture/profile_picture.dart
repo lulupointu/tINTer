@@ -14,8 +14,8 @@ Future<void> userProfilePictureGet(
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   if (!(req.uri.queryParameters.containsKey('login'))) {
     throw MissingQueryParameterError('The parameter \'login\' is needed', true);
@@ -36,6 +36,4 @@ Future<void> userProfilePictureGet(
   req.response.headers.contentType = ContentType.parse("image/png");
   await req.response.addStream(picture.asStream());
   await req.response.close();
-
-  await tinterDatabase.close();
 }

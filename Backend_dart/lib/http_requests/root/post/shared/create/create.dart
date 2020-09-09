@@ -11,6 +11,7 @@ import 'package:tinter_backend/database_interface/scolaire/relation_status_scola
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/associatif/relation_score_associatif.dart';
 import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
 import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
@@ -39,8 +40,8 @@ Future<void> userCreate(HttpRequest req, List<String> segments, String login) as
         true);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   // Save all user info
   UsersManagementTable usersManagementTable =
@@ -144,5 +145,5 @@ Future<void> userCreate(HttpRequest req, List<String> segments, String login) as
     ..statusCode = HttpStatus.ok
     ..close();
 
-  await tinterDatabase.close();
+  // await tinterDatabase.close();
 }

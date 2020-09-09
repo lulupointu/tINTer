@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/associatif/searched_user_associatif_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/associatif/searched_user_associatif.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
@@ -14,8 +15,8 @@ Future<void> searchUsersAssociatifsGet(HttpRequest req, List<String> segments, S
     throw UnknownRequestedPathError(req.uri.path);
   }
 
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   SearchedUserAssociatifTable searchedUserTable = SearchedUserAssociatifTable(database: tinterDatabase.connection);
 
@@ -28,7 +29,7 @@ Future<void> searchUsersAssociatifsGet(HttpRequest req, List<String> segments, S
       ..write(json.encode([for (SearchedUserAssociatif searchedUser in searchedUsers.values) searchedUser.toJson()]))
       ..close();
   } finally {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
   }
 }
 

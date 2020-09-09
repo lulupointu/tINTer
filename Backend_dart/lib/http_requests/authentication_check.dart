@@ -8,6 +8,7 @@ import 'package:tinter_backend/database_interface/shared/sessions.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/http_requests/root/root.dart';
+import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/shared/session.dart';
 import 'package:meta/meta.dart';
@@ -100,8 +101,8 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
 
 Logger _checkSessionLogger = Logger('checkSessionTokenAndGetLogin');
 Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest}) async {
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   SessionsTable sessionsTable = SessionsTable(database: tinterDatabase.connection);
 
@@ -175,23 +176,23 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
     }
     return login;
   } on EmptyResponseToDatabaseQuery {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
     throw UnknownTokenError(error: 'The given token is unknown.', shouldSend: true);
   } on InvalidTokenError {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
     throw InvalidTokenError(error: 'The given token is invalid.', shouldSend: true);
   } on ExpiredTokenError {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
     throw ExpiredTokenError(error: 'The given token is expired.', shouldSend: true);
   } finally {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
   }
 }
 
 Logger _tryLoginLogger = Logger('tryLogin');
 Future<void> tryLogin({@required HttpRequest httpRequest}) async {
-  TinterDatabase tinterDatabase = TinterDatabase();
-  await tinterDatabase.open();
+  // TinterDatabase tinterDatabase = TinterDatabase();
+  // await tinterDatabase.open();
 
   UsersTable usersTable = UsersTable(
     database: tinterDatabase.connection,
@@ -254,7 +255,7 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
     ));
     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
   } finally {
-    await tinterDatabase.close();
+    // await tinterDatabase.close();
   }
 }
 
