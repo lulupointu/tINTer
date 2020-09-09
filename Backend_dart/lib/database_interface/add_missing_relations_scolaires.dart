@@ -59,6 +59,8 @@ Future<void> main() async {
       List<BuildUser> otherUsersScolaireMissing = allUsers.values.where((BuildUser otherUser) =>
       otherUser != user && !relationScolaires.keys.contains(otherUser.login)).toList();
 
+      print('${user.login} is missing ${otherUsersScolaireMissing.map((BuildUser user) => user.login).toList()}');
+
 
       // Get the number of associations and gouts musicaux
       int numberMaxOfAssociations =
