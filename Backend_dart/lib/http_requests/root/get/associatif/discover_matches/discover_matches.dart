@@ -11,7 +11,7 @@ import 'package:tinter_backend/models/associatif/match.dart';
 
 final _logger = Logger('scolaireGetToNextSegment');
 Future<void> discoverMatchesGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('DiscoverMatchesGet', segments);
+  _logger.info(printReceivedSegments('DiscoverMatchesGet', segments));
 
   // There should be only one segment left
   if (segments.length != 0) {

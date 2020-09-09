@@ -6,6 +6,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
 
+
 final _logger = Logger('sharedGetToNextSegment');
 Future<void> sharedGetToNextSegment(HttpRequest req, List<String> segments, String login) async {
   _logger.info(printReceivedSegments('SharedGetToNextSegment', segments));

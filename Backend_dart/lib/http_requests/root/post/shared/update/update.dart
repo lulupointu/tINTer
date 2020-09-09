@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/associatif/gouts_musicaux_table.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_score_associatif_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
@@ -22,8 +23,10 @@ import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/shared/user.dart';
 
+final _logger = Logger('userUpdate');
+
 Future<void> userUpdate(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('UserUpdate', segments);
+  _logger.info(printReceivedSegments('UserUpdate', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

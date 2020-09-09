@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/http_requests/root/post/associatif/associatif.dart';
 import 'package:tinter_backend/http_requests/root/post/scolaire/scolaire.dart';
@@ -6,8 +7,10 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
 
+final _logger = Logger('postToNextSegment');
+
 Future<void> postToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('postToNextSegment', segments);
+  _logger.info(printReceivedSegments('postToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'associatif':

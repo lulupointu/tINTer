@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/associatif/gouts_musicaux_table.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_score_associatif_table.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
@@ -20,8 +21,10 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/shared/internal_errors.dart';
 import 'package:tinter_backend/models/shared/user.dart';
 
+final _logger = Logger('userCreate');
+
 Future<void> userCreate(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('UserCreate', segments);
+  _logger.info(printReceivedSegments('UserCreate', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

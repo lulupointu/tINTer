@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/scolaire/searched_user_scolaire_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
@@ -8,8 +9,10 @@ import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
+final _logger = Logger('searchUsersScolairesGet');
+
 Future<void> searchUsersScolairesGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('SearchUsersScolairesGet', segments);
+  _logger.info(printReceivedSegments('SearchUsersScolairesGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

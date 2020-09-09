@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
@@ -8,10 +9,12 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
 
+final _logger = Logger('associationLogoGet');
+
 Future<void> associationLogoGet(HttpRequest req, List<String> segments, String login) async {
   String associationLogoBasePath = '/home/df/tINTerPictures/AssociationsLogoById';
 
-  printReceivedSegments('AssociationLogoGet', segments);
+  _logger.info(printReceivedSegments('AssociationLogoGet', segments));
 
   if (segments.length != 0) {
     return UnknownRequestedPathError(req.uri.path);

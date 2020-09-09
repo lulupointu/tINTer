@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
+final _logger = Logger('userProfilePictureGet');
+
 Future<void> userProfilePictureGet(
     HttpRequest req, List<String> segments, String login) async {
   final String profilePictureBasePath = '/home/df/tINTerPictures/ProfilePictures';
-  printReceivedSegments('UserProfilePictureGet', segments);
+  _logger.info(printReceivedSegments('UserProfilePictureGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

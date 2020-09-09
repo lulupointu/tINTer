@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/scolaire/binomes_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
@@ -8,8 +9,10 @@ import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
+final _logger = Logger('matchedBinomesGet');
+
 Future<void> matchedBinomesGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('MatchedBinomesGet', segments);
+  _logger.info(printReceivedSegments('MatchedBinomesGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

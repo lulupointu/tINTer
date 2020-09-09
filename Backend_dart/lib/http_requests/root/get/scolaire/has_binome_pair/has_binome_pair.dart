@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
@@ -8,8 +9,10 @@ import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/main.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 
+final _logger = Logger('hasBinomePairGet');
+
 Future<void> hasBinomePairGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('HasBinomePairGet', segments);
+  _logger.info(printReceivedSegments('HasBinomePairGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

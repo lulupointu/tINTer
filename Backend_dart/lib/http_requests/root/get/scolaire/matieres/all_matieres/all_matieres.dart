@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/scolaire/matieres_table.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
@@ -8,8 +9,10 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 import 'dart:io';
 
+final _logger = Logger('allMatieresGet');
+
 Future<void> allMatieresGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('AllMatieresGet', segments);
+  _logger.info(printReceivedSegments('AllMatieresGet', segments));
 
   if (segments.length != 0) {
     return UnknownRequestedPathError(req.uri.path);
