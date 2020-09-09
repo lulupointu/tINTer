@@ -45,7 +45,7 @@ Future<void> removingFalseRelationsAssociatif() async {
 
       print('${user.login} is having false relation with ${falseRelationsAssociatif.map((RelationStatusAssociatif relationStatusAssociatif) => relationStatusAssociatif.otherLogin).toList()}');
 
-      relationsStatusAssociatifTable.removeMultiple(listRelationStatusAssociatif: falseRelationsAssociatif);
+      await relationsStatusAssociatifTable.removeMultiple(listRelationStatusAssociatif: falseRelationsAssociatif);
     } catch (e) {
       print('Error with user ${user.login}: $e');
     }
@@ -64,7 +64,7 @@ Future<void> removingFalseRelationsAssociatif() async {
 
       print('${user.login} is having false relation with ${falseRelationsAssociatif.map((RelationStatusAssociatif relationStatusAssociatif) => relationStatusAssociatif.otherLogin).toList()}');
 
-      relationsStatusAssociatifTable.removeMultiple(listRelationStatusAssociatif: falseRelationsAssociatif);
+      await relationsStatusAssociatifTable.removeMultiple(listRelationStatusAssociatif: falseRelationsAssociatif);
     } catch (e) {
       print('Error with user ${user.login}: $e');
     }
