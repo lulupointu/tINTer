@@ -6,52 +6,53 @@ import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
 
 List<RelationStatusAssociatif> fakeListRelationStatusAssociatif = [
-  RelationStatusAssociatif((r) => r
-    ..login = fakeUsers[0].login
-    ..otherLogin = fakeUsers[1].login
-    ..status = EnumRelationStatusAssociatif.liked,
+  RelationStatusAssociatif(
+    (r) => r
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[1].login
+      ..status = EnumRelationStatusAssociatif.liked,
   ),
   RelationStatusAssociatif(
     (r) => r
-    ..login =  fakeUsers[0].login
-    ..otherLogin = fakeUsers[2].login
-    ..status = EnumRelationStatusAssociatif.none,
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[2].login
+      ..status = EnumRelationStatusAssociatif.none,
   ),
   RelationStatusAssociatif(
     (r) => r
-    ..login =  fakeUsers[0].login
-    ..otherLogin = fakeUsers[3].login
-    ..status = EnumRelationStatusAssociatif.ignored,
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[3].login
+      ..status = EnumRelationStatusAssociatif.ignored,
   ),
   RelationStatusAssociatif(
     (r) => r
-    ..login =  fakeUsers[0].login
-    ..otherLogin = fakeUsers[4].login
-    ..status = EnumRelationStatusAssociatif.askedParrain,
+      ..login = fakeUsers[0].login
+      ..otherLogin = fakeUsers[4].login
+      ..status = EnumRelationStatusAssociatif.askedParrain,
   ),
   RelationStatusAssociatif(
     (r) => r
-    ..login =  fakeUsers[1].login
-    ..otherLogin = fakeUsers[0].login
-    ..status = EnumRelationStatusAssociatif.askedParrain,
+      ..login = fakeUsers[1].login
+      ..otherLogin = fakeUsers[0].login
+      ..status = EnumRelationStatusAssociatif.askedParrain,
   ),
   RelationStatusAssociatif(
     (r) => r
-    ..login =  fakeUsers[2].login
-    ..otherLogin = fakeUsers[0].login
-    ..status = EnumRelationStatusAssociatif.ignored,
+      ..login = fakeUsers[2].login
+      ..otherLogin = fakeUsers[0].login
+      ..status = EnumRelationStatusAssociatif.ignored,
   ),
   RelationStatusAssociatif(
     (r) => r
-    ..login =  fakeUsers[3].login
-    ..otherLogin = fakeUsers[0].login
-    ..status = EnumRelationStatusAssociatif.acceptedParrain,
+      ..login = fakeUsers[3].login
+      ..otherLogin = fakeUsers[0].login
+      ..status = EnumRelationStatusAssociatif.acceptedParrain,
   ),
   RelationStatusAssociatif(
     (r) => r
-    ..login =  fakeUsers[4].login
-    ..otherLogin = fakeUsers[0].login
-    ..status = EnumRelationStatusAssociatif.refusedParrain,
+      ..login = fakeUsers[4].login
+      ..otherLogin = fakeUsers[0].login
+      ..status = EnumRelationStatusAssociatif.refusedParrain,
   ),
 ];
 
@@ -168,7 +169,8 @@ class RelationsStatusAssociatifTable {
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
 
-  Future<void> addMultiple({@required List<RelationStatusAssociatif> listRelationStatusAssociatif}) async {
+  Future<void> addMultiple(
+      {@required List<RelationStatusAssociatif> listRelationStatusAssociatif}) async {
     if (listRelationStatusAssociatif.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -192,16 +194,18 @@ class RelationsStatusAssociatifTable {
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
 
-  Future<void> updateMultiple({@required List<RelationStatusAssociatif> listRelationStatusAssociatif}) async {
+  Future<void> updateMultiple(
+      {@required List<RelationStatusAssociatif> listRelationStatusAssociatif}) async {
     if (listRelationStatusAssociatif.length == 0) return;
-    final String query = "UPDATE $name AS old SET \"statusAssociatif\"=new.\"statusAssociatif\" "
-            "FROM (VALUES " +
-        [
-          for (int index = 0; index < listRelationStatusAssociatif.length; index++)
-            "(@login$index, @otherLogin$index, @status$index)"
-        ].join(',') +
-        ") AS new(login, \"otherLogin\", \"statusAssociatif\")"
-            "WHERE (old.login=new.login AND old.\"otherLogin\"=new.\"otherLogin\");";
+    final String query =
+        "UPDATE $name AS old SET \"statusAssociatif\"=new.\"statusAssociatif\" "
+                "FROM (VALUES " +
+            [
+              for (int index = 0; index < listRelationStatusAssociatif.length; index++)
+                "(@login$index, @otherLogin$index, @status$index)"
+            ].join(',') +
+            ") AS new(login, \"otherLogin\", \"statusAssociatif\")"
+                "WHERE (old.login=new.login AND old.\"otherLogin\"=new.\"otherLogin\");";
 
     return database.query(query, substitutionValues: {
       for (int index = 0; index < listRelationStatusAssociatif.length; index++)
@@ -230,11 +234,16 @@ class RelationsStatusAssociatifTable {
                 'One relationStatus requested (between $login and $otherLogin) but got ${sqlResults.length}');
       }
 
-      return RelationStatusAssociatif.fromJson(sqlResults[0][name]);
+      return RelationStatusAssociatif.fromJson({
+        'login': sqlResults[0][name]['login'],
+        'otherLogin': sqlResults[0][name]['otherLogin'],
+        'status': sqlResults[0][name]['statusAssociatif'],
+      });
     });
   }
 
-  Future<Map<String, RelationStatusAssociatif>> getAllFromLogin({@required String login}) async {
+  Future<Map<String, RelationStatusAssociatif>> getAllFromLogin(
+      {@required String login}) async {
     final String query = """
     SELECT * FROM $name WHERE login=@login;
     """;
@@ -249,7 +258,11 @@ class RelationsStatusAssociatifTable {
 
       return {
         for (Map<String, Map<String, dynamic>> result in sqlResults)
-          result[name]['otherLogin']: RelationStatusAssociatif.fromJson(result[name])
+          result[name]['otherLogin']: RelationStatusAssociatif.fromJson({
+            'login': result[name]['login'],
+            'otherLogin': result[name]['otherLogin'],
+            'status': result[name]['statusAssociatif'],
+          })
       };
     });
   }
@@ -259,8 +272,12 @@ class RelationsStatusAssociatifTable {
 
     return database.mappedResultsQuery(query).then((sqlResults) {
       return sqlResults
-          .map((Map<String, Map<String, dynamic>> result) =>
-              RelationStatusAssociatif.fromJson(result[name]))
+          .map(
+              (Map<String, Map<String, dynamic>> result) => RelationStatusAssociatif.fromJson({
+                    'login': result[name]['login'],
+                    'otherLogin': result[name]['otherLogin'],
+                    'status': result[name]['statusAssociatif'],
+                  }))
           .toList();
     });
   }
@@ -272,7 +289,8 @@ class RelationsStatusAssociatifTable {
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
 
-  Future<void> removeMultiple({@required List<RelationStatusAssociatif> listRelationStatusAssociatif}) async {
+  Future<void> removeMultiple(
+      {@required List<RelationStatusAssociatif> listRelationStatusAssociatif}) async {
     if (listRelationStatusAssociatif.length == 0) return;
     final String query = "DELETE FROM $name WHERE (login, \"otherLogin\") IN (" +
         [
