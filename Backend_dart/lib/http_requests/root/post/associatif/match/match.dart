@@ -14,7 +14,7 @@ import 'package:tinter_backend/models/shared/internal_errors.dart';
 final _logger = Logger('matchUpdateRelationStatusAssociatif');
 
 Future<void> matchUpdateRelationStatusAssociatif(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('matchUpdateRelationStatusAssociatif', segments));
+  _logger.info(printReceivedSegments(login, 'matchUpdateRelationStatusAssociatif', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

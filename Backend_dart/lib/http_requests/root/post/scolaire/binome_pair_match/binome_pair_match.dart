@@ -17,7 +17,7 @@ import 'package:tinter_backend/models/shared/internal_errors.dart';
 final _logger = Logger('binomePairMatchUpdateRelationStatus');
 
 Future<void> binomePairMatchUpdateRelationStatus(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('BinomePairMatchUpdateRelationStatus', segments));
+  _logger.info(printReceivedSegments(login, 'BinomePairMatchUpdateRelationStatus', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

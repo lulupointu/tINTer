@@ -11,7 +11,7 @@ import 'package:tinter_backend/models/associatif/match.dart';
 
 final _logger = Logger('matchedMatchesGet');
 Future<void> matchedMatchesGet(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('MatchedMatchesGet', segments));
+  _logger.info(printReceivedSegments(login, 'MatchedMatchesGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

@@ -11,7 +11,7 @@ final _logger = Logger('userProfilePictureGet');
 Future<void> userProfilePictureGet(
     HttpRequest req, List<String> segments, String login) async {
   final String profilePictureBasePath = '/home/df/tINTerPictures/ProfilePictures';
-  _logger.info(printReceivedSegments('UserProfilePictureGet', segments));
+  _logger.info(printReceivedSegments(login, 'UserProfilePictureGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

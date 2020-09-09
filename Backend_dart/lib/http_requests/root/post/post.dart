@@ -10,7 +10,7 @@ import 'dart:io';
 final _logger = Logger('postToNextSegment');
 
 Future<void> postToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('postToNextSegment', segments));
+  _logger.info(printReceivedSegments(login, 'postToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'associatif':

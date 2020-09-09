@@ -8,7 +8,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 final _logger = Logger('rootToGetOrPost');
 Future<void> rootToGetOrPost(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('rootToGetOrPost', segments));
+  _logger.info(printReceivedSegments(login, 'rootToGetOrPost', segments));
 
   switch (req.method) {
     case 'GET':

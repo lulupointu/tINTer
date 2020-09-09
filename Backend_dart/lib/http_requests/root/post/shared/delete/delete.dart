@@ -11,7 +11,7 @@ import 'package:tinter_backend/models/shared/internal_errors.dart';
 final _logger = Logger('userDelete');
 
 Future<void> userDelete(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('UserDelete', segments));
+  _logger.info(printReceivedSegments(login, 'UserDelete', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

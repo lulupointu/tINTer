@@ -28,7 +28,7 @@ import 'package:built_collection/built_collection.dart';
 final _logger = Logger('binomeUpdateRelationStatusScolaire');
 
 Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('BinomeUpdateRelationStatusScolaire', segments));
+  _logger.info(printReceivedSegments(login, 'BinomeUpdateRelationStatusScolaire', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

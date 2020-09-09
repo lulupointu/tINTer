@@ -9,7 +9,7 @@ import 'dart:io';
 
 final _logger = Logger('sharedGetToNextSegment');
 Future<void> sharedGetToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('SharedGetToNextSegment', segments));
+  _logger.info(printReceivedSegments(login, 'SharedGetToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'user':

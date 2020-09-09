@@ -13,7 +13,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 final _logger = Logger('discoverBinomePairsMatchesGet');
 
 Future<void> discoverBinomePairsMatchesGet(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('DiscoverBinomePairsMatchesGet', segments));
+  _logger.info(printReceivedSegments(login, 'DiscoverBinomePairsMatchesGet', segments));
 
   // There should be only one segment left
   if (segments.length != 0) {

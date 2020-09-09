@@ -11,7 +11,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 final _logger = Logger('searchUsersAssociatifsGet');
 Future<void> searchUsersAssociatifsGet(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('SearchUsersAssociatifsGet', segments));
+  _logger.info(printReceivedSegments(login, 'SearchUsersAssociatifsGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

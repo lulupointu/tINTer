@@ -12,7 +12,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 final _logger = Logger('matchedBinomePairMatchesGet');
 
 Future<void> matchedBinomePairMatchesGet(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('MatchedBinomePairMatchesGet', segments));
+  _logger.info(printReceivedSegments(login, 'MatchedBinomePairMatchesGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

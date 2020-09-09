@@ -12,7 +12,7 @@ final _logger = Logger('associatifGetToNextSegment');
 Future<void> associatifGetToNextSegment(
     HttpRequest req, List<String> segments, String login) async {
   _logger.info(
-      printReceivedSegments('associatifGetToNextSegment', segments));
+      printReceivedSegments(login, 'associatifGetToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'searchUsers':

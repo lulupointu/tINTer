@@ -14,7 +14,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 final _logger = Logger('binomePairGet');
 
 Future<void> binomePairGet(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('BinomePairGet', segments));
+  _logger.info(printReceivedSegments(login, 'BinomePairGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

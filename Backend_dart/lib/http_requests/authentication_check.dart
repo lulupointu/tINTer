@@ -259,6 +259,6 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   }
 }
 
-String printReceivedSegments(String functionName, List<String> segments) {
-  return '($functionName) Recieved segment: $segments';
+String printReceivedSegments(String login, String functionName, List<String> segments) {
+  return '$login ($functionName): Recieved segment: $segments';
 }

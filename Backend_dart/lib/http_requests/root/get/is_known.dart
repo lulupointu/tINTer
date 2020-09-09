@@ -10,7 +10,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 
 final _logger = Logger('isUserKnownGet');
 Future<void> isUserKnownGet(HttpRequest req, List<String> segments, String login) async {
-  printReceivedSegments('IsUserKnownGet', segments);
+  printReceivedSegments(login, 'IsUserKnownGet', segments);
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

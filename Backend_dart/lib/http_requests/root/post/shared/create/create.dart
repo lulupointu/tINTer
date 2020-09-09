@@ -24,7 +24,7 @@ import 'package:tinter_backend/models/shared/user.dart';
 final _logger = Logger('userCreate');
 
 Future<void> userCreate(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('UserCreate', segments));
+  _logger.info(printReceivedSegments(login, 'UserCreate', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

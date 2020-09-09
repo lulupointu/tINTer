@@ -8,7 +8,7 @@ import 'dart:io';
 final _logger = Logger('matieresGetToNextSegment');
 
 Future<void> matieresGetToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('MatieresGetToNextSegment', segments));
+  _logger.info(printReceivedSegments(login, 'MatieresGetToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'allMatieres':

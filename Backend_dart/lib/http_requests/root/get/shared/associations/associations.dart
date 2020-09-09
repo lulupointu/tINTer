@@ -10,7 +10,7 @@ import 'dart:io';
 final _logger = Logger('associationsGetToNextSegment');
 
 Future<void> associationsGetToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('AssociationsGetToNextSegment', segments));
+  _logger.info(printReceivedSegments(login, 'AssociationsGetToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'allAssociations':

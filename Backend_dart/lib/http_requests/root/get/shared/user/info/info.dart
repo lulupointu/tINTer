@@ -13,7 +13,7 @@ import 'package:tinter_backend/models/shared/user.dart';
 final _logger = Logger('userSharedInfoGet');
 
 Future<void> userSharedInfoGet(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('userSharedInfoGet', segments));
+  _logger.info(printReceivedSegments(login, 'userSharedInfoGet', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

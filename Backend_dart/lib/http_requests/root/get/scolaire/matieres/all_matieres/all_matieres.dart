@@ -12,7 +12,7 @@ import 'dart:io';
 final _logger = Logger('allMatieresGet');
 
 Future<void> allMatieresGet(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('AllMatieresGet', segments));
+  _logger.info(printReceivedSegments(login, 'AllMatieresGet', segments));
 
   if (segments.length != 0) {
     return UnknownRequestedPathError(req.uri.path);

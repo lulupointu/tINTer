@@ -26,7 +26,7 @@ import 'package:tinter_backend/models/shared/user.dart';
 final _logger = Logger('userUpdate');
 
 Future<void> userUpdate(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('UserUpdate', segments));
+  _logger.info(printReceivedSegments(login, 'UserUpdate', segments));
 
   if (segments.length != 0) {
     throw UnknownRequestedPathError(req.uri.path);

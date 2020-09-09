@@ -14,7 +14,7 @@ final _logger = Logger('associationLogoGet');
 Future<void> associationLogoGet(HttpRequest req, List<String> segments, String login) async {
   String associationLogoBasePath = '/home/df/tINTerPictures/AssociationsLogoById';
 
-  _logger.info(printReceivedSegments('AssociationLogoGet', segments));
+  _logger.info(printReceivedSegments(login, 'AssociationLogoGet', segments));
 
   if (segments.length != 0) {
     return UnknownRequestedPathError(req.uri.path);

@@ -11,7 +11,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 final _logger = Logger('sharedPostToNextSegment');
 
 Future<void> sharedPostToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('sharedPostToNextSegment', segments));
+  _logger.info(printReceivedSegments(login, 'sharedPostToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'updateProfilePicture':

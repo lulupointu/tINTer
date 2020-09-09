@@ -9,7 +9,7 @@ import 'dart:io';
 final _logger = Logger('scolairePostToNextSegment');
 
 Future<void> scolairePostToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('scolairePostToNextSegment', segments));
+  _logger.info(printReceivedSegments(login, 'scolairePostToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'binomeUpdateRelationStatus':

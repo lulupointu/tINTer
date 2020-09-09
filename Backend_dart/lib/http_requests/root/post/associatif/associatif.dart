@@ -8,7 +8,7 @@ import 'dart:io';
 final _logger = Logger('associatifPostToNextSegment');
 
 Future<void> associatifPostToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('AssociatifPostToNextSegment', segments));
+  _logger.info(printReceivedSegments(login, 'AssociatifPostToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'matchUpdateRelationStatusAssociatif':

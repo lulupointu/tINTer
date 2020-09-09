@@ -15,7 +15,7 @@ import 'dart:io';
 
 final _logger = Logger('scolaireGetToNextSegment');
 Future<void> scolaireGetToNextSegment(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('scolaireGetToNextSegment', segments));
+  _logger.info(printReceivedSegments(login, 'scolaireGetToNextSegment', segments));
 
   switch (segments.removeAt(0)) {
     case 'searchUsers':

@@ -12,7 +12,7 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 final _logger = Logger('discoverBinomesGet');
 
 Future<void> discoverBinomesGet(HttpRequest req, List<String> segments, String login) async {
-  _logger.info(printReceivedSegments('DiscoverBinomesGet', segments));
+  _logger.info(printReceivedSegments(login, 'DiscoverBinomesGet', segments));
 
   // There should be only one segment left
   if (segments.length != 0) {
