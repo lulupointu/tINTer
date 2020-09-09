@@ -39,40 +39,13 @@ Future<void> removingFalseRelationsAssociatif() async {
       Map<String,
           RelationStatusAssociatif> relationsAssociatif = await relationsStatusAssociatifTable
           .getAllFromLogin(login: user.login);
-      List<BuildUser> otherUsersAssociatifFalseRelation = allUsersPrimoEntrant.values.where((BuildUser otherUser) =>
-      !relationsAssociatif.keys.contains(otherUser.login)).toList();
+      List<RelationStatusAssociatif> falseRelationsAssociatif = relationsAssociatif.values.where((RelationStatusAssociatif relationStatusAssociatif) =>
+      allUsersPrimoEntrant.containsKey(relationStatusAssociatif.otherLogin)
+      ).toList();
 
-      print('${user.login} is having false relation with ${otherUsersAssociatifFalseRelation.map((BuildUser user) => user.login).toList()}');
+      print('${user.login} is having false relation with ${falseRelationsAssociatif.map((RelationStatusAssociatif relationStatusAssociatif) => relationStatusAssociatif.otherLogin).toList()}');
 
-      // Get the number of associations and gouts musicaux
-      int numberMaxOfAssociations =
-          (await AssociationsTable(database: tinterDatabase.connection).getAll()).length;
-      int numberMaxOfGoutsMusicaux =
-          (await GoutsMusicauxTable(database: tinterDatabase.connection).getAll()).length;
-
-      // Get the scores
-      Map<String, RelationScoreAssociatif> scores =
-      RelationScoreAssociatif.getScoreBetweenMultiple(user, otherUsersAssociatifFalseRelation,
-          numberMaxOfAssociations, numberMaxOfGoutsMusicaux);
-
-      // Update the database with all relevant scores
-      await relationsScoreAssociatifTable.addMultiple(
-          listRelationScoreAssociatif: scores.values.toList());
-
-      // Update the database with status none
-      await relationsStatusAssociatifTable.addMultiple(listRelationStatusAssociatif: [
-        for (String otherLogin in otherUsersAssociatifFalseRelation.map((BuildUser user) => user.login).toList()) ...[
-          RelationStatusAssociatif((b) => b
-            ..login = user.login
-            ..otherLogin = otherLogin
-            ..status = EnumRelationStatusAssociatif.none),
-          RelationStatusAssociatif((b) => b
-            ..login = otherLogin
-            ..otherLogin = user.login
-            ..status = EnumRelationStatusAssociatif.none)
-        ]
-      ]);
-
+      relationsStatusAssociatifTable.removeMultiple(listRelationStatusAssociatif: falseRelationsAssociatif);
     } catch (e) {
       print('Error with user ${user.login}: $e');
     }
@@ -85,40 +58,13 @@ Future<void> removingFalseRelationsAssociatif() async {
       Map<String,
           RelationStatusAssociatif> relationsAssociatif = await relationsStatusAssociatifTable
           .getAllFromLogin(login: user.login);
-      List<BuildUser> otherUsersAssociatifFalseRelation = allUsersNotPrimoEntrant.values.where((BuildUser otherUser) =>
-      !relationsAssociatif.keys.contains(otherUser.login)).toList();
+      List<RelationStatusAssociatif> falseRelationsAssociatif = relationsAssociatif.values.where((RelationStatusAssociatif relationStatusAssociatif) =>
+          allUsersNotPrimoEntrant.containsKey(relationStatusAssociatif.otherLogin)
+      ).toList();
 
-      print('${user.login} is having false relation with ${otherUsersAssociatifFalseRelation.map((BuildUser user) => user.login).toList()}');
+      print('${user.login} is having false relation with ${falseRelationsAssociatif.map((RelationStatusAssociatif relationStatusAssociatif) => relationStatusAssociatif.otherLogin).toList()}');
 
-      // Get the number of associations and gouts musicaux
-      int numberMaxOfAssociations =
-          (await AssociationsTable(database: tinterDatabase.connection).getAll()).length;
-      int numberMaxOfGoutsMusicaux =
-          (await GoutsMusicauxTable(database: tinterDatabase.connection).getAll()).length;
-
-      // Get the scores
-      Map<String, RelationScoreAssociatif> scores =
-      RelationScoreAssociatif.getScoreBetweenMultiple(user, otherUsersAssociatifFalseRelation,
-          numberMaxOfAssociations, numberMaxOfGoutsMusicaux);
-
-      // Update the database with all relevant scores
-      await relationsScoreAssociatifTable.addMultiple(
-          listRelationScoreAssociatif: scores.values.toList());
-
-      // Update the database with status none
-      await relationsStatusAssociatifTable.addMultiple(listRelationStatusAssociatif: [
-        for (String otherLogin in otherUsersAssociatifFalseRelation.map((BuildUser user) => user.login).toList()) ...[
-          RelationStatusAssociatif((b) => b
-            ..login = user.login
-            ..otherLogin = otherLogin
-            ..status = EnumRelationStatusAssociatif.none),
-          RelationStatusAssociatif((b) => b
-            ..login = otherLogin
-            ..otherLogin = user.login
-            ..status = EnumRelationStatusAssociatif.none)
-        ]
-      ]);
-
+      relationsStatusAssociatifTable.removeMultiple(listRelationStatusAssociatif: falseRelationsAssociatif);
     } catch (e) {
       print('Error with user ${user.login}: $e');
     }
