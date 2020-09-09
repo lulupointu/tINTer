@@ -92,14 +92,16 @@ Future<void> addMissingAssociatif() async {
   RelationsStatusAssociatifTable(database: tinterDatabase.connection);
 
   Map<String, BuildUser> allUsersPrimoEntrant = await usersManagementTable.getAll(primoEntrant: false);
+  Map<String, BuildUser> allUsersNotPrimoEntrant = await usersManagementTable.getAll(primoEntrant: true);
+
   print('Adding missing users associatifs primoEntrant');
   for (BuildUser user in allUsersPrimoEntrant.values) {
     try {
       Map<String,
           RelationStatusAssociatif> relationsAssociatif = await relationsStatusAssociatifTable
           .getAllFromLogin(login: user.login);
-      List<BuildUser> otherUsersAssociatifMissing = allUsersPrimoEntrant.values.where((BuildUser otherUser) =>
-      otherUser != user && !relationsAssociatif.keys.contains(otherUser.login)).toList();
+      List<BuildUser> otherUsersAssociatifMissing = allUsersNotPrimoEntrant.values.where((BuildUser otherUser) =>
+      !relationsAssociatif.keys.contains(otherUser.login)).toList();
 
       print('${user.login} is missing ${otherUsersAssociatifMissing.map((BuildUser user) => user.login).toList()}');
 
@@ -138,15 +140,14 @@ Future<void> addMissingAssociatif() async {
   }
 
 
-  Map<String, BuildUser> allUsersNotPrimoEntrant = await usersManagementTable.getAll(primoEntrant: true);
   print('Adding missing users associatifs not primoEntrant');
   for (BuildUser user in allUsersNotPrimoEntrant.values) {
     try {
       Map<String,
           RelationStatusAssociatif> relationsAssociatif = await relationsStatusAssociatifTable
           .getAllFromLogin(login: user.login);
-      List<BuildUser> otherUsersAssociatifMissing = allUsersNotPrimoEntrant.values.where((BuildUser otherUser) =>
-      otherUser != user && !relationsAssociatif.keys.contains(otherUser.login)).toList();
+      List<BuildUser> otherUsersAssociatifMissing = allUsersPrimoEntrant.values.where((BuildUser otherUser) =>
+      !relationsAssociatif.keys.contains(otherUser.login)).toList();
 
       print('${user.login} is missing ${otherUsersAssociatifMissing.map((BuildUser user) => user.login).toList()}');
 
