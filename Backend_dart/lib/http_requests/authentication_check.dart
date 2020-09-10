@@ -205,8 +205,6 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   final String _loginPassword = utf8
       .decode(base64Url.decode(httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader)));
 
-  print('LPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLPLP \n $_loginPassword');
-
   final int splitIndex = _loginPassword.indexOf(':');
   if (splitIndex == -1) {
     throw InvalidCredentialsFormatException(
