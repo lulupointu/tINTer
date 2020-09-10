@@ -10,7 +10,7 @@ Future<void> main() async {
   Stream<HttpRequest> server;
 
   File _logFile = File('/home/df/logs');
-  IOSink _logFileSink = _logFile.openWrite();
+  IOSink _logFileSink = _logFile.openWrite(mode: FileMode.append);
 
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
