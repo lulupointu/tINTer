@@ -1,7 +1,10 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/associatif/gouts_musicaux_table.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
+
+final _logger = Logger('UsersGoutsMusicauxTable');
 
 class UsersGoutsMusicauxTable {
   // WARNING: the name must have only lower case letter.
@@ -13,6 +16,7 @@ class UsersGoutsMusicauxTable {
       : goutsMusicauxTable = GoutsMusicauxTable(database: database);
 
   Future<void> create() {
+    _logger.info('Executing function create.');
     final String query = """
     CREATE TABLE $name (
       user_login Text NOT NULL REFERENCES ${UsersTable.name} (login) ON DELETE CASCADE,
@@ -25,6 +29,8 @@ class UsersGoutsMusicauxTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final String query = """
       DROP TABLE IF EXISTS $name;
     """;
@@ -33,6 +39,8 @@ class UsersGoutsMusicauxTable {
   }
 
   Future<void> addFromLogin({@required String login, @required String goutMusical}) async {
+    _logger.info('Executing function addFromLogin with args: login=${login}, goutMusical=${goutMusical}');
+
     // get the goutMusical id from the goutMusical name
     int goutMusicalId = await goutsMusicauxTable.getIdFromName(goutMusical: goutMusical);
 
@@ -46,6 +54,8 @@ class UsersGoutsMusicauxTable {
 
   Future<void> addMultipleFromLogin(
       {@required String login, @required List<String> goutsMusicaux}) async {
+    _logger.info('Executing function addMultipleFromLogin with args: login=${login}, goutsMusicaux=${goutsMusicaux}');
+
     if (goutsMusicaux.length == 0) return;
     // get the goutsMusicaux ids from the goutsMusicaux names
     List<int> goutsMusicauxIds =
@@ -68,12 +78,16 @@ class UsersGoutsMusicauxTable {
 
   Future<void> updateUser(
       {@required String login, @required List<String> goutsMusicaux}) async {
+    _logger.info('Executing function updateUser with args: login=${login}, goutsMusicaux=${goutsMusicaux}');
+
     await removeAllFromLogin(login: login);
 
     return addMultipleFromLogin(login: login, goutsMusicaux: goutsMusicaux);
   }
 
   Future<List<String>> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE user_login=@login "
@@ -92,6 +106,8 @@ class UsersGoutsMusicauxTable {
 
   Future<Map<String, List<String>>> getMultipleFromLogins(
       {@required List<String> logins}) async {
+    _logger.info('Executing function getMultipleFromLogins with args: logins=${logins}');
+
     if (logins.length == 0) return {};
     final String query = "SELECT * "
             "FROM ("
@@ -118,6 +134,8 @@ class UsersGoutsMusicauxTable {
   }
 
   Future<Map<String, List<String>>> getAllExceptOneFromLogin({@required String login}) async {
+    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE user_login != @login "
@@ -142,6 +160,8 @@ class UsersGoutsMusicauxTable {
   }
 
   Future<void> removeAllFromLogin({@required String login}) {
+    _logger.info('Executing function removeAllFromLogin with args: login=${login}');
+
     final String query = "DELETE FROM $name WHERE user_login=@login;";
 
     return database.query(query, substitutionValues: {
@@ -150,6 +170,8 @@ class UsersGoutsMusicauxTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

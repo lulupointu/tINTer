@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_score_associatif_table.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
@@ -6,6 +7,8 @@ import 'package:tinter_backend/models/associatif/match.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
 import 'package:tinter_backend/models/shared/user.dart';
+
+final _logger = Logger('MatchesTable');
 
 class MatchesTable {
   final UsersManagementTable usersManagementTable;
@@ -21,6 +24,8 @@ class MatchesTable {
 
   Future<List<BuildMatch>> getXDiscoverMatchesFromLogin(
       {@required String login, @required int limit, int offset = 0}) async {
+    _logger.info('Executing function getXDiscoverMatchesFromLogin with args: login=${login}, limit=${limit}, offset=${offset}');
+
     String getDiscoverMatchesQuery =
         "SELECT ${RelationsStatusAssociatifTable.name}.\"otherLogin\", score, \"statusAssociatif\" FROM ${RelationsScoreAssociatifTable.name} JOIN "
         "(SELECT \"myRelationStatusAssociatif\".login, \"myRelationStatusAssociatif\".\"otherLogin\", \"myRelationStatusAssociatif\".\"statusAssociatif\", \"otherRelationStatusAssociatif\".\"statusAssociatif\" AS \"otherStatus\" "
@@ -63,6 +68,8 @@ class MatchesTable {
   }
 
   Future<List<BuildMatch>> getMatchedMatchesFromLogin({@required String login}) async {
+    _logger.info('Executing function getMatchedMatchesFromLogin with args: login=${login}');
+
     String getDiscoverMatchesQuery =
         "SELECT ${RelationsStatusAssociatifTable.name}.\"otherLogin\", score, \"statusAssociatif\", \"otherStatus\" FROM ${RelationsScoreAssociatifTable.name} JOIN "
         "(SELECT \"myRelationStatusAssociatif\".login, \"myRelationStatusAssociatif\".\"otherLogin\", \"myRelationStatusAssociatif\".\"statusAssociatif\", \"otherRelationStatusAssociatif\".\"statusAssociatif\" AS \"otherStatus\" "
@@ -109,6 +116,8 @@ class MatchesTable {
   // ignore: missing_return
   MatchStatus getMatchStatusFromRelationStatusAssociatif(
       {EnumRelationStatusAssociatif status, EnumRelationStatusAssociatif otherStatus}) {
+    _logger.info('Executing function getMatchStatusFromRelationStatusAssociatif with args: status=${status}, otherStatus=${otherStatus}');
+
     assert(status != null && otherStatus != null);
 
     switch (status) {

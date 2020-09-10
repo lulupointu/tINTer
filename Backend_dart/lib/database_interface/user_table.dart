@@ -1,8 +1,11 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/models/shared/user.dart';
+
+final _logger = Logger('UsersTable');
 
 class UsersTable {
   // WARNING: the name must have only lower case letter.
@@ -13,6 +16,8 @@ class UsersTable {
 
 
   Future<void> create() async {
+    _logger.info('Executing function create.');
+
     final List<Future> createTypeQueries = [
       database.query("CREATE TYPE School AS ENUM ('TSP', 'IMTBS');"),
       database.query("CREATE TYPE LieuDeVie AS ENUM ('maisel', 'other');"),
@@ -79,6 +84,8 @@ class UsersTable {
   }
 
   Future<void> delete() async {
+    _logger.info('Executing function delete.');
+
     final List<Future> queries = [
       database.query("DROP FUNCTION IF EXISTS constraints_check"),
       database.query("DROP TYPE IF EXISTS School CASCADE;"),
@@ -92,6 +99,8 @@ class UsersTable {
   }
 
   Future<void> addBasicInfo({@required Map<String, dynamic> userJson}) async {
+    _logger.info('Executing function addBasicInfo with args: userJson=${userJson}');
+
     assert(userJson.containsKey('login'));
 
     // Remove any useless input
@@ -113,6 +122,8 @@ class UsersTable {
   }
 
   Future<bool> isKnown({@required String login}) {
+    _logger.info('Executing function isKnown with args: login=${login}');
+
     final String query = "SELECT \"isAccountCreationFinished\" FROM $name "
         "WHERE $name.login=@login;";
 
@@ -129,6 +140,8 @@ class UsersTable {
   }
 
   Future<void> update({@required BuildUser user}) async {
+    _logger.info('Executing function update with args: user=${user}');
+
     Map<String, dynamic> userJson = user.toJson();
 
     // Remove any useless input
@@ -151,6 +164,8 @@ class UsersTable {
   }
 
   Future<Map<String, dynamic>> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
     final String query = "SELECT * FROM $name "
         "WHERE $name.login=@login;";
 
@@ -168,6 +183,8 @@ class UsersTable {
 
   Future<Map<String, Map<String, dynamic>>> getMultipleFromLogin(
       {@required List<String> logins}) async {
+    _logger.info('Executing function getMultipleFromLogin with args: logins=${logins}');
+
     if (logins.length == 0) return {};
     final String query = "SELECT * FROM $name "
             "WHERE $name.login IN (" +
@@ -201,6 +218,8 @@ class UsersTable {
 //  }
 
   Future<void> remove({@required String login}) async {
+    _logger.info('Executing function remove with args: login=${login}');
+
     final String query = "DELETE FROM $name WHERE login=@login;";
 
     return database.query(query, substitutionValues: {
@@ -209,6 +228,8 @@ class UsersTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

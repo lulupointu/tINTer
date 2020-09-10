@@ -1,7 +1,10 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:meta/meta.dart';
+
+final _logger = Logger('AssociationsTable');
 
 class AssociationsTable {
   // WARNING: the name must have only lower case letter.
@@ -11,6 +14,8 @@ class AssociationsTable {
   AssociationsTable({@required this.database});
 
   Future<void> create() {
+    _logger.info('Executing function create.');
+
     final String query = """
     CREATE TABLE $name (
       id SERIAL PRIMARY KEY,
@@ -23,6 +28,8 @@ class AssociationsTable {
   }
 
   Future<void> populate() {
+    _logger.info('Executing function populate.');
+
     var queries = <Future>[
       for (Association association in allAssociations)
         database.query("INSERT INTO $name VALUES (DEFAULT, @name, @description);",
@@ -36,6 +43,8 @@ class AssociationsTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final String query = """
       DROP TABLE IF EXISTS $name;
     """;
@@ -44,6 +53,8 @@ class AssociationsTable {
   }
 
   Future<void> add({@required Association association}) async {
+    _logger.info('Executing function add with args: association=${association}');
+
     final String query = "INSERT INTO $name VALUES (DEFAULT, @name, @description);";
 
     return database.query(query, substitutionValues: {
@@ -53,6 +64,8 @@ class AssociationsTable {
   }
 
   Future<void> addMultiple({@required List<Association> associations}) async {
+    _logger.info('Executing function addMultiple with args: associations=${associations}');
+
     if (associations.length==0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -71,6 +84,8 @@ class AssociationsTable {
 
   Future<void> update(
       {@required Association oldAssociation, @required Association association}) async {
+    _logger.info('Executing function update with args: oldAssociation=${oldAssociation}, association=${association}');
+
     final String query =
         "UPDATE $name SET name=@name, description=@description WHERE name=@old_name;";
 
@@ -82,6 +97,8 @@ class AssociationsTable {
   }
 
   Future<void> updateMultiple({@required List<Association> associations}) async {
+    _logger.info('Executing function updateMultiple with args: associations=${associations}');
+
     if (associations.length == 0) return;
     final String query =
         "UPDATE $name AS old SET name=new.name, description=new.description "
@@ -102,6 +119,8 @@ class AssociationsTable {
   }
 
   Future<Association> getFromName({@required Association association}) async {
+    _logger.info('Executing function getFromName with args: association=${association}');
+
     final String query = "SELECT * FROM $name WHERE name=@name;";
 
     return database.mappedResultsQuery(query, substitutionValues: {
@@ -122,6 +141,8 @@ class AssociationsTable {
   }
 
   Future<List<Association>> getMultipleFromName({@required List<Association> associations}) async {
+    _logger.info('Executing function getMultipleFromName with args: associations=${associations}');
+
     if (associations.length == 0) return [];
     final String query = """
     SELECT * FROM $name WHERE name IN (
@@ -149,6 +170,8 @@ class AssociationsTable {
   }
 
   Future<int> getIdFromName({@required String associationName}) async {
+    _logger.info('Executing function getIdFromName with args: associationName=${associationName}');
+
     final String query = "SELECT id FROM $name WHERE name=@name;";
 
     return database.mappedResultsQuery(query, substitutionValues: {
@@ -169,6 +192,8 @@ class AssociationsTable {
   }
 
   Future<List<int>> getMultipleIdFromName({@required List<Association> associations}) async {
+    _logger.info('Executing function getMultipleIdFromName with args: associations=${associations}');
+
     if (associations.length == 0) return [];
     final String query = """
     SELECT id FROM $name WHERE name IN (
@@ -196,6 +221,8 @@ class AssociationsTable {
   }
 
   Future<List<Association>> getAll() async {
+    _logger.info('Executing function getAll.');
+
     final String query = "SELECT * FROM $name";
 
     return database.mappedResultsQuery(query).then((sqlResults) {
@@ -207,6 +234,8 @@ class AssociationsTable {
   }
 
   Future<void> remove({@required Association association}) async {
+    _logger.info('Executing function remove with args: association=${association}');
+
     final String query = "DELETE FROM $name WHERE name=@name;";
 
     return database.query(query, substitutionValues: {
@@ -215,6 +244,8 @@ class AssociationsTable {
   }
 
   Future<void> removeMultiple({@required List<Association> associations}) async {
+    _logger.info('Executing function removeMultiple with args: associations=${associations}');
+
     if (associations.length == 0) return;
     final String query = "DELETE FROM $name WHERE name IN (" +
         [for (int index = 0; index < associations.length; index++) '@$index'].join(',') +
@@ -226,6 +257,8 @@ class AssociationsTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

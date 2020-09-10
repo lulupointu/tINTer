@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
@@ -77,6 +78,8 @@ List<Session> fakeSessions = [
   ),
 ];
 
+final _logger = Logger('SessionsTable');
+
 class SessionsTable {
   // WARNING: the name must have only lower case letter.
   static final String name = 'sessions';
@@ -85,6 +88,8 @@ class SessionsTable {
   SessionsTable({@required this.database});
 
   Future<void> create() async {
+    _logger.info('Executing function create.');
+
     final String createTableQuery = """
     CREATE TABLE $name (
       token Text PRIMARY KEY,
@@ -128,6 +133,8 @@ class SessionsTable {
   }
 
   Future<void> populate() {
+    _logger.info('Executing function populate.');
+
     var queries = <Future>[
       for (Session session in fakeSessions)
         database.query("INSERT INTO $name VALUES (@token, @login, @creationDate, @isValid);",
@@ -138,6 +145,8 @@ class SessionsTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final List<Future> queries = [
       database.query("DROP TABLE IF EXISTS $name;"),
       database.query("DROP FUNCTION IF EXISTS session_table_check;"),
@@ -147,12 +156,16 @@ class SessionsTable {
   }
 
   Future<void> add({@required Session session}) async {
+    _logger.info('Executing function add with args: session=${session}');
+
     final String query = "INSERT INTO $name VALUES (@token, @login, @creationDate, @isValid);";
 
     return database.query(query, substitutionValues: session.toJson());
   }
 
   Future<void> addMultiple({@required List<Session> sessions}) async {
+    _logger.info('Executing function addMultiple with args: sessions=${sessions}');
+
     if (sessions.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -170,6 +183,8 @@ class SessionsTable {
   }
 
   Future<void> update({@required Session session}) async {
+    _logger.info('Executing function update with args: session=${session}');
+
     final String query = "UPDATE $name "
         "SET token=@token, login=@login, \"creationDate\"=@creationDate, \"isValid\"=@isValid "
         "WHERE token=@token;";
@@ -178,6 +193,8 @@ class SessionsTable {
   }
 
   Future<void> updateMultiple({@required List<Session> sessions}) async {
+    _logger.info('Executing function updateMultiple with args: sessions=${sessions}');
+
     if (sessions.length == 0) return;
     final String query = "UPDATE $name AS old "
         "SET token=new.token, login=new.login, \"creationDate\"=new.\"creationDate\", \"isValid\"=new.\"isValid\" "
@@ -198,6 +215,8 @@ class SessionsTable {
   }
 
   Future<void> invalidAllFromLogin({@required String login}) async {
+    _logger.info('Executing function invalidAllFromLogin with args: login=${login}');
+
     final String query = "UPDATE $name AS old "
         "SET \"isValid\"='f' WHERE login=@login;";
 
@@ -207,6 +226,8 @@ class SessionsTable {
 
 
   Future<Session> getFromToken({@required String token}) async {
+    _logger.info('Executing function getFromToken with args: token=${token}');
+
     final String query = "SELECT * FROM $name WHERE token=@token;";
 
     return database.mappedResultsQuery(query, substitutionValues: {
@@ -228,6 +249,8 @@ class SessionsTable {
   }
 
   Future<List<Session>> getMultipleFromTokens({@required List<String> tokens}) async {
+    _logger.info('Executing function getMultipleFromTokens with args: tokens=${tokens}');
+
     if (tokens.length == 0) return [];
     final String query = "SELECT * FROM $name WHERE token IN (" +
         [for (int index = 0; index < tokens.length; index++) '@$index'].join(', ') +
@@ -253,6 +276,8 @@ class SessionsTable {
   }
 
   Future<bool> isValidFromToken({@required String token}) async {
+    _logger.info('Executing function isValidFromToken with args: token=${token}');
+
     final String query = "SELECT \"isValid\" FROM $name WHERE token=@token;";
 
     return database.mappedResultsQuery(query, substitutionValues: {
@@ -271,6 +296,8 @@ class SessionsTable {
   }
 
   Future<List<Session>> getAll() async {
+    _logger.info('Executing function getAll.');
+
     final String query = "SELECT * FROM $name";
 
     return database.mappedResultsQuery(query).then((sqlResults) {
@@ -281,6 +308,8 @@ class SessionsTable {
   }
 
   Future<void> removeFromToken({@required String token}) async {
+    _logger.info('Executing function removeFromToken with args: token=${token}');
+
     final String query = "DELETE FROM $name WHERE token=@token;";
 
     return database.query(query, substitutionValues: {
@@ -289,6 +318,8 @@ class SessionsTable {
   }
 
   Future<void> removeMultipleFromTokens({@required List<String> tokens}) async {
+    _logger.info('Executing function removeMultipleFromTokens with args: tokens=${tokens}');
+
     if (tokens.length == 0) return;
     final String query = "DELETE FROM $name WHERE token IN (" +
         [for (int index = 0; index < tokens.length; index++) '@$index'].join(',') +
@@ -300,6 +331,8 @@ class SessionsTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_score_scolaire_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
@@ -6,6 +7,8 @@ import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinter_backend/models/shared/user.dart';
+
+final _logger = Logger('BinomesTable');
 
 class BinomesTable {
   final UsersManagementTable usersManagementTable;
@@ -21,6 +24,8 @@ class BinomesTable {
 
   Future<List<BuildBinome>> getXDiscoverBinomesFromLogin(
       {@required String login, @required int limit, int offset = 0}) async {
+    _logger.info('Executing function getXDiscoverBinomesFromLogin with args: login=${login}, limit=${limit}, offset=${offset}');
+
     String getDiscoverBinomesQuery =
         "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, \"statusScolaire\" FROM ${RelationsScoreScolaireTable.name} JOIN "
         "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
@@ -62,6 +67,8 @@ class BinomesTable {
   }
 
   Future<List<BuildBinome>> getMatchedBinomesFromLogin({@required String login}) async {
+    _logger.info('Executing function getMatchedBinomesFromLogin with args: login=${login}');
+
     String getDiscoverBinomesQuery =
         "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, \"statusScolaire\", \"otherStatus\" FROM ${RelationsScoreScolaireTable.name} JOIN "
         "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
@@ -108,6 +115,7 @@ class BinomesTable {
   // ignore: missing_return
   BinomeStatus getBinomeStatusFromRelationStatusScolaire(
       {EnumRelationStatusScolaire status, EnumRelationStatusScolaire otherStatus}) {
+    _logger.info('Executing function getBinomeStatusFromRelationStatusScolaire with args: status=${status}, otherStatus=${otherStatus}');
     assert(status != null && otherStatus != null);
 
     switch (status) {

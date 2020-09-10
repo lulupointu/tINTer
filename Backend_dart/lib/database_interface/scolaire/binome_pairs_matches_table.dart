@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_management_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
@@ -8,6 +9,8 @@ import 'package:tinter_backend/models/scolaire/binome.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair_match.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
+
+final _logger = Logger('BinomePairsMatchesTable');
 
 class BinomePairsMatchesTable {
   final BinomePairsManagementTable binomePairsManagementTable;
@@ -23,6 +26,8 @@ class BinomePairsMatchesTable {
 
   Future<List<BuildBinomePairMatch>> getXDiscoverBinomesFromLogin(
       {@required String login, @required int limit, int offset = 0}) async {
+    _logger.info('Executing function getXDiscoverBinomesFromLogin with args: login=${login}, limit=${limit}, offset=${offset}');
+
     String getDiscoverBinomePairMatchesQuery =
         " SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
         " (SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
@@ -73,6 +78,8 @@ class BinomePairsMatchesTable {
   }
   Future<List<BuildBinomePairMatch>> getXDiscoverBinomesFromBinomePairId(
       {@required int binomePairId, @required int limit, int offset = 0}) async {
+    _logger.info('Executing function getXDiscoverBinomesFromBinomePairId with args: binomePairId=${binomePairId}, limit=${limit}, offset=${offset}');
+
     String getDiscoverBinomePairMatchesQuery =
         "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
         "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
@@ -115,6 +122,8 @@ class BinomePairsMatchesTable {
   }
 
   Future<List<BuildBinomePairMatch>> getMatchedBinomesFromLogin({@required String login}) async {
+    _logger.info('Executing function getMatchedBinomesFromLogin with args: login=${login}');
+
     String getDiscoverBinomesQuery =
         "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\", \"otherStatus\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
         "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
@@ -169,6 +178,8 @@ class BinomePairsMatchesTable {
 
 
   Future<List<BuildBinomePairMatch>> getMatchedBinomesFromBinomePairId({@required int binomePairId}) async {
+    _logger.info('Executing function getMatchedBinomesFromBinomePairId with args: binomePairId=${binomePairId}');
+
     String getDiscoverBinomesQuery =
         "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\", \"otherStatus\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
         "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
@@ -216,6 +227,8 @@ class BinomePairsMatchesTable {
   // ignore: missing_return
   BinomePairMatchStatus getBinomeStatusFromRelationStatusBinomePair(
       {EnumRelationStatusBinomePair status, EnumRelationStatusBinomePair otherStatus}) {
+    _logger.info('Executing function getBinomeStatusFromRelationStatusBinomePair with args: status=${status}, otherStatus=${otherStatus}');
+
     assert(status != null && otherStatus != null);
 
     switch (status) {

@@ -1,7 +1,10 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/scolaire/matieres.dart';
+
+final _logger = Logger('MatieresTable');
 
 class MatieresTable {
   // WARNING: the name must have only lower case letter.
@@ -11,6 +14,8 @@ class MatieresTable {
   MatieresTable({@required this.database});
 
   Future<void> create() {
+    _logger.info('Executing function create.');
+
     final String query = """
     CREATE TABLE $name (
       id SERIAL PRIMARY KEY,
@@ -22,6 +27,8 @@ class MatieresTable {
   }
 
   Future<void> populate() {
+    _logger.info('Executing function populate.');
+
     var queries = <Future>[
       for (String matiere in allMatieres)
         database.query("INSERT INTO $name VALUES (DEFAULT, @name);", substitutionValues: {
@@ -33,6 +40,8 @@ class MatieresTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final String query = """
       DROP TABLE IF EXISTS $name CASCADE;
     """;
@@ -42,6 +51,8 @@ class MatieresTable {
 
 
   Future<void> add({@required String matiere}) async {
+    _logger.info('Executing function add with args: matiere=${matiere}');
+
     final String query = "INSERT INTO $name VALUES (DEFAULT, @name);";
 
     return database.query(query, substitutionValues: {
@@ -50,6 +61,8 @@ class MatieresTable {
   }
 
   Future<void> addMultiple({@required List<String> matieres}) async {
+    _logger.info('Executing function addMultiple with args: matieres=${matieres}');
+
     if (matieres.length==0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -66,6 +79,8 @@ class MatieresTable {
 
   Future<void> update(
       {@required String oldMatiere, @required String matiere}) async {
+    _logger.info('Executing function update with args: matiere=${matiere}');
+
     final String query =
         "UPDATE $name SET name=@name WHERE name=@old_name;";
 
@@ -76,6 +91,8 @@ class MatieresTable {
   }
 
   Future<int> getIdFromName({@required String matiere}) async {
+    _logger.info('Executing function getIdFromName with args: matiere=${matiere}');
+
     final String query = "SELECT id FROM $name WHERE name=@name;";
 
     return database.mappedResultsQuery(query, substitutionValues: {
@@ -96,6 +113,8 @@ class MatieresTable {
   }
 
   Future<List<int>> getMultipleIdFromName({@required List<String> matieres}) async {
+    _logger.info('Executing function getMultipleIdFromName with args: matieres=${matieres}');
+
     if (matieres==0) return [];
     final String query = """
     SELECT id FROM $name WHERE name IN (
@@ -123,6 +142,8 @@ class MatieresTable {
   }
 
   Future<List<String>> getAll() async {
+    _logger.info('Executing function getAll.');
+
     final String query = "SELECT * FROM $name";
 
     return database.mappedResultsQuery(query).then((sqlResults) {
@@ -134,6 +155,8 @@ class MatieresTable {
   }
 
   Future<void> remove({@required String matiere}) async {
+    _logger.info('Executing function remove with args: matiere=${matiere}');
+
     final String query = "DELETE FROM $name WHERE name=@name;";
 
     return database.query(query, substitutionValues: {
@@ -142,6 +165,8 @@ class MatieresTable {
   }
 
   Future<void> removeMultiple({@required List<String> matieres}) async {
+    _logger.info('Executing function removeMultiple with args: matieres=${matieres}');
+
     if (matieres.length ==0) return;
     final String query = "DELETE FROM $name WHERE name IN (" +
         [for (int index = 0; index < matieres.length; index++) '@$index'].join(',') +
@@ -153,6 +178,8 @@ class MatieresTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

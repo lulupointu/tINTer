@@ -1,9 +1,12 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/associatif/relation_status_associatif.dart';
 import 'package:tinter_backend/models/associatif/searched_user_associatif.dart';
+
+final _logger = Logger('SearchedUserAssociatifTable');
 
 class SearchedUserAssociatifTable {
   // WARNING: the name must have only lower case letter.
@@ -14,6 +17,8 @@ class SearchedUserAssociatifTable {
   });
 
   Future<Map<String, SearchedUserAssociatif>> getAllExceptOneFromLogin({@required String login}) async {
+    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
+
     final Future query = database.mappedResultsQuery(
         "SELECT ${UsersTable.name}.login, name, surname, \"statusAssociatif\" FROM "
         "(SELECT * FROM ${RelationsStatusAssociatifTable.name} "
@@ -38,6 +43,7 @@ class SearchedUserAssociatifTable {
   }
 
   bool _getLikeOrNotFromRelationStatusAssociatif(EnumRelationStatusAssociatif relationStatus) {
+    _logger.info('Executing function _getLikeOrNotFromRelationStatusAssociatif with args: relationStatus=${relationStatus}');
     return (relationStatus == EnumRelationStatusAssociatif.ignored || relationStatus == EnumRelationStatusAssociatif.none)
         ? false
         : true;

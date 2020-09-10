@@ -1,9 +1,11 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/associatif/relation_score_associatif.dart';
+
 
 List<RelationScoreAssociatif> fakeListRelationScoreAssociatif = [
   RelationScoreAssociatif(
@@ -50,6 +52,8 @@ List<RelationScoreAssociatif> fakeListRelationScoreAssociatif = [
   ),
 ];
 
+final _logger = Logger('RelationsScoreAssociatifTable');
+
 class RelationsScoreAssociatifTable {
   // WARNING: the name must have only lower case letter.
   static final String name = 'relations_scores_associatif';
@@ -58,6 +62,8 @@ class RelationsScoreAssociatifTable {
   RelationsScoreAssociatifTable({@required this.database});
 
   Future<void> create() {
+    _logger.info('Executing function create.');
+
     final String query = """
     CREATE TABLE $name (
       loginA Text NOT NULL REFERENCES ${UsersTable.name} (login) ON DELETE CASCADE,
@@ -72,6 +78,8 @@ class RelationsScoreAssociatifTable {
   }
 
   Future<void> populate() {
+    _logger.info('Executing function populate.');
+
     var queries = <Future>[
       for (RelationScoreAssociatif relationScore in fakeListRelationScoreAssociatif)
         database.query("INSERT INTO $name VALUES (@loginA, @loginB, @score);",
@@ -92,6 +100,8 @@ class RelationsScoreAssociatifTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final String query = """
       DROP TABLE IF EXISTS $name;
     """;
@@ -100,6 +110,8 @@ class RelationsScoreAssociatifTable {
   }
 
   Future<void> add({@required RelationScoreAssociatif relationScore}) async {
+    _logger.info('Executing function add with args: relationScore=${relationScore}');
+
     final String query = "INSERT INTO $name VALUES (@loginA, @loginB, @score);";
 
     return database.query(query,
@@ -118,6 +130,8 @@ class RelationsScoreAssociatifTable {
 
   Future<void> addMultiple(
       {@required List<RelationScoreAssociatif> listRelationScoreAssociatif}) async {
+    _logger.info('Executing function addMultiple with args: listRelationScoreAssociatif=${listRelationScoreAssociatif}');
+
     if (listRelationScoreAssociatif.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -146,6 +160,8 @@ class RelationsScoreAssociatifTable {
   }
 
   Future<void> update({@required RelationScoreAssociatif relationScore}) async {
+    _logger.info('Executing function update with args: relationScore=${relationScore}');
+
     final String query =
         "UPDATE $name SET score=@score WHERE loginA=@loginA AND loginB=@loginB;";
 
@@ -165,6 +181,8 @@ class RelationsScoreAssociatifTable {
 
   Future<void> updateMultiple(
       {@required List<RelationScoreAssociatif> listRelationScoreAssociatif}) async {
+    _logger.info('Executing function updateMultiple with args: listRelationScoreAssociatif=${listRelationScoreAssociatif}');
+
     if (listRelationScoreAssociatif.length == 0) return;
     final String query = "UPDATE $name AS old SET score=new.score "
             "FROM (VALUES " +
@@ -196,6 +214,8 @@ class RelationsScoreAssociatifTable {
 
   Future<RelationScoreAssociatif> getFromLogins(
       {@required String login, @required otherLogin}) async {
+    _logger.info('Executing function getFromLogins with args: login=${login}, otherLogin=${otherLogin}');
+
     final String query = "SELECT * FROM $name WHERE loginA=@loginA AND loginB=@loginB;";
 
     return database
@@ -223,6 +243,8 @@ class RelationsScoreAssociatifTable {
   }
 
   Future<List<RelationScoreAssociatif>> getAllFromLogin({@required String login}) async {
+    _logger.info('Executing function getAllFromLogin with args: login=${login}');
+
     final String query = "SELECT * FROM $name WHERE loginA=@login OR loginB=@login";
 
     return database
@@ -235,6 +257,8 @@ class RelationsScoreAssociatifTable {
   }
 
   Future<List<RelationScoreAssociatif>> getAll() {
+    _logger.info('Executing function getAll.');
+
     final String query = "SELECT * FROM $name";
 
     return database.mappedResultsQuery(query).then((sqlResults) {
@@ -246,6 +270,8 @@ class RelationsScoreAssociatifTable {
   }
 
   Future<void> removeFromLogins({@required String login, @required otherLogin}) async {
+    _logger.info('Executing function removeFromLogins with args: login=${login}, otherLogin=${otherLogin}');
+
     final String query = "DELETE FROM $name WHERE loginA=@loginA AND loginB=@loginB;";
 
     return database.query(query,
@@ -261,12 +287,16 @@ class RelationsScoreAssociatifTable {
   }
 
   Future<void> removeAllFromLogin({@required String login}) async {
+    _logger.info('Executing function removeAllFromLogin with args: login=${login}');
+
     final String query = "DELETE FROM $name WHERE loginA=@login OR loginB=@login;";
 
     return database.query(query, substitutionValues: {'login': login});
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

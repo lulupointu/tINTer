@@ -1,8 +1,11 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/matieres_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
+
+final _logger = Logger('BinomePairsMatieresTable');
 
 class BinomePairsMatieresTable {
   // WARNING: the name must have only lower case letter.
@@ -14,6 +17,8 @@ class BinomePairsMatieresTable {
       : matieresTable = MatieresTable(database: database);
 
   Future<void> create() {
+    _logger.info('Executing function create.');
+
     final String query = """
     CREATE TABLE $name (
       \"binomePairId\" int NOT NULL REFERENCES ${BinomePairsProfilesTable.name} (\"binomePairId\") ON DELETE CASCADE,
@@ -26,6 +31,8 @@ class BinomePairsMatieresTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final String query = """
       DROP TABLE IF EXISTS $name;
     """;
@@ -34,6 +41,8 @@ class BinomePairsMatieresTable {
   }
 
   Future<void> addFromBinomePairId({@required int binomePairId, @required String matiere}) async {
+    _logger.info('Executing function addFromBinomePairId with args: binomePairId=${binomePairId}, matiere=${matiere}');
+
     // get the matiere id from the matiere name
     int matiereId = await matieresTable.getIdFromName(matiere: matiere);
 
@@ -47,6 +56,8 @@ class BinomePairsMatieresTable {
 
   Future<void> addMultipleFromBinomePairId(
       {@required int binomePairId, @required List<String> matieres}) async {
+    _logger.info('Executing function addMultipleFromBinomePairId with args: binomePairId=${binomePairId}, matieres=${matieres}');
+
     if (matieres.length == 0 ) return;
     // get the matieres ids from the matieres names
     List<int> matieresIds =
@@ -68,12 +79,16 @@ class BinomePairsMatieresTable {
   }
 
   Future<void> updateBinomePair({@required int binomePairId, @required List<String> matieres}) async {
+    _logger.info('Executing function updateBinomePair with args: binomePairId=${binomePairId}, matieres=${matieres}');
+
     await removeAllFromBinomePairId(binomePairId: binomePairId);
 
     return addMultipleFromBinomePairId(binomePairId: binomePairId, matieres: matieres);
   }
 
   Future<List<String>> getFromBinomePairId({@required int binomePairId}) async {
+    _logger.info('Executing function getFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE \"binomePairId\"=@binomePairId "
@@ -91,6 +106,8 @@ class BinomePairsMatieresTable {
   }
 
   Future<List<String>> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE login=@login OR \"otherLogin\"=@login "
@@ -109,6 +126,8 @@ class BinomePairsMatieresTable {
 
   Future<Map<int, List<String>>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
+    _logger.info('Executing function getMultipleFromBinomePairsId with args: binomePairsId=${binomePairsId}');
+
     if (binomePairsId.length == 0) return {};
     final String query = "SELECT * "
         "FROM ("
@@ -135,6 +154,8 @@ class BinomePairsMatieresTable {
   }
 
   Future<Map<String, List<String>>> getAllExceptOneFromBinomePairId({@required int binomePairId}) async {
+    _logger.info('Executing function getAllExceptOneFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE \"binomePairId\" != @binomePairId "
@@ -159,6 +180,8 @@ class BinomePairsMatieresTable {
   }
 
   Future<void> removeAllFromBinomePairId({@required int binomePairId}) {
+    _logger.info('Executing function removeAllFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = "DELETE FROM $name WHERE \"binomePairId\"=@binomePairId;";
 
     return database.query(query, substitutionValues: {
@@ -167,6 +190,8 @@ class BinomePairsMatieresTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

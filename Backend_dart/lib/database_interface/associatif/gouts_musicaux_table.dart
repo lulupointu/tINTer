@@ -1,7 +1,10 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/associatif/gouts_musicaux.dart';
+
+final _logger = Logger('GoutsMusicauxTable');
 
 class GoutsMusicauxTable {
   // WARNING: the name must have only lower case letter.
@@ -11,6 +14,9 @@ class GoutsMusicauxTable {
   GoutsMusicauxTable({@required this.database});
 
   Future<void> create() {
+    _logger.info('Executing function .');
+
+    
     final String query = """
     CREATE TABLE $name (
       id SERIAL PRIMARY KEY,
@@ -22,6 +28,8 @@ class GoutsMusicauxTable {
   }
 
   Future<void> populate() {
+    _logger.info('Executing function populate.');
+
     var queries = <Future>[
       for (String goutMusical in allGoutsMusicaux)
         database.query("INSERT INTO $name VALUES (DEFAULT, @name);", substitutionValues: {
@@ -33,6 +41,8 @@ class GoutsMusicauxTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final String query = """
       DROP TABLE IF EXISTS $name;
     """;
@@ -42,6 +52,8 @@ class GoutsMusicauxTable {
 
 
   Future<void> add({@required String goutMusical}) async {
+    _logger.info('Executing function add with args: goutMusical=${goutMusical}');
+
     final String query = "INSERT INTO $name VALUES (DEFAULT, @name);";
 
     return database.query(query, substitutionValues: {
@@ -50,6 +62,8 @@ class GoutsMusicauxTable {
   }
 
   Future<void> addMultiple({@required List<String> goutsMusicaux}) async {
+    _logger.info('Executing function addMultiple with args: goutsMusicaux=${goutsMusicaux}');
+
     if (goutsMusicaux.length==0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -66,6 +80,8 @@ class GoutsMusicauxTable {
 
   Future<void> update(
       {@required String oldGoutMusical, @required String goutMusical}) async {
+    _logger.info('Executing function update with args: oldGoutMusical=${oldGoutMusical}, goutMusical=${goutMusical}');
+
     final String query =
         "UPDATE $name SET name=@name WHERE name=@old_name;";
 
@@ -76,6 +92,8 @@ class GoutsMusicauxTable {
   }
 
   Future<int> getIdFromName({@required String goutMusical}) async {
+    _logger.info('Executing function getIdFromName with args: goutMusical=${goutMusical}');
+
     final String query = "SELECT id FROM $name WHERE name=@name;";
 
     return database.mappedResultsQuery(query, substitutionValues: {
@@ -96,6 +114,8 @@ class GoutsMusicauxTable {
   }
 
   Future<List<int>> getMultipleIdFromName({@required List<String> goutsMusicaux}) async {
+    _logger.info('Executing function getMultipleIdFromName with args: goutsMusicaux=${goutsMusicaux}');
+
     if (goutsMusicaux==0) return [];
     final String query = """
     SELECT id FROM $name WHERE name IN (
@@ -123,6 +143,8 @@ class GoutsMusicauxTable {
   }
 
   Future<List<String>> getAll() async {
+    _logger.info('Executing function getAll.');
+
     final String query = "SELECT * FROM $name";
 
     return database.mappedResultsQuery(query).then((sqlResults) {
@@ -134,6 +156,8 @@ class GoutsMusicauxTable {
   }
 
   Future<void> remove({@required String goutMusical}) async {
+    _logger.info('Executing function remove with args: goutMusical=${goutMusical}');
+
     final String query = "DELETE FROM $name WHERE name=@name;";
 
     return database.query(query, substitutionValues: {
@@ -142,6 +166,8 @@ class GoutsMusicauxTable {
   }
 
   Future<void> removeMultiple({@required List<String> goutsMusicaux}) async {
+    _logger.info('Executing function removeMultiple with args: goutsMusicaux=${goutsMusicaux}');
+
     if (goutsMusicaux.length ==0) return;
     final String query = "DELETE FROM $name WHERE name IN (" +
         [for (int index = 0; index < goutsMusicaux.length; index++) '@$index'].join(',') +
@@ -153,6 +179,8 @@ class GoutsMusicauxTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

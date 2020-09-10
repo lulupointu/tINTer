@@ -1,8 +1,11 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
+
+final _logger = Logger('BinomePairsProfilesTable');
 
 class BinomePairsProfilesTable {
   // WARNING: the name must have only lower case letter.
@@ -12,6 +15,8 @@ class BinomePairsProfilesTable {
   BinomePairsProfilesTable({@required this.database});
 
   Future<void> create() async {
+    _logger.info('Executing function create.');
+
     final String createTableQuery = """
     CREATE TABLE $name (
       \"binomePairId\" SERIAL PRIMARY KEY,
@@ -34,10 +39,14 @@ class BinomePairsProfilesTable {
   }
 
   Future<void> delete() async {
+    _logger.info('Executing function delete.');
+
     return database.query("DROP TABLE IF EXISTS $name CASCADE;");
   }
 
   Future<void> add({@required Map<String, dynamic> binomePairJson}) async {
+    _logger.info('Executing function add with args: binomePairJson=${binomePairJson}');
+
     assert(binomePairJson.containsKey('binomePairId'));
 
     // Remove any useless input
@@ -59,6 +68,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<bool> isKnown({@required int binomePairId}) {
+    _logger.info('Executing function isKnown with args: binomePairId=${binomePairId}');
+
     final String query = "SELECT * FROM $name "
         "WHERE $name.\"binomePairId\"=@binomePairId;";
 
@@ -74,6 +85,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<bool> isKnownFromLogin({@required String login}) {
+    _logger.info('Executing function isKnownFromLogin with args: login=${login}');
+
     final String query = "SELECT * FROM $name "
         "WHERE login=@login OR \"otherLogin\"=@login;";
 
@@ -89,6 +102,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<void> update({@required BuildBinomePair binomePair}) async {
+    _logger.info('Executing function update with args: binomePair=${binomePair}');
+
     Map<String, dynamic> binomePairJson = binomePair.toJson();
 
     // Remove any useless input
@@ -108,6 +123,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<Map<String, dynamic>> getFromBinomePairId({@required int binomePairId}) async {
+    _logger.info('Executing function getFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = "SELECT * FROM $name "
         "WHERE $name.\"binomePairId\"=@binomePairId;";
 
@@ -124,6 +141,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<Map<String, dynamic>> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
     final String query = "SELECT * FROM $name "
         "WHERE login=@login OR \"otherLogin\"=@login;";
 
@@ -140,6 +159,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<String> getOtherLoginFromLogin({@required String login}) async {
+    _logger.info('Executing function getOtherLoginFromLogin with args: login=${login}');
+
     final String query = "SELECT login, \"otherLogin\" FROM $name "
         "WHERE login=@login OR \"otherLogin\"=@login;";
 
@@ -158,6 +179,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<int> getBinomePairIdFromLogin({@required String login}) async {
+    _logger.info('Executing function getBinomePairIdFromLogin with args: login=${login}');
+
     final String query = "SELECT \"binomePairId\" FROM $name "
         "WHERE login=@login OR \"otherLogin\"=@login;";
 
@@ -175,6 +198,8 @@ class BinomePairsProfilesTable {
 
   Future<Map<int, Map<String, dynamic>>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
+    _logger.info('Executing function getMultipleFromBinomePairsId with args: binomePairsId=${binomePairsId}');
+
     if (binomePairsId.length == 0) return {};
     final String query = "SELECT * FROM $name "
             "WHERE $name.\"binomePairId\" IN (" +
@@ -194,6 +219,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<void> remove({@required int binomePairId}) async {
+    _logger.info('Executing function remove with args: binomePairId=${binomePairId}');
+
     final String query = "DELETE FROM $name WHERE \"binomePairId\"=@binomePairId;";
 
     return database.query(query, substitutionValues: {
@@ -202,6 +229,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<void> removeFromLogin({@required String login}) async {
+    _logger.info('Executing function removeFromLogin with args: login=${login}');
+
     final String query = "DELETE FROM $name WHERE \"login\"=@login OR \"otherLogin\"=@login;";
 
     return database.query(query, substitutionValues: {
@@ -210,6 +239,8 @@ class BinomePairsProfilesTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

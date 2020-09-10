@@ -1,7 +1,10 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/shared/user.dart';
+
+final _logger = Logger('UsersHorairesDeTravailTable');
 
 class UsersHorairesDeTravailTable {
   // WARNING: the name must have only lower case letter.
@@ -11,6 +14,8 @@ class UsersHorairesDeTravailTable {
   UsersHorairesDeTravailTable({@required this.database});
 
   Future<void> create() async {
+    _logger.info('Executing function create.');
+
     final String createType = """
         CREATE TYPE HorairesDeTravail AS ENUM ('morning', 'afternoon', 'evening', 'night');
         """;
@@ -29,6 +34,8 @@ class UsersHorairesDeTravailTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final List<Future> queries = [
       database.query("DROP TABLE IF EXISTS $name CASCADE;"),
       database.query("DROP TYPE IF EXISTS HorairesDeTravail CASCADE;"),
@@ -39,6 +46,8 @@ class UsersHorairesDeTravailTable {
 
   Future<void> addFromLogin(
       {@required String login, @required HoraireDeTravail horaireDeTravail}) async {
+    _logger.info('Executing function addFromLogin with args: login=${login}, horaireDeTravail=${horaireDeTravail}');
+
     final String query = "INSERT INTO $name VALUES (@login, @HoraireDeTravail);";
 
     return database.query(query, substitutionValues: {
@@ -49,6 +58,8 @@ class UsersHorairesDeTravailTable {
 
   Future<void> addMultipleFromLogin(
       {@required String login, @required List<HoraireDeTravail> horairesDeTravail}) async {
+    _logger.info('Executing function addMultipleFromLogin with args: login=${login}, horairesDeTravail=${horairesDeTravail}');
+
     if (horairesDeTravail.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -67,12 +78,16 @@ class UsersHorairesDeTravailTable {
 
   Future<void> updateUser(
       {@required String login, @required List<HoraireDeTravail> horairesDeTravail}) async {
+    _logger.info('Executing function updateUser with args: login=${login}, horairesDeTravail=${horairesDeTravail}');
+
     await removeAllFromLogin(login: login);
 
     return addMultipleFromLogin(login: login, horairesDeTravail: horairesDeTravail);
   }
 
   Future<List<String>> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
     final String query = "SELECT * FROM $name WHERE user_login=@login ";
 
     return database.mappedResultsQuery(query, substitutionValues: {
@@ -87,6 +102,8 @@ class UsersHorairesDeTravailTable {
 
   Future<Map<String, List<String>>> getMultipleFromLogins(
       {@required List<String> logins}) async {
+    _logger.info('Executing function getMultipleFromLogins with args: logins=${logins}');
+
     if (logins.length == 0) return {};
     final String query = "SELECT * FROM $name WHERE user_login IN (" +
         [for (int index = 0; index < logins.length; index++) "@login$index"].join(',') +
@@ -109,6 +126,8 @@ class UsersHorairesDeTravailTable {
   }
 
   Future<Map<String, List<String>>> getAllExceptOneFromLogin({@required String login}) async {
+    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
+
     final String query = "SELECT * FROM $name WHERE user_login != @login ";
 
     return database.mappedResultsQuery(query, substitutionValues: {
@@ -129,6 +148,8 @@ class UsersHorairesDeTravailTable {
   }
 
   Future<void> removeAllFromLogin({@required String login}) {
+    _logger.info('Executing function removeAllFromLogin with args: login=${login}');
+
     final String query = "DELETE FROM $name WHERE user_login=@login;";
 
     return database.query(query, substitutionValues: {
@@ -137,6 +158,8 @@ class UsersHorairesDeTravailTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

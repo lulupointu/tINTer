@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
@@ -54,6 +55,8 @@ import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart'
 //  ),
 //];
 
+final _logger = Logger('RelationsStatusBinomePairsMatchesTable');
+
 class RelationsStatusBinomePairsMatchesTable {
   // WARNING: the name must have only lower case letter.
   static final String name = 'relations_status_binome_pair';
@@ -62,6 +65,8 @@ class RelationsStatusBinomePairsMatchesTable {
   RelationsStatusBinomePairsMatchesTable({@required this.database});
 
   Future<void> create() async {
+    _logger.info('Executing function create.');
+
     final String statusTypeCreateQuery = """
     CREATE TYPE \"statusBinomePair\" 
     AS ENUM ('none', 'ignored', 'liked', 'askedBinomePairMatch', 'acceptedBinomePairMatch', 'refusedBinomePairMatch')
@@ -151,6 +156,8 @@ class RelationsStatusBinomePairsMatchesTable {
 //  }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final List<Future> queries = [
       database.query("DROP TABLE IF EXISTS $name;"),
       database.query("DROP TYPE IF EXISTS \"statusBinomePair\";"),
@@ -161,12 +168,16 @@ class RelationsStatusBinomePairsMatchesTable {
   }
 
   Future<void> add({@required RelationStatusBinomePair relationStatus}) async {
+    _logger.info('Executing function add.');
+
     final String query = "INSERT INTO $name VALUES (@binomePairId, @otherBinomePairId, @status);";
 
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
 
   Future<void> addMultiple({@required List<RelationStatusBinomePair> listRelationStatusBinomePair}) async {
+    _logger.info('Executing function addMultiple with args: listRelationStatusBinomePair=${listRelationStatusBinomePair}');
+
     if (listRelationStatusBinomePair.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -184,6 +195,8 @@ class RelationsStatusBinomePairsMatchesTable {
   }
 
   Future<void> update({@required RelationStatusBinomePair relationStatus}) async {
+    _logger.info('Executing function update with args: relationStatus=${relationStatus}');
+
     final String query =
         "UPDATE $name SET \"status\"=@status WHERE \"binomePairId\"=@binomePairId AND \"otherBinomePairId\"=@otherBinomePairId;";
 
@@ -192,6 +205,8 @@ class RelationsStatusBinomePairsMatchesTable {
   }
 
   Future<void> updateMultiple({@required List<RelationStatusBinomePair> listRelationStatusBinomePair}) async {
+    _logger.info('Executing function updateMultiple with args: listRelationStatusBinomePair=${listRelationStatusBinomePair}');
+
     if (listRelationStatusBinomePair.length == 0) return;
     final String query = "UPDATE $name AS old SET \"status\"=new.\"status\" "
         "FROM (VALUES " +
@@ -212,6 +227,8 @@ class RelationsStatusBinomePairsMatchesTable {
 
   Future<RelationStatusBinomePair> getFromBinomePairIds(
       {@required int binomePairId, @required int otherBinomePairId}) async {
+    _logger.info('Executing function getFromBinomePairIds with args: binomePairId=${binomePairId}, otherBinomePairId=${otherBinomePairId}');
+
     final String query =
         "SELECT * FROM $name WHERE \"binomePairId\"=@binomePairId AND \"otherBinomePairId\"=@otherBinomePairId;";
 
@@ -234,6 +251,8 @@ class RelationsStatusBinomePairsMatchesTable {
   }
 
   Future<Map<String, RelationStatusBinomePair>> getAllFromBinomePairId({@required String binomePairId}) async {
+    _logger.info('Executing function getAllFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = """
     SELECT * FROM $name WHERE \"binomePairId\"=@binomePairId;
     """;
@@ -254,6 +273,8 @@ class RelationsStatusBinomePairsMatchesTable {
   }
 
   Future<List<RelationStatusBinomePair>> getAll() async {
+    _logger.info('Executing function getAll.');
+
     final String query = "SELECT * FROM $name";
 
     return database.mappedResultsQuery(query).then((sqlResults) {
@@ -265,6 +286,8 @@ class RelationsStatusBinomePairsMatchesTable {
   }
 
   Future<void> remove({@required RelationStatusBinomePair relationStatus}) async {
+    _logger.info('Executing function remove with args: relationStatus=${relationStatus}');
+
     final String query =
         "DELETE FROM $name WHERE \"binomePairId\"=@binomePairId AND \"otherBinomePairId\"=@otherBinomePairId;";
 
@@ -272,6 +295,8 @@ class RelationsStatusBinomePairsMatchesTable {
   }
 
   Future<void> removeMultiple({@required List<RelationStatusBinomePair> listRelationStatusBinomePair}) async {
+    _logger.info('Executing function removeMultiple with args: listRelationStatusBinomePair=${listRelationStatusBinomePair}');
+
     if (listRelationStatusBinomePair.length == 0) return;
     final String query = "DELETE FROM $name WHERE (\"binomePairId\", \"otherBinomePairId\") IN (" +
         [
@@ -289,12 +314,15 @@ class RelationsStatusBinomePairsMatchesTable {
   }
 
   Future<void> removeBinomePairId({@required String binomePairId}) async {
+    _logger.info('Executing function removeBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = "DELETE FROM $name WHERE \"binomePairId\"=@binomePairId OR \"otherBinomePairId\"=@binomePairId;";
 
     return database.query(query, substitutionValues: {'binomePairId': binomePairId});
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

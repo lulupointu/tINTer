@@ -1,9 +1,12 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:meta/meta.dart';
+
+final _logger = Logger('BinomePairsAssociationsTable');
 
 class BinomePairsAssociationsTable {
   // WARNING: the name must have only lower case letter.
@@ -15,6 +18,8 @@ class BinomePairsAssociationsTable {
       : associationsTable = AssociationsTable(database: database);
 
   Future<void> create() {
+    _logger.info('Executing function create.');
+
     final String query = """
     CREATE TABLE $name (
       \"binomePairId\" int NOT NULL REFERENCES ${BinomePairsProfilesTable.name} (\"binomePairId\") ON DELETE CASCADE,
@@ -27,6 +32,8 @@ class BinomePairsAssociationsTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final String query = """
       DROP TABLE IF EXISTS $name;
     """;
@@ -36,6 +43,8 @@ class BinomePairsAssociationsTable {
 
   Future<void> addFromBinomePairId(
       {@required int binomePairId, @required Association association}) async {
+    _logger.info('Executing function addFromBinomePairId with args: binomePairId=${binomePairId}, association=${association}');
+
     // get the association id from the association name
     int associationId =
     await associationsTable.getIdFromName(associationName: association.name);
@@ -50,6 +59,8 @@ class BinomePairsAssociationsTable {
 
   Future<void> addMultipleFromBinomePairId(
       {@required binomePairId, @required List<Association> associations}) async {
+    _logger.info('Executing function addMultipleFromBinomePairId with args: binomePairId=${binomePairId}, associations=${associations}');
+
     if (associations.length == 0 ) return;
     // get the associations ids from the associations names
     List<int> associationsIds =
@@ -71,12 +82,16 @@ class BinomePairsAssociationsTable {
   }
 
   Future<void> updateBinomePair({@required int binomePairId, @required List<Association> associations}) async {
+    _logger.info('Executing function updateBinomePair with args: binomePairId=${binomePairId}, associations=${associations}');
+
     await removeAllFromBinomePairId(binomePairId: binomePairId);
 
     return addMultipleFromBinomePairId(binomePairId: binomePairId, associations: associations);
   }
 
   Future<List<Association>> getFromBinomePairId({@required int binomePairId}) async {
+    _logger.info('Executing function getFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE \"binomePairId\" = @binomePairId "
@@ -94,6 +109,8 @@ class BinomePairsAssociationsTable {
   }
 
   Future<List<Association>> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE login=@login OR \"otherLogin\"=@login "
@@ -112,6 +129,8 @@ class BinomePairsAssociationsTable {
 
   Future<Map<int, List<Association>>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
+    _logger.info('Executing function getMultipleFromBinomePairsId with args: binomePairsId=${binomePairsId}');
+
     if (binomePairsId.length == 0) return {};
     final String query = "SELECT * "
         "FROM ("
@@ -139,6 +158,8 @@ class BinomePairsAssociationsTable {
 
   Future<Map<String, List<Association>>> getAllExceptOneFromBinomePairId(
       {@required int binomePairId}) async {
+    _logger.info('Executing function getAllExceptOneFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE \"binomePairId\" != @binomePairId "
@@ -163,6 +184,8 @@ class BinomePairsAssociationsTable {
   }
 
   Future<void> removeAllFromBinomePairId({@required int binomePairId}) {
+    _logger.info('Executing function removeAllFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final String query = "DELETE FROM $name WHERE \"binomePairId\"=@binomePairId;";
 
     return database.query(query, substitutionValues: {
@@ -171,6 +194,8 @@ class BinomePairsAssociationsTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

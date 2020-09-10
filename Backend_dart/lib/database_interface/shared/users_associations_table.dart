@@ -1,8 +1,11 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:meta/meta.dart';
+
+final _logger = Logger('UsersAssociationsTable');
 
 class UsersAssociationsTable {
   // WARNING: the name must have only lower case letter.
@@ -14,6 +17,8 @@ class UsersAssociationsTable {
       : associationsTable = AssociationsTable(database: database);
 
   Future<void> create() {
+    _logger.info('Executing function create.');
+
     final String query = """
     CREATE TABLE $name (
       user_login Text NOT NULL REFERENCES ${UsersTable.name} (login) ON DELETE CASCADE,
@@ -26,6 +31,8 @@ class UsersAssociationsTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final String query = """
       DROP TABLE IF EXISTS $name;
     """;
@@ -35,6 +42,8 @@ class UsersAssociationsTable {
 
   Future<void> addFromLogin(
       {@required String login, @required Association association}) async {
+    _logger.info('Executing function addFromLogin with args: association=${association}, association=${association}');
+
     // get the association id from the association name
     int associationId =
         await associationsTable.getIdFromName(associationName: association.name);
@@ -49,6 +58,8 @@ class UsersAssociationsTable {
 
   Future<void> addMultipleFromLogin(
       {@required login, @required List<Association> associations}) async {
+    _logger.info('Executing function addMultipleFromLogin with args: associations=${associations}, associations=${associations}');
+
     if (associations.length == 0 ) return;
     // get the associations ids from the associations names
     List<int> associationsIds =
@@ -70,12 +81,16 @@ class UsersAssociationsTable {
   }
 
   Future<void> updateUser({@required String login, @required List<Association> associations}) async {
+    _logger.info('Executing function updateUser with args: associations=${associations}, associations=${associations}');
+
     await removeAllFromLogin(login: login);
 
     return addMultipleFromLogin(login: login, associations: associations);
   }
 
   Future<List<Association>> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE user_login = @login "
@@ -94,6 +109,8 @@ class UsersAssociationsTable {
 
   Future<Map<String, List<Association>>> getMultipleFromLogins(
       {@required List<String> logins}) async {
+    _logger.info('Executing function getMultipleFromLogins with args: logins=${logins}');
+
     if (logins.length == 0) return {};
     final String query = "SELECT * "
             "FROM ("
@@ -121,6 +138,8 @@ class UsersAssociationsTable {
 
   Future<Map<String, List<Association>>> getAllExceptOneFromLogin(
       {@required String login}) async {
+    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
+
     final String query = "SELECT * "
         "FROM ("
         "SELECT * FROM $name WHERE user_login != @login "
@@ -145,6 +164,8 @@ class UsersAssociationsTable {
   }
 
   Future<void> removeAllFromLogin({@required String login}) {
+    _logger.info('Executing function removeAllFromLogin with args: login=${login}');
+
     final String query = "DELETE FROM $name WHERE user_login=@login;";
 
     return database.query(query, substitutionValues: {
@@ -153,6 +174,8 @@ class UsersAssociationsTable {
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
+
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_associations_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_horaire_de_travail_table.dart';
@@ -9,6 +10,8 @@ import 'package:tinter_backend/models/associatif/association.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/binome_pair_match.dart';
+
+final _logger = Logger('BinomePairsManagementTable');
 
 class BinomePairsManagementTable {
   final BinomePairsProfilesTable binomePairsTable;
@@ -24,6 +27,8 @@ class BinomePairsManagementTable {
         binomePairsHorairesDeTravailTable = BinomePairsHorairesDeTravailTable(database: database);
 
   Future<void> populate() {
+    _logger.info('Executing function populate.');
+
     final List<Future> queries = [
       for (BuildBinomePair binomePair in fakeBinomePairs) ...[add(binomePair: binomePair)]
     ];
@@ -32,6 +37,8 @@ class BinomePairsManagementTable {
   }
 
   Future<void> create() async {
+    _logger.info('Executing function create.');
+
     await binomePairsTable.create();
 
     final List<Future> queries = [
@@ -44,6 +51,8 @@ class BinomePairsManagementTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final List<Future> queries = [
       binomePairsTable.delete(),
       binomePairsAssociationsTable.delete(),
@@ -55,6 +64,8 @@ class BinomePairsManagementTable {
   }
 
   Future<void> add({@required BuildBinomePair binomePair}) async {
+    _logger.info('Executing function add with args: binomePair=${binomePair}');
+
     await binomePairsTable.add(binomePairJson: binomePair.toJson());
 
     // Get the binome pair id
@@ -77,6 +88,8 @@ class BinomePairsManagementTable {
   }
 
   Future<void> update({@required BuildBinomePair binomePair}) async {
+    _logger.info('Executing function update with args: binomePair=${binomePair}');
+
 
     final List<Future> queries = [
       binomePairsTable.update(binomePair: binomePair),
@@ -92,10 +105,14 @@ class BinomePairsManagementTable {
   }
 
   Future<void> removeFromBinomePairId(int binomePairId) {
+    _logger.info('Executing function removeFromBinomePairId with args: binomePairId=${binomePairId}');
+
     return binomePairsTable.remove(binomePairId: binomePairId);
   }
 
   Future<BuildBinomePair> getFromBinomePairId({@required int binomePairId}) async {
+    _logger.info('Executing function getFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final List<Future> queries = [
       binomePairsTable.getFromBinomePairId(binomePairId: binomePairId),
       binomePairsAssociationsTable.getFromBinomePairId(binomePairId: binomePairId),
@@ -114,6 +131,8 @@ class BinomePairsManagementTable {
   }
 
   Future<BuildBinomePair> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
 
     Map<String, dynamic> binomePairJson = await binomePairsTable.getFromLogin(login: login);
 
@@ -135,6 +154,8 @@ class BinomePairsManagementTable {
 
   Future<Map<int, BuildBinomePair>> getAllExceptOneFromBinomePairId(
       {@required int binomePairId}) async {
+    _logger.info('Executing function getAllExceptOneFromBinomePairId with args: binomePairId=${binomePairId}');
+
     final Map<int, Map<String, dynamic>> otherBinomePairsJson = await database.mappedResultsQuery(
         "SELECT * FROM ${BinomePairsProfilesTable.name} "
             "WHERE binomePairId<>@binomePairId "
@@ -171,6 +192,8 @@ class BinomePairsManagementTable {
 
   Future<Map<int, BuildBinomePair>> getAllExceptOneFromLogin(
       {@required String login}) async {
+    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
+
     final Map<int, Map<String, dynamic>> otherBinomePairsJson = await database.mappedResultsQuery(
         "SELECT * FROM ${BinomePairsProfilesTable.name} "
             "WHERE login<>@login AND \"otherLogin\"<>@login "
@@ -207,6 +230,8 @@ class BinomePairsManagementTable {
 
 Future<Map<int, BuildBinomePair>> getMultipleFromBinomePairsId(
       {@required List<int> binomePairsId}) async {
+  _logger.info('Executing function getMultipleFromBinomePairsId with args: binomePairsId=${binomePairsId}');
+
     if (binomePairsId.length == 0) return {};
 
     final List<Future> queries = [

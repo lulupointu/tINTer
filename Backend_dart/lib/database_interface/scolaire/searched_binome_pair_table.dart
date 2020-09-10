@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_status_table.dart';
@@ -5,6 +6,8 @@ import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/searched_binome_pair.dart';
+
+final _logger = Logger('SearchedBinomePairsTable');
 
 class SearchedBinomePairsTable {
   // WARNING: the name must have only lower case letter.
@@ -15,6 +18,8 @@ class SearchedBinomePairsTable {
   });
 
   Future<Map<int, SearchedBinomePair>> getAllExceptOneFromLogin({@required String login}) async {
+    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
+
     final Future query = database.mappedResultsQuery(
         "SELECT \"binomePairId\", login, name, surname, \"otherLogin\", \"otherName\", \"otherSurname\", \"status\" "
             " FROM "
@@ -47,6 +52,8 @@ class SearchedBinomePairsTable {
 
 
   bool _getLikeOrNotFromRelationStatusBinomePair(EnumRelationStatusBinomePair relationStatus) {
+    _logger.info('Executing function _getLikeOrNotFromRelationStatusBinomePair with args: relationStatus=${relationStatus}');
+
     return (relationStatus == EnumRelationStatusBinomePair.ignored || relationStatus == EnumRelationStatusBinomePair.none)
         ? false
         : true;

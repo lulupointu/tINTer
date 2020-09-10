@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:meta/meta.dart';
@@ -56,6 +57,8 @@ List<RelationStatusScolaire> fakeListRelationStatusScolaire = [
   ),
 ];
 
+final _logger = Logger('RelationsStatusScolaireTable');
+
 class RelationsStatusScolaireTable {
   // WARNING: the name must have only lower case letter.
   static final String name = 'relations_status_scolaire';
@@ -64,6 +67,8 @@ class RelationsStatusScolaireTable {
   RelationsStatusScolaireTable({@required this.database});
 
   Future<void> create() async {
+    _logger.info('Executing function create.');
+
     final String statusTypeCreateQuery = """
     CREATE TYPE \"statusScolaire\" 
     AS ENUM ('none', 'ignored', 'liked', 'askedBinome', 'acceptedBinome', 'refusedBinome')
@@ -145,6 +150,8 @@ class RelationsStatusScolaireTable {
   }
 
   Future<void> populate() {
+    _logger.info('Executing function populate.');
+
     var queries = <Future>[
       for (RelationStatusScolaire relationStatus in fakeListRelationStatusScolaire)
         database.query("INSERT INTO $name VALUES (@login, @otherLogin, @statusScolaire);",
@@ -155,6 +162,8 @@ class RelationsStatusScolaireTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final List<Future> queries = [
       database.query("DROP TABLE IF EXISTS $name;"),
       database.query("DROP TYPE IF EXISTS \"statusScolaire\";"),
@@ -165,12 +174,16 @@ class RelationsStatusScolaireTable {
   }
 
   Future<void> add({@required RelationStatusScolaire relationStatus}) async {
+    _logger.info('Executing function add with args: relationStatus=${relationStatus}');
+
     final String query = "INSERT INTO $name VALUES (@login, @otherLogin, @statusScolaire);";
 
     return database.query(query, substitutionValues: relationStatus.toJson());
   }
 
   Future<void> addMultiple({@required List<RelationStatusScolaire> listRelationStatusScolaire}) async {
+    _logger.info('Executing function addMultiple with args: listRelationStatusScolaire=${listRelationStatusScolaire}');
+
     if (listRelationStatusScolaire.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
         [
@@ -188,6 +201,8 @@ class RelationsStatusScolaireTable {
   }
 
   Future<void> update({@required RelationStatusScolaire relationStatus}) async {
+    _logger.info('Executing function update with args: relationStatus=${relationStatus}');
+
     final String query =
         "UPDATE $name SET \"statusScolaire\"=@statusScolaire WHERE login=@login AND \"otherLogin\"=@otherLogin;";
 
@@ -195,6 +210,8 @@ class RelationsStatusScolaireTable {
   }
 
   Future<void> updateMultiple({@required List<RelationStatusScolaire> listRelationStatusScolaire}) async {
+    _logger.info('Executing function updateMultiple with args: listRelationStatusScolaire=${listRelationStatusScolaire}');
+
     if (listRelationStatusScolaire.length == 0) return;
     final String query = "UPDATE $name AS old SET \"statusScolaire\"=new.\"statusScolaire\" "
             "FROM (VALUES " +
@@ -215,6 +232,8 @@ class RelationsStatusScolaireTable {
 
   Future<RelationStatusScolaire> getFromLogins(
       {@required String login, @required String otherLogin}) async {
+    _logger.info('Executing function getFromLogins with args: login=${login}, otherLogin=${otherLogin}');
+
     final String query =
         "SELECT * FROM $name WHERE login=@login AND \"otherLogin\"=@otherLogin;";
 
@@ -237,6 +256,8 @@ class RelationsStatusScolaireTable {
   }
 
   Future<Map<String, RelationStatusScolaire>> getAllFromLogin({@required String login}) async {
+    _logger.info('Executing function getAllFromLogin with args: login=${login}');
+
     final String query = """
     SELECT * FROM $name WHERE login=@login;
     """;
@@ -257,6 +278,8 @@ class RelationsStatusScolaireTable {
   }
 
   Future<List<RelationStatusScolaire>> getAll() async {
+    _logger.info('Executing function getAll.');
+
     final String query = "SELECT * FROM $name";
 
     return database.mappedResultsQuery(query).then((sqlResults) {
@@ -268,6 +291,8 @@ class RelationsStatusScolaireTable {
   }
 
   Future<void> remove({@required RelationStatusScolaire relationStatus}) async {
+    _logger.info('Executing function remove with args: relationStatus=${relationStatus}');
+
     final String query =
         "DELETE FROM $name WHERE login=@login AND \"otherLogin\"=@otherLogin;";
 
@@ -275,6 +300,8 @@ class RelationsStatusScolaireTable {
   }
 
   Future<void> removeMultiple({@required List<RelationStatusScolaire> listRelationStatusScolaire}) async {
+    _logger.info('Executing function removeMultiple with args: listRelationStatusScolaire=${listRelationStatusScolaire}');
+
     if (listRelationStatusScolaire.length == 0) return;
     final String query = "DELETE FROM $name WHERE (login, \"otherLogin\") IN (" +
         [
@@ -292,12 +319,15 @@ class RelationsStatusScolaireTable {
   }
 
   Future<void> removeLogin({@required String login}) async {
+    _logger.info('Executing function removeLogin with args: login=${login}');
+
     final String query = "DELETE FROM $name WHERE login=@login OR \"otherLogin\"=@login;";
 
     return database.query(query, substitutionValues: {'login': login});
   }
 
   Future<void> removeAll() {
+    _logger.info('Executing function removeAll.');
     final String query = "DELETE FROM $name;";
 
     return database.query(query);

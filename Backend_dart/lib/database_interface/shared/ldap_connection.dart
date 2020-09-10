@@ -2,11 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartdap/dartdap.dart';
+import 'package:logging/logging.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/shared/user.dart';
 
+final _logger = Logger('getUserInfoFromLDAP');
+
 Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required password}) async {
+  _logger.info('Executing function getUserInfoFromLDAP with args: login and password');
+
   Map<String, String> userJson;
 
   // Create an LDAP connection object

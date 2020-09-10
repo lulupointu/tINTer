@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/associatif/users_gouts_musicaux_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/users_horaires_de_travail.dart';
@@ -9,6 +10,8 @@ import 'package:meta/meta.dart';
 import 'package:tinter_backend/models/associatif/gouts_musicaux.dart';
 import 'package:tinter_backend/models/scolaire/matieres.dart';
 import 'package:tinter_backend/models/shared/user.dart';
+
+final _logger = Logger('UsersManagementTable');
 
 class UsersManagementTable {
   final UsersTable usersTable;
@@ -26,6 +29,8 @@ class UsersManagementTable {
         usersHorairesDeTravailTable = UsersHorairesDeTravailTable(database: database);
 
   Future<void> populate() {
+    _logger.info('Executing function populate.');
+
     final List<Future> queries = [
       for (BuildUser user in fakeUsers) ...[add(user: user)]
     ];
@@ -34,6 +39,8 @@ class UsersManagementTable {
   }
 
   Future<void> create() async {
+    _logger.info('Executing function create.');
+
     await usersTable.create();
 
     final List<Future> queries = [
@@ -47,6 +54,8 @@ class UsersManagementTable {
   }
 
   Future<void> delete() {
+    _logger.info('Executing function delete.');
+
     final List<Future> queries = [
       usersTable.delete(),
       usersAssociationsTable.delete(),
@@ -59,6 +68,8 @@ class UsersManagementTable {
   }
 
   Future<void> add({@required BuildUser user}) async {
+    _logger.info('Executing function add with args: user=${user}');
+
     await usersTable.addBasicInfo(userJson: user.toJson());
 
     final List<Future> queries = [
@@ -77,6 +88,8 @@ class UsersManagementTable {
   }
 
   Future<void> update({@required BuildUser user}) async {
+    _logger.info('Executing function update with args: user=${user}');
+
 
     final List<Future> queries = [
       usersTable.update(user: user),
@@ -94,10 +107,14 @@ class UsersManagementTable {
   }
 
   Future<void> removeFromLogin(String login) {
+    _logger.info('Executing function removeFromLogin with args: login=${login}');
+
     return usersTable.remove(login: login);
   }
 
   Future<BuildUser> getFromLogin({@required String login}) async {
+    _logger.info('Executing function getFromLogin with args: login=${login}');
+
     final List<Future> queries = [
       usersTable.getFromLogin(login: login),
       usersAssociationsTable.getFromLogin(login: login),
@@ -119,6 +136,8 @@ class UsersManagementTable {
 
   Future<Map<String, BuildUser>> getAll(
       {bool primoEntrant, TSPYear year, School school}) async {
+    _logger.info('Executing function getAll with args: primoEntrant=${primoEntrant}, year=${year}, school=${school}');
+
     final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
         "SELECT * FROM ${UsersTable.name} "
             "WHERE \"isAccountCreationFinished\"='t' " +
@@ -163,6 +182,8 @@ class UsersManagementTable {
 
   Future<Map<String, BuildUser>> getAllExceptOneFromLogin(
       {@required String login, bool primoEntrant, TSPYear year, School school}) async {
+    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}, primoEntrant=${primoEntrant}, year=${year}, school=${school}');
+
     final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
         "SELECT * FROM ${UsersTable.name} "
             "WHERE login<>@login AND \"isAccountCreationFinished\"='t' " +
@@ -207,6 +228,8 @@ class UsersManagementTable {
 
   Future<Map<String, BuildUser>> getMultipleFromLogins(
       {@required List<String> logins}) async {
+    _logger.info('Executing function getMultipleFromLogins with args: logins=${logins}');
+
     if (logins.length == 0) return {};
 
     final List<Future> queries = [
