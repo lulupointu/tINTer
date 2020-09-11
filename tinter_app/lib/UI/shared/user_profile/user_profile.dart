@@ -834,11 +834,12 @@ class SaveModificationsOverlay extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0, bottom: 5.0),
                           child: Center(
-                            child: Text(
+                            child: AutoSizeText(
                               (userState is KnownUserSavingFailedState)
                                   ? 'Echec de la sauvegarde, réessayer?'
                                   : 'Des modifications ont été effectuées',
                               style: tinterTheme.textStyle.headline2,
+                              maxLines: 1,
                             ),
                           ),
                         ),
