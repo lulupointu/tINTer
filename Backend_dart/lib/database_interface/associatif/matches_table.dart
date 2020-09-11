@@ -37,7 +37,7 @@ class MatchesTable {
         "ON \"myRelationStatusAssociatif\".login = \"otherRelationStatusAssociatif\".\"otherLogin\" AND \"myRelationStatusAssociatif\".\"otherLogin\" = \"otherRelationStatusAssociatif\".login "
         ") AS ${RelationsStatusAssociatifTable.name} "
         "ON (${RelationsStatusAssociatifTable.name}.\"otherLogin\" = ${RelationsScoreAssociatifTable.name}.loginA AND ${RelationsStatusAssociatifTable.name}.login = ${RelationsScoreAssociatifTable.name}.loginB) OR (${RelationsStatusAssociatifTable.name}.\"otherLogin\" = ${RelationsScoreAssociatifTable.name}.loginB AND ${RelationsStatusAssociatifTable.name}.login = ${RelationsScoreAssociatifTable.name}.loginA) "
-        " ORDER BY score DESC LIMIT @limit OFFSET @offset"
+        " ORDER BY score, login DESC LIMIT @limit OFFSET @offset"
         ";";
 
     return database.mappedResultsQuery(getDiscoverMatchesQuery, substitutionValues: {
