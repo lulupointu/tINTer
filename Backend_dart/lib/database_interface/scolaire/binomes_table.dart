@@ -53,7 +53,7 @@ class BinomesTable {
           "WHERE login=@login AND \"statusScolaire\"='none' "
           ") AS \"myRelationStatusScolaire\" "
 
-          " LEFT JOIN ${BinomePairsProfilesTable.name} "
+          " LEFT OUTER JOIN ${BinomePairsProfilesTable.name} "
           "ON ${BinomePairsProfilesTable.name}.login=\"myRelationStatusScolaire\".\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=\"myRelationStatusScolaire\".\"otherLogin\" "
           ") AS \"myRelationStatusScolaire\" "
 
