@@ -54,7 +54,8 @@ class BinomesTable {
           ") AS \"myRelationStatusScolaire\" "
 
           " LEFT OUTER JOIN ${BinomePairsProfilesTable.name} "
-          "ON ${BinomePairsProfilesTable.name}.login=\"myRelationStatusScolaire\".\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=\"myRelationStatusScolaire\".\"otherLogin\" "
+          " ON ${BinomePairsProfilesTable.name}.login=\"myRelationStatusScolaire\".\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=\"myRelationStatusScolaire\".\"otherLogin\" "
+          " WHERE ${BinomePairsProfilesTable.name}.\"binomePairId\" IS NULL"
           ") AS \"myRelationStatusScolaire\" "
 
           "JOIN ${RelationsStatusScolaireTable.name} AS \"otherRelationStatusScolaire\" "
