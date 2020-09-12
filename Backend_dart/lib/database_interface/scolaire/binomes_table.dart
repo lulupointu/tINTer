@@ -49,7 +49,7 @@ class BinomesTable {
 
           "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\" FROM "
 
-          "(SELECT * FROM ${RelationsStatusScolaireTable.name} "
+          "(SELECT login, \"otherLogin\" FROM ${RelationsStatusScolaireTable.name} "
           "WHERE login=@login AND \"statusScolaire\"='none' "
           ") AS \"myRelationStatusScolaire\" "
 
