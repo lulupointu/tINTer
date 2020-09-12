@@ -28,43 +28,27 @@ class BinomesTable {
     _logger.info('Executing function getXDiscoverBinomesFromLogin with args: login=${login}, limit=${limit}, offset=${offset}');
 
     String getDiscoverBinomesQuery =
-        "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, \"statusScolaire\" FROM ${RelationsScoreScolaireTable.name} JOIN "
-        "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
+        "SELECT \"otherLogin\", score FROM ${RelationsScoreScolaireTable.name} JOIN "
+        "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\" "
         "FROM "
-        "(SELECT * FROM ${RelationsStatusScolaireTable.name} "
+
+        "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\" FROM "
+
+        "(SELECT login, \"otherLogin\" FROM ${RelationsStatusScolaireTable.name} "
         "WHERE login=@login AND \"statusScolaire\"='none' "
         ") AS \"myRelationStatusScolaire\" "
+
+        " LEFT OUTER JOIN ${BinomePairsProfilesTable.name} "
+        " ON ${BinomePairsProfilesTable.name}.login=\"myRelationStatusScolaire\".\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=\"myRelationStatusScolaire\".\"otherLogin\" "
+        " WHERE ${BinomePairsProfilesTable.name}.\"binomePairId\" IS NULL"
+        ") AS \"myRelationStatusScolaire\" "
+
         "JOIN ${RelationsStatusScolaireTable.name} AS \"otherRelationStatusScolaire\" "
         "ON \"myRelationStatusScolaire\".login = \"otherRelationStatusScolaire\".\"otherLogin\" AND \"myRelationStatusScolaire\".\"otherLogin\" = \"otherRelationStatusScolaire\".login "
         ") AS ${RelationsStatusScolaireTable.name} "
         "ON (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginA AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginB) OR (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginB AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginA) "
         " ORDER BY score DESC LIMIT @limit OFFSET @offset"
         ";";
-
-    if (login == "delsol_l") {
-      getDiscoverBinomesQuery =
-          "SELECT \"otherLogin\", score FROM ${RelationsScoreScolaireTable.name} JOIN "
-          "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\" "
-          "FROM "
-
-          "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\" FROM "
-
-          "(SELECT login, \"otherLogin\" FROM ${RelationsStatusScolaireTable.name} "
-          "WHERE login=@login AND \"statusScolaire\"='none' "
-          ") AS \"myRelationStatusScolaire\" "
-
-          " LEFT OUTER JOIN ${BinomePairsProfilesTable.name} "
-          " ON ${BinomePairsProfilesTable.name}.login=\"myRelationStatusScolaire\".\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=\"myRelationStatusScolaire\".\"otherLogin\" "
-          " WHERE ${BinomePairsProfilesTable.name}.\"binomePairId\" IS NULL"
-          ") AS \"myRelationStatusScolaire\" "
-
-          "JOIN ${RelationsStatusScolaireTable.name} AS \"otherRelationStatusScolaire\" "
-          "ON \"myRelationStatusScolaire\".login = \"otherRelationStatusScolaire\".\"otherLogin\" AND \"myRelationStatusScolaire\".\"otherLogin\" = \"otherRelationStatusScolaire\".login "
-          ") AS ${RelationsStatusScolaireTable.name} "
-          "ON (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginA AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginB) OR (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginB AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginA) "
-          " ORDER BY score DESC LIMIT @limit OFFSET @offset"
-          ";";
-    }
 
     return database.mappedResultsQuery(getDiscoverBinomesQuery, substitutionValues: {
       'login': login,
