@@ -59,8 +59,8 @@ class BinomesTable {
 
           "JOIN ${RelationsStatusScolaireTable.name} AS \"otherRelationStatusScolaire\" "
           "ON \"myRelationStatusScolaire\".login = \"otherRelationStatusScolaire\".\"otherLogin\" AND \"myRelationStatusScolaire\".\"otherLogin\" = \"otherRelationStatusScolaire\".login "
-          ") AS ${RelationsStatusScolaireTable.name} "
-          "ON (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginA AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginB) OR (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginB AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginA) "
+          ") AS azerty "
+          "ON (azerty.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginA AND azerty.login = ${RelationsScoreScolaireTable.name}.loginB) OR (azerty.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginB AND azerty.login = ${RelationsScoreScolaireTable.name}.loginA) "
           " ORDER BY score DESC LIMIT @limit OFFSET @offset"
           ";";
     }
