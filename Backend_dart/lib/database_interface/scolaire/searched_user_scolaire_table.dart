@@ -23,30 +23,16 @@ class SearchedUserScolaireTable {
 
     String getAllExceptOneFromLoginQuery =
         "SELECT ${UsersTable.name}.login, name, surname, \"statusScolaire\" FROM "
+        "(SELECT ${RelationsStatusScolaireTable.name}.login, ${RelationsStatusScolaireTable.name}.\"otherLogin\", ${RelationsStatusScolaireTable.name}.\"statusScolaire\" FROM "
         "(SELECT * FROM ${RelationsStatusScolaireTable.name} "
         "WHERE login=@login "
         ") AS ${RelationsStatusScolaireTable.name} "
+        " LEFT OUTER JOIN ${BinomePairsProfilesTable.name} "
+        " ON ${BinomePairsProfilesTable.name}.login=${RelationsStatusScolaireTable.name}.\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=${RelationsStatusScolaireTable.name}.\"otherLogin\" "
+        " WHERE ${BinomePairsProfilesTable.name}.\"binomePairId\" IS NULL"
+        ") AS ${RelationsStatusScolaireTable.name} "
         "JOIN ${UsersTable.name} "
         "ON ${RelationsStatusScolaireTable.name}.\"otherLogin\"=${UsersTable.name}.login ";
-
-    if (login == "delsol_l") {
-      getAllExceptOneFromLoginQuery =
-          "SELECT ${UsersTable.name}.login, name, surname, \"statusScolaire\" FROM "
-
-          "(SELECT ${RelationsStatusScolaireTable.name}.login, ${RelationsStatusScolaireTable.name}.\"otherLogin\", ${RelationsStatusScolaireTable.name}.\"statusScolaire\" FROM "
-
-          "(SELECT * FROM ${RelationsStatusScolaireTable.name} "
-          "WHERE login=@login "
-          ") AS ${RelationsStatusScolaireTable.name} "
-
-          " LEFT OUTER JOIN ${BinomePairsProfilesTable.name} "
-          " ON ${BinomePairsProfilesTable.name}.login=${RelationsStatusScolaireTable.name}.\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=${RelationsStatusScolaireTable.name}.\"otherLogin\" "
-          " WHERE ${BinomePairsProfilesTable.name}.\"binomePairId\" IS NULL"
-          ") AS ${RelationsStatusScolaireTable.name} "
-
-          "JOIN ${UsersTable.name} "
-          "ON ${RelationsStatusScolaireTable.name}.\"otherLogin\"=${UsersTable.name}.login ";
-    }
 
     final Future query =
         database.mappedResultsQuery(getAllExceptOneFromLoginQuery, substitutionValues: {
