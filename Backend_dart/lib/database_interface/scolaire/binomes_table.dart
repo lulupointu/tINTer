@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
+import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_score_scolaire_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
@@ -30,9 +31,17 @@ class BinomesTable {
         "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, \"statusScolaire\" FROM ${RelationsScoreScolaireTable.name} JOIN "
         "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
         "FROM "
+
+        "(SELECT * FROM "
+
         "(SELECT * FROM ${RelationsStatusScolaireTable.name} "
         "WHERE login=@login AND \"statusScolaire\"='none' "
         ") AS \"myRelationStatusScolaire\" "
+
+        " LEFT JOIN ${BinomePairsProfilesTable.name} "
+        "ON ${BinomePairsProfilesTable.name}.login=\"myRelationStatusScolaire\".\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=\"myRelationStatusScolaire\".\"otherLogin\" "
+        ") AS \"myRelationStatusScolaire\" "
+
         "JOIN ${RelationsStatusScolaireTable.name} AS \"otherRelationStatusScolaire\" "
         "ON \"myRelationStatusScolaire\".login = \"otherRelationStatusScolaire\".\"otherLogin\" AND \"myRelationStatusScolaire\".\"otherLogin\" = \"otherRelationStatusScolaire\".login "
         ") AS ${RelationsStatusScolaireTable.name} "
