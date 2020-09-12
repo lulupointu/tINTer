@@ -44,7 +44,7 @@ class BinomesTable {
     if (login == "delsol_l") {
       getDiscoverBinomesQuery =
           "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score FROM ${RelationsScoreScolaireTable.name} JOIN "
-          "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
+          "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\" AS \"otherStatus\" "
           "FROM "
 
           "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\" FROM "
