@@ -160,10 +160,11 @@ class BinomePairsMatchesTable {
       getDiscoverBinomesQuery =
           "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\", \"otherStatus\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
           "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
-          "FROM ("
+          "FROM "
 
-          " (SELECT \"myRelationStatusBinomePair\".* FROM "
+          "(SELECT \"myRelationStatusBinomePair\".* FROM "
 
+          "(SELECT * FROM "
           "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
           "WHERE \"status\"<>'none' AND \"status\"<>'ignored' "
           ") AS \"myRelationStatus\" "
@@ -179,7 +180,7 @@ class BinomePairsMatchesTable {
           " WHERE status='acceptedBinomePairMatch' "
           " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
           " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" "
-//          " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" <> \"myRelationStatusBinomePair\".\"binomePairId\" AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
+          " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" <> \"myRelationStatusBinomePair\".\"binomePairId\" AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
 
           " ) AS \"myRelationStatusBinomePair\" "
 
