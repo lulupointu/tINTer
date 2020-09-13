@@ -89,50 +89,50 @@ class BinomePairsMatchesTable {
       });
     });
   }
-  Future<List<BuildBinomePairMatch>> getXDiscoverBinomesFromBinomePairId(
-      {@required int binomePairId, @required int limit, int offset = 0}) async {
-    _logger.info('Executing function getXDiscoverBinomesFromBinomePairId with args: binomePairId=${binomePairId}, limit=${limit}, offset=${offset}');
-
-    String getDiscoverBinomePairMatchesQuery =
-        "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
-        "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
-        "FROM "
-        "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
-        "WHERE \"binomePairId\"=@binomePairId AND \"status\"='none' "
-        ") AS \"myRelationStatusBinomePair\" "
-        "JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
-        "ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
-        ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
-        "ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.binomePairId = ${RelationsScoreBinomePairsMatchesTable.name}.\"binomePairId\"B) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
-        " ORDER BY score DESC LIMIT @limit OFFSET @offset"
-        ";";
-
-    return database.mappedResultsQuery(getDiscoverBinomePairMatchesQuery, substitutionValues: {
-      'binomePairId': binomePairId,
-      'limit': limit,
-      'offset': offset,
-    }).then((sqlResults) {
-      return binomePairsManagementTable
-          .getMultipleFromBinomePairsId(
-          binomePairsId: sqlResults
-              .map<int>((Map<String, Map<String, dynamic>> result) =>
-          result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
-              .toList())
-          .then((Map<int, BuildBinomePair> otherUsers) {
-
-        return [
-          for (int index = 0; index < otherUsers.length; index++)
-            BuildBinomePairMatch.fromJson({
-              ...otherUsers[sqlResults[index][RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']]
-                  .toJson(),
-              'score': sqlResults[index][RelationsScoreBinomePairsMatchesTable.name]['score'],
-              'status': BinomeStatus.none.serialize(),
-              // Since we search for discover, we know that the status is none.
-            })
-        ];
-      });
-    });
-  }
+//  Future<List<BuildBinomePairMatch>> getXDiscoverBinomesFromBinomePairId(
+//      {@required int binomePairId, @required int limit, int offset = 0}) async {
+//    _logger.info('Executing function getXDiscoverBinomesFromBinomePairId with args: binomePairId=${binomePairId}, limit=${limit}, offset=${offset}');
+//
+//    String getDiscoverBinomePairMatchesQuery =
+//        "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
+//        "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
+//        "FROM "
+//        "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
+//        "WHERE \"binomePairId\"=@binomePairId AND \"status\"='none' "
+//        ") AS \"myRelationStatusBinomePair\" "
+//        "JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
+//        "ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
+//        ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
+//        "ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.binomePairId = ${RelationsScoreBinomePairsMatchesTable.name}.\"binomePairId\"B) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
+//        " ORDER BY score DESC LIMIT @limit OFFSET @offset"
+//        ";";
+//
+//    return database.mappedResultsQuery(getDiscoverBinomePairMatchesQuery, substitutionValues: {
+//      'binomePairId': binomePairId,
+//      'limit': limit,
+//      'offset': offset,
+//    }).then((sqlResults) {
+//      return binomePairsManagementTable
+//          .getMultipleFromBinomePairsId(
+//          binomePairsId: sqlResults
+//              .map<int>((Map<String, Map<String, dynamic>> result) =>
+//          result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
+//              .toList())
+//          .then((Map<int, BuildBinomePair> otherUsers) {
+//
+//        return [
+//          for (int index = 0; index < otherUsers.length; index++)
+//            BuildBinomePairMatch.fromJson({
+//              ...otherUsers[sqlResults[index][RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']]
+//                  .toJson(),
+//              'score': sqlResults[index][RelationsScoreBinomePairsMatchesTable.name]['score'],
+//              'status': BinomeStatus.none.serialize(),
+//              // Since we search for discover, we know that the status is none.
+//            })
+//        ];
+//      });
+//    });
+//  }
 
   Future<List<BuildBinomePairMatch>> getMatchedBinomesFromLogin({@required String login}) async {
     _logger.info('Executing function getMatchedBinomesFromLogin with args: login=${login}');
@@ -156,7 +156,40 @@ class BinomePairsMatchesTable {
         "ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
         ";";
 
-    print(0);
+    if (login == "delsol_l") {
+      getDiscoverBinomesQuery =
+          "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\", \"otherStatus\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
+
+          " (SELECT \"myRelationStatusBinomePair\".* FROM "
+
+          "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
+          "FROM ("
+          "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
+          "WHERE \"status\"<>'none' AND \"status\"<>'ignored' "
+          ") AS \"myRelationStatus\" "
+          "JOIN "
+          "(SELECT * FROM ${BinomePairsProfilesTable.name} "
+          "WHERE login=@login OR \"otherLogin\"=@login "
+          ") AS ${BinomePairsProfilesTable.name} "
+          "USING (\"binomePairId\") "
+          ") AS \"myRelationStatusBinomePair\" "
+
+          " LEFT JOIN "
+          "( SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
+          " WHERE status='acceptedBinomePairMatch' "
+          " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
+          " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" "
+          " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" <> \"myRelationStatusBinomePair\".\"binomePairId\" AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
+
+          " ) AS \"myRelationStatusBinomePair\" "
+
+
+          "JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
+          "ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
+          ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
+          "ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
+          ";";
+    }
 
     return database.mappedResultsQuery(getDiscoverBinomesQuery, substitutionValues: {
       'login': login,
@@ -190,51 +223,51 @@ class BinomePairsMatchesTable {
 
 
 
-  Future<List<BuildBinomePairMatch>> getMatchedBinomesFromBinomePairId({@required int binomePairId}) async {
-    _logger.info('Executing function getMatchedBinomesFromBinomePairId with args: binomePairId=${binomePairId}');
-
-    String getDiscoverBinomesQuery =
-        "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\", \"otherStatus\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
-        "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
-        "FROM "
-        "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
-        "WHERE \"binomePairId\"=@binomePairId AND \"status\"<>'none' AND \"status\"<>'ignored' "
-        ") AS \"myRelationStatusBinomePair\" "
-        "JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
-        "ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
-        ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
-        "ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
-        ";";
-
-    return database.mappedResultsQuery(getDiscoverBinomesQuery, substitutionValues: {
-      'binomePairId': binomePairId,
-    }).then((sqlResults) {
-      return binomePairsManagementTable
-          .getMultipleFromBinomePairsId(
-          binomePairsId: sqlResults
-              .map<int>((Map<String, Map<String, dynamic>> result) =>
-          result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
-              .toList())
-          .then((Map<int, BuildBinomePair> otherUsers) {
-
-        return [
-          for (int index = 0; index < otherUsers.length; index++)
-            BuildBinomePairMatch.fromJson({
-              ...otherUsers[sqlResults[index][RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']]
-                  .toJson(),
-              'score': sqlResults[index][RelationsScoreBinomePairsMatchesTable.name]['score'],
-              'status': getBinomeStatusFromRelationStatusBinomePair(
-                  status: EnumRelationStatusBinomePair.valueOf(sqlResults[index]
-                  [RelationsStatusBinomePairsMatchesTable.name]['status']),
-                  otherStatus: EnumRelationStatusBinomePair.valueOf(
-                      sqlResults[index][RelationsStatusBinomePairsMatchesTable.name]['otherStatus']))
-                  .serialize(),
-              // Since we search for discover, we know that the status is none.
-            })
-        ];
-      });
-    });
-  }
+//  Future<List<BuildBinomePairMatch>> getMatchedBinomesFromBinomePairId({@required int binomePairId}) async {
+//    _logger.info('Executing function getMatchedBinomesFromBinomePairId with args: binomePairId=${binomePairId}');
+//
+//    String getDiscoverBinomesQuery =
+//        "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\", \"otherStatus\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
+//        "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
+//        "FROM "
+//        "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
+//        "WHERE \"binomePairId\"=@binomePairId AND \"status\"<>'none' AND \"status\"<>'ignored' "
+//        ") AS \"myRelationStatusBinomePair\" "
+//        "JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
+//        "ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
+//        ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
+//        "ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
+//        ";";
+//
+//    return database.mappedResultsQuery(getDiscoverBinomesQuery, substitutionValues: {
+//      'binomePairId': binomePairId,
+//    }).then((sqlResults) {
+//      return binomePairsManagementTable
+//          .getMultipleFromBinomePairsId(
+//          binomePairsId: sqlResults
+//              .map<int>((Map<String, Map<String, dynamic>> result) =>
+//          result[RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId'])
+//              .toList())
+//          .then((Map<int, BuildBinomePair> otherUsers) {
+//
+//        return [
+//          for (int index = 0; index < otherUsers.length; index++)
+//            BuildBinomePairMatch.fromJson({
+//              ...otherUsers[sqlResults[index][RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']]
+//                  .toJson(),
+//              'score': sqlResults[index][RelationsScoreBinomePairsMatchesTable.name]['score'],
+//              'status': getBinomeStatusFromRelationStatusBinomePair(
+//                  status: EnumRelationStatusBinomePair.valueOf(sqlResults[index]
+//                  [RelationsStatusBinomePairsMatchesTable.name]['status']),
+//                  otherStatus: EnumRelationStatusBinomePair.valueOf(
+//                      sqlResults[index][RelationsStatusBinomePairsMatchesTable.name]['otherStatus']))
+//                  .serialize(),
+//              // Since we search for discover, we know that the status is none.
+//            })
+//        ];
+//      });
+//    });
+//  }
 
   // Maps the RelationStatusBinomePair to the BinomeStatus
   // ignore: missing_return
