@@ -72,7 +72,7 @@ class BinomePairsMatchesTable {
           "( SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
           " WHERE status='acceptedBinomePairMatch' "
           " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
-          " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" "
+          " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" "
           " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
 
           " ) AS \"myRelationStatusBinomePair\" "
