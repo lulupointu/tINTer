@@ -28,10 +28,13 @@ class BinomePairsMatchesTable {
       {@required String login, @required int limit, int offset = 0}) async {
     _logger.info('Executing function getXDiscoverBinomesFromLogin with args: login=${login}, limit=${limit}, offset=${offset}');
 
-    String getDiscoverBinomePairMatchesQuery =
+    String       getDiscoverBinomePairMatchesQuery =
         " SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
         " (SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
         " FROM "
+
+        " (SELECT \"myRelationStatusBinomePair\".* FROM "
+
         " (SELECT * FROM "
         " (SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
         " WHERE \"status\"='none' "
@@ -42,48 +45,22 @@ class BinomePairsMatchesTable {
         " ) AS ${BinomePairsProfilesTable.name} "
         " USING (\"binomePairId\") "
         " ) AS \"myRelationStatusBinomePair\" "
+
+        " LEFT JOIN "
+        "( SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
+        " WHERE status='acceptedBinomePairMatch' "
+        " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
+        " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" "
+        " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
+
+        " ) AS \"myRelationStatusBinomePair\" "
+
         " JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
         " ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
         ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
         " ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
         " ORDER BY score DESC LIMIT @limit OFFSET @offset"
         ";";
-
-    if (login == "delsol_l") {
-      getDiscoverBinomePairMatchesQuery =
-      " SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
-          " (SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
-          " FROM "
-
-          " (SELECT \"myRelationStatusBinomePair\".* FROM "
-
-          " (SELECT * FROM "
-          " (SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
-          " WHERE \"status\"='none' "
-          " ) AS \"myRelationStatusBinomePair\" "
-          " JOIN "
-          " (SELECT * FROM ${BinomePairsProfilesTable.name} "
-          " WHERE login=@login OR \"otherLogin\"=@login "
-          " ) AS ${BinomePairsProfilesTable.name} "
-          " USING (\"binomePairId\") "
-          " ) AS \"myRelationStatusBinomePair\" "
-
-          " LEFT JOIN "
-          "( SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
-          " WHERE status='acceptedBinomePairMatch' "
-          " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
-          " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" "
-          " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
-
-          " ) AS \"myRelationStatusBinomePair\" "
-
-          " JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
-          " ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
-          ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
-          " ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
-          " ORDER BY score DESC LIMIT @limit OFFSET @offset"
-          ";";
-    }
 
     return database.mappedResultsQuery(getDiscoverBinomePairMatchesQuery, substitutionValues: {
       'login': login,
