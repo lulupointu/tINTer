@@ -75,7 +75,7 @@ class BinomePairsMatchesTable {
           " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" "
           " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
 
-          " ) AS ${BinomePairsProfilesTable.name} "
+          " ) AS \"myRelationStatusBinomePair\" "
 
           " JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
           " ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
