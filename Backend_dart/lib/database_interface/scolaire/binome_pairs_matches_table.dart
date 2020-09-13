@@ -54,29 +54,29 @@ class BinomePairsMatchesTable {
       " SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
           " (SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
           " FROM "
+
+          " (SELECT \"myRelationStatusBinomePair\".* FROM "
+
           " (SELECT * FROM "
           " (SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
           " WHERE \"status\"='none' "
           " ) AS \"myRelationStatusBinomePair\" "
           " JOIN "
-
-          " (SELECT * FROM "
-
           " (SELECT * FROM ${BinomePairsProfilesTable.name} "
           " WHERE login=@login OR \"otherLogin\"=@login "
           " ) AS ${BinomePairsProfilesTable.name} "
+          " USING (\"binomePairId\") "
+          " ) AS \"myRelationStatusBinomePair\" "
 
           " LEFT JOIN "
           "( SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
           " WHERE status='acceptedBinomePairMatch' "
           " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
-          " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${BinomePairsProfilesTable.name}.\"binomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${BinomePairsProfilesTable.name}.\"binomePairId\" "
+          " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" "
           " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
 
           " ) AS ${BinomePairsProfilesTable.name} "
 
-          " USING (\"binomePairId\") "
-          " ) AS \"myRelationStatusBinomePair\" "
           " JOIN ${RelationsStatusBinomePairsMatchesTable.name} AS \"otherRelationStatusBinomePair\" "
           " ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
           ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
