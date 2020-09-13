@@ -11,7 +11,7 @@ main() async {
   RelationsStatusScolaireTable(database: tinterDatabase.connection);
 
   // Removing old function
-//  await tinterDatabase.connection.query("DROP TRIGGER IF EXISTS relation_status_scolaire_check;");
+  await tinterDatabase.connection.query("DROP TRIGGER IF EXISTS relation_status_scolaire_check ON ${RelationsStatusScolaireTable.name};");
   await tinterDatabase.connection.query("DROP FUNCTION IF EXISTS relation_status_scolaire_check;");
 
   // New funcion
