@@ -36,7 +36,9 @@ class DiscoverAssociatifTab extends StatelessWidget {
           if (discoverMatchesState is DiscoverMatchesInitialState ||
               discoverMatchesState is DiscoverMatchesLoadInProgressState)
             return Center(
-              child: Center(child: CircularProgressIndicator(),),
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             );
           if (discoverMatchesState is DiscoverMatchesLoadSuccessState &&
               discoverMatchesState.matches.length == 0) return NoMoreDiscoveryMatchesWidget();
@@ -256,51 +258,60 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Flexible(
-            child: IconButton(
-              padding: EdgeInsets.all(0.0),
-              iconSize: 60,
-              color: tinterTheme.colors.secondary,
-              icon: FlareActor(
-                'assets/icons/Heart.flr',
+      return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+          builder: (context, DiscoverMatchesState discoverMatchesState) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Flexible(
+              child: IconButton(
+                padding: EdgeInsets.all(0.0),
+                iconSize: 60,
                 color: tinterTheme.colors.secondary,
-                fit: BoxFit.contain,
-                controller: CustomFlareController(
-                    controller: likeController, forwardAnimationName: 'Validate'),
-              ),
-              onPressed: () {
-                likeController.forward().whenComplete(
-                    () => likeController.animateTo(0, duration: Duration(seconds: 0)));
-                BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchLikeEvent());
-              },
-            ),
-          ),
-          Flexible(
-            child: IconButton(
-              padding: EdgeInsets.all(0.0),
-              iconSize: 60,
-              color: tinterTheme.colors.secondary,
-              icon: FlareActor(
-                'assets/icons/Clear.flr',
-                color: tinterTheme.colors.secondary,
-                fit: BoxFit.contain,
-                controller: CustomFlareController(
-                  controller: ignoreController,
-                  forwardAnimationName: 'Ignore',
+                icon: FlareActor(
+                  'assets/icons/Heart.flr',
+                  color: tinterTheme.colors.secondary,
+                  fit: BoxFit.contain,
+                  controller: CustomFlareController(
+                      controller: likeController, forwardAnimationName: 'Validate'),
                 ),
+                onPressed: discoverMatchesState is DiscoverMatchesSavingNewStatusState
+                    ? null
+                    : () {
+                        likeController.forward().whenComplete(
+                            () => likeController.animateTo(0, duration: Duration(seconds: 0)));
+                        BlocProvider.of<DiscoverMatchesBloc>(context)
+                            .add(DiscoverMatchLikeEvent());
+                      },
               ),
-              onPressed: () {
-                ignoreController.forward().whenComplete(
-                    () => ignoreController.animateTo(0, duration: Duration(seconds: 0)));
-                BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchIgnoreEvent());
-              },
             ),
-          ),
-        ],
-      );
+            Flexible(
+              child: IconButton(
+                padding: EdgeInsets.all(0.0),
+                iconSize: 60,
+                color: tinterTheme.colors.secondary,
+                icon: FlareActor(
+                  'assets/icons/Clear.flr',
+                  color: tinterTheme.colors.secondary,
+                  fit: BoxFit.contain,
+                  controller: CustomFlareController(
+                    controller: ignoreController,
+                    forwardAnimationName: 'Ignore',
+                  ),
+                ),
+                onPressed: discoverMatchesState is DiscoverMatchesSavingNewStatusState
+                    ? null
+                    : () {
+                        ignoreController.forward().whenComplete(() =>
+                            ignoreController.animateTo(0, duration: Duration(seconds: 0)));
+                        BlocProvider.of<DiscoverMatchesBloc>(context)
+                            .add(DiscoverMatchIgnoreEvent());
+                      },
+              ),
+            ),
+          ],
+        );
+      });
     });
   }
 }
@@ -361,10 +372,15 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                   .animateTo(0, duration: Duration(milliseconds: 0))
                   .whenComplete(() => animationController.forward());
             }
+            if (previousState is DiscoverMatchesSavingNewStatusState) {
+              return false;
+            }
             return true;
           }, builder: (BuildContext context, DiscoverMatchesState state) {
             if (!(state is DiscoverMatchesLoadSuccessState)) {
-              return Center(child: CircularProgressIndicator(),);
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
             return Container(
               height: constraints.maxHeight,
@@ -719,34 +735,44 @@ class _MatchInformationState extends State<MatchInformation> {
                                   'Score',
                                   style: tinterTheme.textStyle.headline1,
                                 ),
-                                BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(builder:
-                                    (BuildContext context, DiscoverMatchesState state) {
-                                  if (!(state is DiscoverMatchesLoadSuccessState)) {
-                                    return Center(child: CircularProgressIndicator(),);
-                                  }
-                                  return AnimatedSwitcher(
-                                    duration: Duration(milliseconds: 300),
-                                    transitionBuilder:
-                                        (Widget child, Animation<double> animation) {
-                                      return ScaleTransition(
-                                        child: child,
-                                        scale: animation,
+                                BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+                                  buildWhen: (DiscoverMatchesState previousState,
+                                      DiscoverMatchesState state) {
+                                    if (previousState is DiscoverMatchesSavingNewStatusState) {
+                                      return false;
+                                    }
+                                    return true;
+                                  },
+                                  builder: (BuildContext context, DiscoverMatchesState state) {
+                                    if (!(state is DiscoverMatchesLoadSuccessState)) {
+                                      return Center(
+                                        child: CircularProgressIndicator(),
                                       );
-                                    },
-                                    child: Text(
-                                      (state as DiscoverMatchesLoadSuccessState)
-                                          .matches[0]
-                                          .score
-                                          .toString(),
-                                      key: GlobalKey(),
-                                      style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold,
-                                        color: tinterTheme.textStyle.headline1.color,
+                                    }
+                                    return AnimatedSwitcher(
+                                      duration: Duration(milliseconds: 300),
+                                      transitionBuilder:
+                                          (Widget child, Animation<double> animation) {
+                                        return ScaleTransition(
+                                          child: child,
+                                          scale: animation,
+                                        );
+                                      },
+                                      child: Text(
+                                        (state as DiscoverMatchesLoadSuccessState)
+                                            .matches[0]
+                                            .score
+                                            .toString(),
+                                        key: GlobalKey(),
+                                        style: TextStyle(
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.bold,
+                                          color: tinterTheme.textStyle.headline1.color,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                }),
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -803,7 +829,9 @@ class _MatchInformationState extends State<MatchInformation> {
                                 child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
                                   builder: (BuildContext context, DiscoverMatchesState state) {
                                     if (!(state is DiscoverMatchesLoadSuccessState)) {
-                                      return Center(child: CircularProgressIndicator(),);
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
                                     }
                                     return AnimatedSwitcher(
                                       duration: Duration(milliseconds: 300),
@@ -856,7 +884,9 @@ class _MatchInformationState extends State<MatchInformation> {
                           child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
                             builder: (BuildContext context, DiscoverMatchesState state) {
                               if (!(state is DiscoverMatchesLoadSuccessState)) {
-                                return Center(child: CircularProgressIndicator(),);
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
                               }
                               return TweenAnimationBuilder(
                                 tween: Tween<double>(
@@ -900,7 +930,9 @@ class _MatchInformationState extends State<MatchInformation> {
                               child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
                                 builder: (BuildContext context, DiscoverMatchesState state) {
                                   if (!(state is DiscoverMatchesLoadSuccessState)) {
-                                    return Center(child: CircularProgressIndicator(),);
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
                                   }
                                   return TweenAnimationBuilder(
                                     tween: Tween<double>(
@@ -947,7 +979,9 @@ class _MatchInformationState extends State<MatchInformation> {
                               child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
                                 builder: (BuildContext context, DiscoverMatchesState state) {
                                   if (!(state is DiscoverMatchesLoadSuccessState)) {
-                                    return Center(child: CircularProgressIndicator(),);
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
                                   }
                                   return TweenAnimationBuilder(
                                     tween: Tween<double>(
@@ -989,7 +1023,9 @@ class _MatchInformationState extends State<MatchInformation> {
                           child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
                             builder: (BuildContext context, DiscoverMatchesState state) {
                               if (!(state is DiscoverMatchesLoadSuccessState)) {
-                                return Center(child: CircularProgressIndicator(),);
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
                               }
                               return TweenAnimationBuilder(
                                 tween: Tween<double>(
@@ -1026,7 +1062,9 @@ class _MatchInformationState extends State<MatchInformation> {
                         BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
                           builder: (BuildContext context, DiscoverMatchesState state) {
                             if (!(state is DiscoverMatchesLoadSuccessState)) {
-                              return Center(child: CircularProgressIndicator(),);
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
                             }
                             return AnimatedSwitcher(
                               duration: Duration(milliseconds: 300),

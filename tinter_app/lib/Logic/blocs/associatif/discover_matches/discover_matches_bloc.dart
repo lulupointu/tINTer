@@ -117,10 +117,16 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
       return;
     }
 
+    print('OLD MATCHES: ${oldMatches.map((BuildMatch match) => 'login: ${match.login}, score: ${match.score}')}');
+
     List<BuildMatch> newMatches = List<BuildMatch>.from(oldMatches);
     newMatches.remove(event.match);
 
+    print('NEW MATCHES: ${newMatches.map((BuildMatch match) => 'login: ${match.login}, score: ${match.score}')}');
+
     yield DiscoverMatchesSavingNewStatusState(matches: newMatches);
+
+//    await Future.delayed(Duration(seconds: 2));
 
     // Update database
     try {
@@ -149,6 +155,8 @@ class DiscoverMatchesBloc extends Bloc<DiscoverMatchesEvent, DiscoverMatchesStat
     if (newMatch != null) {
       newMatches.add(newMatch);
     }
+
+    print('UPDATED NEW MATCHES ${newMatches.map((BuildMatch match) => 'login: ${match.login}, score: ${match.score}')}');
 
     yield DiscoverMatchesWaitingStatusChangeState(matches: newMatches);
   }
