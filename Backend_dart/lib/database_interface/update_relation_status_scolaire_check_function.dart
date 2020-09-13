@@ -25,7 +25,7 @@ main() async {
             WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
             
             
-        IF NEW.\"statusScolaire\" = 'ignored' OR NEW.\"statusScolaire\" = 'none' THEN
+        IF NEW.\"statusScolaire\" = 'ignored' THEN
           
           IF \"otherStatus\" = 'askedBinome' 
             OR \"otherStatus\" = 'acceptedBinome' 
