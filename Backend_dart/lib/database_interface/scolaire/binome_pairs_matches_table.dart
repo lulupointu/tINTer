@@ -70,7 +70,7 @@ class BinomePairsMatchesTable {
 
           " LEFT JOIN "
           "( SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
-          " WHERE status='acceptedBinomePairMatch' "
+          " WHERE status='acceptednomePairMatch' "
           " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
           " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" "
           " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
