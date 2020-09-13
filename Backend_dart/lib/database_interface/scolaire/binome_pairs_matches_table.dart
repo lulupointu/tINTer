@@ -49,7 +49,7 @@ class BinomePairsMatchesTable {
         " ORDER BY score DESC LIMIT @limit OFFSET @offset"
         ";";
 
-    if (login == "delsol") {
+    if (login == "delsol_l") {
       getDiscoverBinomePairMatchesQuery =
       " SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
           " (SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
@@ -71,7 +71,7 @@ class BinomePairsMatchesTable {
           " WHERE status=acceptedBinomePairMatch "
           " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
           " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${BinomePairsProfilesTable.name}.\"binomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${BinomePairsProfilesTable.name}.\"binomePairId\" "
-          " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
+          " WHERE ${RelationsStatusBinomePairsMatchesTable.name}.\"binomeirId\" IS NULL"
 
           " ) AS ${BinomePairsProfilesTable.name} "
 
