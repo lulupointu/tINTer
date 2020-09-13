@@ -79,7 +79,7 @@ class BinomesTable {
   Future<List<BuildBinome>> getMatchedBinomesFromLogin({@required String login}) async {
     _logger.info('Executing function getMatchedBinomesFromLogin with args: login=${login}');
 
-    String getDiscoverBinomesQuery =
+    String       getDiscoverBinomesQuery =
         "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, \"statusScolaire\", \"otherStatus\" FROM ${RelationsScoreScolaireTable.name} JOIN "
         "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
         "FROM "
@@ -90,7 +90,10 @@ class BinomesTable {
         "WHERE login=@login AND \"statusScolaire\"<>'none' AND \"statusScolaire\"<>'ignored' "
         ") AS \"myRelationStatusScolaire\" "
 
-        " LEFT OUTER JOIN ${BinomePairsProfilesTable.name} "
+        " LEFT OUTER JOIN "
+        " (SELECT * FROM ${BinomePairsProfilesTable.name} "
+        " WHERE ${BinomePairsProfilesTable.name}.login <> @login AND ${BinomePairsProfilesTable.name}.\"otherLogin\" <> @login "
+        ") AS ${BinomePairsProfilesTable.name} "
         " ON ${BinomePairsProfilesTable.name}.login=\"myRelationStatusScolaire\".\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=\"myRelationStatusScolaire\".\"otherLogin\" "
         " WHERE ${BinomePairsProfilesTable.name}.\"binomePairId\" IS NULL"
         ") AS \"myRelationStatusScolaire\" "
@@ -100,33 +103,6 @@ class BinomesTable {
         ") AS ${RelationsStatusScolaireTable.name} "
         "ON (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginA AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginB) OR (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginB AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginA) "
         ";";
-
-    if (login == "delsol_l") {
-      getDiscoverBinomesQuery =
-          "SELECT ${RelationsStatusScolaireTable.name}.\"otherLogin\", score, \"statusScolaire\", \"otherStatus\" FROM ${RelationsScoreScolaireTable.name} JOIN "
-          "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\", \"otherRelationStatusScolaire\".\"statusScolaire\" AS \"otherStatus\" "
-          "FROM "
-
-          "(SELECT \"myRelationStatusScolaire\".login, \"myRelationStatusScolaire\".\"otherLogin\", \"myRelationStatusScolaire\".\"statusScolaire\" FROM "
-
-          "(SELECT * FROM ${RelationsStatusScolaireTable.name} "
-          "WHERE login=@login AND \"statusScolaire\"<>'none' AND \"statusScolaire\"<>'ignored' "
-          ") AS \"myRelationStatusScolaire\" "
-
-          " LEFT OUTER JOIN "
-          " (SELECT * FROM ${BinomePairsProfilesTable.name} "
-          " WHERE ${BinomePairsProfilesTable.name}.login <> @login AND ${BinomePairsProfilesTable.name}.\"otherLogin\" <> @login "
-          ") AS ${BinomePairsProfilesTable.name} "
-          " ON ${BinomePairsProfilesTable.name}.login=\"myRelationStatusScolaire\".\"otherLogin\" OR ${BinomePairsProfilesTable.name}.\"otherLogin\"=\"myRelationStatusScolaire\".\"otherLogin\" "
-          " WHERE ${BinomePairsProfilesTable.name}.\"binomePairId\" IS NULL"
-          ") AS \"myRelationStatusScolaire\" "
-
-          "JOIN ${RelationsStatusScolaireTable.name} AS \"otherRelationStatusScolaire\" "
-          "ON \"myRelationStatusScolaire\".login = \"otherRelationStatusScolaire\".\"otherLogin\" AND \"myRelationStatusScolaire\".\"otherLogin\" = \"otherRelationStatusScolaire\".login "
-          ") AS ${RelationsStatusScolaireTable.name} "
-          "ON (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginA AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginB) OR (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginB AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginA) "
-          ";";
-    }
 
     return database.mappedResultsQuery(getDiscoverBinomesQuery, substitutionValues: {
       'login': login,
