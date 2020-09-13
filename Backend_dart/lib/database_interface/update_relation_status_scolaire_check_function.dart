@@ -25,7 +25,7 @@ main() async {
             WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
             
             
-        IF NEW.\"statusScolaire\" = 'ignored' THEN
+        IF NEW.\"statusScolaire\" = 'ignored' OR NEW.\"statusScolaire\" = 'none' THEN
           
           IF \"otherStatus\" = 'askedBinome' 
             OR \"otherStatus\" = 'acceptedBinome' 
@@ -74,11 +74,17 @@ main() async {
     EXECUTE FUNCTION relation_status_scolaire_check();
     """;
 
+  print('okokok');
+
   // Add new function
   await tinterDatabase.connection.query(createConstraintFunctionQuery);
 
+  print('zzzzzzz');
+
   // Add function trigger
   await tinterDatabase.connection.query(applyTableConstraintQuery);
+
+  print('aaaaaaa');
 
   tinterDatabase.close();
 }
