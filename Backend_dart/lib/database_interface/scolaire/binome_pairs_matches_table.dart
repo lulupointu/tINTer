@@ -180,7 +180,7 @@ class BinomePairsMatchesTable {
           " WHERE status='acceptedBinomePairMatch' "
           " ) AS ${RelationsStatusBinomePairsMatchesTable.name} "
           " ON ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"otherBinomePairId\" "
-          " WHERE (${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\") AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
+          " WHERE (${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\" OR ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = \"myRelationStatusBinomePair\".\"binomePairId\") OR ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" IS NULL"
 
           " ) AS \"myRelationStatusBinomePair\" "
 
