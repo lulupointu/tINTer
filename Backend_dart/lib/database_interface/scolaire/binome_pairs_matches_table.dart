@@ -160,10 +160,10 @@ class BinomePairsMatchesTable {
       getDiscoverBinomesQuery =
           "SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\", \"otherStatus\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
           "(SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
+          "FROM ("
 
           " (SELECT \"myRelationStatusBinomePair\".* FROM "
 
-          "FROM ("
           "(SELECT * FROM ${RelationsStatusBinomePairsMatchesTable.name} "
           "WHERE \"status\"<>'none' AND \"status\"<>'ignored' "
           ") AS \"myRelationStatus\" "
