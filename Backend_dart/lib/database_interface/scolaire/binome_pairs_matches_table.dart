@@ -59,7 +59,7 @@ class BinomePairsMatchesTable {
         " ON \"myRelationStatusBinomePair\".\"binomePairId\" = \"otherRelationStatusBinomePair\".\"otherBinomePairId\" AND \"myRelationStatusBinomePair\".\"otherBinomePairId\" = \"otherRelationStatusBinomePair\".\"binomePairId\" "
         ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
         " ON (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB) OR (${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdB AND ${RelationsStatusBinomePairsMatchesTable.name}.\"binomePairId\" = ${RelationsScoreBinomePairsMatchesTable.name}.binomePairIdA) "
-        " ORDER BY score DESC LIMIT @limit OFFSET @offset"
+        " ORDER BY score DESC, \"otherBinomePairId\" ASC LIMIT @limit OFFSET @offset"
         ";";
 
     return database.mappedResultsQuery(getDiscoverBinomePairMatchesQuery, substitutionValues: {

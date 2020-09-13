@@ -47,7 +47,7 @@ class BinomesTable {
         "ON \"myRelationStatusScolaire\".login = \"otherRelationStatusScolaire\".\"otherLogin\" AND \"myRelationStatusScolaire\".\"otherLogin\" = \"otherRelationStatusScolaire\".login "
         ") AS ${RelationsStatusScolaireTable.name} "
         "ON (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginA AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginB) OR (${RelationsStatusScolaireTable.name}.\"otherLogin\" = ${RelationsScoreScolaireTable.name}.loginB AND ${RelationsStatusScolaireTable.name}.login = ${RelationsScoreScolaireTable.name}.loginA) "
-        " ORDER BY score DESC LIMIT @limit OFFSET @offset"
+        " ORDER BY score DESC, \"otherLogin\" ASC LIMIT @limit OFFSET @offset"
         ";";
 
     return database.mappedResultsQuery(getDiscoverBinomesQuery, substitutionValues: {
