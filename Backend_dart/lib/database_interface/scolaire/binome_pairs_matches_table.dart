@@ -28,7 +28,7 @@ class BinomePairsMatchesTable {
       {@required String login, @required int limit, int offset = 0}) async {
     _logger.info('Executing function getXDiscoverBinomesFromLogin with args: login=${login}, limit=${limit}, offset=${offset}');
 
-    String       getDiscoverBinomePairMatchesQuery =
+    String getDiscoverBinomePairMatchesQuery =
         " SELECT ${RelationsStatusBinomePairsMatchesTable.name}.\"otherBinomePairId\", score, \"status\" FROM ${RelationsScoreBinomePairsMatchesTable.name} JOIN "
         " (SELECT \"myRelationStatusBinomePair\".\"binomePairId\", \"myRelationStatusBinomePair\".\"otherBinomePairId\", \"myRelationStatusBinomePair\".\"status\", \"otherRelationStatusBinomePair\".\"status\" AS \"otherStatus\" "
         " FROM "

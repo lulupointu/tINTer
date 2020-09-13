@@ -95,7 +95,7 @@ class RelationsStatusScolaireTable {
             WHERE login=OLD.\"otherLogin\" AND \"otherLogin\"=OLD.login;
             
             
-        IF NEW.\"statusScolaire\" = 'ignored' THEN
+        IF NEW.\"statusScolaire\" = 'ignored' OR NEW.\"statusScolaire\" = 'none' THEN
           
           IF \"otherStatus\" = 'askedBinome' 
             OR \"otherStatus\" = 'acceptedBinome' 
