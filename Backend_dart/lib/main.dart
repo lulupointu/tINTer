@@ -38,7 +38,7 @@ Future<void> main() async {
   _serverLogger.info('Connecting to notification server (Firebase Cloud messaging)');
   fcmAPI.initializeApp(
       secret: jsonDecode(File(
-              '/home/lulupointu/Downloads/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
+              '/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
           .readAsStringSync()));
 
   try {

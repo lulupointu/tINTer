@@ -11,7 +11,7 @@ dependencies:
   logging: ^0.11.4
 
   fcm_api:
-    path: /home/lulupointu/ProgrammingProjects/fcm_api
+    path: /home/df/fcm_api
 
 
 
