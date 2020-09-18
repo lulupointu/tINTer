@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "944748839213",
+    "firebase_url": "https://tinter-2c20c.firebaseio.com",
+    "project_id": "tinter-2c20c",
+    "storage_bucket": "tinter-2c20c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944748839213:android:af33c464e68feb11a393a4",
+        "android_client_info": {
+          "package_name": "imtbstelecomsudparis.tinterapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944748839213-vk4sh07ad46ib1u1jtad5mulu75fh787.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC89zNkJkOzsq4tnAU3TqrRRxnJ1MZbNOk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944748839213-vk4sh07ad46ib1u1jtad5mulu75fh787.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

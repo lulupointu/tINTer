@@ -17,6 +17,8 @@ import 'package:tinter_backend/models/scolaire/relation_status_binome_pair.dart'
 import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinter_backend/models/scolaire/searched_binome_pair.dart';
 import 'package:tinter_backend/models/scolaire/searched_user_scolaire.dart';
+import 'package:tinter_backend/models/shared/notification_relation_status_types/notification_relation_status_body.dart';
+import 'package:tinter_backend/models/shared/notification_relation_status_types/notification_relation_status_title.dart';
 import 'package:tinter_backend/models/shared/session.dart';
 import 'package:tinter_backend/models/shared/token.dart';
 import 'package:tinter_backend/models/shared/user.dart';
@@ -51,6 +53,8 @@ part 'serializers.g.dart';
   RelationStatusBinomePair,
   EnumRelationStatusBinomePair,
   SearchedBinomePair,
+  NotificationRelationStatusTitle,
+  NotificationRelationStatusBody,
 ])
 final Serializers serializers =
     (_$serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();

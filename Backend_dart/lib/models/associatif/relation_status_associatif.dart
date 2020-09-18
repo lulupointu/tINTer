@@ -2,6 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinter_backend/models/serializers.dart';
+import 'package:tinter_backend/models/shared/relation_status.dart';
 
 part 'relation_status_associatif.g.dart';
 
@@ -34,7 +35,7 @@ class EnumRelationStatusAssociatif extends EnumClass {
 }
 
 abstract class RelationStatusAssociatif
-    implements Built<RelationStatusAssociatif, RelationStatusAssociatifBuilder> {
+    implements RelationStatus, Built<RelationStatusAssociatif, RelationStatusAssociatifBuilder> {
   @nullable
   String get login;
 

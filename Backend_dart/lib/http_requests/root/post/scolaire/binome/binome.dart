@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fcm_api/fcm_api.dart' as fmc;
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
@@ -11,6 +12,7 @@ import 'package:tinter_backend/database_interface/scolaire/binome_pairs_status_t
 import 'package:tinter_backend/database_interface/scolaire/matieres_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
 import 'package:tinter_backend/database_interface/shared/associations_table.dart';
+import 'package:tinter_backend/database_interface/shared/notification_table.dart';
 import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/main.dart';
@@ -21,13 +23,15 @@ import 'package:tinter_backend/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:postgres/src/connection.dart';
 import 'package:tinter_backend/models/shared/internal_errors.dart';
+import 'package:tinter_backend/models/shared/notification_relation_status_types/notification_relation_status_body.dart';
+import 'package:tinter_backend/models/shared/notification_relation_status_types/notification_relation_status_title.dart';
 import 'package:tinter_backend/models/shared/user.dart';
 import 'package:built_collection/built_collection.dart';
 
-
 final _logger = Logger('binomeUpdateRelationStatusScolaire');
 
-Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> segments, String login) async {
+Future<void> binomeUpdateRelationStatusScolaire(
+    HttpRequest req, List<String> segments, String login) async {
   _logger.info(printReceivedSegments(login, 'BinomeUpdateRelationStatusScolaire', segments));
 
   if (segments.length != 0) {
@@ -39,7 +43,7 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
     Map<String, dynamic> relationStatusJson = jsonDecode(await utf8.decodeStream(req));
     relationStatusJson['login'] = login;
     relationStatus = RelationStatusScolaire.fromJson(relationStatusJson);
-  } catch(error) {
+  } catch (error) {
     throw error;
   }
 
@@ -47,7 +51,7 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
   // await tinterDatabase.open();
 
   RelationsStatusScolaireTable relationsStatusTable =
-  RelationsStatusScolaireTable(database: tinterDatabase.connection);
+      RelationsStatusScolaireTable(database: tinterDatabase.connection);
 
   try {
     await relationsStatusTable.update(relationStatus: relationStatus);
@@ -70,7 +74,7 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
       await setupBinomeOfBinomeTables(
           database: tinterDatabase.connection, relationStatusScolaire: relationStatus);
     }
-  } catch(error) {
+  } catch (error) {
     print(error);
     // await tinterDatabase.close();
     throw InternalDatabaseError(error);
@@ -80,31 +84,71 @@ Future<void> binomeUpdateRelationStatusScolaire(HttpRequest req, List<String> se
     ..statusCode = HttpStatus.ok
     ..close();
 
+  // Get match information
+  UsersManagementTable usersManagementTable =
+      UsersManagementTable(database: tinterDatabase.connection);
+  BuildUser binomeProfile =
+      await usersManagementTable.getFromLogin(login: relationStatus.otherLogin);
+  RelationStatusScolaire otherRelationStatus = await relationsStatusTable.getFromLogins(
+      login: relationStatus.otherLogin, otherLogin: relationStatus.login);
+
+  // If the otherRelationStatus is none or ignored, do not send a notification
+  switch (otherRelationStatus.statusScolaire) {
+    case EnumRelationStatusScolaire.none:
+    case EnumRelationStatusScolaire.ignored:
+      break;
+  }
+
+  // Get devices to notify
+  NotificationTable notificationTable = NotificationTable(database: tinterDatabase.connection);
+  List<String> notificationTokens =
+      await notificationTable.getFromLogin(login: relationStatus.otherLogin);
+
+  // Send the notifications
+  await fcmAPI.sendAll(notificationTokens
+      .map((String token) => fmc.Message((b) => b
+        ..token = token
+        ..data = BuiltMap<String, String>.from({
+          'title': NotificationRelationStatusTitle.relationStatusScolaireUpdate.serialize(),
+          'relationStatus': jsonEncode(
+              NotificationRelationStatusBody((b) => b..relationStatus = relationStatus)
+                  .toJson()),
+          'binomeName': binomeProfile.name,
+          'binomeSurname': binomeProfile.surname,
+        }).toBuilder()))
+      .toList());
+
   // await tinterDatabase.close();
 }
 
-Future<void> setupBinomeOfBinomeTables({@required PostgreSQLConnection database, @required RelationStatusScolaire relationStatusScolaire}) async {
+Future<void> setupBinomeOfBinomeTables(
+    {@required PostgreSQLConnection database,
+    @required RelationStatusScolaire relationStatusScolaire}) async {
   // Get the users composing the binome
   UsersManagementTable usersManagementTable = UsersManagementTable(database: database);
-  Map<String, BuildUser> users = await usersManagementTable.getMultipleFromLogins(logins: [relationStatusScolaire.login, relationStatusScolaire.otherLogin]);
+  Map<String, BuildUser> users = await usersManagementTable.getMultipleFromLogins(
+      logins: [relationStatusScolaire.login, relationStatusScolaire.otherLogin]);
   print("Got both users $users");
 
   // Calculate the BinomePair profile
   // It is a union and intersection of the attributes
   // of the two user composing the binome
-  BuildBinomePair binomePair = BuildBinomePair.getFromUsers(users.values.toList()[0], users.values.toList()[1]);
+  BuildBinomePair binomePair =
+      BuildBinomePair.getFromUsers(users.values.toList()[0], users.values.toList()[1]);
   print("Got binome pair from binome");
 
-
-  BinomePairsManagementTable binomePairsManagementTable = BinomePairsManagementTable(database: database);
+  BinomePairsManagementTable binomePairsManagementTable =
+      BinomePairsManagementTable(database: database);
 
   // Save the binome pair to its table
   await binomePairsManagementTable.add(binomePair: binomePair);
   print("Save the binome pair to its table");
 
   // Get the binome pair id
-  BinomePairsProfilesTable binomePairsProfilesTable = BinomePairsProfilesTable(database: database);
-  int binomePairId = await binomePairsProfilesTable.getBinomePairIdFromLogin(login: relationStatusScolaire.login);
+  BinomePairsProfilesTable binomePairsProfilesTable =
+      BinomePairsProfilesTable(database: database);
+  int binomePairId = await binomePairsProfilesTable.getBinomePairIdFromLogin(
+      login: relationStatusScolaire.login);
   print("Get the binome pair id");
 
   // Add the binome pair id to the binome pair
@@ -112,33 +156,33 @@ Future<void> setupBinomeOfBinomeTables({@required PostgreSQLConnection database,
   print("Add the binome pair id to the binome pair");
 
   // Grab all other binome paire
-  Map<int, BuildBinomePair> otherBinomePairs= await binomePairsManagementTable.getAllExceptOneFromLogin(
-      login: relationStatusScolaire.login);
+  Map<int, BuildBinomePair> otherBinomePairs = await binomePairsManagementTable
+      .getAllExceptOneFromLogin(login: relationStatusScolaire.login);
   print("Grab all other binome paire");
 
   // Get the number of associations and matieres
-  int numberMaxOfAssociations =
-      (await AssociationsTable(database: database).getAll()).length;
-  int numberMaxOfMatieres =
-      (await MatieresTable(database: database).getAll()).length;
+  int numberMaxOfAssociations = (await AssociationsTable(database: database).getAll()).length;
+  int numberMaxOfMatieres = (await MatieresTable(database: database).getAll()).length;
   print('Get the number of associations and matieres');
 
   // Get the scores
-  Map<int, RelationScoreBinomePair> scores =
-  RelationScoreBinomePair.getScoreBetweenMultiple(binomePair, otherBinomePairs.values.toList(),
-      numberMaxOfAssociations, numberMaxOfMatieres);
+  Map<int, RelationScoreBinomePair> scores = RelationScoreBinomePair.getScoreBetweenMultiple(
+      binomePair,
+      otherBinomePairs.values.toList(),
+      numberMaxOfAssociations,
+      numberMaxOfMatieres);
   print('Get the scores');
 
   // Update the database with all relevant scores
   RelationsScoreBinomePairsMatchesTable relationsScoreScolaireTable =
-  RelationsScoreBinomePairsMatchesTable(database: database);
+      RelationsScoreBinomePairsMatchesTable(database: database);
   await relationsScoreScolaireTable.addMultiple(
       listRelationScoreBinomePair: scores.values.toList());
   print('Update the database with all relevant scores');
 
   // Update the database with status none
   RelationsStatusBinomePairsMatchesTable relationsStatusScolaireTable =
-  RelationsStatusBinomePairsMatchesTable(database: database);
+      RelationsStatusBinomePairsMatchesTable(database: database);
   await relationsStatusScolaireTable.addMultiple(listRelationStatusBinomePair: [
     for (int otherBinomePairId in otherBinomePairs.keys) ...[
       RelationStatusBinomePair((b) => b
@@ -152,6 +196,4 @@ Future<void> setupBinomeOfBinomeTables({@required PostgreSQLConnection database,
     ]
   ]);
   print("Update the database with status none");
-
 }
-

@@ -2,6 +2,11 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
+    <content url="file://$MODULE_DIR$/../../fcm_api">
+      <excludeFolder url="file://$MODULE_DIR$/../../fcm_api/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/../../fcm_api/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/../../fcm_api/build" />
+    </content>
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/.pub" />

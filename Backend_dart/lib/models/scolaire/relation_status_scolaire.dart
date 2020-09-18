@@ -2,11 +2,12 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinter_backend/models/serializers.dart';
+import 'package:tinter_backend/models/shared/relation_status.dart';
 
 part 'relation_status_scolaire.g.dart';
 
 abstract class RelationStatusScolaire
-    implements Built<RelationStatusScolaire, RelationStatusScolaireBuilder> {
+    implements RelationStatus, Built<RelationStatusScolaire, RelationStatusScolaireBuilder> {
   String get login;
 
   String get otherLogin;

@@ -2,10 +2,11 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:tinter_backend/models/serializers.dart';
+import 'package:tinter_backend/models/shared/relation_status.dart';
 
 part 'relation_status_binome_pair.g.dart';
 
-abstract class RelationStatusBinomePair implements Built<RelationStatusBinomePair, RelationStatusBinomePairBuilder> {
+abstract class RelationStatusBinomePair implements RelationStatus, Built<RelationStatusBinomePair, RelationStatusBinomePairBuilder> {
   @nullable
   int get binomePairId;
 
