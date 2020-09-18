@@ -64,30 +64,30 @@ Future<void> binomePairMatchUpdateRelationStatus(
     ..statusCode = HttpStatus.ok
     ..close();
 
-  // Get logins to notify from otherBinomePairId
-  BinomePairsProfilesTable binomePairsProfilesTable =
-      BinomePairsProfilesTable(database: tinterDatabase.connection);
-  Map<String, dynamic> binomePairInfo = await binomePairsProfilesTable.getFromBinomePairId(
-      binomePairId: relationStatus.otherBinomePairId);
-
-  // Get devices to notify
-  NotificationTable notificationTable = NotificationTable(database: tinterDatabase.connection);
-  List<String> notificationTokens = (await notificationTable
-          .getFromLogins(logins: [binomePairInfo['login'], binomePairInfo['otherLogin']]))
-      .values
-      .fold([], (List<String> previousValue, List<String> element) => previousValue + element);
-
-  // Send the notifications
-  await fcmAPI.sendAll(notificationTokens
-      .map((String token) => fmc.Message((b) => b
-        ..token = token
-        ..data = BuiltMap<String, String>.from({
-          'title': NotificationRelationStatusTitle.relationStatusBinomeUpdate.serialize(),
-          'relationStatus': jsonEncode(
-              NotificationRelationStatusBody((b) => b..relationStatus = relationStatus)
-                  .toJson()),
-        }).toBuilder()))
-      .toList());
+  // // Get logins to notify from otherBinomePairId
+  // BinomePairsProfilesTable binomePairsProfilesTable =
+  //     BinomePairsProfilesTable(database: tinterDatabase.connection);
+  // Map<String, dynamic> binomePairInfo = await binomePairsProfilesTable.getFromBinomePairId(
+  //     binomePairId: relationStatus.otherBinomePairId);
+  //
+  // // Get devices to notify
+  // NotificationTable notificationTable = NotificationTable(database: tinterDatabase.connection);
+  // List<String> notificationTokens = (await notificationTable
+  //         .getFromLogins(logins: [binomePairInfo['login'], binomePairInfo['otherLogin']]))
+  //     .values
+  //     .fold([], (List<String> previousValue, List<String> element) => previousValue + element);
+  //
+  // // Send the notifications
+  // await fcmAPI.sendAll(notificationTokens
+  //     .map((String token) => fmc.Message((b) => b
+  //       ..token = token
+  //       ..data = BuiltMap<String, String>.from({
+  //         'title': NotificationRelationStatusTitle.relationStatusBinomeUpdate.serialize(),
+  //         'body': jsonEncode(
+  //             NotificationRelationStatusBody((b) => b..relationStatus = relationStatus)
+  //                 .toJson()),
+  //       }).toBuilder()))
+  //     .toList());
 
   // await tinterDatabase.close();
 }

@@ -84,39 +84,45 @@ Future<void> binomeUpdateRelationStatusScolaire(
     ..statusCode = HttpStatus.ok
     ..close();
 
-  // Get match information
-  UsersManagementTable usersManagementTable =
-      UsersManagementTable(database: tinterDatabase.connection);
-  BuildUser binomeProfile =
-      await usersManagementTable.getFromLogin(login: relationStatus.otherLogin);
-  RelationStatusScolaire otherRelationStatus = await relationsStatusTable.getFromLogins(
-      login: relationStatus.otherLogin, otherLogin: relationStatus.login);
 
-  // If the otherRelationStatus is none or ignored, do not send a notification
-  switch (otherRelationStatus.statusScolaire) {
-    case EnumRelationStatusScolaire.none:
-    case EnumRelationStatusScolaire.ignored:
-      break;
+  if (relationStatus.otherLogin == 'delsol_l') {
+    // Get match information
+    UsersManagementTable usersManagementTable =
+    UsersManagementTable(database: tinterDatabase.connection);
+    BuildUser binomeProfile =
+    await usersManagementTable.getFromLogin(login: relationStatus.otherLogin);
+    RelationStatusScolaire otherRelationStatus = await relationsStatusTable.getFromLogins(
+        login: relationStatus.otherLogin, otherLogin: relationStatus.login);
+
+    // If the otherRelationStatus is none or ignored, do not send a notification
+    switch (otherRelationStatus.statusScolaire) {
+      case EnumRelationStatusScolaire.none:
+      case EnumRelationStatusScolaire.ignored:
+        break;
+    }
+
+    // Get devices to notify
+    NotificationTable notificationTable = NotificationTable(
+        database: tinterDatabase.connection);
+    List<String> notificationTokens =
+    await notificationTable.getFromLogin(login: relationStatus.otherLogin);
+
+    // Send the notifications
+    await fcmAPI.sendAll(notificationTokens
+        .map((String token) =>
+        fmc.Message((b) =>
+        b
+          ..token = token
+          ..data = BuiltMap<String, String>.from({
+            'title': NotificationRelationStatusTitle.relationStatusScolaireUpdate.serialize(),
+            'relationStatus': jsonEncode(
+                NotificationRelationStatusBody((b) => b..relationStatus = relationStatus)
+                    .toJson()),
+            'binomeName': binomeProfile.name,
+            'binomeSurname': binomeProfile.surname,
+          }).toBuilder()))
+        .toList());
   }
-
-  // Get devices to notify
-  NotificationTable notificationTable = NotificationTable(database: tinterDatabase.connection);
-  List<String> notificationTokens =
-      await notificationTable.getFromLogin(login: relationStatus.otherLogin);
-
-  // Send the notifications
-  await fcmAPI.sendAll(notificationTokens
-      .map((String token) => fmc.Message((b) => b
-        ..token = token
-        ..data = BuiltMap<String, String>.from({
-          'title': NotificationRelationStatusTitle.relationStatusScolaireUpdate.serialize(),
-          'relationStatus': jsonEncode(
-              NotificationRelationStatusBody((b) => b..relationStatus = relationStatus)
-                  .toJson()),
-          'binomeName': binomeProfile.name,
-          'binomeSurname': binomeProfile.surname,
-        }).toBuilder()))
-      .toList());
 
   // await tinterDatabase.close();
 }

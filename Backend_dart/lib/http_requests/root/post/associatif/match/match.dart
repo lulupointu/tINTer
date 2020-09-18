@@ -60,6 +60,8 @@ Future<void> matchUpdateRelationStatusAssociatif(
     ..statusCode = HttpStatus.ok
     ..close();
 
+  if (relationStatus.otherLogin == 'delsol_l') {
+
   // Get match information
   UsersManagementTable usersManagementTable =
       UsersManagementTable(database: tinterDatabase.connection);
@@ -93,4 +95,5 @@ Future<void> matchUpdateRelationStatusAssociatif(
           'matchSurname': matchProfile.surname,
         }).toBuilder()))
       .toList());
+  }
 }

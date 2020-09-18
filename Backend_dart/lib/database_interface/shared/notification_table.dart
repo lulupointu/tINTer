@@ -36,7 +36,7 @@ class NotificationTable {
   }
 
   Future<void> add({@required String login, @required String token}) async {
-    _logger.info('Executing function addBasicInfo with args: login=${login}, token=${token}');
+    _logger.info('Executing function add with args: login=${login}, token=${token}');
 
     var queries = <Future>[
       database.query("INSERT INTO $name VALUES (@login, @token);", substitutionValues: {
