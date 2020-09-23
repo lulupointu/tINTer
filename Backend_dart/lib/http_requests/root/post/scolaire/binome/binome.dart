@@ -97,8 +97,10 @@ Future<void> binomeUpdateRelationStatusScolaire(
     // If the otherRelationStatus is none or ignored, do not send a notification
     switch (otherRelationStatus.statusScolaire) {
       case EnumRelationStatusScolaire.none:
+        _logger.info('RELATION STATUS SCOLAIRE is none');
         return;
       case EnumRelationStatusScolaire.ignored:
+        _logger.info('RELATION STATUS SCOLAIRE is ignored');
         return;
     }
 
