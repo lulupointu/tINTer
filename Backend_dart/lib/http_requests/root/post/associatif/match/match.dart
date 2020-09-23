@@ -90,7 +90,7 @@ Future<void> matchUpdateRelationStatusAssociatif(
                 ..data = BuiltMap<String, String>.from({
                   'title': NotificationRelationStatusTitle.relationStatusAssociatifUpdate
                       .serialize(),
-                  'relationStatus': relationStatus,
+                  'relationStatus': jsonEncode(relationStatus.toJson()),
                   'matchName': matchProfile.name,
                   'matchSurname': matchProfile.surname,
                 }).toBuilder(),

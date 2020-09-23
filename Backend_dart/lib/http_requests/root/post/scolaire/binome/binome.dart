@@ -94,15 +94,11 @@ Future<void> binomeUpdateRelationStatusScolaire(
     RelationStatusScolaire otherRelationStatus = await relationsStatusTable.getFromLogins(
         login: relationStatus.otherLogin, otherLogin: relationStatus.login);
 
-    _logger.info('ENUM RELATION STATUS SCOLAIRE: ${otherRelationStatus.statusScolaire}');
-
     // If the otherRelationStatus is none or ignored, do not send a notification
+    // ie the notification will only be sent to user who already liked the current user.
     switch (otherRelationStatus.statusScolaire) {
       case EnumRelationStatusScolaire.none:
-        _logger.info('RELATION STATUS SCOLAIRE is none');
-        return;
       case EnumRelationStatusScolaire.ignored:
-        _logger.info('RELATION STATUS SCOLAIRE is ignored');
         return;
     }
 
