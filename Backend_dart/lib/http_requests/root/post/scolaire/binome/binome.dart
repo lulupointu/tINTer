@@ -98,7 +98,7 @@ Future<void> binomeUpdateRelationStatusScolaire(
     switch (otherRelationStatus.statusScolaire) {
       case EnumRelationStatusScolaire.none:
       case EnumRelationStatusScolaire.ignored:
-        break;
+        return;
     }
 
     // Get devices to notify
