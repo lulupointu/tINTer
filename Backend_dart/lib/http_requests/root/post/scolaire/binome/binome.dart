@@ -90,7 +90,7 @@ Future<void> binomeUpdateRelationStatusScolaire(
     UsersManagementTable usersManagementTable =
     UsersManagementTable(database: tinterDatabase.connection);
     BuildUser binomeProfile =
-    await usersManagementTable.getFromLogin(login: relationStatus.otherLogin);
+    await usersManagementTable.getFromLogin(login: relationStatus.login);
     RelationStatusScolaire otherRelationStatus = await relationsStatusTable.getFromLogins(
         login: relationStatus.otherLogin, otherLogin: relationStatus.login);
 
