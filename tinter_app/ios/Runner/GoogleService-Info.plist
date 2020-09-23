@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>944748839213-4gk5u2pm3vj4h0ncqvm4pnf1ek1j7ovv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.944748839213-4gk5u2pm3vj4h0ncqvm4pnf1ek1j7ovv</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBjwvhPmLK4gkA-iL8TNON0k-VyGU36EyY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>944748839213</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>imtbs-telecomsudparis.tinterapp</string>
+	<key>PROJECT_ID</key>
+	<string>tinter-2c20c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tinter-2c20c.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:944748839213:ios:7b187cfafc3230c7a393a4</string>
+	<key>DATABASE_URL</key>
+	<string>https://tinter-2c20c.firebaseio.com</string>
+</dict>
+</plist>

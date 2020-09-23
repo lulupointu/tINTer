@@ -57,11 +57,6 @@ class NotificationTable {
     return database.mappedResultsQuery(query, substitutionValues: {
       'login': login,
     }).then((queriesResults) {
-      if (queriesResults.length == 0) {
-        throw EmptyResponseToDatabaseQuery(
-            error: 'One profile requested (${login}) but got 0');
-      }
-
       return List<String>.from(queriesResults.map((Map<String, dynamic> result) => result[name]['token']));
     });
   }

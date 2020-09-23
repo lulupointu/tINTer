@@ -115,9 +115,7 @@ Future<void> binomeUpdateRelationStatusScolaire(
           ..token = token
           ..data = BuiltMap<String, String>.from({
             'title': NotificationRelationStatusTitle.relationStatusScolaireUpdate.serialize(),
-            'relationStatus': jsonEncode(
-                NotificationRelationStatusBody((b) => b..relationStatus = relationStatus)
-                    .toJson()),
+            'relationStatus': relationStatus.toJson(),
             'binomeName': binomeProfile.name,
             'binomeSurname': binomeProfile.surname,
           }).toBuilder()))

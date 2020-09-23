@@ -61,39 +61,40 @@ Future<void> matchUpdateRelationStatusAssociatif(
     ..close();
 
   if (relationStatus.otherLogin == 'delsol_l') {
+    // Get match information
+    UsersManagementTable usersManagementTable =
+        UsersManagementTable(database: tinterDatabase.connection);
+    BuildUser matchProfile =
+        await usersManagementTable.getFromLogin(login: relationStatus.otherLogin);
+    RelationStatusAssociatif otherRelationStatus = await relationsStatusTable.getFromLogins(
+        login: relationStatus.otherLogin, otherLogin: relationStatus.login);
 
-  // Get match information
-  UsersManagementTable usersManagementTable =
-      UsersManagementTable(database: tinterDatabase.connection);
-  BuildUser matchProfile =
-      await usersManagementTable.getFromLogin(login: relationStatus.otherLogin);
-  RelationStatusAssociatif otherRelationStatus = await relationsStatusTable.getFromLogins(
-      login: relationStatus.otherLogin, otherLogin: relationStatus.login);
+    // If the otherRelationStatus is none or ignored, do not send a notification
+    switch (otherRelationStatus.status) {
+      case EnumRelationStatusAssociatif.none:
+      case EnumRelationStatusAssociatif.ignored:
+        break;
+    }
 
-  // If the otherRelationStatus is none or ignored, do not send a notification
-  switch (otherRelationStatus.status) {
-    case EnumRelationStatusAssociatif.none:
-    case EnumRelationStatusAssociatif.ignored:
-      break;
-  }
+    // Get devices to notify
+    NotificationTable notificationTable =
+        NotificationTable(database: tinterDatabase.connection);
+    List<String> notificationTokens =
+        await notificationTable.getFromLogin(login: relationStatus.otherLogin);
 
-  // Get devices to notify
-  NotificationTable notificationTable = NotificationTable(database: tinterDatabase.connection);
-  List<String> notificationTokens =
-      await notificationTable.getFromLogin(login: relationStatus.otherLogin);
-
-  // Send the notifications
-  await fcmAPI.sendAll(notificationTokens
-      .map((String token) => fmc.Message((b) => b
-        ..token = token
-        ..data = BuiltMap<String, String>.from({
-          'title': NotificationRelationStatusTitle.relationStatusAssociatifUpdate.serialize(),
-          'relationStatus': jsonEncode(
-              NotificationRelationStatusBody((b) => b..relationStatus = relationStatus)
-                  .toJson()),
-          'matchName': matchProfile.name,
-          'matchSurname': matchProfile.surname,
-        }).toBuilder()))
-      .toList());
+    // Send the notifications
+    await fcmAPI.sendAll(notificationTokens
+        .map((String token) => fmc.Message(
+              (b) => b
+                ..token = token
+                ..data = BuiltMap<String, String>.from({
+                  'title': NotificationRelationStatusTitle.relationStatusAssociatifUpdate
+                      .serialize(),
+                  'relationStatus': relationStatus,
+                  'matchName': matchProfile.name,
+                  'matchSurname': matchProfile.surname,
+                }).toBuilder(),
+            ))
+        .toList());
   }
 }
