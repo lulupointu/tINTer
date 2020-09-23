@@ -65,7 +65,7 @@ Future<void> matchUpdateRelationStatusAssociatif(
     UsersManagementTable usersManagementTable =
         UsersManagementTable(database: tinterDatabase.connection);
     BuildUser matchProfile =
-        await usersManagementTable.getFromLogin(login: relationStatus.otherLogin);
+        await usersManagementTable.getFromLogin(login: relationStatus.login);
     RelationStatusAssociatif otherRelationStatus = await relationsStatusTable.getFromLogins(
         login: relationStatus.otherLogin, otherLogin: relationStatus.login);
 
