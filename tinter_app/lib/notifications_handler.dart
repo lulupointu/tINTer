@@ -400,6 +400,7 @@ class NotificationHandler {
   Future onDidReceiveLocalNotification(int id, String title, String body, String payload) {
     print(
         'onDidReceiveLocalNotification: id: $id, title: $title, body: $body, playload: $payload');
+    showNotification(id: id, title: title, body: body, color: TinterDarkThemeColors.primary, payload: jsonDecode(payload));
   }
 
   static Future deleteNotificationToken() async {
