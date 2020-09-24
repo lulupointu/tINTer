@@ -41,7 +41,7 @@ import '../shared_element/const.dart';
 //  ));
 //}
 
-class UserTab extends StatefulWidget {
+class UserTab extends StatefulWidget implements TinterTab {
   @override
   _UserTabState createState() => _UserTabState();
 }

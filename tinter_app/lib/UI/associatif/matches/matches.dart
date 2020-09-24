@@ -16,6 +16,7 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
 import 'package:tinterapp/UI/shared/snap_scroll_sheet_physics/snap_scroll_sheet_physics.dart';
+import 'package:tinterapp/main.dart';
 
 main() => runApp(MaterialApp(
       home: Material(
@@ -23,17 +24,30 @@ main() => runApp(MaterialApp(
       ),
     ));
 
-class MatchsTab extends StatefulWidget {
+class SelectedAssociatif extends ChangeNotifier {
+  String _matchLogin;
+
+  String get matchLogin => _matchLogin;
+
+  set matchLogin(newMatchLogin) {
+    if (newMatchLogin != matchLogin) {
+      _matchLogin = newMatchLogin;
+      notifyListeners();
+      notificationHandler.removeNotification(newMatchLogin.hashCode);
+    }
+  }
+}
+
+class MatchsTab extends StatefulWidget implements TinterTab {
   final Map<String, double> fractions = {
     'matchSelectionMenu': null,
   };
 
   @override
-  _MatchsTabState createState() => _MatchsTabState();
+  MatchsTabState createState() => MatchsTabState();
 }
 
-class _MatchsTabState extends State<MatchsTab> {
-  String _selectedMatchLogin;
+class MatchsTabState extends State<MatchsTab> {
   ScrollController _controller = ScrollController();
   ScrollPhysics _scrollPhysics = NeverScrollableScrollPhysics();
   double topMenuScrolledFraction = 0;
@@ -87,10 +101,12 @@ class _MatchsTabState extends State<MatchsTab> {
           if (!_controller.hasListeners) {
             _controller.addListener(() {
               setState(() {
-                topMenuScrolledFraction = max(0, min(
-                    1,
-                    _controller.position.pixels /
-                        (widget.fractions['matchSelectionMenu'] * constraints.maxHeight)));
+                topMenuScrolledFraction = max(
+                    0,
+                    min(
+                        1,
+                        _controller.position.pixels /
+                            (widget.fractions['matchSelectionMenu'] * constraints.maxHeight)));
               });
             });
           }
@@ -112,16 +128,15 @@ class _MatchsTabState extends State<MatchsTab> {
               controller: _controller,
               children: [
                 MatchSelectionMenu(
-                  onTap: matchSelected,
                   height: constraints.maxHeight * widget.fractions['matchSelectionMenu'],
                   matchesNotParrains: _matchesNotParrains,
                   parrains: _parrains,
                 ),
-                (_selectedMatchLogin == null)
+                (context.watch<SelectedAssociatif>().matchLogin == null)
                     ? noMatchSelected(constraints.maxHeight)
                     : CompareView(
-                        match: allMatches.firstWhere(
-                            (BuildMatch match) => match.login == _selectedMatchLogin),
+                        match: allMatches.firstWhere((BuildMatch match) =>
+                            match.login == context.watch<SelectedAssociatif>().matchLogin),
                         appHeight: constraints.maxHeight,
                         topMenuScrolledFraction: topMenuScrolledFraction,
                         onCompareTapped: onCompareTapped,
@@ -175,7 +190,9 @@ class _MatchsTabState extends State<MatchsTab> {
             },
             builder: (BuildContext context, MatchedMatchesState state) {
               if (!(state is MatchedMatchesLoadSuccessState)) {
-                return Center(child: CircularProgressIndicator(),);
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               }
               return ((state as MatchedMatchesLoadSuccessState).matches.length == 0)
                   ? Text(
@@ -193,11 +210,11 @@ class _MatchsTabState extends State<MatchsTab> {
     });
   }
 
-  void matchSelected(BuildMatch match) {
-    setState(() {
-      _selectedMatchLogin = match.login;
-    });
-  }
+// void matchSelected(BuildMatch match) {
+//   setState(() {
+//     selectedMatchLogin = match.login;
+//   });
+// }
 }
 
 class CompareView extends StatelessWidget {
@@ -245,7 +262,9 @@ class CompareView extends StatelessWidget {
                 BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                   if (!(userState is UserLoadSuccessState)) {
-                    return Center(child: CircularProgressIndicator(),);
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
                   return userPicture(
                       getProfilePicture: ({@required height, @required width}) =>
@@ -601,7 +620,9 @@ class CompareView extends StatelessWidget {
                 builder: (BuildContext context, UserState state) {
               if (!(state is KnownUserState)) {
                 BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
-                return Center(child: CircularProgressIndicator(),);
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               }
               return ProfileInformation(user: (state as KnownUserState).user);
             }),
@@ -896,17 +917,12 @@ class ProfileInformation extends StatelessWidget {
 }
 
 class MatchSelectionMenu extends StatelessWidget {
-  final _onTap;
   final double height;
   final List<BuildMatch> matchesNotParrains;
   final List<BuildMatch> parrains;
 
   MatchSelectionMenu(
-      {@required onTap,
-      @required this.height,
-      @required this.matchesNotParrains,
-      @required this.parrains})
-      : _onTap = onTap;
+      {@required this.height, @required this.matchesNotParrains, @required this.parrains});
 
   @override
   Widget build(BuildContext context) {
@@ -915,10 +931,22 @@ class MatchSelectionMenu extends StatelessWidget {
       child: Column(
         children: [
           (matchesNotParrains.length != 0)
-              ? Expanded(child: topMenu(matches: matchesNotParrains, title: 'Mes matchs'))
+              ? Expanded(
+                  child: topMenu(
+                    context: context,
+                    matches: matchesNotParrains,
+                    title: 'Mes matchs',
+                  ),
+                )
               : Container(),
           (parrains.length != 0)
-              ? Expanded(child: topMenu(matches: parrains, title: 'Mes Parrains et marraines'))
+              ? Expanded(
+                  child: topMenu(
+                    context: context,
+                    matches: parrains,
+                    title: 'Mes Parrains et marraines',
+                  ),
+                )
               : Container(),
         ],
       ),
@@ -926,7 +954,10 @@ class MatchSelectionMenu extends StatelessWidget {
   }
 
   /// Either displays the parrain top menu or the match top menu
-  Widget topMenu({@required List<BuildMatch> matches, @required String title}) {
+  Widget topMenu(
+      {@required BuildContext context,
+      @required List<BuildMatch> matches,
+      @required String title}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -948,7 +979,7 @@ class MatchSelectionMenu extends StatelessWidget {
                 InkWell(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  onTap: () => _onTap(match),
+                  onTap: () => context.read<SelectedAssociatif>().matchLogin = match.login,
                   child: Center(
                     child: Consumer<TinterTheme>(
                       builder: (context, tinterTheme, child) {

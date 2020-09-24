@@ -185,7 +185,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -201,7 +201,8 @@ class TinterAPIClient {
   Future<TinterApiResponse<void>> updateBinomePairMatchRelationStatus(
       {@required RelationStatusBinomePair relationStatus, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/scolaire/binomePairMatchUpdateRelationStatus', {'shouldRefresh': 'true'}),
+      Uri.http(
+          baseUrl, '/scolaire/binomePairMatchUpdateRelationStatus', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(relationStatus.toJson()),
     );
@@ -209,7 +210,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -231,7 +232,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -261,7 +262,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -303,8 +304,7 @@ class TinterAPIClient {
     }
 
     List<SearchedUserAssociatif> searchedUsers;
-    print('USER ASSOCIATIFS ${json
-        .decode(response.body)}');
+    print('USER ASSOCIATIFS ${json.decode(response.body)}');
     try {
       searchedUsers = json
           .decode(response.body)
@@ -328,7 +328,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -340,12 +340,11 @@ class TinterAPIClient {
 
     List<SearchedUserScolaire> searchedUsers;
     try {
-      print('SEARCHED USERS ${json
-          .decode(response.body)}');
+      print('SEARCHED USERS ${json.decode(response.body)}');
       searchedUsers = json
           .decode(response.body)
           .map<SearchedUserScolaire>((dynamic jsonSearchedUserScolaire) =>
-          SearchedUserScolaire.fromJson(jsonSearchedUserScolaire))
+              SearchedUserScolaire.fromJson(jsonSearchedUserScolaire))
           .toList();
     } catch (error) {
       throw error;
@@ -364,7 +363,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -379,7 +378,7 @@ class TinterAPIClient {
       searchedUsers = json
           .decode(response.body)
           .map<SearchedBinomePair>((dynamic jsonSearchedUserScolaire) =>
-          SearchedBinomePair.fromJson(jsonSearchedUserScolaire))
+              SearchedBinomePair.fromJson(jsonSearchedUserScolaire))
           .toList();
     } catch (error) {
       throw error;
@@ -397,7 +396,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -426,7 +425,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -525,7 +524,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -561,7 +560,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -594,7 +593,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -608,7 +607,8 @@ class TinterAPIClient {
     try {
       matchedBinomePairMatches = json
           .decode(response.body)
-          .map<BuildBinomePairMatch>((dynamic jsonMatch) => BuildBinomePairMatch.fromJson(jsonMatch))
+          .map<BuildBinomePairMatch>(
+              (dynamic jsonMatch) => BuildBinomePairMatch.fromJson(jsonMatch))
           .toList();
     } catch (error) {
       throw error;
@@ -630,7 +630,7 @@ class TinterAPIClient {
     Token newToken;
     try {
       newToken = Token(
-            (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
       );
     } catch (error) {
       throw error;
@@ -644,7 +644,8 @@ class TinterAPIClient {
     try {
       discoverBinomePairMatches = json
           .decode(response.body)
-          .map<BuildBinomePairMatch>((dynamic jsonMatch) => BuildBinomePairMatch.fromJson(jsonMatch))
+          .map<BuildBinomePairMatch>(
+              (dynamic jsonMatch) => BuildBinomePairMatch.fromJson(jsonMatch))
           .toList();
     } catch (error) {
       throw error;
@@ -711,13 +712,43 @@ class TinterAPIClient {
 
     List<String> allMatieres;
     try {
-      allMatieres =
-          json.decode(response.body).map<String>((dynamic matiere) => matiere.toString()).toList();
+      allMatieres = json
+          .decode(response.body)
+          .map<String>((dynamic matiere) => matiere.toString())
+          .toList();
     } catch (error) {
       throw error;
     }
 
     return TinterApiResponse(value: allMatieres, token: newToken);
+  }
+
+  Future<TinterApiResponse<void>> sendNotificationToken(
+      {@required Token token, @required String notificationToken}) async {
+    http.Response response = await httpClient.post(
+        Uri.http(
+            baseUrl, '/shared/setNotificationToken', {'shouldRefresh': 'true'}),
+        headers: {
+          HttpHeaders.wwwAuthenticateHeader: token.token,
+        },
+        body: jsonEncode({
+          'notificationToken': notificationToken,
+        }));
+
+    Token newToken;
+    try {
+      newToken = Token(
+        (t) => t..token = response.headers[HttpHeaders.wwwAuthenticateHeader],
+      );
+    } catch (error) {
+      throw error;
+    }
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw TinterAPIError('Error ${response.statusCode}: (${response.body})', newToken);
+    }
+
+    return TinterApiResponse(value: null, token: newToken);
   }
 
   Future<TinterApiResponse<void>> deleteUserAccount({@required Token token}) async {

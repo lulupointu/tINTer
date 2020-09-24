@@ -30,22 +30,25 @@ import 'package:tinterapp/Logic/repository/shared/associations_repository.dart';
 import 'package:tinterapp/Logic/repository/shared/authentication_repository.dart';
 import 'package:tinterapp/Logic/repository/associatif/discover_matches_repository.dart';
 import 'package:tinterapp/Logic/repository/associatif/matched_matches_repository.dart';
+import 'package:tinterapp/Logic/repository/shared/notification_repository.dart';
 import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:tinterapp/UI/associatif/discover/discover.dart';
 import 'package:tinterapp/UI/associatif/matches/matches.dart';
 import 'package:tinterapp/UI/scolaire/binomes/binomes.dart';
-import 'package:tinterapp/UI/scolaire/discover/discover.dart';
-import 'package:tinterapp/UI/scolaire/discover_binome_pair/discover_binome_pair.dart';
+import 'package:tinterapp/UI/scolaire/shared/discover_scolaire_tab.dart';
 import 'package:tinterapp/UI/shared/login/login.dart';
 import 'package:tinterapp/UI/shared/profile_creation/create_profile.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/tinter_bottom_navigation_bar.dart';
 import 'package:tinterapp/UI/shared/splash_screen/splash_screen.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
+import 'package:tinterapp/notifications_handler.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
+NotificationHandler notificationHandler;
 
 main() {
 //  Bloc.observer = AllBlocObserver();
@@ -58,6 +61,9 @@ main() {
 
   final AuthenticationRepository authenticationRepository =
       AuthenticationRepository(tinterAPIClient: tinterAPIClient);
+
+  final NotificationRepository notificationRepository = NotificationRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   final UserRepository userRepository = UserRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
@@ -92,6 +98,8 @@ main() {
 
   final MatieresRepository matieresRepository = MatieresRepository(
       tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
+
+  notificationHandler = NotificationHandler(notificationRepository: notificationRepository);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
     runApp(
@@ -184,8 +192,13 @@ main() {
                   ),
                 ),
               ],
-              child: ChangeNotifierProvider<TinterTheme>(
-                create: (_) => TinterTheme(),
+              child: MultiProvider(
+                providers: [
+                  ChangeNotifierProvider<TinterTheme>(create: (_) => TinterTheme()),
+                  ChangeNotifierProvider<TinterTabs>(create: (_) => TinterTabs()),
+                  ChangeNotifierProvider<SelectedScolaire>(create: (_) => SelectedScolaire()),
+                  ChangeNotifierProvider<SelectedAssociatif>(create: (_) => SelectedAssociatif()),
+                ],
                 child: MaterialApp(
                   debugShowCheckedModeBanner: false,
                   home: SafeArea(
@@ -222,6 +235,11 @@ class Tinter extends StatelessWidget {
 
         // next check on the user state
         return BlocBuilder<UserBloc, UserState>(
+          buildWhen: (UserState previousUserState, UserState userState) {
+            if (previousUserState is KnownUserState && userState is KnownUserState)
+              return false;
+            return true;
+          },
           builder: (BuildContext context, UserState userState) {
             if (userState is UserInitialState) {
               BlocProvider.of<UserBloc>(context).add(UserInitEvent());
@@ -237,6 +255,14 @@ class Tinter extends StatelessWidget {
               if (userState.user.year == TSPYear.TSP1A &&
                   userState.user.school == School.TSP) {
                 return BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(
+                  buildWhen: (MatchedBinomesState previousMatchedBinomePairMatchesState,
+                      MatchedBinomesState matchedBinomePairMatchesState) {
+                    if (previousMatchedBinomePairMatchesState
+                            is MatchedBinomesLoadSuccessState &&
+                        matchedBinomePairMatchesState is MatchedBinomesLoadSuccessState)
+                      return false;
+                    return true;
+                  },
                   builder: (BuildContext context,
                       MatchedBinomesState matchedBinomePairMatchesState) {
                     if (matchedBinomePairMatchesState is MatchedBinomesInitialState ||
@@ -265,9 +291,12 @@ class Tinter extends StatelessWidget {
 }
 
 class TinterHome extends StatefulWidget {
-  final List<Widget> tabsAssociatif = [MatchsTab(), DiscoverAssociatifTab(), UserTab()];
-  final List<Widget> tabsScolaire = [BinomesTab(), DiscoverScolaireTab(), UserTab()];
-  final List<Widget> tabsBinomePair = [BinomesTab(), DiscoverBinomePairTab(), UserTab()];
+  final List<TinterTab> tabsAssociatif = [MatchsTab(), DiscoverAssociatifTab(), UserTab()];
+  final List<TinterTab> tabsScolaire = [BinomesTab(), DiscoverScolaireTab(), UserTab()];
+
+  // final List<Widget> tabsAssociatif = [MatchsTab(), DiscoverAssociatifTab(), UserTab()];
+  // final List<Widget> tabsScolaire = [BinomesTab(), DiscoverBinomeTab(), UserTab()];
+  // final List<Widget> tabsBinomePair = [BinomesTab(), DiscoverBinomePairTab(), UserTab()];
 
   @override
   _TinterHomeState createState() => _TinterHomeState();
@@ -275,85 +304,113 @@ class TinterHome extends StatefulWidget {
 
 class _TinterHomeState extends State<TinterHome> {
   final GlobalKey discoverIconKey = GlobalKey();
-  int _selectedTab = 2;
+
+  // int _selectedTab = 2;
   OverlayEntry introduceBinomeOfBinomeOverlayEntry;
 
   @override
   Widget build(BuildContext context) {
+    // Only init the notification handler now since
+    // It is useless to have it init before the user
+    // has created its account
+    notificationHandler.init(context: context);
+    print('INIT notifications');
+
     return Consumer<TinterTheme>(
       builder: (context, tinterTheme, child) {
-        return Scaffold(
-          backgroundColor: tinterTheme.colors.background,
-          body: child,
-          bottomNavigationBar: CustomBottomNavigationBar(
-            onTap: _onItemTapped,
-            selectedIndex: _selectedTab,
-            discoverIconKey: discoverIconKey,
-          ),
+        return Consumer<TinterTabs>(
+          builder: (context, tinterTabs, child) {
+            return Scaffold(
+              backgroundColor: tinterTheme.colors.background,
+              body: child,
+              bottomNavigationBar: CustomBottomNavigationBar(
+                onTap: (int index) =>
+                    Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = index,
+                selectedIndex: tinterTabs.selectedTabIndex,
+                discoverIconKey: discoverIconKey,
+              ),
+            );
+          },
+          child: child,
         );
       },
       child: FutureBuilder(
         future: SharedPreferences.getInstance(),
         builder: (context, AsyncSnapshot<SharedPreferences> sharedPreferences) {
           if (!sharedPreferences.hasData) return SplashScreen();
-          return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-            return BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(builder:
-                (BuildContext context, MatchedBinomesState matchedBinomePairMatchesState) {
-              // If MatchedBinomesState is in InitState, this means that the user is not a 1A
-                  if (matchedBinomePairMatchesState is MatchedBinomesInitialState) {
-                    return widget.tabsAssociatif[_selectedTab];
-                  }
-              bool _hasEverHadBinome =
-                  sharedPreferences.data.getBool('hasEverHadBinome') ?? false;
-              if ((matchedBinomePairMatchesState
-                          as MatchedBinomesHasBinomePairCheckedSuccessState)
-                      .hasBinomePair &&
-                  !_hasEverHadBinome &&
-                  introduceBinomeOfBinomeOverlayEntry == null) {
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  if (tinterTheme.theme != MyTheme.light) {
-                    tinterTheme.changeTheme();
-                  }
-                  _onItemTapped(0);
+          return Consumer<TinterTheme>(
+            builder: (context, tinterTheme, child) {
+              return Consumer<TinterTabs>(
+                builder: (context, tinterTabs, child) {
+                  return BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(
+                    builder: (BuildContext context,
+                        MatchedBinomesState matchedBinomePairMatchesState) {
+                      // If MatchedBinomesState is in InitState, this means that the user is not a 1A
+                      if (matchedBinomePairMatchesState is MatchedBinomesInitialState) {
+                        print('DISPLAY KJHDKSHDKQ');
+                        return (tinterTheme.theme == MyTheme.dark)
+                            ? widget.tabsAssociatif[tinterTabs.selectedTabIndex]
+                            : widget.tabsScolaire[tinterTabs.selectedTabIndex];
+                      }
+                      bool _hasEverHadBinome =
+                          sharedPreferences.data.getBool('hasEverHadBinome') ?? false;
+                      if ((matchedBinomePairMatchesState
+                                  as MatchedBinomesHasBinomePairCheckedSuccessState)
+                              .hasBinomePair &&
+                          !_hasEverHadBinome &&
+                          introduceBinomeOfBinomeOverlayEntry == null) {
+                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                          tinterTheme.theme = MyTheme.light;
+                          Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = 0;
 
-                  introduceBinomeOfBinomeOverlayEntry = OverlayEntry(
-                    builder: (context) {
-                      return IntroduceBinomeOfBinomeOverlay(
-                        removeSelf: () =>
-                            removeIntroduceBinomeOfBinomeOverlay(sharedPreferences.data),
-                        discoverIconKey: discoverIconKey,
-                      );
+                          introduceBinomeOfBinomeOverlayEntry = OverlayEntry(
+                            builder: (context) {
+                              return IntroduceBinomeOfBinomeOverlay(
+                                removeSelf: () => removeIntroduceBinomeOfBinomeOverlay(
+                                    context, sharedPreferences.data),
+                                discoverIconKey: discoverIconKey,
+                              );
+                            },
+                          );
+                          // Wait for the animation of the bottom nav bar
+                          Future.delayed(Duration(milliseconds: 500), () {
+                            Overlay.of(context).insert(introduceBinomeOfBinomeOverlayEntry);
+                          });
+                        });
+                      }
+                      print('DISPLAY SELECTED TAB');
+                      return (tinterTheme.theme == MyTheme.dark)
+                          ? widget.tabsAssociatif[tinterTabs.selectedTabIndex]
+                          : widget.tabsScolaire[tinterTabs.selectedTabIndex];
+                      // return tinterTheme.theme == MyTheme.dark
+                      //     ? widget.tabsAssociatif[_selectedTab]
+                      //     : (matchedBinomePairMatchesState
+                      //                 as MatchedBinomesHasBinomePairCheckedSuccessState)
+                      //             .hasBinomePair
+                      //         ? widget.tabsBinomePair[_selectedTab]
+                      //         : widget.tabsScolaire[_selectedTab];
                     },
                   );
-                  // Wait for the animation of the bottom nav bar
-                  Future.delayed(Duration(milliseconds: 500), () {
-                    Overlay.of(context).insert(introduceBinomeOfBinomeOverlayEntry);
-                  });
-                });
-              }
-              return tinterTheme.theme == MyTheme.dark
-                  ? widget.tabsAssociatif[_selectedTab]
-                  : (matchedBinomePairMatchesState
-                              as MatchedBinomesHasBinomePairCheckedSuccessState)
-                          .hasBinomePair
-                      ? widget.tabsBinomePair[_selectedTab]
-                      : widget.tabsScolaire[_selectedTab];
-            });
-          });
+                },
+              );
+            },
+          );
         },
       ),
     );
   }
 
-  void _onItemTapped(int index) {
-    _selectedTab = index;
-    setState(() {});
-  }
+  // void _onItemTapped(int index) {
+  //   _selectedTab = index;
+  //   setState(() {});
+  // }
 
-  removeIntroduceBinomeOfBinomeOverlay(SharedPreferences sharedPreferences) async {
+  removeIntroduceBinomeOfBinomeOverlay(
+      BuildContext context, SharedPreferences sharedPreferences) async {
     await sharedPreferences.setBool('hasEverHadBinome', true);
     introduceBinomeOfBinomeOverlayEntry.remove();
-    _onItemTapped(1);
+    Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = 1;
+    // _onItemTapped(1);
   }
 }
 

@@ -38,8 +38,9 @@ class AssociatifToScolaireButton extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        if (tinterTheme.theme == MyTheme.light)
-                          Provider.of<TinterTheme>(context, listen: false).changeTheme();
+                        tinterTheme.theme = MyTheme.dark;
+                        // if (tinterTheme.theme == MyTheme.light)
+                        //   Provider.of<TinterTheme>(context, listen: false).changeTheme();
                       },
                       child: Center(
                         child: TweenAnimationBuilder(
@@ -59,8 +60,9 @@ class AssociatifToScolaireButton extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        if (tinterTheme.theme == MyTheme.dark)
-                          Provider.of<TinterTheme>(context, listen: false).changeTheme();
+                        tinterTheme.theme = MyTheme.light;
+                        // if (tinterTheme.theme == MyTheme.dark)
+                        //   Provider.of<TinterTheme>(context, listen: false).changeTheme();
                       },
                       child: Center(
                         child: Text(
@@ -96,7 +98,8 @@ class AssociatifToScolaireButtonOverlay extends StatelessWidget {
       onTapUp: (details) {
         if (details.globalPosition.dx < buttonOffset.dx + buttonSize.width && details.globalPosition.dx > buttonOffset.dx + buttonSize.width/2 &&
             details.globalPosition.dy > buttonOffset.dy && details.globalPosition.dy < buttonOffset.dy + buttonSize.height) {
-          Provider.of<TinterTheme>(context, listen: false).changeTheme();
+          Provider.of<TinterTheme>(context, listen: false).theme = MyTheme.light;
+          // Provider.of<TinterTheme>(context, listen: false).changeTheme();
           removeSelf();
         }
       },

@@ -48,8 +48,9 @@ class _TinterAuthenticationTabState extends State<TinterAuthenticationTab> {
   Widget build(BuildContext context) {
     return Consumer<TinterTheme>(
       builder: (context, tinterTheme, child) {
-        if (tinterTheme.theme == MyTheme.light)
-          Provider.of<TinterTheme>(context, listen: false).changeTheme();
+        tinterTheme.theme = MyTheme.dark;
+        // if (tinterTheme.theme == MyTheme.light)
+        //   Provider.of<TinterTheme>(context, listen: false).changeTheme();
 
         return Scaffold(
           backgroundColor: tinterTheme.colors.background,

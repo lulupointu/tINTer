@@ -23,7 +23,7 @@ class UserRepository {
     try {
       token = await AuthenticationRepository.getAuthenticationToken();
     } catch (error) {
-      print('Cannot get User:');
+      print('isKnown Cannot get User:');
       print(error);
       throw error;
     }
@@ -48,7 +48,7 @@ class UserRepository {
     try {
       token = await AuthenticationRepository.getAuthenticationToken();
     } catch (error) {
-      print('Cannot get User:');
+      print('getUser Cannot get User:');
       print(error);
       throw error;
     }

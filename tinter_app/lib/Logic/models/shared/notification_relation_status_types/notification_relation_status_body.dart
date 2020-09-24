@@ -1,8 +1,8 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:tinter_backend/models/serializers.dart';
-import 'package:tinter_backend/models/shared/relation_status.dart';
+import 'package:tinterapp/Logic/models/serializers.dart';
+import 'package:tinterapp/Logic/models/shared/relation_status.dart';
 
 part 'notification_relation_status_body.g.dart';
 

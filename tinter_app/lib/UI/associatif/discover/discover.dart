@@ -18,7 +18,7 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 
-class DiscoverAssociatifTab extends StatelessWidget {
+class DiscoverAssociatifTab extends StatelessWidget implements TinterTab {
   @override
   Widget build(BuildContext context) {
     // Update to last information

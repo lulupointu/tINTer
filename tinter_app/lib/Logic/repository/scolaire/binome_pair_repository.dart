@@ -48,7 +48,7 @@ class BinomePairRepository {
     } catch (error) {
       throw error;
     }
-    print('getMultipleBasicBinomePairsInfo using token ${token.token}');
+    print('getBinomePair using token ${token.token}');
 
     TinterApiResponse<BuildBinomePair> tinterApiResponse;
     try {
@@ -70,7 +70,7 @@ class BinomePairRepository {
     } catch (error) {
       throw error;
     }
-    print('getMultipleBasicBinomePairsInfo using token ${token.token}');
+    print('getAllSearchedBinomePairsScolaire using token ${token.token}');
 
     TinterApiResponse<List<SearchedBinomePair>> tinterApiResponse;
     try {

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
+import 'package:tinterapp/notifications_handler.dart';
 
 part 'user_shared_state.dart';
 
@@ -210,6 +211,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     authenticationBloc.add(AuthenticationLoggedOutEvent());
 
     await (await SharedPreferences.getInstance()).setBool('hasEverHadBinome', false);
+    await NotificationHandler.deleteNotificationToken();
 
     yield UserInitialState();
   }

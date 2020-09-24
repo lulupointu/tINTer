@@ -36,6 +36,4 @@ class AssociationsRepository {
 
     return tinterApiResponse.value;
   }
-
-
 }

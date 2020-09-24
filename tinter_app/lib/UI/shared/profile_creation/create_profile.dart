@@ -249,7 +249,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
             if (_associatifFormKey.currentState.validate()) {
               BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
             } else {
-              Provider.of<TinterTheme>(context, listen: false).changeTheme();
+              Provider.of<TinterTheme>(context, listen: false).theme = MyTheme.dark;
               _controller.animateTo(0,
                   duration: Duration(milliseconds: 400), curve: Curves.easeIn);
             }
@@ -262,7 +262,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
             if (_scolaireFormKey.currentState.validate()) {
               BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
             } else {
-              Provider.of<TinterTheme>(context, listen: false).changeTheme();
+              Provider.of<TinterTheme>(context, listen: false).theme = MyTheme.light;
               _controller.animateTo(0,
                   duration: Duration(milliseconds: 400), curve: Curves.easeIn);
             }

@@ -16,6 +16,8 @@ import 'package:tinterapp/Logic/models/scolaire/relation_status_binome_pair.dart
 import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
+import 'package:tinterapp/Logic/models/shared/notification_relation_status_types/notification_relation_status_body.dart';
+import 'package:tinterapp/Logic/models/shared/notification_relation_status_types/notification_relation_status_title.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:built_collection/built_collection.dart';
@@ -49,6 +51,8 @@ part 'serializers.g.dart';
   RelationStatusBinomePair,
   EnumRelationStatusBinomePair,
   SearchedBinomePair,
+  NotificationRelationStatusBody,
+  NotificationRelationStatusTitle,
 
 ])
 final Serializers serializers =

@@ -20,6 +20,7 @@ import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
+import 'package:tinterapp/main.dart';
 
 import '../../shared/snap_scroll_sheet_physics/snap_scroll_sheet_physics.dart';
 
@@ -29,18 +30,72 @@ main() => runApp(MaterialApp(
       ),
     ));
 
-class BinomesTab extends StatefulWidget {
+class SelectedScolaire extends ChangeNotifier {
+  String _binomeLogin;
+
+  String get binomeLogin => _binomeLogin;
+
+  int _binomePairId;
+
+  int get binomePairId => _binomePairId;
+
+  set binomeLogin(newBinomeLogin) {
+    if (binomeLogin != newBinomeLogin) {
+      _binomeLogin = newBinomeLogin;
+      _binomePairId = null;
+      notifyListeners();
+      print('REMOVING NOTIFICATION');
+      notificationHandler.removeNotification(newBinomeLogin.hashCode);
+      print('NOTIFICATION REMOVED');
+    }
+  }
+
+  set binomePairId(newBinomePairId) {
+    if (binomePairId != newBinomePairId) {
+      _binomeLogin = null;
+      _binomePairId = newBinomePairId;
+      notifyListeners();
+      notificationHandler.removeNotification(newBinomePairId.hashCode);
+    }
+  }
+}
+
+// class SelectedScolaire extends ChangeNotifier {
+//   String _login;
+//
+//   String get login => _login;
+//
+//   set login(newLogin) {
+//     if (login != newLogin) {
+//       _login = newLogin;
+//       notifyListeners();
+//     }
+//   }
+// }
+//
+// class SelectedScolaire extends ChangeNotifier {
+//   int _id;
+//
+//   int get id => _id;
+//
+//   set id(newId) {
+//     if (id != newId) {
+//       id = newId;
+//       notifyListeners();
+//     }
+//   }
+// }
+
+class BinomesTab extends StatefulWidget implements TinterTab {
   final Map<String, double> fractions = {
     'binomeSelectionMenu': null,
   };
 
   @override
-  _BinomesTabState createState() => _BinomesTabState();
+  BinomesTabState createState() => BinomesTabState();
 }
 
-class _BinomesTabState extends State<BinomesTab> {
-  String _selectedBinomeLogin;
-  String _selectedBinomePairMatchLogin;
+class BinomesTabState extends State<BinomesTab> {
   ScrollController _controller = ScrollController();
   ScrollPhysics _scrollPhysics = NeverScrollableScrollPhysics();
   double topMenuScrolledFraction = 0;
@@ -175,20 +230,21 @@ class _BinomesTabState extends State<BinomesTab> {
                 controller: _controller,
                 children: [
                   BinomeSelectionMenu(
-                    onTapBinome: binomeSelected,
-                    onTapBinomePair: binomePairSelected,
                     height: constraints.maxHeight * widget.fractions['binomeSelectionMenu'],
                     binomesNotBinomes: _binomesNotBinomes,
                     binomes: _binomes,
                     binomePairMatchesNotMatched: _binomePairMatchesNotMatched,
                     binomePairMatches: _binomePairMatches,
                   ),
-                  (_selectedBinomeLogin == null && _selectedBinomePairMatchLogin == null)
+                  (context.watch<SelectedScolaire>().binomeLogin == null &&
+                          context.watch<SelectedScolaire>().binomePairId == null)
                       ? noBinomeSelected(constraints.maxHeight)
-                      : (_selectedBinomePairMatchLogin == null)
+                      : (context.watch<SelectedScolaire>().binomePairId == null)
                           ? CompareViewBinome(
                               binome: allBinomes.firstWhere(
-                                (BuildBinome binome) => binome.login == _selectedBinomeLogin,
+                                (BuildBinome binome) =>
+                                    binome.login ==
+                                    context.watch<SelectedScolaire>().binomeLogin,
                               ),
                               appHeight: constraints.maxHeight,
                               topMenuScrolledFraction: topMenuScrolledFraction,
@@ -197,7 +253,8 @@ class _BinomesTabState extends State<BinomesTab> {
                           : CompareViewBinomePairMatch(
                               binomePairMatch: allBinomePairMatches.firstWhere(
                                 (BuildBinomePairMatch binomePairMatch) =>
-                                    binomePairMatch.login == _selectedBinomePairMatchLogin,
+                                    binomePairMatch.binomePairId ==
+                                    context.watch<SelectedScolaire>().binomePairId,
                               ),
                               appHeight: constraints.maxHeight,
                               topMenuScrolledFraction: topMenuScrolledFraction,
@@ -275,19 +332,15 @@ class _BinomesTabState extends State<BinomesTab> {
     );
   }
 
-  void binomeSelected(BuildBinome binome) {
-    setState(() {
-      _selectedBinomeLogin = binome.login;
-      _selectedBinomePairMatchLogin = null;
-    });
-  }
-
-  void binomePairSelected(BuildBinomePairMatch binomePairMatch) {
-    setState(() {
-      _selectedBinomeLogin = null;
-      _selectedBinomePairMatchLogin = binomePairMatch.login;
-    });
-  }
+// void binomeSelected(BuildBinome binome) {
+//   context.watch<SelectedScolaire>().binomeLogin = binome.login;
+//   context.watch<SelectedScolaire>().binomePairId = null;
+// }
+//
+// void binomePairSelected(BuildBinomePairMatch binomePairMatch) {
+//   context.watch<SelectedScolaire>().binomeLogin = null;
+//   context.watch<SelectedScolaire>().binomePairId = binomePairMatch.binomePairId;
+// }
 }
 
 class CompareViewBinome extends StatelessWidget {
@@ -1630,8 +1683,6 @@ class ProfileInformation extends StatelessWidget {
 }
 
 class BinomeSelectionMenu extends StatelessWidget {
-  final void Function(BuildBinome) _onTapBinome;
-  final void Function(BuildBinomePairMatch) _onTapBinomePair;
   final double height;
   final List<BuildBinome> binomesNotBinomes;
   final List<BuildBinome> binomes;
@@ -1639,15 +1690,12 @@ class BinomeSelectionMenu extends StatelessWidget {
   final List<BuildBinomePairMatch> binomePairMatches;
 
   BinomeSelectionMenu({
-    @required onTapBinome,
-    @required onTapBinomePair,
     @required this.height,
     @required this.binomesNotBinomes,
     @required this.binomes,
     @required this.binomePairMatchesNotMatched,
     @required this.binomePairMatches,
-  })  : _onTapBinome = onTapBinome,
-        _onTapBinomePair = onTapBinomePair;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1658,21 +1706,38 @@ class BinomeSelectionMenu extends StatelessWidget {
           (binomesNotBinomes.length != 0 && binomes.length == 0)
               ? Expanded(
                   child: topMenuBinome(
-                      binomes: binomesNotBinomes, title: 'Mes binomes potentiels'))
+                    context: context,
+                    binomes: binomesNotBinomes,
+                    title: 'Mes binomes potentiels',
+                  ),
+                )
               : Container(),
           (binomes.length != 0)
-              ? Expanded(child: topMenuBinome(binomes: binomes, title: 'Mon/Ma Binome'))
+              ? Expanded(
+                  child: topMenuBinome(
+                    context: context,
+                    binomes: binomes,
+                    title: 'Mon/Ma Binome',
+                  ),
+                )
               : Container(),
           (binomePairMatchesNotMatched.length != 0 && binomePairMatches.length == 0)
               ? Expanded(
                   child: topMenuBinomePair(
-                      binomePairMatches: binomePairMatchesNotMatched,
-                      title: 'Mes binomes de binome potentiels'))
+                    context: context,
+                    binomePairMatches: binomePairMatchesNotMatched,
+                    title: 'Mes binomes de binome potentiels',
+                  ),
+                )
               : Container(),
           (binomePairMatches.length != 0)
               ? Expanded(
                   child: topMenuBinomePair(
-                      binomePairMatches: binomePairMatches, title: 'Mon Binome de binome'))
+                    context: context,
+                    binomePairMatches: binomePairMatches,
+                    title: 'Mon Binome de binome',
+                  ),
+                )
               : Container(),
         ],
       ),
@@ -1680,7 +1745,10 @@ class BinomeSelectionMenu extends StatelessWidget {
   }
 
   /// Either displays the binome top menu or the binome top menu
-  Widget topMenuBinome({@required List<BuildBinome> binomes, @required String title}) {
+  Widget topMenuBinome(
+      {@required BuildContext context,
+      @required List<BuildBinome> binomes,
+      @required String title}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1702,7 +1770,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                 InkWell(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  onTap: () => _onTapBinome(binome),
+                  onTap: () => context.read<SelectedScolaire>().binomeLogin = binome.login,
                   child: Container(
                     margin: EdgeInsets.only(
                       right: 20.0,
@@ -1731,7 +1799,9 @@ class BinomeSelectionMenu extends StatelessWidget {
 
   /// Either displays the binome pair matched top menu or the binome pair not matched top menu
   Widget topMenuBinomePair(
-      {@required List<BuildBinomePairMatch> binomePairMatches, @required String title}) {
+      {@required BuildContext context,
+      @required List<BuildBinomePairMatch> binomePairMatches,
+      @required String title}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1753,7 +1823,8 @@ class BinomeSelectionMenu extends StatelessWidget {
                 InkWell(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  onTap: () => _onTapBinomePair(binomePairMatch),
+                  onTap: () => context.read<SelectedScolaire>().binomePairId =
+                      binomePairMatch.binomePairId,
                   child: Container(
                     margin: EdgeInsets.only(
                       right: 20.0,
