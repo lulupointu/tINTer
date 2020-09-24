@@ -1010,7 +1010,7 @@ class AssociationsRectangle extends StatelessWidget {
                             child:
                                 Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                               return Text(
-                                'Aucune association séléctionnée.',
+                                'Aucune association sélectionnée.',
                                 style: tinterTheme.textStyle.headline2.copyWith(fontSize: 16),
                               );
                             }),

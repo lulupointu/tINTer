@@ -20,7 +20,7 @@ class CreateProfileScolaire extends StatelessWidget {
               child: MaiselOuNonRectangle(),
             ),
           ),
-          text: 'Clique pour dire si tu habite à la maisel ou non.',
+          text: 'Clique pour dire si tu habites à la maisel ou non.',
         ),
         separator,
         HidingRectangle(
@@ -44,7 +44,7 @@ class CreateProfileScolaire extends StatelessWidget {
           child: InformationRectangle(
             child: GroupeOuSeulRectangle(),
           ),
-          text: 'Clique pour dire si tu aime travailler en groupe.',
+          text: 'Clique pour dire si tu aimes travailler en groupe.',
         ),
         separator,
         HidingRectangle(
@@ -52,7 +52,7 @@ class CreateProfileScolaire extends StatelessWidget {
             child: EnLigneOuPresentielRectangle(),
           ),
           text:
-          "Clique pour dire si tu préfére travailler en ligne ou à l\'école.",
+          "Clique pour dire si tu préféres travailler en ligne ou à l\'école.",
         ),
         separator,
         HidingRectangle(

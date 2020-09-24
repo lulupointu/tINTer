@@ -456,7 +456,7 @@ class NoLikedAssociationWidget extends StatelessWidget {
             children: [
               Center(
                 child: Text(
-                  'Aucune association selectionnée.',
+                  'Aucune association sélectionnée.',
                   style: tinterTheme.textStyle.headline2.copyWith(color: Colors.black),
                 ),
               ),

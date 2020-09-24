@@ -32,6 +32,12 @@ class NotificationHandler {
 
     WidgetsFlutterBinding.ensureInitialized();
     _firebaseMessaging = FirebaseMessaging();
+
+
+    await _firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
+    );
+
     token = await _firebaseMessaging.getToken();
 
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

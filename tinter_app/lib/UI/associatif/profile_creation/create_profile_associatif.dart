@@ -65,7 +65,7 @@ class CreateProfileAssociatif extends StatelessWidget {
             child: AideOuSortirRectangle(),
           ),
           text:
-          "Clique pour dire si tu préfére un parrain qui t'aide scolairement ou avec qui sortir.",
+          "Clique pour dire si tu préféres un parrain qui t'aide scolairement ou avec qui sortir.",
         ),
         separator,
         HidingRectangle(
@@ -108,7 +108,7 @@ class PrimoEntrantRectangle extends StatelessWidget {
               child: Consumer<TinterTheme>(
                   builder: (context, tinterTheme, child) {
                     return Text(
-                    'Est-tu primo-entrant?',
+                    'Es-tu primo-entrant?',
                     style: tinterTheme.textStyle.headline2,
                   );
                 }
@@ -216,7 +216,7 @@ class YearRectangle extends StatelessWidget {
               child: Consumer<TinterTheme>(
                   builder: (context, tinterTheme, child) {
                     return Text(
-                      'Quelle année est-tu?',
+                      'Quelle année es-tu?',
                       style: tinterTheme.textStyle.headline2,
                     );
                   }

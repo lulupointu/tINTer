@@ -69,7 +69,7 @@ class MaiselOuNonRectangle extends StatelessWidget {
               child: Consumer<TinterTheme>(
                   builder: (context, tinterTheme, child) {
                     return Text(
-                    'Ou habites-tu?',
+                    'Où habites-tu?',
                     style: tinterTheme.textStyle.headline2,
                   );
                 }
@@ -196,7 +196,7 @@ class HoraireDeTravailRectangle extends StatelessWidget {
               child: Consumer<TinterTheme>(
                   builder: (context, tinterTheme, child) {
                     return Text(
-                    'Quand préfére-tu travailler?',
+                    'Quand préféres-tu travailler?',
                     style: tinterTheme.textStyle.headline2,
                   );
                 }
@@ -435,7 +435,7 @@ class GroupeOuSeulRectangle extends StatelessWidget {
             child: Consumer<TinterTheme>(
                 builder: (context, tinterTheme, child) {
                   return Text(
-                  'Preferes-tu travailler seul.e ou en groupe?',
+                  'Préfères-tu travailler seul.e ou en groupe?',
                   style: tinterTheme.textStyle.headline2,
                   textAlign: TextAlign.start,
                 );
@@ -495,7 +495,7 @@ class EnLigneOuPresentielRectangle extends StatelessWidget {
             child: Consumer<TinterTheme>(
                 builder: (context, tinterTheme, child) {
                   return Text(
-                  'Preferes-tu travailler en ligne ou à l\'école?',
+                  'Préfères-tu travailler en ligne ou à l\'école?',
                   style: tinterTheme.textStyle.headline2,
                   textAlign: TextAlign.start,
                 );
