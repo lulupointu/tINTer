@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -400,7 +401,20 @@ class NotificationHandler {
   Future onDidReceiveLocalNotification(int id, String title, String body, String payload) {
     print(
         'onDidReceiveLocalNotification: id: $id, title: $title, body: $body, playload: $payload');
-    showNotification(id: id, title: title, body: body, color: TinterDarkThemeColors.primary, payload: jsonDecode(payload));
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: Text('Ok'),
+            onPressed: () async {},
+          )
+        ],
+      ),
+    );
   }
 
   static Future deleteNotificationToken() async {
