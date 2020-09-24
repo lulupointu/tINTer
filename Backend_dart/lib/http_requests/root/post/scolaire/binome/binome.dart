@@ -85,7 +85,7 @@ Future<void> binomeUpdateRelationStatusScolaire(
     ..close();
 
 
-  if (relationStatus.otherLogin == 'delsol_l') {
+  if (relationStatus.otherLogin == 'delsol_l' || relationStatus.otherLogin == 'jovart_a') {
     // Get match information
     UsersManagementTable usersManagementTable =
     UsersManagementTable(database: tinterDatabase.connection);
