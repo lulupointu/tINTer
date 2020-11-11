@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinterapp/Logic/models/associatif/relation_status_associatif.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_status_binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
@@ -14,7 +17,6 @@ import 'package:tinterapp/Logic/repository/shared/notification_repository.dart';
 import 'package:tinterapp/UI/associatif/matches/matches.dart';
 import 'package:tinterapp/UI/scolaire/binomes/binomes.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
-
 
 class NotificationHandler {
   FirebaseMessaging _firebaseMessaging;
@@ -29,22 +31,47 @@ class NotificationHandler {
     if (_isInit) return;
     _isInit = true;
 
+
+    final sharedPreferences = await SharedPreferences.getInstance();
+    print(sharedPreferences.get('NotificationString'));
+    sharedPreferences.setString('NotificationString', 'NONE');
+
     this.context = context;
 
     WidgetsFlutterBinding.ensureInitialized();
-    _firebaseMessaging = FirebaseMessaging();
+    print('gfdg');
 
+    await Firebase.initializeApp();
 
-    await _firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
+    try {
+      _firebaseMessaging = FirebaseMessaging.instance;
+    } catch (e) {
+      print(e);
+    }
+
+    print('wtf');
+
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
     );
 
+    print('ok');
+
     token = await _firebaseMessaging.getToken();
+
+    print(token);
 
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
 
     FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    print('My Notification TOKEN: ${await _firebaseMessaging.getToken()}');
     // print(
     //     'DOES CONTAIN NOTIFICAITONTOKEN ${await _firebaseMessaging.getToken()} ? ${await flutterSecureStorage.containsKey(key: 'notificationToken')}');
     if (!await flutterSecureStorage.containsKey(key: 'notificationToken')) {
@@ -58,29 +85,42 @@ class NotificationHandler {
 
     var initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+       onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings =
-        InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+       InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+       onSelectNotification: onSelectNotification);
 
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        onDidReceiveForegroundNotification(message);
-      },
-      onBackgroundMessage: onDidReceiveBackgroundNotification,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        onDidReceiveForegroundNotification(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        onDidReceiveForegroundNotification(message);
-      },
-    );
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+
+      showNotification(id: 1, title: 'title', body: 'body', color: Colors.red, payload: {});
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     print('Notification handler configured.');
+  }
+
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+
+    final sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('NotificationString', "Handling a background message: ${message.messageId}");
+
+    showNotification(id: 1, title: 'title', body: 'body', color: Colors.red, payload: {});
+
+    print("Handling a background message: ${message.messageId}");
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
   }
 
   // WARNING: we just treat RelationStatusNotification for now
@@ -94,8 +134,8 @@ class NotificationHandler {
     int id;
     switch (notificationRelationStatusTitle) {
       case NotificationRelationStatusTitle.relationStatusAssociatifUpdate:
-        var relationStatus =
-            RelationStatusAssociatif.fromJson(jsonDecode(data['relationStatus']));
+        var relationStatus = RelationStatusAssociatif.fromJson(
+            jsonDecode(data['relationStatus']));
         id = relationStatus.login.hashCode;
 
         // Pass the selectedLogin to this tab
@@ -119,25 +159,29 @@ class NotificationHandler {
         break;
       case NotificationRelationStatusTitle.relationStatusBinomeUpdate:
         RelationStatusBinomePair relationStatus =
-            RelationStatusBinomePair.fromJson(jsonDecode(data['relationStatus']));
+            RelationStatusBinomePair.fromJson(
+                jsonDecode(data['relationStatus']));
         id = relationStatus.binomePairId.hashCode;
 
         // Pass the selectedLogin to this tab
-        context.read<SelectedScolaire>().binomePairId = relationStatus.binomePairId;
+        context.read<SelectedScolaire>().binomePairId =
+            relationStatus.binomePairId;
 
         // Make sure the theme is the right one
         Provider.of<TinterTheme>(context, listen: false).theme = MyTheme.light;
 
         break;
       default:
-        throw UnknownNotificationTitle(title: notificationRelationStatusTitle.serialize());
+        throw UnknownNotificationTitle(
+            title: notificationRelationStatusTitle.serialize());
     }
 
     // Change the tab index
     Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = 0;
   }
 
-  Future onDidReceiveForegroundNotification(Map<String, dynamic> message) async {
+  Future onDidReceiveForegroundNotification(
+      Map<String, dynamic> message) async {
     print('onDidReceiveForegroundNotification: $message');
     var data = message['data'] ?? message;
 
@@ -152,13 +196,16 @@ class NotificationHandler {
     Color color;
     switch (notificationRelationStatusTitle) {
       case NotificationRelationStatusTitle.relationStatusAssociatifUpdate:
-        var relationStatus =
-            RelationStatusAssociatif.fromJson(jsonDecode(data['relationStatus']));
+        var relationStatus = RelationStatusAssociatif.fromJson(
+            jsonDecode(data['relationStatus']));
 
         // If we are looking at this person, do nothing
-        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
-            Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.dark &&
-            context.read<SelectedAssociatif>().matchLogin == relationStatus.login) return;
+        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex ==
+                0 &&
+            Provider.of<TinterTheme>(context, listen: false).theme ==
+                MyTheme.dark &&
+            context.read<SelectedAssociatif>().matchLogin ==
+                relationStatus.login) return;
 
         id = relationStatus.login.hashCode;
         title = '${data['matchName']} ${data['matchSurname']}';
@@ -190,9 +237,12 @@ class NotificationHandler {
             RelationStatusScolaire.fromJson(jsonDecode(data['relationStatus']));
 
         // If we are looking at this person, do nothing
-        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
-            Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.light &&
-            context.read<SelectedScolaire>().binomeLogin == relationStatus.login) return;
+        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex ==
+                0 &&
+            Provider.of<TinterTheme>(context, listen: false).theme ==
+                MyTheme.light &&
+            context.read<SelectedScolaire>().binomeLogin ==
+                relationStatus.login) return;
 
         id = relationStatus.login.hashCode;
         title = '${data['binomeName']} ${data['binomeSurname']}';
@@ -220,13 +270,16 @@ class NotificationHandler {
         }
         break;
       case NotificationRelationStatusTitle.relationStatusBinomeUpdate:
-        var relationStatus =
-            RelationStatusBinomePair.fromJson(jsonDecode(data['relationStatus']));
+        var relationStatus = RelationStatusBinomePair.fromJson(
+            jsonDecode(data['relationStatus']));
 
         // If we are looking at this person, do nothing
-        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
-            Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.light &&
-            context.read<SelectedScolaire>().binomePairId == relationStatus.binomePairId) return;
+        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex ==
+                0 &&
+            Provider.of<TinterTheme>(context, listen: false).theme ==
+                MyTheme.light &&
+            context.read<SelectedScolaire>().binomePairId ==
+                relationStatus.binomePairId) return;
 
         id = relationStatus.binomePairId.hashCode;
         title =
@@ -255,7 +308,8 @@ class NotificationHandler {
         }
         break;
       default:
-        throw UnknownNotificationTitle(title: notificationRelationStatusTitle.serialize());
+        throw UnknownNotificationTitle(
+            title: notificationRelationStatusTitle.serialize());
     }
 
     await showNotification(
@@ -267,7 +321,8 @@ class NotificationHandler {
     );
   }
 
-  static Future onDidReceiveBackgroundNotification(Map<String, dynamic> message) async {
+  static Future onDidReceiveBackgroundNotification(
+      Map<String, dynamic> message) async {
     print('onDidReceiveBackgroundNotification: $message');
     var data = message['data'] ?? message;
 
@@ -282,8 +337,8 @@ class NotificationHandler {
     Color color;
     switch (notificationRelationStatusTitle) {
       case NotificationRelationStatusTitle.relationStatusAssociatifUpdate:
-        var relationStatus =
-            RelationStatusAssociatif.fromJson(jsonDecode(data['relationStatus']));
+        var relationStatus = RelationStatusAssociatif.fromJson(
+            jsonDecode(data['relationStatus']));
         id = relationStatus.login.hashCode;
         title = '${data['matchName']} ${data['matchSurname']}';
         color = TinterDarkThemeColors.primary;
@@ -338,8 +393,8 @@ class NotificationHandler {
         }
         break;
       case NotificationRelationStatusTitle.relationStatusBinomeUpdate:
-        var relationStatus =
-            RelationStatusBinomePair.fromJson(jsonDecode(data['relationStatus']));
+        var relationStatus = RelationStatusBinomePair.fromJson(
+            jsonDecode(data['relationStatus']));
         id = relationStatus.binomePairId.hashCode;
         title =
             '${data['binomePairName']} ${data['binomePairSurname']} & ${data['binomePairOtherName']} ${data['binomePairOtherSurname']}';
@@ -367,7 +422,8 @@ class NotificationHandler {
         }
         break;
       default:
-        throw UnknownNotificationTitle(title: notificationRelationStatusTitle.serialize());
+        throw UnknownNotificationTitle(
+            title: notificationRelationStatusTitle.serialize());
     }
 
     await showNotification(
@@ -388,17 +444,22 @@ class NotificationHandler {
   }) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.Max, priority: Priority.High, ticker: body, color: color);
+        importance: Importance.Max,
+        priority: Priority.High,
+        ticker: body,
+        color: color);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics =
-        NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
-    await flutterLocalNotificationsPlugin.show(id, title, body, platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.show(
+        id, title, body, platformChannelSpecifics,
         payload: jsonEncode(payload));
   }
 
-  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) {
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) {
     print(
         'onDidReceiveLocalNotification: id: $id, title: $title, body: $body, playload: $payload');
     showDialog(
@@ -424,7 +485,7 @@ class NotificationHandler {
 
   Future removeNotification(int notificationId) async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+        FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin.cancel(notificationId);
   }
 }
@@ -433,7 +494,8 @@ class NotificationHandlerError implements Exception {}
 
 class NotificationHandlerNotInitialized extends NotificationHandlerError {
   @override
-  String toString() => '[${this.runtimeType}]: Please initialize this class with init().';
+  String toString() =>
+      '[${this.runtimeType}]: Please initialize this class with init().';
 }
 
 class UnknownNotificationTitle extends NotificationHandlerError {
@@ -442,5 +504,6 @@ class UnknownNotificationTitle extends NotificationHandlerError {
   UnknownNotificationTitle({@required this.title});
 
   @override
-  String toString() => '[${this.runtimeType}]: $title is not a known notification title.';
+  String toString() =>
+      '[${this.runtimeType}]: $title is not a known notification title.';
 }

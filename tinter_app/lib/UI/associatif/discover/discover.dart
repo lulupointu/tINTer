@@ -24,13 +24,15 @@ class DiscoverAssociatifTab extends StatelessWidget implements TinterTab {
     // Update to last information
     if (BlocProvider.of<DiscoverMatchesBloc>(context).state
         is DiscoverMatchesLoadSuccessState) {
-      BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchesRefreshEvent());
+      BlocProvider.of<DiscoverMatchesBloc>(context)
+          .add(DiscoverMatchesRefreshEvent());
     } else {
-      BlocProvider.of<DiscoverMatchesBloc>(context).add(DiscoverMatchesRequestedEvent());
+      BlocProvider.of<DiscoverMatchesBloc>(context)
+          .add(DiscoverMatchesRequestedEvent());
     }
 
-    return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-        builder: (BuildContext context, DiscoverMatchesState discoverMatchesState) {
+    return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(builder:
+        (BuildContext context, DiscoverMatchesState discoverMatchesState) {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           if (discoverMatchesState is DiscoverMatchesInitialState ||
@@ -41,7 +43,8 @@ class DiscoverAssociatifTab extends StatelessWidget implements TinterTab {
               ),
             );
           if (discoverMatchesState is DiscoverMatchesLoadSuccessState &&
-              discoverMatchesState.matches.length == 0) return NoMoreDiscoveryMatchesWidget();
+              discoverMatchesState.matches.length == 0)
+            return NoMoreDiscoveryMatchesWidget();
           return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
             return Stack(
               children: [
@@ -103,10 +106,12 @@ class DiscoverRight extends StatelessWidget {
       builder: (context, tinterTheme, child) {
         return Container(
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0x00555578), tinterTheme.colors.background])),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0x00555578), tinterTheme.colors.background],
+            ),
+          ),
           child: child,
         );
       },
@@ -120,7 +125,8 @@ class DiscoverRight extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Container(
-                height: ((this.appHeight - 8 * 2 - 50 - 15) - this.appHeight * 1 / 2) /
+                height: ((this.appHeight - 8 * 2 - 50 - 15) -
+                        this.appHeight * 1 / 2) /
                     (1 -
                         (1 / 2 * MatchesFlock.fractions['bigHead'] +
                             MatchesFlock.fractions['nameAndSurname'])),
@@ -161,7 +167,8 @@ class StudentSearch extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RechercheEtudiantAssociatifTab()),
+                  MaterialPageRoute(
+                      builder: (context) => RechercheEtudiantAssociatifTab()),
                 );
               },
               child: Center(
@@ -225,7 +232,8 @@ class LikeOrIgnore extends StatefulWidget {
   _LikeOrIgnoreState createState() => _LikeOrIgnoreState();
 }
 
-class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMixin {
+class _LikeOrIgnoreState extends State<LikeOrIgnore>
+    with TickerProviderStateMixin {
   AnimationController likeController;
   Animation<double> likeAnimation;
   AnimationController ignoreController;
@@ -233,18 +241,19 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
 
   @override
   void initState() {
-    likeController =
-        AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+    likeController = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
     likeAnimation = CurveTween(curve: Curves.easeOut).animate(likeController)
       ..addListener(() {
         setState(() {});
       });
-    ignoreController =
-        AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    ignoreAnimation = CurveTween(curve: Curves.easeOut).animate(ignoreController)
-      ..addListener(() {
-        setState(() {});
-      });
+    ignoreController = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    ignoreAnimation =
+        CurveTween(curve: Curves.easeOut).animate(ignoreController)
+          ..addListener(() {
+            setState(() {});
+          });
     super.initState();
   }
 
@@ -273,16 +282,19 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
                   color: tinterTheme.colors.secondary,
                   fit: BoxFit.contain,
                   controller: CustomFlareController(
-                      controller: likeController, forwardAnimationName: 'Validate'),
+                      controller: likeController,
+                      forwardAnimationName: 'Validate'),
                 ),
-                onPressed: discoverMatchesState is DiscoverMatchesSavingNewStatusState
-                    ? null
-                    : () {
-                        likeController.forward().whenComplete(
-                            () => likeController.animateTo(0, duration: Duration(seconds: 0)));
-                        BlocProvider.of<DiscoverMatchesBloc>(context)
-                            .add(DiscoverMatchLikeEvent());
-                      },
+                onPressed:
+                    discoverMatchesState is DiscoverMatchesSavingNewStatusState
+                        ? null
+                        : () {
+                            likeController.forward().whenComplete(() =>
+                                likeController.animateTo(0,
+                                    duration: Duration(seconds: 0)));
+                            BlocProvider.of<DiscoverMatchesBloc>(context)
+                                .add(DiscoverMatchLikeEvent());
+                          },
               ),
             ),
             Flexible(
@@ -299,14 +311,16 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore> with TickerProviderStateMix
                     forwardAnimationName: 'Ignore',
                   ),
                 ),
-                onPressed: discoverMatchesState is DiscoverMatchesSavingNewStatusState
-                    ? null
-                    : () {
-                        ignoreController.forward().whenComplete(() =>
-                            ignoreController.animateTo(0, duration: Duration(seconds: 0)));
-                        BlocProvider.of<DiscoverMatchesBloc>(context)
-                            .add(DiscoverMatchIgnoreEvent());
-                      },
+                onPressed:
+                    discoverMatchesState is DiscoverMatchesSavingNewStatusState
+                        ? null
+                        : () {
+                            ignoreController.forward().whenComplete(() =>
+                                ignoreController.animateTo(0,
+                                    duration: Duration(seconds: 0)));
+                            BlocProvider.of<DiscoverMatchesBloc>(context)
+                                .add(DiscoverMatchIgnoreEvent());
+                          },
               ),
             ),
           ],
@@ -332,7 +346,8 @@ class MatchesFlock extends StatefulWidget {
   _MatchesFlockState createState() => _MatchesFlockState();
 }
 
-class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderStateMixin {
+class _MatchesFlockState extends State<MatchesFlock>
+    with SingleTickerProviderStateMixin {
   final AutoSizeGroup nameAndSurnameAutoSizeGroup = AutoSizeGroup();
   AnimationController animationController;
   BuildMatch previousFirstMatch;
@@ -364,10 +379,13 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
       builder: (BuildContext context, BoxConstraints constraints) {
         return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
           return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-              buildWhen: (DiscoverMatchesState previousState, DiscoverMatchesState state) {
+              buildWhen: (DiscoverMatchesState previousState,
+                  DiscoverMatchesState state) {
             if (state is DiscoverMatchesSavingNewStatusState) {
               previousFirstMatch =
-                  (previousState as DiscoverMatchesLoadSuccessState).matches.first;
+                  (previousState as DiscoverMatchesLoadSuccessState)
+                      .matches
+                      .first;
               animationController
                   .animateTo(0, duration: Duration(milliseconds: 0))
                   .whenComplete(() => animationController.forward());
@@ -388,7 +406,10 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                 overflow: Overflow.visible,
                 alignment: AlignmentDirectional.topCenter,
                 children: <Widget>[
-                  if ((state as DiscoverMatchesLoadSuccessState).matches.length >= 3) ...[
+                  if ((state as DiscoverMatchesLoadSuccessState)
+                          .matches
+                          .length >=
+                      3) ...[
                     // First head
                     Positioned(
                       top: -50 * (1 - animationController.value),
@@ -402,16 +423,20 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                               color: tinterTheme.colors.secondary,
                             ),
                           ),
-                          height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
-                          width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                          height: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'],
+                          width: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'],
                           child: Center(
                             child: getProfilePictureFromLocalPathOrLogin(
-                                login: (state as DiscoverMatchesLoadSuccessState)
-                                    .matches[2]
-                                    .login,
-                                localPath: (state as DiscoverMatchesLoadSuccessState)
-                                    .matches[2]
-                                    .profilePictureLocalPath,
+                                login:
+                                    (state as DiscoverMatchesLoadSuccessState)
+                                        .matches[2]
+                                        .login,
+                                localPath:
+                                    (state as DiscoverMatchesLoadSuccessState)
+                                        .matches[2]
+                                        .profilePictureLocalPath,
                                 height: constraints.maxHeight *
                                     MatchesFlock.fractions['smallHead'],
                                 width: constraints.maxHeight *
@@ -423,21 +448,26 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
 
                     // First separator
                     Positioned(
-                      top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      top: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
                           10 -
                           50 * (1 - animationController.value),
                       child: Opacity(
                         opacity: animationController.value,
                         child: Container(
-                          height:
-                              constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
+                          height: constraints.maxHeight *
+                                  MatchesFlock.fractions['separator'] -
+                              20,
                           width: 1.5,
                           color: tinterTheme.colors.primaryAccent,
                         ),
                       ),
                     ),
                   ],
-                  if ((state as DiscoverMatchesLoadSuccessState).matches.length >= 2) ...[
+                  if ((state as DiscoverMatchesLoadSuccessState)
+                          .matches
+                          .length >=
+                      2) ...[
                     // Second head
                     Positioned(
                       top: 0 +
@@ -453,44 +483,55 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                             color: tinterTheme.colors.secondary,
                           ),
                         ),
-                        height: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
-                        width: constraints.maxHeight * MatchesFlock.fractions['smallHead'],
+                        height: constraints.maxHeight *
+                            MatchesFlock.fractions['smallHead'],
+                        width: constraints.maxHeight *
+                            MatchesFlock.fractions['smallHead'],
                         child: Center(
                           child: getProfilePictureFromLocalPathOrLogin(
-                              login:
-                                  (state as DiscoverMatchesLoadSuccessState).matches[1].login,
-                              localPath: (state as DiscoverMatchesLoadSuccessState)
+                              login: (state as DiscoverMatchesLoadSuccessState)
                                   .matches[1]
-                                  .profilePictureLocalPath,
-                              height:
-                                  constraints.maxHeight * MatchesFlock.fractions['smallHead'],
-                              width:
-                                  constraints.maxHeight * MatchesFlock.fractions['smallHead']),
+                                  .login,
+                              localPath:
+                                  (state as DiscoverMatchesLoadSuccessState)
+                                      .matches[1]
+                                      .profilePictureLocalPath,
+                              height: constraints.maxHeight *
+                                  MatchesFlock.fractions['smallHead'],
+                              width: constraints.maxHeight *
+                                  MatchesFlock.fractions['smallHead']),
                         ),
                       ),
                     ),
 
                     // Second separator
                     Positioned(
-                      top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      top: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
                           10 +
                           constraints.maxHeight *
                               (MatchesFlock.fractions['smallHead'] +
                                   MatchesFlock.fractions['separator']) *
                               animationController.value,
                       child: Container(
-                        height:
-                            constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
+                        height: constraints.maxHeight *
+                                MatchesFlock.fractions['separator'] -
+                            20,
                         width: 1.5,
                         color: tinterTheme.colors.primaryAccent,
                       ),
                     ),
                   ],
-                  if ((state as DiscoverMatchesLoadSuccessState).matches.length >= 1) ...[
+                  if ((state as DiscoverMatchesLoadSuccessState)
+                          .matches
+                          .length >=
+                      1) ...[
                     // Third head
                     Positioned(
-                      top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                          constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                      top: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['separator'] +
                           constraints.maxHeight *
                               (MatchesFlock.fractions['smallHead'] +
                                   MatchesFlock.fractions['separator']) *
@@ -503,12 +544,14 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                             color: tinterTheme.colors.secondary,
                           ),
                         ),
-                        height: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        height: constraints.maxHeight *
+                                MatchesFlock.fractions['smallHead'] +
                             constraints.maxHeight *
                                 (MatchesFlock.fractions['bigHead'] -
                                     MatchesFlock.fractions['smallHead']) *
                                 animationController.value,
-                        width: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                        width: constraints.maxHeight *
+                                MatchesFlock.fractions['smallHead'] +
                             constraints.maxHeight *
                                 (MatchesFlock.fractions['bigHead'] -
                                     MatchesFlock.fractions['smallHead']) *
@@ -518,37 +561,42 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                               login: (state as DiscoverMatchesLoadSuccessState)
                                   .matches[0]
                                   .login,
-                              localPath: (state as DiscoverMatchesLoadSuccessState)
-                                  .matches[0]
-                                  .profilePictureLocalPath,
+                              localPath:
+                                  (state as DiscoverMatchesLoadSuccessState)
+                                      .matches[0]
+                                      .profilePictureLocalPath,
                               height: constraints.maxHeight *
                                       MatchesFlock.fractions['smallHead'] +
                                   constraints.maxHeight *
                                       (MatchesFlock.fractions['bigHead'] -
                                           MatchesFlock.fractions['smallHead']) *
                                       animationController.value,
-                              width:
-                                  constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                                      constraints.maxHeight *
-                                          (MatchesFlock.fractions['bigHead'] -
-                                              MatchesFlock.fractions['smallHead']) *
-                                          animationController.value),
+                              width: constraints.maxHeight *
+                                      MatchesFlock.fractions['smallHead'] +
+                                  constraints.maxHeight *
+                                      (MatchesFlock.fractions['bigHead'] -
+                                          MatchesFlock.fractions['smallHead']) *
+                                      animationController.value),
                         ),
                       ),
                     ),
 
                     // Third separator
                     Positioned(
-                      top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                          constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                          constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
+                      top: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['separator'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
                           10 +
                           50 * animationController.value,
                       child: Opacity(
                         opacity: 1 - animationController.value,
                         child: Container(
-                          height:
-                              constraints.maxHeight * MatchesFlock.fractions['separator'] - 20,
+                          height: constraints.maxHeight *
+                                  MatchesFlock.fractions['separator'] -
+                              20,
                           width: 1.5,
                           color: tinterTheme.colors.primaryAccent,
                         ),
@@ -557,22 +605,29 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
 
                     // Name and surname
                     Positioned(
-                      top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                          constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                          constraints.maxHeight * MatchesFlock.fractions['bigHead'] +
+                      top: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['separator'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['bigHead'] +
                           animationController.value *
-                              (constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                                  constraints.maxHeight * MatchesFlock.fractions['separator']),
+                              (constraints.maxHeight *
+                                      MatchesFlock.fractions['smallHead'] +
+                                  constraints.maxHeight *
+                                      MatchesFlock.fractions['separator']),
                       child: Opacity(
                         opacity: animationController.value,
                         child: Container(
-                          height:
-                              constraints.maxHeight * MatchesFlock.fractions['nameAndSurname'],
+                          height: constraints.maxHeight *
+                              MatchesFlock.fractions['nameAndSurname'],
                           child: Column(
                             children: <Widget>[
                               Expanded(
                                 child: AutoSizeText(
-                                  (state as DiscoverMatchesLoadSuccessState).matches[0].name,
+                                  (state as DiscoverMatchesLoadSuccessState)
+                                      .matches[0]
+                                      .name,
                                   group: nameAndSurnameAutoSizeGroup,
                                   style: tinterTheme.textStyle.headline2,
                                 ),
@@ -595,10 +650,14 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                   if (previousFirstMatch != null) ...[
                     // Third head
                     Positioned(
-                      top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                          constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                          constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                          constraints.maxHeight * MatchesFlock.fractions['separator'] +
+                      top: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['separator'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['separator'] +
                           50 * animationController.value,
                       child: Opacity(
                         opacity: 1 - animationController.value,
@@ -610,15 +669,19 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
                               color: tinterTheme.colors.secondary,
                             ),
                           ),
-                          height: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
-                          width: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
+                          height: constraints.maxHeight *
+                              MatchesFlock.fractions['bigHead'],
+                          width: constraints.maxHeight *
+                              MatchesFlock.fractions['bigHead'],
                           child: Center(
                             child: getProfilePictureFromLocalPathOrLogin(
                               login: previousFirstMatch.login,
-                              localPath: previousFirstMatch.profilePictureLocalPath,
-                              height:
-                                  constraints.maxHeight * MatchesFlock.fractions['bigHead'],
-                              width: constraints.maxHeight * MatchesFlock.fractions['bigHead'],
+                              localPath:
+                                  previousFirstMatch.profilePictureLocalPath,
+                              height: constraints.maxHeight *
+                                  MatchesFlock.fractions['bigHead'],
+                              width: constraints.maxHeight *
+                                  MatchesFlock.fractions['bigHead'],
                             ),
                           ),
                         ),
@@ -627,17 +690,22 @@ class _MatchesFlockState extends State<MatchesFlock> with SingleTickerProviderSt
 
                     // Name and surname of the third head
                     Positioned(
-                      top: constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                          constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                          constraints.maxHeight * MatchesFlock.fractions['smallHead'] +
-                          constraints.maxHeight * MatchesFlock.fractions['separator'] +
-                          constraints.maxHeight * MatchesFlock.fractions['bigHead'] +
+                      top: constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['separator'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['smallHead'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['separator'] +
+                          constraints.maxHeight *
+                              MatchesFlock.fractions['bigHead'] +
                           50 * animationController.value,
                       child: Opacity(
                         opacity: 1 - animationController.value,
                         child: Container(
-                          height:
-                              constraints.maxHeight * MatchesFlock.fractions['nameAndSurname'],
+                          height: constraints.maxHeight *
+                              MatchesFlock.fractions['nameAndSurname'],
                           child: Column(
                             children: <Widget>[
                               Expanded(
@@ -735,24 +803,29 @@ class _MatchInformationState extends State<MatchInformation> {
                                   'Score',
                                   style: tinterTheme.textStyle.headline1,
                                 ),
-                                BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-                                  buildWhen: (DiscoverMatchesState previousState,
-                                      DiscoverMatchesState state) {
-                                    if (previousState is DiscoverMatchesSavingNewStatusState) {
+                                BlocBuilder<DiscoverMatchesBloc,
+                                    DiscoverMatchesState>(
+                                  buildWhen:
+                                      (DiscoverMatchesState previousState,
+                                          DiscoverMatchesState state) {
+                                    if (previousState
+                                        is DiscoverMatchesSavingNewStatusState) {
                                       return false;
                                     }
                                     return true;
                                   },
-                                  builder: (BuildContext context, DiscoverMatchesState state) {
-                                    if (!(state is DiscoverMatchesLoadSuccessState)) {
+                                  builder: (BuildContext context,
+                                      DiscoverMatchesState state) {
+                                    if (!(state
+                                        is DiscoverMatchesLoadSuccessState)) {
                                       return Center(
                                         child: CircularProgressIndicator(),
                                       );
                                     }
                                     return AnimatedSwitcher(
                                       duration: Duration(milliseconds: 300),
-                                      transitionBuilder:
-                                          (Widget child, Animation<double> animation) {
+                                      transitionBuilder: (Widget child,
+                                          Animation<double> animation) {
                                         return ScaleTransition(
                                           child: child,
                                           scale: animation,
@@ -767,7 +840,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                         style: TextStyle(
                                           fontSize: 50,
                                           fontWeight: FontWeight.bold,
-                                          color: tinterTheme.textStyle.headline1.color,
+                                          color: tinterTheme
+                                              .textStyle.headline1.color,
                                         ),
                                       ),
                                     );
@@ -784,7 +858,9 @@ class _MatchInformationState extends State<MatchInformation> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: tinterTheme.colors.defaultTextColor, width: 2),
+                                      color:
+                                          tinterTheme.colors.defaultTextColor,
+                                      width: 2),
                                 ),
                                 height: 20,
                                 width: 20,
@@ -792,7 +868,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                   child: Text(
                                     '?',
                                     style: TextStyle(
-                                      color: tinterTheme.colors.defaultTextColor,
+                                      color:
+                                          tinterTheme.colors.defaultTextColor,
                                     ),
                                   ),
                                 ),
@@ -826,9 +903,12 @@ class _MatchInformationState extends State<MatchInformation> {
                             children: <Widget>[
                               Container(
                                 height: 60,
-                                child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-                                  builder: (BuildContext context, DiscoverMatchesState state) {
-                                    if (!(state is DiscoverMatchesLoadSuccessState)) {
+                                child: BlocBuilder<DiscoverMatchesBloc,
+                                    DiscoverMatchesState>(
+                                  builder: (BuildContext context,
+                                      DiscoverMatchesState state) {
+                                    if (!(state
+                                        is DiscoverMatchesLoadSuccessState)) {
                                       return Center(
                                         child: CircularProgressIndicator(),
                                       );
@@ -839,16 +919,19 @@ class _MatchInformationState extends State<MatchInformation> {
                                         key: GlobalKey(),
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: (state as DiscoverMatchesLoadSuccessState)
+                                        itemCount: (state
+                                                as DiscoverMatchesLoadSuccessState)
                                             .matches[0]
                                             .associations
                                             .length,
-                                        separatorBuilder: (BuildContext context, int index) {
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
                                           return SizedBox(
                                             width: 5,
                                           );
                                         },
-                                        itemBuilder: (BuildContext context, int index) {
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
                                           return associationBubble(
                                               context,
                                               (state as DiscoverMatchesLoadSuccessState)
@@ -881,8 +964,10 @@ class _MatchInformationState extends State<MatchInformation> {
                         ),
                         SliderTheme(
                           data: tinterTheme.slider.disabled,
-                          child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-                            builder: (BuildContext context, DiscoverMatchesState state) {
+                          child: BlocBuilder<DiscoverMatchesBloc,
+                              DiscoverMatchesState>(
+                            builder: (BuildContext context,
+                                DiscoverMatchesState state) {
                               if (!(state is DiscoverMatchesLoadSuccessState)) {
                                 return Center(
                                   child: CircularProgressIndicator(),
@@ -891,11 +976,13 @@ class _MatchInformationState extends State<MatchInformation> {
                               return TweenAnimationBuilder(
                                 tween: Tween<double>(
                                     begin: 0.5,
-                                    end: (state as DiscoverMatchesLoadSuccessState)
+                                    end: (state
+                                            as DiscoverMatchesLoadSuccessState)
                                         .matches[0]
                                         .attiranceVieAsso),
                                 duration: Duration(milliseconds: 300),
-                                builder: (BuildContext context, value, Widget child) {
+                                builder: (BuildContext context, value,
+                                    Widget child) {
                                   return Slider(
                                     value: value,
                                     onChanged: null,
@@ -913,7 +1000,8 @@ class _MatchInformationState extends State<MatchInformation> {
                 return informationRectangle(
                   context: context,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 5),
                     child: Column(
                       children: <Widget>[
                         Text(
@@ -927,9 +1015,12 @@ class _MatchInformationState extends State<MatchInformation> {
                             context,
                             SliderTheme(
                               data: tinterTheme.slider.disabled,
-                              child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-                                builder: (BuildContext context, DiscoverMatchesState state) {
-                                  if (!(state is DiscoverMatchesLoadSuccessState)) {
+                              child: BlocBuilder<DiscoverMatchesBloc,
+                                  DiscoverMatchesState>(
+                                builder: (BuildContext context,
+                                    DiscoverMatchesState state) {
+                                  if (!(state
+                                      is DiscoverMatchesLoadSuccessState)) {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );
@@ -937,11 +1028,13 @@ class _MatchInformationState extends State<MatchInformation> {
                                   return TweenAnimationBuilder(
                                     tween: Tween<double>(
                                         begin: 0.5,
-                                        end: (state as DiscoverMatchesLoadSuccessState)
+                                        end: (state
+                                                as DiscoverMatchesLoadSuccessState)
                                             .matches[0]
                                             .feteOuCours),
                                     duration: Duration(milliseconds: 300),
-                                    builder: (BuildContext context, value, Widget child) {
+                                    builder: (BuildContext context, value,
+                                        Widget child) {
                                       return Slider(
                                         value: value,
                                         onChanged: null,
@@ -961,7 +1054,8 @@ class _MatchInformationState extends State<MatchInformation> {
                 return informationRectangle(
                   context: context,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 5),
                     child: Column(
                       children: <Widget>[
                         Text(
@@ -976,9 +1070,12 @@ class _MatchInformationState extends State<MatchInformation> {
                             context,
                             SliderTheme(
                               data: tinterTheme.slider.disabled,
-                              child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-                                builder: (BuildContext context, DiscoverMatchesState state) {
-                                  if (!(state is DiscoverMatchesLoadSuccessState)) {
+                              child: BlocBuilder<DiscoverMatchesBloc,
+                                  DiscoverMatchesState>(
+                                builder: (BuildContext context,
+                                    DiscoverMatchesState state) {
+                                  if (!(state
+                                      is DiscoverMatchesLoadSuccessState)) {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );
@@ -986,11 +1083,13 @@ class _MatchInformationState extends State<MatchInformation> {
                                   return TweenAnimationBuilder(
                                     tween: Tween<double>(
                                         begin: 0.5,
-                                        end: (state as DiscoverMatchesLoadSuccessState)
+                                        end: (state
+                                                as DiscoverMatchesLoadSuccessState)
                                             .matches[0]
                                             .aideOuSortir),
                                     duration: Duration(milliseconds: 300),
-                                    builder: (BuildContext context, value, Widget child) {
+                                    builder: (BuildContext context, value,
+                                        Widget child) {
                                       return Slider(
                                         value: value,
                                         onChanged: null,
@@ -1020,8 +1119,10 @@ class _MatchInformationState extends State<MatchInformation> {
                         ),
                         SliderTheme(
                           data: tinterTheme.slider.disabled,
-                          child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-                            builder: (BuildContext context, DiscoverMatchesState state) {
+                          child: BlocBuilder<DiscoverMatchesBloc,
+                              DiscoverMatchesState>(
+                            builder: (BuildContext context,
+                                DiscoverMatchesState state) {
                               if (!(state is DiscoverMatchesLoadSuccessState)) {
                                 return Center(
                                   child: CircularProgressIndicator(),
@@ -1030,11 +1131,13 @@ class _MatchInformationState extends State<MatchInformation> {
                               return TweenAnimationBuilder(
                                 tween: Tween<double>(
                                     begin: 0.5,
-                                    end: (state as DiscoverMatchesLoadSuccessState)
+                                    end: (state
+                                            as DiscoverMatchesLoadSuccessState)
                                         .matches[0]
                                         .organisationEvenements),
                                 duration: Duration(milliseconds: 300),
-                                builder: (BuildContext context, value, Widget child) {
+                                builder: (BuildContext context, value,
+                                    Widget child) {
                                   return Slider(
                                     value: value,
                                     onChanged: null,
@@ -1060,7 +1163,8 @@ class _MatchInformationState extends State<MatchInformation> {
                           style: tinterTheme.textStyle.headline2,
                         ),
                         BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-                          builder: (BuildContext context, DiscoverMatchesState state) {
+                          builder: (BuildContext context,
+                              DiscoverMatchesState state) {
                             if (!(state is DiscoverMatchesLoadSuccessState)) {
                               return Center(
                                 child: CircularProgressIndicator(),
@@ -1072,14 +1176,16 @@ class _MatchInformationState extends State<MatchInformation> {
                                 key: GlobalKey(),
                                 spacing: 15,
                                 children: <Widget>[
-                                  for (String musicStyle
-                                      in (state as DiscoverMatchesLoadSuccessState)
-                                          .matches[0]
-                                          .goutsMusicaux)
+                                  for (String musicStyle in (state
+                                          as DiscoverMatchesLoadSuccessState)
+                                      .matches[0]
+                                      .goutsMusicaux)
                                     Chip(
                                       label: Text(musicStyle),
-                                      labelStyle: tinterTheme.textStyle.chipLiked,
-                                      backgroundColor: tinterTheme.colors.primaryAccent,
+                                      labelStyle:
+                                          tinterTheme.textStyle.chipLiked,
+                                      backgroundColor:
+                                          tinterTheme.colors.primaryAccent,
                                     )
                                 ],
                               ),
@@ -1091,7 +1197,8 @@ class _MatchInformationState extends State<MatchInformation> {
                   ),
                 );
               }
-              return ErrorWidget('This list should not contain more than 7 items.');
+              return ErrorWidget(
+                  'This list should not contain more than 7 items.');
             },
           );
         }),
@@ -1100,7 +1207,10 @@ class _MatchInformationState extends State<MatchInformation> {
   }
 
   Widget informationRectangle(
-      {@required BuildContext context, @required Widget child, double width, double height}) {
+      {@required BuildContext context,
+      @required Widget child,
+      double width,
+      double height}) {
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
@@ -1126,7 +1236,8 @@ class _MatchInformationState extends State<MatchInformation> {
         return Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: tinterTheme.textStyle.headline1.color, width: 3),
+            border: Border.all(
+                color: tinterTheme.textStyle.headline1.color, width: 3),
           ),
           height: 60,
           width: 60,
@@ -1155,7 +1266,8 @@ class _MatchInformationState extends State<MatchInformation> {
             children: <Widget>[
               SliderLabel(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 3.0, vertical: 2.0),
                   child: Text(
                     leftLabel,
                     style: tinterTheme.textStyle.smallLabel,
@@ -1166,7 +1278,8 @@ class _MatchInformationState extends State<MatchInformation> {
               ),
               SliderLabel(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 3.0, vertical: 2.0),
                   child: Text(
                     rightLabel,
                     style: tinterTheme.textStyle.smallLabel,
@@ -1197,7 +1310,8 @@ class NoPaddingTrackShape extends RoundedRectSliderTrackShape {
   }) {
     final double trackHeight = sliderTheme.trackHeight;
     final double trackLeft = offset.dx;
-    final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width - 5;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
@@ -1215,7 +1329,8 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
           ),
           Expanded(
             child: Center(
-              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+              child:
+                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -1229,7 +1344,8 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
                     ),
                     AutoSizeText(
                       "Il n'y a plus de match à découvrir pour l'instant.\nDemande à d'autres étudiant.e.s de s'inscrire!",
-                      style: tinterTheme.textStyle.headline2.copyWith(height: 2),
+                      style:
+                          tinterTheme.textStyle.headline2.copyWith(height: 2),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
@@ -1266,7 +1382,8 @@ class WideStudentSearch extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RechercheEtudiantAssociatifTab()),
+                MaterialPageRoute(
+                    builder: (context) => RechercheEtudiantAssociatifTab()),
               );
             },
             child: Center(
