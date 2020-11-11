@@ -10,7 +10,7 @@
     <uses-permission
         android:name="android.permission.CAMERA"/>
     <application
-        android:name="io.flutter.plugins.Application"
+        android:name="io.flutter.app.FlutterApplication"
         android:label="tINTer"
         android:icon="@mipmap/ic_launcher"
         android:fullBackupContent="@xml/my_backup_rules"
