@@ -37,14 +37,16 @@ Future<void> main() async {
 
   _serverLogger.info('Connecting to notification server (Firebase Cloud messaging)');
   fcmAPI.initializeApp(
-      secret: jsonDecode(File(
-              '/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
+      secret: jsonDecode(File('/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
           .readAsStringSync()));
-
   try {
     await for (HttpRequest req in server) {
-      await authenticationCheckThenRoute(req);
-      req.response.close();
+      try {
+        await authenticationCheckThenRoute(req);
+        req.response.close();
+      } catch (e) {
+        _serverLogger.shout('Error crashed the server: $e');
+      }
     }
   } catch (e) {
     _serverLogger.shout('Error crashed the server: $e');
