@@ -132,6 +132,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield UserInitialState();
       return;
     }
+
     yield KnownUserRefreshingState(user: (state as KnownUserState).user);
 
     BuildUser user;

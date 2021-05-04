@@ -12,17 +12,17 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 
 
 main() => runApp(MaterialApp(
-      home: RechercheEtudiantBinomePairTab(),
+      home: SearchStudentBinomePairTab(),
     ));
 
 
 // TODO: implement binome pair
-class RechercheEtudiantBinomePairTab extends StatefulWidget {
+class SearchStudentBinomePairTab extends StatefulWidget {
   @override
-  _RechercheEtudiantBinomePairTabState createState() => _RechercheEtudiantBinomePairTabState();
+  _SearchStudentBinomePairTabState createState() => _SearchStudentBinomePairTabState();
 }
 
-class _RechercheEtudiantBinomePairTabState extends State<RechercheEtudiantBinomePairTab> {
+class _SearchStudentBinomePairTabState extends State<SearchStudentBinomePairTab> {
   final Map<String, double> fractions = {
     'top': 0.2,
     'separator': 0.05,
@@ -69,7 +69,7 @@ class _RechercheEtudiantBinomePairTabState extends State<RechercheEtudiantBinome
       child: Consumer<TinterTheme>(
           builder: (context, tinterTheme, child) {
             return Scaffold(
-            resizeToAvoidBottomPadding: true,
+              resizeToAvoidBottomInset: true,
             backgroundColor: tinterTheme.colors.background,
             body: child,
           );

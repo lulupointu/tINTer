@@ -14,11 +14,12 @@ import 'package:tinter_backend/models/shared/session.dart';
 import 'package:meta/meta.dart';
 
 Logger _authenticationLogger = Logger('authenticationCheckThenRoute');
+
 Future<void> authenticationCheckThenRoute(HttpRequest req) async {
   // The segment are the different part of the uri
   List<String> segments = req.uri.path.split('/');
   // The first element is an empty string, remove it
-  segments.removeAt(0);
+  if (segments.length > 0) segments.removeAt(0);
 
   // if login then use ldap to check for credentials
   if (segments[0] == 'login') {
@@ -100,6 +101,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
 }
 
 Logger _checkSessionLogger = Logger('checkSessionTokenAndGetLogin');
+
 Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest}) async {
   // TinterDatabase tinterDatabase = TinterDatabase();
   // await tinterDatabase.open();
@@ -107,7 +109,8 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
   SessionsTable sessionsTable = SessionsTable(database: tinterDatabase.connection);
 
   try {
-    _checkSessionLogger.info("Check if the token is in the session table, if not a EmptyResponseToDatabaseQuery is raised");
+    _checkSessionLogger.info(
+        "Check if the token is in the session table, if not a EmptyResponseToDatabaseQuery is raised");
     final String _token = httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader);
 
     final Session session = await sessionsTable.getFromToken(token: _token);
@@ -122,7 +125,8 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
 
     // If the token is more than Session.MaximumLifeTime old, the token is expired and should not be used
     // So we set isValid to false and throw an ExpiredTokenError.
-    if (session.creationDate.add(Session.MaximumLifeTime).compareTo(DateTime.now().toUtc()) < 0) {
+    if (session.creationDate.add(Session.MaximumLifeTime).compareTo(DateTime.now().toUtc()) <
+        0) {
       await sessionsTable.update(
           session: Session(
         (b) => b
@@ -190,6 +194,7 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
 }
 
 Logger _tryLoginLogger = Logger('tryLogin');
+
 Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   // TinterDatabase tinterDatabase = TinterDatabase();
   // await tinterDatabase.open();
@@ -218,11 +223,12 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   try {
     _tryLoginLogger.info('Try authenticating with LDAP');
 
-
-    _tryLoginLogger.info('Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised');
+    _tryLoginLogger.info(
+        'Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised');
     userBasicInfoJson = await ldap.getUserInfoFromLDAP(login: _login, password: _password);
 
-    _tryLoginLogger.info('Get static student info from database, If unknown EmptyResponseToDatabaseQuery is raised');
+    _tryLoginLogger.info(
+        'Get static student info from database, If unknown EmptyResponseToDatabaseQuery is raised');
     await usersTable.getFromLogin(login: _login);
 
     _tryLoginLogger.info('Generate a new token, store it, and send it in the header');
@@ -239,8 +245,8 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
   } on InvalidCredentialsException catch (error) {
     throw error;
   } on EmptyResponseToDatabaseQuery {
-
-    _tryLoginLogger.info('This means that it is the first authentication, therefore we save the static profile');
+    _tryLoginLogger.info(
+        'This means that it is the first authentication, therefore we save the static profile');
     await usersTable.addBasicInfo(userJson: userBasicInfoJson);
 
     _tryLoginLogger.info('Generate a new token, store it, and send it in the header');

@@ -108,7 +108,7 @@ class NotificationHandler {
     print('Notification handler configured.');
   }
 
-  Future<void> _firebaseMessagingBackgroundHandler(
+  static Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
 
     final sharedPreferences = await SharedPreferences.getInstance();

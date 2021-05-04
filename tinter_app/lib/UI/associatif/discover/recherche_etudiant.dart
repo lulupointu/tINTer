@@ -12,15 +12,15 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 
 
 main() => runApp(MaterialApp(
-      home: RechercheEtudiantAssociatifTab(),
+      home: SearchStudentAssociatifTab(),
     ));
 
-class RechercheEtudiantAssociatifTab extends StatefulWidget {
+class SearchStudentAssociatifTab extends StatefulWidget {
   @override
-  _RechercheEtudiantAssociatifTabState createState() => _RechercheEtudiantAssociatifTabState();
+  _SearchStudentAssociatifTabState createState() => _SearchStudentAssociatifTabState();
 }
 
-class _RechercheEtudiantAssociatifTabState extends State<RechercheEtudiantAssociatifTab> {
+class _SearchStudentAssociatifTabState extends State<SearchStudentAssociatifTab> {
   final Map<String, double> fractions = {
     'top': 0.2,
     'separator': 0.05,
@@ -67,7 +67,7 @@ class _RechercheEtudiantAssociatifTabState extends State<RechercheEtudiantAssoci
         builder: (context, tinterTheme, child) {
           return SafeArea(
           child: Scaffold(
-            resizeToAvoidBottomPadding: true,
+            resizeToAvoidBottomInset: true,
             backgroundColor: tinterTheme.colors.background,
             body: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {

@@ -13,7 +13,7 @@ import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/UI/scolaire/discover_binome/recherche_etudiant.dart';
+import 'package:tinterapp/UI/scolaire/discover_binome/search_student.dart';
 import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
@@ -169,7 +169,7 @@ class StudentSearch extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RechercheEtudiantScolaireTab()),
+              MaterialPageRoute(builder: (context) => SearchStudentScolaireTab()),
             );
           },
           child: Center(
@@ -1545,7 +1545,7 @@ class WideStudentSearch extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RechercheEtudiantScolaireTab()),
+              MaterialPageRoute(builder: (context) => SearchStudentScolaireTab()),
             );
           },
           child: Center(

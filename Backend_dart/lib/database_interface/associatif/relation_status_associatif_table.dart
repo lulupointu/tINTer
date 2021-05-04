@@ -83,8 +83,7 @@ class RelationsStatusAssociatifTable {
     );
     """;
 
-    // This functions prevent anyone from modifying any field except
-    // isValid which can only be changed from true to false.
+
     final String createConstraintFunctionQuery = """
     CREATE FUNCTION relation_status_associatif_check() RETURNS trigger AS \$relation_status_associatif_check\$
     DECLARE

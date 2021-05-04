@@ -168,7 +168,7 @@ class StudentSearch extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => RechercheEtudiantAssociatifTab()),
+                      builder: (context) => SearchStudentAssociatifTab()),
                 );
               },
               child: Center(
@@ -1383,7 +1383,7 @@ class WideStudentSearch extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => RechercheEtudiantAssociatifTab()),
+                    builder: (context) => SearchStudentAssociatifTab()),
               );
             },
             child: Center(

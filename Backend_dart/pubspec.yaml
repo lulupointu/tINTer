@@ -10,8 +10,11 @@ dependencies:
   built_value: ^7.1.0
   logging: ^0.11.4
 
-  fcm_api:
-    path: /home/df/fcm_api
+  firebase_core: ^1.0.0
+  firebase_messaging: ^8.0.0-dev.15
+
+#  fcm_api:
+#    path: /home/df/fcm_api
 
 
 

@@ -80,7 +80,7 @@ class TinterAPIClient {
     userJson.remove('profilePictureLocalPath');
 
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, 'shared/create', {'shouldRefresh': 'true'}),
+      Uri.http(baseUrl, '/shared/create', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(userJson),
     );
