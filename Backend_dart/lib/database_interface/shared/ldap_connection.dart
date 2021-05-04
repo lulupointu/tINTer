@@ -20,9 +20,13 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
   var port = 389; // null = use standard LDAP/LDAPS port
   var bindDN = "uid=$login,ou=People,dc=int-evry,dc=fr"; // null=unauthenticated
 
-  var connection = new LdapConnection(host: host);
-  connection.setProtocol(ssl, port);
-  connection.setAuthentication(bindDN, password);
+  var connection = new LdapConnection(
+    host: host,
+    ssl: ssl,
+    port: port,
+    bindDN: bindDN,
+    password: password,
+  );
 
   try {
     // Perform search operation
@@ -38,8 +42,12 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
         'name': entry.attributes['givenName'].values.first.toString().capitalized,
         'surname': entry.attributes['sn'].values.first.toString().capitalized,
         'email': entry.attributes['mail'].values.first,
-        'school': (entry.attributes['mail'].values.first.substring(entry.attributes['mail'].values.first.length - 19) == 'telecom-sudparis.eu'
-        ? School.TSP : School.IMTBS).serialize()
+        'school': (entry.attributes['mail'].values.first
+                        .substring(entry.attributes['mail'].values.first.length - 19) ==
+                    'telecom-sudparis.eu'
+                ? School.TSP
+                : School.IMTBS)
+            .serialize()
       };
     }
   } on LdapResultInvalidCredentialsException {
