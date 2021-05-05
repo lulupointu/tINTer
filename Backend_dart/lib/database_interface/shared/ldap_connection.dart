@@ -55,10 +55,12 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
     throw InvalidCredentialsException('Login or password incorrect.', true);
   } on SocketException catch (error) {
     if (error.osError.message == 'Connection refused') {
+      await connection.close();
       throw ConnectionToLDAPRefused(error.osError.message, false);
     }
   } catch (e) {
-    print(e);
+    await connection.close();
+    throw e;
   } finally {
     // Close the connection when finished with it
     await connection.close();

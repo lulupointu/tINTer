@@ -260,8 +260,6 @@ Future<void> tryLogin({@required HttpRequest httpRequest}) async {
         ..isValid = true,
     ));
     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
-  } finally {
-    // await tinterDatabase.close();
   }
 }
 
