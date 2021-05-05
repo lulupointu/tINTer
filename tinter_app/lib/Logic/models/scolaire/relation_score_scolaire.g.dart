@@ -47,7 +47,7 @@ class _$RelationScoreScolaireSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'login':
           result.login = serializers.deserialize(value,
@@ -82,15 +82,12 @@ class _$RelationScoreScolaire extends RelationScoreScolaire {
 
   _$RelationScoreScolaire._({this.login, this.otherLogin, this.score})
       : super._() {
-    if (login == null) {
-      throw new BuiltValueNullFieldError('RelationScoreScolaire', 'login');
-    }
-    if (otherLogin == null) {
-      throw new BuiltValueNullFieldError('RelationScoreScolaire', 'otherLogin');
-    }
-    if (score == null) {
-      throw new BuiltValueNullFieldError('RelationScoreScolaire', 'score');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        login, 'RelationScoreScolaire', 'login');
+    BuiltValueNullFieldError.checkNotNull(
+        otherLogin, 'RelationScoreScolaire', 'otherLogin');
+    BuiltValueNullFieldError.checkNotNull(
+        score, 'RelationScoreScolaire', 'score');
   }
 
   @override
@@ -146,10 +143,11 @@ class RelationScoreScolaireBuilder
   RelationScoreScolaireBuilder();
 
   RelationScoreScolaireBuilder get _$this {
-    if (_$v != null) {
-      _login = _$v.login;
-      _otherLogin = _$v.otherLogin;
-      _score = _$v.score;
+    final $v = _$v;
+    if ($v != null) {
+      _login = $v.login;
+      _otherLogin = $v.otherLogin;
+      _score = $v.score;
       _$v = null;
     }
     return this;
@@ -157,9 +155,7 @@ class RelationScoreScolaireBuilder
 
   @override
   void replace(RelationScoreScolaire other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RelationScoreScolaire;
   }
 
@@ -172,7 +168,12 @@ class RelationScoreScolaireBuilder
   _$RelationScoreScolaire build() {
     final _$result = _$v ??
         new _$RelationScoreScolaire._(
-            login: login, otherLogin: otherLogin, score: score);
+            login: BuiltValueNullFieldError.checkNotNull(
+                login, 'RelationScoreScolaire', 'login'),
+            otherLogin: BuiltValueNullFieldError.checkNotNull(
+                otherLogin, 'RelationScoreScolaire', 'otherLogin'),
+            score: BuiltValueNullFieldError.checkNotNull(
+                score, 'RelationScoreScolaire', 'score'));
     replace(_$result);
     return _$result;
   }

@@ -75,10 +75,12 @@ class _$RelationStatusScolaireSerializer
       serializers.serialize(object.statusScolaire,
           specifiedType: const FullType(EnumRelationStatusScolaire)),
     ];
-    if (object.login != null) {
+    Object value;
+    value = object.login;
+    if (value != null) {
       result
         ..add('login')
-        ..add(serializers.serialize(object.login,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
     return result;
@@ -94,7 +96,7 @@ class _$RelationStatusScolaireSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'login':
           result.login = serializers.deserialize(value,
@@ -149,14 +151,10 @@ class _$RelationStatusScolaire extends RelationStatusScolaire {
 
   _$RelationStatusScolaire._({this.login, this.otherLogin, this.statusScolaire})
       : super._() {
-    if (otherLogin == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationStatusScolaire', 'otherLogin');
-    }
-    if (statusScolaire == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationStatusScolaire', 'statusScolaire');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        otherLogin, 'RelationStatusScolaire', 'otherLogin');
+    BuiltValueNullFieldError.checkNotNull(
+        statusScolaire, 'RelationStatusScolaire', 'statusScolaire');
   }
 
   @override
@@ -213,10 +211,11 @@ class RelationStatusScolaireBuilder
   RelationStatusScolaireBuilder();
 
   RelationStatusScolaireBuilder get _$this {
-    if (_$v != null) {
-      _login = _$v.login;
-      _otherLogin = _$v.otherLogin;
-      _statusScolaire = _$v.statusScolaire;
+    final $v = _$v;
+    if ($v != null) {
+      _login = $v.login;
+      _otherLogin = $v.otherLogin;
+      _statusScolaire = $v.statusScolaire;
       _$v = null;
     }
     return this;
@@ -224,9 +223,7 @@ class RelationStatusScolaireBuilder
 
   @override
   void replace(RelationStatusScolaire other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RelationStatusScolaire;
   }
 
@@ -240,8 +237,10 @@ class RelationStatusScolaireBuilder
     final _$result = _$v ??
         new _$RelationStatusScolaire._(
             login: login,
-            otherLogin: otherLogin,
-            statusScolaire: statusScolaire);
+            otherLogin: BuiltValueNullFieldError.checkNotNull(
+                otherLogin, 'RelationStatusScolaire', 'otherLogin'),
+            statusScolaire: BuiltValueNullFieldError.checkNotNull(
+                statusScolaire, 'RelationStatusScolaire', 'statusScolaire'));
     replace(_$result);
     return _$result;
   }

@@ -40,7 +40,7 @@ class _TinterAuthenticationTabState extends State<TinterAuthenticationTab> {
 
   @override
   void initState() {
-    KeyboardVisibility.onChange.listen((bool visible) {});
+    KeyboardVisibilityController().onChange.listen((bool visible) {});
     super.initState();
   }
 
@@ -187,7 +187,7 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
 
   @override
   void initState() {
-    KeyboardVisibility.onChange.listen((bool visible) {
+    KeyboardVisibilityController().onChange.listen((bool visible) {
       if (!visible) {
         _passwordVisible = false;
       }
@@ -210,7 +210,7 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
     return Column(
       children: [
         Flexible(
-          flex: KeyboardVisibility.isVisible ? 1 : 0,
+          flex: KeyboardVisibilityProvider.isKeyboardVisible(context) ? 1 : 0,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 40, bottom: 20.0),
             child: Consumer<TinterTheme>(
@@ -474,7 +474,7 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
         ),
 
         // Logo
-        KeyboardVisibility.isVisible
+        KeyboardVisibilityProvider.isKeyboardVisible(context)
             ? Container()
             : Flexible(
                 fit: FlexFit.tight,

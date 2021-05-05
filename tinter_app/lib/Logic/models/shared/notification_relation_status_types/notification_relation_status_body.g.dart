@@ -43,7 +43,7 @@ class _$NotificationRelationStatusBodySerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'relationStatus':
           result.relationStatus = serializers.deserialize(value,
@@ -65,10 +65,8 @@ class _$NotificationRelationStatusBody extends NotificationRelationStatusBody {
       (new NotificationRelationStatusBodyBuilder()..update(updates)).build();
 
   _$NotificationRelationStatusBody._({this.relationStatus}) : super._() {
-    if (relationStatus == null) {
-      throw new BuiltValueNullFieldError(
-          'NotificationRelationStatusBody', 'relationStatus');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        relationStatus, 'NotificationRelationStatusBody', 'relationStatus');
   }
 
   @override
@@ -114,8 +112,9 @@ class NotificationRelationStatusBodyBuilder
   NotificationRelationStatusBodyBuilder();
 
   NotificationRelationStatusBodyBuilder get _$this {
-    if (_$v != null) {
-      _relationStatus = _$v.relationStatus;
+    final $v = _$v;
+    if ($v != null) {
+      _relationStatus = $v.relationStatus;
       _$v = null;
     }
     return this;
@@ -123,9 +122,7 @@ class NotificationRelationStatusBodyBuilder
 
   @override
   void replace(NotificationRelationStatusBody other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NotificationRelationStatusBody;
   }
 
@@ -137,7 +134,11 @@ class NotificationRelationStatusBodyBuilder
   @override
   _$NotificationRelationStatusBody build() {
     final _$result = _$v ??
-        new _$NotificationRelationStatusBody._(relationStatus: relationStatus);
+        new _$NotificationRelationStatusBody._(
+            relationStatus: BuiltValueNullFieldError.checkNotNull(
+                relationStatus,
+                'NotificationRelationStatusBody',
+                'relationStatus'));
     replace(_$result);
     return _$result;
   }

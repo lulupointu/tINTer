@@ -40,7 +40,7 @@ class _$SessionSerializer implements StructuredSerializer<Session> {
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'token':
           result.token = serializers.deserialize(value,
@@ -80,18 +80,11 @@ class _$Session extends Session {
 
   _$Session._({this.token, this.login, this.creationDate, this.isValid})
       : super._() {
-    if (token == null) {
-      throw new BuiltValueNullFieldError('Session', 'token');
-    }
-    if (login == null) {
-      throw new BuiltValueNullFieldError('Session', 'login');
-    }
-    if (creationDate == null) {
-      throw new BuiltValueNullFieldError('Session', 'creationDate');
-    }
-    if (isValid == null) {
-      throw new BuiltValueNullFieldError('Session', 'isValid');
-    }
+    BuiltValueNullFieldError.checkNotNull(token, 'Session', 'token');
+    BuiltValueNullFieldError.checkNotNull(login, 'Session', 'login');
+    BuiltValueNullFieldError.checkNotNull(
+        creationDate, 'Session', 'creationDate');
+    BuiltValueNullFieldError.checkNotNull(isValid, 'Session', 'isValid');
   }
 
   @override
@@ -152,11 +145,12 @@ class SessionBuilder implements Builder<Session, SessionBuilder> {
   SessionBuilder();
 
   SessionBuilder get _$this {
-    if (_$v != null) {
-      _token = _$v.token;
-      _login = _$v.login;
-      _creationDate = _$v.creationDate;
-      _isValid = _$v.isValid;
+    final $v = _$v;
+    if ($v != null) {
+      _token = $v.token;
+      _login = $v.login;
+      _creationDate = $v.creationDate;
+      _isValid = $v.isValid;
       _$v = null;
     }
     return this;
@@ -164,9 +158,7 @@ class SessionBuilder implements Builder<Session, SessionBuilder> {
 
   @override
   void replace(Session other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Session;
   }
 
@@ -179,10 +171,14 @@ class SessionBuilder implements Builder<Session, SessionBuilder> {
   _$Session build() {
     final _$result = _$v ??
         new _$Session._(
-            token: token,
-            login: login,
-            creationDate: creationDate,
-            isValid: isValid);
+            token: BuiltValueNullFieldError.checkNotNull(
+                token, 'Session', 'token'),
+            login: BuiltValueNullFieldError.checkNotNull(
+                login, 'Session', 'login'),
+            creationDate: BuiltValueNullFieldError.checkNotNull(
+                creationDate, 'Session', 'creationDate'),
+            isValid: BuiltValueNullFieldError.checkNotNull(
+                isValid, 'Session', 'isValid'));
     replace(_$result);
     return _$result;
   }

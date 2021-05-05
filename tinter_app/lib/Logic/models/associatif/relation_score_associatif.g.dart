@@ -47,7 +47,7 @@ class _$RelationScoreAssociatifSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'login':
           result.login = serializers.deserialize(value,
@@ -82,16 +82,12 @@ class _$RelationScoreAssociatif extends RelationScoreAssociatif {
 
   _$RelationScoreAssociatif._({this.login, this.otherLogin, this.score})
       : super._() {
-    if (login == null) {
-      throw new BuiltValueNullFieldError('RelationScoreAssociatif', 'login');
-    }
-    if (otherLogin == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationScoreAssociatif', 'otherLogin');
-    }
-    if (score == null) {
-      throw new BuiltValueNullFieldError('RelationScoreAssociatif', 'score');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        login, 'RelationScoreAssociatif', 'login');
+    BuiltValueNullFieldError.checkNotNull(
+        otherLogin, 'RelationScoreAssociatif', 'otherLogin');
+    BuiltValueNullFieldError.checkNotNull(
+        score, 'RelationScoreAssociatif', 'score');
   }
 
   @override
@@ -148,10 +144,11 @@ class RelationScoreAssociatifBuilder
   RelationScoreAssociatifBuilder();
 
   RelationScoreAssociatifBuilder get _$this {
-    if (_$v != null) {
-      _login = _$v.login;
-      _otherLogin = _$v.otherLogin;
-      _score = _$v.score;
+    final $v = _$v;
+    if ($v != null) {
+      _login = $v.login;
+      _otherLogin = $v.otherLogin;
+      _score = $v.score;
       _$v = null;
     }
     return this;
@@ -159,9 +156,7 @@ class RelationScoreAssociatifBuilder
 
   @override
   void replace(RelationScoreAssociatif other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RelationScoreAssociatif;
   }
 
@@ -174,7 +169,12 @@ class RelationScoreAssociatifBuilder
   _$RelationScoreAssociatif build() {
     final _$result = _$v ??
         new _$RelationScoreAssociatif._(
-            login: login, otherLogin: otherLogin, score: score);
+            login: BuiltValueNullFieldError.checkNotNull(
+                login, 'RelationScoreAssociatif', 'login'),
+            otherLogin: BuiltValueNullFieldError.checkNotNull(
+                otherLogin, 'RelationScoreAssociatif', 'otherLogin'),
+            score: BuiltValueNullFieldError.checkNotNull(
+                score, 'RelationScoreAssociatif', 'score'));
     replace(_$result);
     return _$result;
   }

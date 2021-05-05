@@ -97,10 +97,12 @@ class _$RelationStatusAssociatifSerializer
       serializers.serialize(object.status,
           specifiedType: const FullType(EnumRelationStatusAssociatif)),
     ];
-    if (object.login != null) {
+    Object value;
+    value = object.login;
+    if (value != null) {
       result
         ..add('login')
-        ..add(serializers.serialize(object.login,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
     return result;
@@ -116,7 +118,7 @@ class _$RelationStatusAssociatifSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'login':
           result.login = serializers.deserialize(value,
@@ -152,13 +154,10 @@ class _$RelationStatusAssociatif extends RelationStatusAssociatif {
 
   _$RelationStatusAssociatif._({this.login, this.otherLogin, this.status})
       : super._() {
-    if (otherLogin == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationStatusAssociatif', 'otherLogin');
-    }
-    if (status == null) {
-      throw new BuiltValueNullFieldError('RelationStatusAssociatif', 'status');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        otherLogin, 'RelationStatusAssociatif', 'otherLogin');
+    BuiltValueNullFieldError.checkNotNull(
+        status, 'RelationStatusAssociatif', 'status');
   }
 
   @override
@@ -215,10 +214,11 @@ class RelationStatusAssociatifBuilder
   RelationStatusAssociatifBuilder();
 
   RelationStatusAssociatifBuilder get _$this {
-    if (_$v != null) {
-      _login = _$v.login;
-      _otherLogin = _$v.otherLogin;
-      _status = _$v.status;
+    final $v = _$v;
+    if ($v != null) {
+      _login = $v.login;
+      _otherLogin = $v.otherLogin;
+      _status = $v.status;
       _$v = null;
     }
     return this;
@@ -226,9 +226,7 @@ class RelationStatusAssociatifBuilder
 
   @override
   void replace(RelationStatusAssociatif other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RelationStatusAssociatif;
   }
 
@@ -241,7 +239,11 @@ class RelationStatusAssociatifBuilder
   _$RelationStatusAssociatif build() {
     final _$result = _$v ??
         new _$RelationStatusAssociatif._(
-            login: login, otherLogin: otherLogin, status: status);
+            login: login,
+            otherLogin: BuiltValueNullFieldError.checkNotNull(
+                otherLogin, 'RelationStatusAssociatif', 'otherLogin'),
+            status: BuiltValueNullFieldError.checkNotNull(
+                status, 'RelationStatusAssociatif', 'status'));
     replace(_$result);
     return _$result;
   }

@@ -2,8 +2,8 @@ import 'package:async/async.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/binome_pair_search/binome_pair_search_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
@@ -28,7 +28,6 @@ class _SearchStudentBinomePairTabState extends State<SearchStudentBinomePairTab>
     'separator': 0.05,
   };
 
-  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
   int _keyboardVisibilitySubscriberId;
   FocusNode searchBarFocusNode = FocusNode();
   String searchString = '';
@@ -47,8 +46,8 @@ class _SearchStudentBinomePairTabState extends State<SearchStudentBinomePairTab>
 
     super.initState();
 
-    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
-      onChange: (bool visible) {
+    KeyboardVisibilityController().onChange.listen(
+      (bool visible) {
         if (!visible) {
           searchBarFocusNode.unfocus();
         }
@@ -59,7 +58,6 @@ class _SearchStudentBinomePairTabState extends State<SearchStudentBinomePairTab>
   @override
   void dispose() {
     searchController.dispose();
-    _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
     super.dispose();
   }
 

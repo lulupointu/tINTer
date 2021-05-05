@@ -40,7 +40,7 @@ class _$TokenSerializer implements StructuredSerializer<Token> {
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'token':
           result.token = serializers.deserialize(value,
@@ -80,18 +80,11 @@ class _$Token extends Token {
 
   _$Token._({this.token, this.login, this.creationDate, this.isValid})
       : super._() {
-    if (token == null) {
-      throw new BuiltValueNullFieldError('Token', 'token');
-    }
-    if (login == null) {
-      throw new BuiltValueNullFieldError('Token', 'login');
-    }
-    if (creationDate == null) {
-      throw new BuiltValueNullFieldError('Token', 'creationDate');
-    }
-    if (isValid == null) {
-      throw new BuiltValueNullFieldError('Token', 'isValid');
-    }
+    BuiltValueNullFieldError.checkNotNull(token, 'Token', 'token');
+    BuiltValueNullFieldError.checkNotNull(login, 'Token', 'login');
+    BuiltValueNullFieldError.checkNotNull(
+        creationDate, 'Token', 'creationDate');
+    BuiltValueNullFieldError.checkNotNull(isValid, 'Token', 'isValid');
   }
 
   @override
@@ -152,11 +145,12 @@ class TokenBuilder implements Builder<Token, TokenBuilder> {
   TokenBuilder();
 
   TokenBuilder get _$this {
-    if (_$v != null) {
-      _token = _$v.token;
-      _login = _$v.login;
-      _creationDate = _$v.creationDate;
-      _isValid = _$v.isValid;
+    final $v = _$v;
+    if ($v != null) {
+      _token = $v.token;
+      _login = $v.login;
+      _creationDate = $v.creationDate;
+      _isValid = $v.isValid;
       _$v = null;
     }
     return this;
@@ -164,9 +158,7 @@ class TokenBuilder implements Builder<Token, TokenBuilder> {
 
   @override
   void replace(Token other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Token;
   }
 
@@ -179,10 +171,14 @@ class TokenBuilder implements Builder<Token, TokenBuilder> {
   _$Token build() {
     final _$result = _$v ??
         new _$Token._(
-            token: token,
-            login: login,
-            creationDate: creationDate,
-            isValid: isValid);
+            token:
+                BuiltValueNullFieldError.checkNotNull(token, 'Token', 'token'),
+            login:
+                BuiltValueNullFieldError.checkNotNull(login, 'Token', 'login'),
+            creationDate: BuiltValueNullFieldError.checkNotNull(
+                creationDate, 'Token', 'creationDate'),
+            isValid: BuiltValueNullFieldError.checkNotNull(
+                isValid, 'Token', 'isValid'));
     replace(_$result);
     return _$result;
   }

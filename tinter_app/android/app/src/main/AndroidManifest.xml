@@ -11,6 +11,7 @@
         android:name="android.permission.CAMERA"/>
     <application
         android:label="tINTer"
+        android:usesCleartextTraffic="true" 
         android:icon="@mipmap/ic_launcher"
         android:fullBackupContent="@xml/my_backup_rules"
         android:allowBackup="false"

@@ -135,10 +135,12 @@ class _$BuildMatchSerializer implements StructuredSerializer<BuildMatch> {
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])),
     ];
-    if (object.profilePictureLocalPath != null) {
+    Object value;
+    value = object.profilePictureLocalPath;
+    if (value != null) {
       result
         ..add('profilePictureLocalPath')
-        ..add(serializers.serialize(object.profilePictureLocalPath,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
     return result;
@@ -153,7 +155,7 @@ class _$BuildMatchSerializer implements StructuredSerializer<BuildMatch> {
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'statusAssociatif':
           result.statusAssociatif = serializers.deserialize(value,
@@ -341,67 +343,38 @@ class _$BuildMatch extends BuildMatch {
       this.enligneOuNon,
       this.matieresPreferees})
       : super._() {
-    if (statusAssociatif == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'statusAssociatif');
-    }
-    if (score == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'score');
-    }
-    if (login == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'login');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'name');
-    }
-    if (surname == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'surname');
-    }
-    if (email == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'email');
-    }
-    if (school == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'school');
-    }
-    if (associations == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'associations');
-    }
-    if (primoEntrant == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'primoEntrant');
-    }
-    if (attiranceVieAsso == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'attiranceVieAsso');
-    }
-    if (feteOuCours == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'feteOuCours');
-    }
-    if (aideOuSortir == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'aideOuSortir');
-    }
-    if (organisationEvenements == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildMatch', 'organisationEvenements');
-    }
-    if (goutsMusicaux == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'goutsMusicaux');
-    }
-    if (year == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'year');
-    }
-    if (lieuDeVie == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'lieuDeVie');
-    }
-    if (groupeOuSeul == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'groupeOuSeul');
-    }
-    if (horairesDeTravail == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'horairesDeTravail');
-    }
-    if (enligneOuNon == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'enligneOuNon');
-    }
-    if (matieresPreferees == null) {
-      throw new BuiltValueNullFieldError('BuildMatch', 'matieresPreferees');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        statusAssociatif, 'BuildMatch', 'statusAssociatif');
+    BuiltValueNullFieldError.checkNotNull(score, 'BuildMatch', 'score');
+    BuiltValueNullFieldError.checkNotNull(login, 'BuildMatch', 'login');
+    BuiltValueNullFieldError.checkNotNull(name, 'BuildMatch', 'name');
+    BuiltValueNullFieldError.checkNotNull(surname, 'BuildMatch', 'surname');
+    BuiltValueNullFieldError.checkNotNull(email, 'BuildMatch', 'email');
+    BuiltValueNullFieldError.checkNotNull(school, 'BuildMatch', 'school');
+    BuiltValueNullFieldError.checkNotNull(
+        associations, 'BuildMatch', 'associations');
+    BuiltValueNullFieldError.checkNotNull(
+        primoEntrant, 'BuildMatch', 'primoEntrant');
+    BuiltValueNullFieldError.checkNotNull(
+        attiranceVieAsso, 'BuildMatch', 'attiranceVieAsso');
+    BuiltValueNullFieldError.checkNotNull(
+        feteOuCours, 'BuildMatch', 'feteOuCours');
+    BuiltValueNullFieldError.checkNotNull(
+        aideOuSortir, 'BuildMatch', 'aideOuSortir');
+    BuiltValueNullFieldError.checkNotNull(
+        organisationEvenements, 'BuildMatch', 'organisationEvenements');
+    BuiltValueNullFieldError.checkNotNull(
+        goutsMusicaux, 'BuildMatch', 'goutsMusicaux');
+    BuiltValueNullFieldError.checkNotNull(year, 'BuildMatch', 'year');
+    BuiltValueNullFieldError.checkNotNull(lieuDeVie, 'BuildMatch', 'lieuDeVie');
+    BuiltValueNullFieldError.checkNotNull(
+        groupeOuSeul, 'BuildMatch', 'groupeOuSeul');
+    BuiltValueNullFieldError.checkNotNull(
+        horairesDeTravail, 'BuildMatch', 'horairesDeTravail');
+    BuiltValueNullFieldError.checkNotNull(
+        enligneOuNon, 'BuildMatch', 'enligneOuNon');
+    BuiltValueNullFieldError.checkNotNull(
+        matieresPreferees, 'BuildMatch', 'matieresPreferees');
   }
 
   @override
@@ -610,28 +583,29 @@ class BuildMatchBuilder implements Builder<BuildMatch, BuildMatchBuilder> {
   BuildMatchBuilder();
 
   BuildMatchBuilder get _$this {
-    if (_$v != null) {
-      _statusAssociatif = _$v.statusAssociatif;
-      _score = _$v.score;
-      _login = _$v.login;
-      _name = _$v.name;
-      _surname = _$v.surname;
-      _email = _$v.email;
-      _school = _$v.school;
-      _profilePictureLocalPath = _$v.profilePictureLocalPath;
-      _associations = _$v.associations?.toBuilder();
-      _primoEntrant = _$v.primoEntrant;
-      _attiranceVieAsso = _$v.attiranceVieAsso;
-      _feteOuCours = _$v.feteOuCours;
-      _aideOuSortir = _$v.aideOuSortir;
-      _organisationEvenements = _$v.organisationEvenements;
-      _goutsMusicaux = _$v.goutsMusicaux?.toBuilder();
-      _year = _$v.year;
-      _lieuDeVie = _$v.lieuDeVie;
-      _groupeOuSeul = _$v.groupeOuSeul;
-      _horairesDeTravail = _$v.horairesDeTravail?.toBuilder();
-      _enligneOuNon = _$v.enligneOuNon;
-      _matieresPreferees = _$v.matieresPreferees?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _statusAssociatif = $v.statusAssociatif;
+      _score = $v.score;
+      _login = $v.login;
+      _name = $v.name;
+      _surname = $v.surname;
+      _email = $v.email;
+      _school = $v.school;
+      _profilePictureLocalPath = $v.profilePictureLocalPath;
+      _associations = $v.associations.toBuilder();
+      _primoEntrant = $v.primoEntrant;
+      _attiranceVieAsso = $v.attiranceVieAsso;
+      _feteOuCours = $v.feteOuCours;
+      _aideOuSortir = $v.aideOuSortir;
+      _organisationEvenements = $v.organisationEvenements;
+      _goutsMusicaux = $v.goutsMusicaux.toBuilder();
+      _year = $v.year;
+      _lieuDeVie = $v.lieuDeVie;
+      _groupeOuSeul = $v.groupeOuSeul;
+      _horairesDeTravail = $v.horairesDeTravail.toBuilder();
+      _enligneOuNon = $v.enligneOuNon;
+      _matieresPreferees = $v.matieresPreferees.toBuilder();
       _$v = null;
     }
     return this;
@@ -639,9 +613,7 @@ class BuildMatchBuilder implements Builder<BuildMatch, BuildMatchBuilder> {
 
   @override
   void replace(BuildMatch other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BuildMatch;
   }
 
@@ -656,26 +628,36 @@ class BuildMatchBuilder implements Builder<BuildMatch, BuildMatchBuilder> {
     try {
       _$result = _$v ??
           new _$BuildMatch._(
-              statusAssociatif: statusAssociatif,
-              score: score,
-              login: login,
-              name: name,
-              surname: surname,
-              email: email,
-              school: school,
+              statusAssociatif: BuiltValueNullFieldError.checkNotNull(
+                  statusAssociatif, 'BuildMatch', 'statusAssociatif'),
+              score: BuiltValueNullFieldError.checkNotNull(
+                  score, 'BuildMatch', 'score'),
+              login: BuiltValueNullFieldError.checkNotNull(
+                  login, 'BuildMatch', 'login'),
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, 'BuildMatch', 'name'),
+              surname: BuiltValueNullFieldError.checkNotNull(
+                  surname, 'BuildMatch', 'surname'),
+              email: BuiltValueNullFieldError.checkNotNull(
+                  email, 'BuildMatch', 'email'),
+              school: BuiltValueNullFieldError.checkNotNull(
+                  school, 'BuildMatch', 'school'),
               profilePictureLocalPath: profilePictureLocalPath,
               associations: associations.build(),
-              primoEntrant: primoEntrant,
-              attiranceVieAsso: attiranceVieAsso,
-              feteOuCours: feteOuCours,
-              aideOuSortir: aideOuSortir,
-              organisationEvenements: organisationEvenements,
+              primoEntrant: BuiltValueNullFieldError.checkNotNull(
+                  primoEntrant, 'BuildMatch', 'primoEntrant'),
+              attiranceVieAsso: BuiltValueNullFieldError.checkNotNull(
+                  attiranceVieAsso, 'BuildMatch', 'attiranceVieAsso'),
+              feteOuCours: BuiltValueNullFieldError.checkNotNull(
+                  feteOuCours, 'BuildMatch', 'feteOuCours'),
+              aideOuSortir: BuiltValueNullFieldError.checkNotNull(aideOuSortir, 'BuildMatch', 'aideOuSortir'),
+              organisationEvenements: BuiltValueNullFieldError.checkNotNull(organisationEvenements, 'BuildMatch', 'organisationEvenements'),
               goutsMusicaux: goutsMusicaux.build(),
-              year: year,
-              lieuDeVie: lieuDeVie,
-              groupeOuSeul: groupeOuSeul,
+              year: BuiltValueNullFieldError.checkNotNull(year, 'BuildMatch', 'year'),
+              lieuDeVie: BuiltValueNullFieldError.checkNotNull(lieuDeVie, 'BuildMatch', 'lieuDeVie'),
+              groupeOuSeul: BuiltValueNullFieldError.checkNotNull(groupeOuSeul, 'BuildMatch', 'groupeOuSeul'),
               horairesDeTravail: horairesDeTravail.build(),
-              enligneOuNon: enligneOuNon,
+              enligneOuNon: BuiltValueNullFieldError.checkNotNull(enligneOuNon, 'BuildMatch', 'enligneOuNon'),
               matieresPreferees: matieresPreferees.build());
     } catch (_) {
       String _$failedField;

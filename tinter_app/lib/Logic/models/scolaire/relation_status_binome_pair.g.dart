@@ -78,11 +78,12 @@ class _$RelationStatusBinomePairSerializer
       serializers.serialize(object.status,
           specifiedType: const FullType(EnumRelationStatusBinomePair)),
     ];
-    if (object.binomePairId != null) {
+    Object value;
+    value = object.binomePairId;
+    if (value != null) {
       result
         ..add('binomePairId')
-        ..add(serializers.serialize(object.binomePairId,
-            specifiedType: const FullType(int)));
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     }
     return result;
   }
@@ -97,7 +98,7 @@ class _$RelationStatusBinomePairSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'binomePairId':
           result.binomePairId = serializers.deserialize(value,
@@ -153,13 +154,10 @@ class _$RelationStatusBinomePair extends RelationStatusBinomePair {
   _$RelationStatusBinomePair._(
       {this.binomePairId, this.otherBinomePairId, this.status})
       : super._() {
-    if (otherBinomePairId == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationStatusBinomePair', 'otherBinomePairId');
-    }
-    if (status == null) {
-      throw new BuiltValueNullFieldError('RelationStatusBinomePair', 'status');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        otherBinomePairId, 'RelationStatusBinomePair', 'otherBinomePairId');
+    BuiltValueNullFieldError.checkNotNull(
+        status, 'RelationStatusBinomePair', 'status');
   }
 
   @override
@@ -218,10 +216,11 @@ class RelationStatusBinomePairBuilder
   RelationStatusBinomePairBuilder();
 
   RelationStatusBinomePairBuilder get _$this {
-    if (_$v != null) {
-      _binomePairId = _$v.binomePairId;
-      _otherBinomePairId = _$v.otherBinomePairId;
-      _status = _$v.status;
+    final $v = _$v;
+    if ($v != null) {
+      _binomePairId = $v.binomePairId;
+      _otherBinomePairId = $v.otherBinomePairId;
+      _status = $v.status;
       _$v = null;
     }
     return this;
@@ -229,9 +228,7 @@ class RelationStatusBinomePairBuilder
 
   @override
   void replace(RelationStatusBinomePair other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RelationStatusBinomePair;
   }
 
@@ -245,8 +242,12 @@ class RelationStatusBinomePairBuilder
     final _$result = _$v ??
         new _$RelationStatusBinomePair._(
             binomePairId: binomePairId,
-            otherBinomePairId: otherBinomePairId,
-            status: status);
+            otherBinomePairId: BuiltValueNullFieldError.checkNotNull(
+                otherBinomePairId,
+                'RelationStatusBinomePair',
+                'otherBinomePairId'),
+            status: BuiltValueNullFieldError.checkNotNull(
+                status, 'RelationStatusBinomePair', 'status'));
     replace(_$result);
     return _$result;
   }

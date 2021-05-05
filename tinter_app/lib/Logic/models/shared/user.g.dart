@@ -171,10 +171,12 @@ class _$BuildUserSerializer implements StructuredSerializer<BuildUser> {
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])),
     ];
-    if (object.profilePictureLocalPath != null) {
+    Object value;
+    value = object.profilePictureLocalPath;
+    if (value != null) {
       result
         ..add('profilePictureLocalPath')
-        ..add(serializers.serialize(object.profilePictureLocalPath,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
     return result;
@@ -189,7 +191,7 @@ class _$BuildUserSerializer implements StructuredSerializer<BuildUser> {
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'login':
           result.login = serializers.deserialize(value,
@@ -415,60 +417,35 @@ class _$BuildUser extends BuildUser {
       this.enligneOuNon,
       this.matieresPreferees})
       : super._() {
-    if (login == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'login');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'name');
-    }
-    if (surname == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'surname');
-    }
-    if (email == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'email');
-    }
-    if (school == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'school');
-    }
-    if (associations == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'associations');
-    }
-    if (primoEntrant == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'primoEntrant');
-    }
-    if (attiranceVieAsso == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'attiranceVieAsso');
-    }
-    if (feteOuCours == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'feteOuCours');
-    }
-    if (aideOuSortir == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'aideOuSortir');
-    }
-    if (organisationEvenements == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'organisationEvenements');
-    }
-    if (goutsMusicaux == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'goutsMusicaux');
-    }
-    if (year == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'year');
-    }
-    if (lieuDeVie == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'lieuDeVie');
-    }
-    if (groupeOuSeul == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'groupeOuSeul');
-    }
-    if (horairesDeTravail == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'horairesDeTravail');
-    }
-    if (enligneOuNon == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'enligneOuNon');
-    }
-    if (matieresPreferees == null) {
-      throw new BuiltValueNullFieldError('BuildUser', 'matieresPreferees');
-    }
+    BuiltValueNullFieldError.checkNotNull(login, 'BuildUser', 'login');
+    BuiltValueNullFieldError.checkNotNull(name, 'BuildUser', 'name');
+    BuiltValueNullFieldError.checkNotNull(surname, 'BuildUser', 'surname');
+    BuiltValueNullFieldError.checkNotNull(email, 'BuildUser', 'email');
+    BuiltValueNullFieldError.checkNotNull(school, 'BuildUser', 'school');
+    BuiltValueNullFieldError.checkNotNull(
+        associations, 'BuildUser', 'associations');
+    BuiltValueNullFieldError.checkNotNull(
+        primoEntrant, 'BuildUser', 'primoEntrant');
+    BuiltValueNullFieldError.checkNotNull(
+        attiranceVieAsso, 'BuildUser', 'attiranceVieAsso');
+    BuiltValueNullFieldError.checkNotNull(
+        feteOuCours, 'BuildUser', 'feteOuCours');
+    BuiltValueNullFieldError.checkNotNull(
+        aideOuSortir, 'BuildUser', 'aideOuSortir');
+    BuiltValueNullFieldError.checkNotNull(
+        organisationEvenements, 'BuildUser', 'organisationEvenements');
+    BuiltValueNullFieldError.checkNotNull(
+        goutsMusicaux, 'BuildUser', 'goutsMusicaux');
+    BuiltValueNullFieldError.checkNotNull(year, 'BuildUser', 'year');
+    BuiltValueNullFieldError.checkNotNull(lieuDeVie, 'BuildUser', 'lieuDeVie');
+    BuiltValueNullFieldError.checkNotNull(
+        groupeOuSeul, 'BuildUser', 'groupeOuSeul');
+    BuiltValueNullFieldError.checkNotNull(
+        horairesDeTravail, 'BuildUser', 'horairesDeTravail');
+    BuiltValueNullFieldError.checkNotNull(
+        enligneOuNon, 'BuildUser', 'enligneOuNon');
+    BuiltValueNullFieldError.checkNotNull(
+        matieresPreferees, 'BuildUser', 'matieresPreferees');
   }
 
   @override
@@ -671,26 +648,27 @@ class BuildUserBuilder implements Builder<BuildUser, BuildUserBuilder> {
   BuildUserBuilder();
 
   BuildUserBuilder get _$this {
-    if (_$v != null) {
-      _login = _$v.login;
-      _name = _$v.name;
-      _surname = _$v.surname;
-      _email = _$v.email;
-      _school = _$v.school;
-      _profilePictureLocalPath = _$v.profilePictureLocalPath;
-      _associations = _$v.associations?.toBuilder();
-      _primoEntrant = _$v.primoEntrant;
-      _attiranceVieAsso = _$v.attiranceVieAsso;
-      _feteOuCours = _$v.feteOuCours;
-      _aideOuSortir = _$v.aideOuSortir;
-      _organisationEvenements = _$v.organisationEvenements;
-      _goutsMusicaux = _$v.goutsMusicaux?.toBuilder();
-      _year = _$v.year;
-      _lieuDeVie = _$v.lieuDeVie;
-      _groupeOuSeul = _$v.groupeOuSeul;
-      _horairesDeTravail = _$v.horairesDeTravail?.toBuilder();
-      _enligneOuNon = _$v.enligneOuNon;
-      _matieresPreferees = _$v.matieresPreferees?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _login = $v.login;
+      _name = $v.name;
+      _surname = $v.surname;
+      _email = $v.email;
+      _school = $v.school;
+      _profilePictureLocalPath = $v.profilePictureLocalPath;
+      _associations = $v.associations.toBuilder();
+      _primoEntrant = $v.primoEntrant;
+      _attiranceVieAsso = $v.attiranceVieAsso;
+      _feteOuCours = $v.feteOuCours;
+      _aideOuSortir = $v.aideOuSortir;
+      _organisationEvenements = $v.organisationEvenements;
+      _goutsMusicaux = $v.goutsMusicaux.toBuilder();
+      _year = $v.year;
+      _lieuDeVie = $v.lieuDeVie;
+      _groupeOuSeul = $v.groupeOuSeul;
+      _horairesDeTravail = $v.horairesDeTravail.toBuilder();
+      _enligneOuNon = $v.enligneOuNon;
+      _matieresPreferees = $v.matieresPreferees.toBuilder();
       _$v = null;
     }
     return this;
@@ -698,9 +676,7 @@ class BuildUserBuilder implements Builder<BuildUser, BuildUserBuilder> {
 
   @override
   void replace(BuildUser other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BuildUser;
   }
 
@@ -715,24 +691,35 @@ class BuildUserBuilder implements Builder<BuildUser, BuildUserBuilder> {
     try {
       _$result = _$v ??
           new _$BuildUser._(
-              login: login,
-              name: name,
-              surname: surname,
-              email: email,
-              school: school,
+              login: BuiltValueNullFieldError.checkNotNull(
+                  login, 'BuildUser', 'login'),
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, 'BuildUser', 'name'),
+              surname: BuiltValueNullFieldError.checkNotNull(
+                  surname, 'BuildUser', 'surname'),
+              email: BuiltValueNullFieldError.checkNotNull(
+                  email, 'BuildUser', 'email'),
+              school: BuiltValueNullFieldError.checkNotNull(
+                  school, 'BuildUser', 'school'),
               profilePictureLocalPath: profilePictureLocalPath,
               associations: associations.build(),
-              primoEntrant: primoEntrant,
-              attiranceVieAsso: attiranceVieAsso,
-              feteOuCours: feteOuCours,
-              aideOuSortir: aideOuSortir,
-              organisationEvenements: organisationEvenements,
+              primoEntrant: BuiltValueNullFieldError.checkNotNull(
+                  primoEntrant, 'BuildUser', 'primoEntrant'),
+              attiranceVieAsso: BuiltValueNullFieldError.checkNotNull(
+                  attiranceVieAsso, 'BuildUser', 'attiranceVieAsso'),
+              feteOuCours: BuiltValueNullFieldError.checkNotNull(
+                  feteOuCours, 'BuildUser', 'feteOuCours'),
+              aideOuSortir: BuiltValueNullFieldError.checkNotNull(
+                  aideOuSortir, 'BuildUser', 'aideOuSortir'),
+              organisationEvenements: BuiltValueNullFieldError.checkNotNull(
+                  organisationEvenements, 'BuildUser', 'organisationEvenements'),
               goutsMusicaux: goutsMusicaux.build(),
-              year: year,
-              lieuDeVie: lieuDeVie,
-              groupeOuSeul: groupeOuSeul,
+              year:
+                  BuiltValueNullFieldError.checkNotNull(year, 'BuildUser', 'year'),
+              lieuDeVie: BuiltValueNullFieldError.checkNotNull(lieuDeVie, 'BuildUser', 'lieuDeVie'),
+              groupeOuSeul: BuiltValueNullFieldError.checkNotNull(groupeOuSeul, 'BuildUser', 'groupeOuSeul'),
               horairesDeTravail: horairesDeTravail.build(),
-              enligneOuNon: enligneOuNon,
+              enligneOuNon: BuiltValueNullFieldError.checkNotNull(enligneOuNon, 'BuildUser', 'enligneOuNon'),
               matieresPreferees: matieresPreferees.build());
     } catch (_) {
       String _$failedField;

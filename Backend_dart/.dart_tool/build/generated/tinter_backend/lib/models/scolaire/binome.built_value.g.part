@@ -132,10 +132,12 @@ class _$BuildBinomeSerializer implements StructuredSerializer<BuildBinome> {
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])),
     ];
-    if (object.profilePictureLocalPath != null) {
+    Object value;
+    value = object.profilePictureLocalPath;
+    if (value != null) {
       result
         ..add('profilePictureLocalPath')
-        ..add(serializers.serialize(object.profilePictureLocalPath,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
     return result;
@@ -150,7 +152,7 @@ class _$BuildBinomeSerializer implements StructuredSerializer<BuildBinome> {
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'statusScolaire':
           result.statusScolaire = serializers.deserialize(value,
@@ -338,67 +340,39 @@ class _$BuildBinome extends BuildBinome {
       this.enligneOuNon,
       this.matieresPreferees})
       : super._() {
-    if (statusScolaire == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'statusScolaire');
-    }
-    if (score == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'score');
-    }
-    if (login == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'login');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'name');
-    }
-    if (surname == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'surname');
-    }
-    if (email == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'email');
-    }
-    if (school == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'school');
-    }
-    if (associations == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'associations');
-    }
-    if (primoEntrant == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'primoEntrant');
-    }
-    if (attiranceVieAsso == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'attiranceVieAsso');
-    }
-    if (feteOuCours == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'feteOuCours');
-    }
-    if (aideOuSortir == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'aideOuSortir');
-    }
-    if (organisationEvenements == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinome', 'organisationEvenements');
-    }
-    if (goutsMusicaux == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'goutsMusicaux');
-    }
-    if (year == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'year');
-    }
-    if (lieuDeVie == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'lieuDeVie');
-    }
-    if (groupeOuSeul == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'groupeOuSeul');
-    }
-    if (horairesDeTravail == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'horairesDeTravail');
-    }
-    if (enligneOuNon == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'enligneOuNon');
-    }
-    if (matieresPreferees == null) {
-      throw new BuiltValueNullFieldError('BuildBinome', 'matieresPreferees');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        statusScolaire, 'BuildBinome', 'statusScolaire');
+    BuiltValueNullFieldError.checkNotNull(score, 'BuildBinome', 'score');
+    BuiltValueNullFieldError.checkNotNull(login, 'BuildBinome', 'login');
+    BuiltValueNullFieldError.checkNotNull(name, 'BuildBinome', 'name');
+    BuiltValueNullFieldError.checkNotNull(surname, 'BuildBinome', 'surname');
+    BuiltValueNullFieldError.checkNotNull(email, 'BuildBinome', 'email');
+    BuiltValueNullFieldError.checkNotNull(school, 'BuildBinome', 'school');
+    BuiltValueNullFieldError.checkNotNull(
+        associations, 'BuildBinome', 'associations');
+    BuiltValueNullFieldError.checkNotNull(
+        primoEntrant, 'BuildBinome', 'primoEntrant');
+    BuiltValueNullFieldError.checkNotNull(
+        attiranceVieAsso, 'BuildBinome', 'attiranceVieAsso');
+    BuiltValueNullFieldError.checkNotNull(
+        feteOuCours, 'BuildBinome', 'feteOuCours');
+    BuiltValueNullFieldError.checkNotNull(
+        aideOuSortir, 'BuildBinome', 'aideOuSortir');
+    BuiltValueNullFieldError.checkNotNull(
+        organisationEvenements, 'BuildBinome', 'organisationEvenements');
+    BuiltValueNullFieldError.checkNotNull(
+        goutsMusicaux, 'BuildBinome', 'goutsMusicaux');
+    BuiltValueNullFieldError.checkNotNull(year, 'BuildBinome', 'year');
+    BuiltValueNullFieldError.checkNotNull(
+        lieuDeVie, 'BuildBinome', 'lieuDeVie');
+    BuiltValueNullFieldError.checkNotNull(
+        groupeOuSeul, 'BuildBinome', 'groupeOuSeul');
+    BuiltValueNullFieldError.checkNotNull(
+        horairesDeTravail, 'BuildBinome', 'horairesDeTravail');
+    BuiltValueNullFieldError.checkNotNull(
+        enligneOuNon, 'BuildBinome', 'enligneOuNon');
+    BuiltValueNullFieldError.checkNotNull(
+        matieresPreferees, 'BuildBinome', 'matieresPreferees');
   }
 
   @override
@@ -607,28 +581,29 @@ class BuildBinomeBuilder implements Builder<BuildBinome, BuildBinomeBuilder> {
   BuildBinomeBuilder();
 
   BuildBinomeBuilder get _$this {
-    if (_$v != null) {
-      _statusScolaire = _$v.statusScolaire;
-      _score = _$v.score;
-      _login = _$v.login;
-      _name = _$v.name;
-      _surname = _$v.surname;
-      _email = _$v.email;
-      _school = _$v.school;
-      _profilePictureLocalPath = _$v.profilePictureLocalPath;
-      _associations = _$v.associations?.toBuilder();
-      _primoEntrant = _$v.primoEntrant;
-      _attiranceVieAsso = _$v.attiranceVieAsso;
-      _feteOuCours = _$v.feteOuCours;
-      _aideOuSortir = _$v.aideOuSortir;
-      _organisationEvenements = _$v.organisationEvenements;
-      _goutsMusicaux = _$v.goutsMusicaux?.toBuilder();
-      _year = _$v.year;
-      _lieuDeVie = _$v.lieuDeVie;
-      _groupeOuSeul = _$v.groupeOuSeul;
-      _horairesDeTravail = _$v.horairesDeTravail?.toBuilder();
-      _enligneOuNon = _$v.enligneOuNon;
-      _matieresPreferees = _$v.matieresPreferees?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _statusScolaire = $v.statusScolaire;
+      _score = $v.score;
+      _login = $v.login;
+      _name = $v.name;
+      _surname = $v.surname;
+      _email = $v.email;
+      _school = $v.school;
+      _profilePictureLocalPath = $v.profilePictureLocalPath;
+      _associations = $v.associations.toBuilder();
+      _primoEntrant = $v.primoEntrant;
+      _attiranceVieAsso = $v.attiranceVieAsso;
+      _feteOuCours = $v.feteOuCours;
+      _aideOuSortir = $v.aideOuSortir;
+      _organisationEvenements = $v.organisationEvenements;
+      _goutsMusicaux = $v.goutsMusicaux.toBuilder();
+      _year = $v.year;
+      _lieuDeVie = $v.lieuDeVie;
+      _groupeOuSeul = $v.groupeOuSeul;
+      _horairesDeTravail = $v.horairesDeTravail.toBuilder();
+      _enligneOuNon = $v.enligneOuNon;
+      _matieresPreferees = $v.matieresPreferees.toBuilder();
       _$v = null;
     }
     return this;
@@ -636,9 +611,7 @@ class BuildBinomeBuilder implements Builder<BuildBinome, BuildBinomeBuilder> {
 
   @override
   void replace(BuildBinome other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BuildBinome;
   }
 
@@ -653,26 +626,36 @@ class BuildBinomeBuilder implements Builder<BuildBinome, BuildBinomeBuilder> {
     try {
       _$result = _$v ??
           new _$BuildBinome._(
-              statusScolaire: statusScolaire,
-              score: score,
-              login: login,
-              name: name,
-              surname: surname,
-              email: email,
-              school: school,
+              statusScolaire: BuiltValueNullFieldError.checkNotNull(
+                  statusScolaire, 'BuildBinome', 'statusScolaire'),
+              score: BuiltValueNullFieldError.checkNotNull(
+                  score, 'BuildBinome', 'score'),
+              login: BuiltValueNullFieldError.checkNotNull(
+                  login, 'BuildBinome', 'login'),
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, 'BuildBinome', 'name'),
+              surname: BuiltValueNullFieldError.checkNotNull(
+                  surname, 'BuildBinome', 'surname'),
+              email: BuiltValueNullFieldError.checkNotNull(
+                  email, 'BuildBinome', 'email'),
+              school: BuiltValueNullFieldError.checkNotNull(
+                  school, 'BuildBinome', 'school'),
               profilePictureLocalPath: profilePictureLocalPath,
               associations: associations.build(),
-              primoEntrant: primoEntrant,
-              attiranceVieAsso: attiranceVieAsso,
-              feteOuCours: feteOuCours,
-              aideOuSortir: aideOuSortir,
-              organisationEvenements: organisationEvenements,
+              primoEntrant: BuiltValueNullFieldError.checkNotNull(
+                  primoEntrant, 'BuildBinome', 'primoEntrant'),
+              attiranceVieAsso: BuiltValueNullFieldError.checkNotNull(
+                  attiranceVieAsso, 'BuildBinome', 'attiranceVieAsso'),
+              feteOuCours:
+                  BuiltValueNullFieldError.checkNotNull(feteOuCours, 'BuildBinome', 'feteOuCours'),
+              aideOuSortir: BuiltValueNullFieldError.checkNotNull(aideOuSortir, 'BuildBinome', 'aideOuSortir'),
+              organisationEvenements: BuiltValueNullFieldError.checkNotNull(organisationEvenements, 'BuildBinome', 'organisationEvenements'),
               goutsMusicaux: goutsMusicaux.build(),
-              year: year,
-              lieuDeVie: lieuDeVie,
-              groupeOuSeul: groupeOuSeul,
+              year: BuiltValueNullFieldError.checkNotNull(year, 'BuildBinome', 'year'),
+              lieuDeVie: BuiltValueNullFieldError.checkNotNull(lieuDeVie, 'BuildBinome', 'lieuDeVie'),
+              groupeOuSeul: BuiltValueNullFieldError.checkNotNull(groupeOuSeul, 'BuildBinome', 'groupeOuSeul'),
               horairesDeTravail: horairesDeTravail.build(),
-              enligneOuNon: enligneOuNon,
+              enligneOuNon: BuiltValueNullFieldError.checkNotNull(enligneOuNon, 'BuildBinome', 'enligneOuNon'),
               matieresPreferees: matieresPreferees.build());
     } catch (_) {
       String _$failedField;

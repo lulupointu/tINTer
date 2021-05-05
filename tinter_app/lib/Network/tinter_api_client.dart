@@ -18,7 +18,7 @@ import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/token.dart';
 
 class TinterAPIClient {
-  static const baseUrl = 'thd-tinter.int-evry.fr:443';
+  static const baseUrl = 'dfvps.telecom-sudparis.eu:443';
   final http.Client httpClient;
 
   TinterAPIClient({@required this.httpClient}) : assert(httpClient != null);

@@ -49,7 +49,7 @@ class _$SearchedUserAssociatifSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'login':
           result.login = serializers.deserialize(value,
@@ -90,18 +90,14 @@ class _$SearchedUserAssociatif extends SearchedUserAssociatif {
 
   _$SearchedUserAssociatif._({this.login, this.name, this.surname, this.liked})
       : super._() {
-    if (login == null) {
-      throw new BuiltValueNullFieldError('SearchedUserAssociatif', 'login');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('SearchedUserAssociatif', 'name');
-    }
-    if (surname == null) {
-      throw new BuiltValueNullFieldError('SearchedUserAssociatif', 'surname');
-    }
-    if (liked == null) {
-      throw new BuiltValueNullFieldError('SearchedUserAssociatif', 'liked');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        login, 'SearchedUserAssociatif', 'login');
+    BuiltValueNullFieldError.checkNotNull(
+        name, 'SearchedUserAssociatif', 'name');
+    BuiltValueNullFieldError.checkNotNull(
+        surname, 'SearchedUserAssociatif', 'surname');
+    BuiltValueNullFieldError.checkNotNull(
+        liked, 'SearchedUserAssociatif', 'liked');
   }
 
   @override
@@ -164,11 +160,12 @@ class SearchedUserAssociatifBuilder
   SearchedUserAssociatifBuilder();
 
   SearchedUserAssociatifBuilder get _$this {
-    if (_$v != null) {
-      _login = _$v.login;
-      _name = _$v.name;
-      _surname = _$v.surname;
-      _liked = _$v.liked;
+    final $v = _$v;
+    if ($v != null) {
+      _login = $v.login;
+      _name = $v.name;
+      _surname = $v.surname;
+      _liked = $v.liked;
       _$v = null;
     }
     return this;
@@ -176,9 +173,7 @@ class SearchedUserAssociatifBuilder
 
   @override
   void replace(SearchedUserAssociatif other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SearchedUserAssociatif;
   }
 
@@ -191,7 +186,14 @@ class SearchedUserAssociatifBuilder
   _$SearchedUserAssociatif build() {
     final _$result = _$v ??
         new _$SearchedUserAssociatif._(
-            login: login, name: name, surname: surname, liked: liked);
+            login: BuiltValueNullFieldError.checkNotNull(
+                login, 'SearchedUserAssociatif', 'login'),
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, 'SearchedUserAssociatif', 'name'),
+            surname: BuiltValueNullFieldError.checkNotNull(
+                surname, 'SearchedUserAssociatif', 'surname'),
+            liked: BuiltValueNullFieldError.checkNotNull(
+                liked, 'SearchedUserAssociatif', 'liked'));
     replace(_$result);
     return _$result;
   }

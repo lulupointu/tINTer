@@ -31,7 +31,6 @@ class NotificationHandler {
     if (_isInit) return;
     _isInit = true;
 
-
     final sharedPreferences = await SharedPreferences.getInstance();
     print(sharedPreferences.get('NotificationString'));
     sharedPreferences.setString('NotificationString', 'NONE');
@@ -85,16 +84,15 @@ class NotificationHandler {
 
     var initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
-       onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings =
-       InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+        InitializationSettings(); // InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS)
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-       onSelectNotification: onSelectNotification);
+        onSelectNotification: onSelectNotification);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
-
 
       showNotification(id: 1, title: 'title', body: 'body', color: Colors.red, payload: {});
 
@@ -108,11 +106,10 @@ class NotificationHandler {
     print('Notification handler configured.');
   }
 
-  static Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     final sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString('NotificationString', "Handling a background message: ${message.messageId}");
+    sharedPreferences.setString(
+        'NotificationString', "Handling a background message: ${message.messageId}");
 
     showNotification(id: 1, title: 'title', body: 'body', color: Colors.red, payload: {});
 
@@ -134,8 +131,8 @@ class NotificationHandler {
     int id;
     switch (notificationRelationStatusTitle) {
       case NotificationRelationStatusTitle.relationStatusAssociatifUpdate:
-        var relationStatus = RelationStatusAssociatif.fromJson(
-            jsonDecode(data['relationStatus']));
+        var relationStatus =
+            RelationStatusAssociatif.fromJson(jsonDecode(data['relationStatus']));
         id = relationStatus.login.hashCode;
 
         // Pass the selectedLogin to this tab
@@ -159,29 +156,25 @@ class NotificationHandler {
         break;
       case NotificationRelationStatusTitle.relationStatusBinomeUpdate:
         RelationStatusBinomePair relationStatus =
-            RelationStatusBinomePair.fromJson(
-                jsonDecode(data['relationStatus']));
+            RelationStatusBinomePair.fromJson(jsonDecode(data['relationStatus']));
         id = relationStatus.binomePairId.hashCode;
 
         // Pass the selectedLogin to this tab
-        context.read<SelectedScolaire>().binomePairId =
-            relationStatus.binomePairId;
+        context.read<SelectedScolaire>().binomePairId = relationStatus.binomePairId;
 
         // Make sure the theme is the right one
         Provider.of<TinterTheme>(context, listen: false).theme = MyTheme.light;
 
         break;
       default:
-        throw UnknownNotificationTitle(
-            title: notificationRelationStatusTitle.serialize());
+        throw UnknownNotificationTitle(title: notificationRelationStatusTitle.serialize());
     }
 
     // Change the tab index
     Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = 0;
   }
 
-  Future onDidReceiveForegroundNotification(
-      Map<String, dynamic> message) async {
+  Future onDidReceiveForegroundNotification(Map<String, dynamic> message) async {
     print('onDidReceiveForegroundNotification: $message');
     var data = message['data'] ?? message;
 
@@ -196,16 +189,13 @@ class NotificationHandler {
     Color color;
     switch (notificationRelationStatusTitle) {
       case NotificationRelationStatusTitle.relationStatusAssociatifUpdate:
-        var relationStatus = RelationStatusAssociatif.fromJson(
-            jsonDecode(data['relationStatus']));
+        var relationStatus =
+            RelationStatusAssociatif.fromJson(jsonDecode(data['relationStatus']));
 
         // If we are looking at this person, do nothing
-        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex ==
-                0 &&
-            Provider.of<TinterTheme>(context, listen: false).theme ==
-                MyTheme.dark &&
-            context.read<SelectedAssociatif>().matchLogin ==
-                relationStatus.login) return;
+        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
+            Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.dark &&
+            context.read<SelectedAssociatif>().matchLogin == relationStatus.login) return;
 
         id = relationStatus.login.hashCode;
         title = '${data['matchName']} ${data['matchSurname']}';
@@ -215,8 +205,7 @@ class NotificationHandler {
           case EnumRelationStatusAssociatif.ignored:
             return;
           case EnumRelationStatusAssociatif.liked:
-            body =
-                '${data['matchName']} ${data['matchSurname']} t\'a matché !🎉🎉';
+            body = '${data['matchName']} ${data['matchSurname']} t\'a matché !🎉🎉';
             break;
           case EnumRelationStatusAssociatif.askedParrain:
             body =
@@ -237,12 +226,9 @@ class NotificationHandler {
             RelationStatusScolaire.fromJson(jsonDecode(data['relationStatus']));
 
         // If we are looking at this person, do nothing
-        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex ==
-                0 &&
-            Provider.of<TinterTheme>(context, listen: false).theme ==
-                MyTheme.light &&
-            context.read<SelectedScolaire>().binomeLogin ==
-                relationStatus.login) return;
+        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
+            Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.light &&
+            context.read<SelectedScolaire>().binomeLogin == relationStatus.login) return;
 
         id = relationStatus.login.hashCode;
         title = '${data['binomeName']} ${data['binomeSurname']}';
@@ -252,12 +238,10 @@ class NotificationHandler {
           case EnumRelationStatusScolaire.ignored:
             return;
           case EnumRelationStatusScolaire.liked:
-            body =
-                '${data['binomeName']} ${data['binomeSurname']} t\'a matché !🎉🎉';
+            body = '${data['binomeName']} ${data['binomeSurname']} t\'a matché !🎉🎉';
             break;
           case EnumRelationStatusScolaire.askedBinome:
-            body =
-                '${data['binomeName']} ${data['binomeSurname']} veut être ton binome !🎉🎉';
+            body = '${data['binomeName']} ${data['binomeSurname']} veut être ton binome !🎉🎉';
             break;
           case EnumRelationStatusScolaire.acceptedBinome:
             body =
@@ -270,16 +254,14 @@ class NotificationHandler {
         }
         break;
       case NotificationRelationStatusTitle.relationStatusBinomeUpdate:
-        var relationStatus = RelationStatusBinomePair.fromJson(
-            jsonDecode(data['relationStatus']));
+        var relationStatus =
+            RelationStatusBinomePair.fromJson(jsonDecode(data['relationStatus']));
 
         // If we are looking at this person, do nothing
-        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex ==
-                0 &&
-            Provider.of<TinterTheme>(context, listen: false).theme ==
-                MyTheme.light &&
-            context.read<SelectedScolaire>().binomePairId ==
-                relationStatus.binomePairId) return;
+        if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
+            Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.light &&
+            context.read<SelectedScolaire>().binomePairId == relationStatus.binomePairId)
+          return;
 
         id = relationStatus.binomePairId.hashCode;
         title =
@@ -308,8 +290,7 @@ class NotificationHandler {
         }
         break;
       default:
-        throw UnknownNotificationTitle(
-            title: notificationRelationStatusTitle.serialize());
+        throw UnknownNotificationTitle(title: notificationRelationStatusTitle.serialize());
     }
 
     await showNotification(
@@ -321,8 +302,7 @@ class NotificationHandler {
     );
   }
 
-  static Future onDidReceiveBackgroundNotification(
-      Map<String, dynamic> message) async {
+  static Future onDidReceiveBackgroundNotification(Map<String, dynamic> message) async {
     print('onDidReceiveBackgroundNotification: $message');
     var data = message['data'] ?? message;
 
@@ -337,8 +317,8 @@ class NotificationHandler {
     Color color;
     switch (notificationRelationStatusTitle) {
       case NotificationRelationStatusTitle.relationStatusAssociatifUpdate:
-        var relationStatus = RelationStatusAssociatif.fromJson(
-            jsonDecode(data['relationStatus']));
+        var relationStatus =
+            RelationStatusAssociatif.fromJson(jsonDecode(data['relationStatus']));
         id = relationStatus.login.hashCode;
         title = '${data['matchName']} ${data['matchSurname']}';
         color = TinterDarkThemeColors.primary;
@@ -347,8 +327,7 @@ class NotificationHandler {
           case EnumRelationStatusAssociatif.ignored:
             break;
           case EnumRelationStatusAssociatif.liked:
-            body =
-                '${data['matchName']} ${data['matchSurname']} t\'a matché !🎉🎉';
+            body = '${data['matchName']} ${data['matchSurname']} t\'a matché !🎉🎉';
             break;
           case EnumRelationStatusAssociatif.askedParrain:
             body =
@@ -375,12 +354,10 @@ class NotificationHandler {
           case EnumRelationStatusScolaire.ignored:
             break;
           case EnumRelationStatusScolaire.liked:
-            body =
-                '${data['binomeName']} ${data['binomeSurname']} t\'a matché !🎉🎉';
+            body = '${data['binomeName']} ${data['binomeSurname']} t\'a matché !🎉🎉';
             break;
           case EnumRelationStatusScolaire.askedBinome:
-            body =
-                '${data['binomeName']} ${data['binomeSurname']} veut être ton binome !🎉🎉';
+            body = '${data['binomeName']} ${data['binomeSurname']} veut être ton binome !🎉🎉';
             break;
           case EnumRelationStatusScolaire.acceptedBinome:
             body =
@@ -393,8 +370,8 @@ class NotificationHandler {
         }
         break;
       case NotificationRelationStatusTitle.relationStatusBinomeUpdate:
-        var relationStatus = RelationStatusBinomePair.fromJson(
-            jsonDecode(data['relationStatus']));
+        var relationStatus =
+            RelationStatusBinomePair.fromJson(jsonDecode(data['relationStatus']));
         id = relationStatus.binomePairId.hashCode;
         title =
             '${data['binomePairName']} ${data['binomePairSurname']} & ${data['binomePairOtherName']} ${data['binomePairOtherSurname']}';
@@ -422,8 +399,7 @@ class NotificationHandler {
         }
         break;
       default:
-        throw UnknownNotificationTitle(
-            title: notificationRelationStatusTitle.serialize());
+        throw UnknownNotificationTitle(title: notificationRelationStatusTitle.serialize());
     }
 
     await showNotification(
@@ -444,22 +420,16 @@ class NotificationHandler {
   }) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.Max,
-        priority: Priority.High,
-        ticker: body,
-        color: color);
+        importance: Importance.max, priority: Priority.high, ticker: body, color: color);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    var platformChannelSpecifics = NotificationDetails(); // NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics)
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
-    await flutterLocalNotificationsPlugin.show(
-        id, title, body, platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.show(id, title, body, platformChannelSpecifics,
         payload: jsonEncode(payload));
   }
 
-  Future onDidReceiveLocalNotification(
-      int id, String title, String body, String payload) {
+  Future<void> onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
     print(
         'onDidReceiveLocalNotification: id: $id, title: $title, body: $body, playload: $payload');
     showDialog(
@@ -494,8 +464,7 @@ class NotificationHandlerError implements Exception {}
 
 class NotificationHandlerNotInitialized extends NotificationHandlerError {
   @override
-  String toString() =>
-      '[${this.runtimeType}]: Please initialize this class with init().';
+  String toString() => '[${this.runtimeType}]: Please initialize this class with init().';
 }
 
 class UnknownNotificationTitle extends NotificationHandlerError {
@@ -504,6 +473,5 @@ class UnknownNotificationTitle extends NotificationHandlerError {
   UnknownNotificationTitle({@required this.title});
 
   @override
-  String toString() =>
-      '[${this.runtimeType}]: $title is not a known notification title.';
+  String toString() => '[${this.runtimeType}]: $title is not a known notification title.';
 }

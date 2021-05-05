@@ -516,9 +516,9 @@ class InvertedClipperDiscoverIcon extends CustomClipper<Path> {
 
 class AllBlocObserver extends BlocObserver {
   @override
-  void onChange(Cubit cubit, Change change) {
-    print('${cubit.runtimeType} $change');
-    super.onChange(cubit, change);
+  void onChange(BlocBase blocBase, Change change) {
+    print('${blocBase.runtimeType} $change');
+    super.onChange(blocBase, change);
   }
 
   @override
@@ -528,8 +528,8 @@ class AllBlocObserver extends BlocObserver {
   }
 
   @override
-  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
-    print('${cubit.runtimeType} $error $stackTrace');
-    super.onError(cubit, error, stackTrace);
+  void onError(BlocBase blocBase, Object error, StackTrace stackTrace) {
+    print('${blocBase.runtimeType} $error $stackTrace');
+    super.onError(blocBase, error, stackTrace);
   }
 }

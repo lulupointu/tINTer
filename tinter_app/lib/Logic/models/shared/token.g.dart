@@ -18,10 +18,12 @@ class _$TokenSerializer implements StructuredSerializer<Token> {
   Iterable<Object> serialize(Serializers serializers, Token object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[];
-    if (object.token != null) {
+    Object value;
+    value = object.token;
+    if (value != null) {
       result
         ..add('token')
-        ..add(serializers.serialize(object.token,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
     return result;
@@ -36,7 +38,7 @@ class _$TokenSerializer implements StructuredSerializer<Token> {
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'token':
           result.token = serializers.deserialize(value,
@@ -93,8 +95,9 @@ class TokenBuilder implements Builder<Token, TokenBuilder> {
   TokenBuilder();
 
   TokenBuilder get _$this {
-    if (_$v != null) {
-      _token = _$v.token;
+    final $v = _$v;
+    if ($v != null) {
+      _token = $v.token;
       _$v = null;
     }
     return this;
@@ -102,9 +105,7 @@ class TokenBuilder implements Builder<Token, TokenBuilder> {
 
   @override
   void replace(Token other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Token;
   }
 

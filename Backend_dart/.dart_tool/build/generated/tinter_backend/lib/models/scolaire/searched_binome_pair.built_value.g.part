@@ -53,7 +53,7 @@ class _$SearchedBinomePairSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'binomePairId':
           result.binomePairId = serializers.deserialize(value,
@@ -126,30 +126,19 @@ class _$SearchedBinomePair extends SearchedBinomePair {
       this.otherSurname,
       this.liked})
       : super._() {
-    if (binomePairId == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'binomePairId');
-    }
-    if (login == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'login');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'name');
-    }
-    if (surname == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'surname');
-    }
-    if (otherLogin == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'otherLogin');
-    }
-    if (otherName == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'otherName');
-    }
-    if (otherSurname == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'otherSurname');
-    }
-    if (liked == null) {
-      throw new BuiltValueNullFieldError('SearchedBinomePair', 'liked');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        binomePairId, 'SearchedBinomePair', 'binomePairId');
+    BuiltValueNullFieldError.checkNotNull(login, 'SearchedBinomePair', 'login');
+    BuiltValueNullFieldError.checkNotNull(name, 'SearchedBinomePair', 'name');
+    BuiltValueNullFieldError.checkNotNull(
+        surname, 'SearchedBinomePair', 'surname');
+    BuiltValueNullFieldError.checkNotNull(
+        otherLogin, 'SearchedBinomePair', 'otherLogin');
+    BuiltValueNullFieldError.checkNotNull(
+        otherName, 'SearchedBinomePair', 'otherName');
+    BuiltValueNullFieldError.checkNotNull(
+        otherSurname, 'SearchedBinomePair', 'otherSurname');
+    BuiltValueNullFieldError.checkNotNull(liked, 'SearchedBinomePair', 'liked');
   }
 
   @override
@@ -245,15 +234,16 @@ class SearchedBinomePairBuilder
   SearchedBinomePairBuilder();
 
   SearchedBinomePairBuilder get _$this {
-    if (_$v != null) {
-      _binomePairId = _$v.binomePairId;
-      _login = _$v.login;
-      _name = _$v.name;
-      _surname = _$v.surname;
-      _otherLogin = _$v.otherLogin;
-      _otherName = _$v.otherName;
-      _otherSurname = _$v.otherSurname;
-      _liked = _$v.liked;
+    final $v = _$v;
+    if ($v != null) {
+      _binomePairId = $v.binomePairId;
+      _login = $v.login;
+      _name = $v.name;
+      _surname = $v.surname;
+      _otherLogin = $v.otherLogin;
+      _otherName = $v.otherName;
+      _otherSurname = $v.otherSurname;
+      _liked = $v.liked;
       _$v = null;
     }
     return this;
@@ -261,9 +251,7 @@ class SearchedBinomePairBuilder
 
   @override
   void replace(SearchedBinomePair other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SearchedBinomePair;
   }
 
@@ -276,14 +264,22 @@ class SearchedBinomePairBuilder
   _$SearchedBinomePair build() {
     final _$result = _$v ??
         new _$SearchedBinomePair._(
-            binomePairId: binomePairId,
-            login: login,
-            name: name,
-            surname: surname,
-            otherLogin: otherLogin,
-            otherName: otherName,
-            otherSurname: otherSurname,
-            liked: liked);
+            binomePairId: BuiltValueNullFieldError.checkNotNull(
+                binomePairId, 'SearchedBinomePair', 'binomePairId'),
+            login: BuiltValueNullFieldError.checkNotNull(
+                login, 'SearchedBinomePair', 'login'),
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, 'SearchedBinomePair', 'name'),
+            surname: BuiltValueNullFieldError.checkNotNull(
+                surname, 'SearchedBinomePair', 'surname'),
+            otherLogin: BuiltValueNullFieldError.checkNotNull(
+                otherLogin, 'SearchedBinomePair', 'otherLogin'),
+            otherName: BuiltValueNullFieldError.checkNotNull(
+                otherName, 'SearchedBinomePair', 'otherName'),
+            otherSurname: BuiltValueNullFieldError.checkNotNull(
+                otherSurname, 'SearchedBinomePair', 'otherSurname'),
+            liked: BuiltValueNullFieldError.checkNotNull(
+                liked, 'SearchedBinomePair', 'liked'));
     replace(_$result);
     return _$result;
   }

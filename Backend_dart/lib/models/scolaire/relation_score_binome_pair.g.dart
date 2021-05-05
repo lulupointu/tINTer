@@ -47,7 +47,7 @@ class _$RelationScoreBinomePairSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'binomePairId':
           result.binomePairId = serializers.deserialize(value,
@@ -83,17 +83,12 @@ class _$RelationScoreBinomePair extends RelationScoreBinomePair {
   _$RelationScoreBinomePair._(
       {this.binomePairId, this.otherBinomePairId, this.score})
       : super._() {
-    if (binomePairId == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationScoreBinomePair', 'binomePairId');
-    }
-    if (otherBinomePairId == null) {
-      throw new BuiltValueNullFieldError(
-          'RelationScoreBinomePair', 'otherBinomePairId');
-    }
-    if (score == null) {
-      throw new BuiltValueNullFieldError('RelationScoreBinomePair', 'score');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        binomePairId, 'RelationScoreBinomePair', 'binomePairId');
+    BuiltValueNullFieldError.checkNotNull(
+        otherBinomePairId, 'RelationScoreBinomePair', 'otherBinomePairId');
+    BuiltValueNullFieldError.checkNotNull(
+        score, 'RelationScoreBinomePair', 'score');
   }
 
   @override
@@ -152,10 +147,11 @@ class RelationScoreBinomePairBuilder
   RelationScoreBinomePairBuilder();
 
   RelationScoreBinomePairBuilder get _$this {
-    if (_$v != null) {
-      _binomePairId = _$v.binomePairId;
-      _otherBinomePairId = _$v.otherBinomePairId;
-      _score = _$v.score;
+    final $v = _$v;
+    if ($v != null) {
+      _binomePairId = $v.binomePairId;
+      _otherBinomePairId = $v.otherBinomePairId;
+      _score = $v.score;
       _$v = null;
     }
     return this;
@@ -163,9 +159,7 @@ class RelationScoreBinomePairBuilder
 
   @override
   void replace(RelationScoreBinomePair other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$RelationScoreBinomePair;
   }
 
@@ -178,9 +172,14 @@ class RelationScoreBinomePairBuilder
   _$RelationScoreBinomePair build() {
     final _$result = _$v ??
         new _$RelationScoreBinomePair._(
-            binomePairId: binomePairId,
-            otherBinomePairId: otherBinomePairId,
-            score: score);
+            binomePairId: BuiltValueNullFieldError.checkNotNull(
+                binomePairId, 'RelationScoreBinomePair', 'binomePairId'),
+            otherBinomePairId: BuiltValueNullFieldError.checkNotNull(
+                otherBinomePairId,
+                'RelationScoreBinomePair',
+                'otherBinomePairId'),
+            score: BuiltValueNullFieldError.checkNotNull(
+                score, 'RelationScoreBinomePair', 'score'));
     replace(_$result);
     return _$result;
   }

@@ -136,10 +136,12 @@ class _$BuildBinomePairMatchSerializer
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])),
     ];
-    if (object.lieuDeVie != null) {
+    Object value;
+    value = object.lieuDeVie;
+    if (value != null) {
       result
         ..add('lieuDeVie')
-        ..add(serializers.serialize(object.lieuDeVie,
+        ..add(serializers.serialize(value,
             specifiedType: const FullType(LieuDeVie)));
     }
     return result;
@@ -155,7 +157,7 @@ class _$BuildBinomePairMatchSerializer
     while (iterator.moveNext()) {
       final key = iterator.current as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object value = iterator.current;
       switch (key) {
         case 'status':
           result.status = serializers.deserialize(value,
@@ -316,61 +318,37 @@ class _$BuildBinomePairMatch extends BuildBinomePairMatch {
       this.enligneOuNon,
       this.matieresPreferees})
       : super._() {
-    if (status == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'status');
-    }
-    if (score == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'score');
-    }
-    if (binomePairId == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinomePairMatch', 'binomePairId');
-    }
-    if (login == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'login');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'name');
-    }
-    if (surname == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'surname');
-    }
-    if (email == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'email');
-    }
-    if (otherLogin == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'otherLogin');
-    }
-    if (otherName == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'otherName');
-    }
-    if (otherSurname == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinomePairMatch', 'otherSurname');
-    }
-    if (otherEmail == null) {
-      throw new BuiltValueNullFieldError('BuildBinomePairMatch', 'otherEmail');
-    }
-    if (associations == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinomePairMatch', 'associations');
-    }
-    if (groupeOuSeul == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinomePairMatch', 'groupeOuSeul');
-    }
-    if (horairesDeTravail == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinomePairMatch', 'horairesDeTravail');
-    }
-    if (enligneOuNon == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinomePairMatch', 'enligneOuNon');
-    }
-    if (matieresPreferees == null) {
-      throw new BuiltValueNullFieldError(
-          'BuildBinomePairMatch', 'matieresPreferees');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        status, 'BuildBinomePairMatch', 'status');
+    BuiltValueNullFieldError.checkNotNull(
+        score, 'BuildBinomePairMatch', 'score');
+    BuiltValueNullFieldError.checkNotNull(
+        binomePairId, 'BuildBinomePairMatch', 'binomePairId');
+    BuiltValueNullFieldError.checkNotNull(
+        login, 'BuildBinomePairMatch', 'login');
+    BuiltValueNullFieldError.checkNotNull(name, 'BuildBinomePairMatch', 'name');
+    BuiltValueNullFieldError.checkNotNull(
+        surname, 'BuildBinomePairMatch', 'surname');
+    BuiltValueNullFieldError.checkNotNull(
+        email, 'BuildBinomePairMatch', 'email');
+    BuiltValueNullFieldError.checkNotNull(
+        otherLogin, 'BuildBinomePairMatch', 'otherLogin');
+    BuiltValueNullFieldError.checkNotNull(
+        otherName, 'BuildBinomePairMatch', 'otherName');
+    BuiltValueNullFieldError.checkNotNull(
+        otherSurname, 'BuildBinomePairMatch', 'otherSurname');
+    BuiltValueNullFieldError.checkNotNull(
+        otherEmail, 'BuildBinomePairMatch', 'otherEmail');
+    BuiltValueNullFieldError.checkNotNull(
+        associations, 'BuildBinomePairMatch', 'associations');
+    BuiltValueNullFieldError.checkNotNull(
+        groupeOuSeul, 'BuildBinomePairMatch', 'groupeOuSeul');
+    BuiltValueNullFieldError.checkNotNull(
+        horairesDeTravail, 'BuildBinomePairMatch', 'horairesDeTravail');
+    BuiltValueNullFieldError.checkNotNull(
+        enligneOuNon, 'BuildBinomePairMatch', 'enligneOuNon');
+    BuiltValueNullFieldError.checkNotNull(
+        matieresPreferees, 'BuildBinomePairMatch', 'matieresPreferees');
   }
 
   @override
@@ -552,24 +530,25 @@ class BuildBinomePairMatchBuilder
   BuildBinomePairMatchBuilder();
 
   BuildBinomePairMatchBuilder get _$this {
-    if (_$v != null) {
-      _status = _$v.status;
-      _score = _$v.score;
-      _binomePairId = _$v.binomePairId;
-      _login = _$v.login;
-      _name = _$v.name;
-      _surname = _$v.surname;
-      _email = _$v.email;
-      _otherLogin = _$v.otherLogin;
-      _otherName = _$v.otherName;
-      _otherSurname = _$v.otherSurname;
-      _otherEmail = _$v.otherEmail;
-      _associations = _$v.associations?.toBuilder();
-      _lieuDeVie = _$v.lieuDeVie;
-      _groupeOuSeul = _$v.groupeOuSeul;
-      _horairesDeTravail = _$v.horairesDeTravail?.toBuilder();
-      _enligneOuNon = _$v.enligneOuNon;
-      _matieresPreferees = _$v.matieresPreferees?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _status = $v.status;
+      _score = $v.score;
+      _binomePairId = $v.binomePairId;
+      _login = $v.login;
+      _name = $v.name;
+      _surname = $v.surname;
+      _email = $v.email;
+      _otherLogin = $v.otherLogin;
+      _otherName = $v.otherName;
+      _otherSurname = $v.otherSurname;
+      _otherEmail = $v.otherEmail;
+      _associations = $v.associations.toBuilder();
+      _lieuDeVie = $v.lieuDeVie;
+      _groupeOuSeul = $v.groupeOuSeul;
+      _horairesDeTravail = $v.horairesDeTravail.toBuilder();
+      _enligneOuNon = $v.enligneOuNon;
+      _matieresPreferees = $v.matieresPreferees.toBuilder();
       _$v = null;
     }
     return this;
@@ -577,9 +556,7 @@ class BuildBinomePairMatchBuilder
 
   @override
   void replace(BuildBinomePairMatch other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$BuildBinomePairMatch;
   }
 
@@ -594,22 +571,31 @@ class BuildBinomePairMatchBuilder
     try {
       _$result = _$v ??
           new _$BuildBinomePairMatch._(
-              status: status,
-              score: score,
-              binomePairId: binomePairId,
-              login: login,
-              name: name,
-              surname: surname,
-              email: email,
-              otherLogin: otherLogin,
-              otherName: otherName,
-              otherSurname: otherSurname,
-              otherEmail: otherEmail,
+              status: BuiltValueNullFieldError.checkNotNull(
+                  status, 'BuildBinomePairMatch', 'status'),
+              score: BuiltValueNullFieldError.checkNotNull(
+                  score, 'BuildBinomePairMatch', 'score'),
+              binomePairId: BuiltValueNullFieldError.checkNotNull(
+                  binomePairId, 'BuildBinomePairMatch', 'binomePairId'),
+              login: BuiltValueNullFieldError.checkNotNull(
+                  login, 'BuildBinomePairMatch', 'login'),
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, 'BuildBinomePairMatch', 'name'),
+              surname: BuiltValueNullFieldError.checkNotNull(
+                  surname, 'BuildBinomePairMatch', 'surname'),
+              email: BuiltValueNullFieldError.checkNotNull(
+                  email, 'BuildBinomePairMatch', 'email'),
+              otherLogin: BuiltValueNullFieldError.checkNotNull(
+                  otherLogin, 'BuildBinomePairMatch', 'otherLogin'),
+              otherName:
+                  BuiltValueNullFieldError.checkNotNull(otherName, 'BuildBinomePairMatch', 'otherName'),
+              otherSurname: BuiltValueNullFieldError.checkNotNull(otherSurname, 'BuildBinomePairMatch', 'otherSurname'),
+              otherEmail: BuiltValueNullFieldError.checkNotNull(otherEmail, 'BuildBinomePairMatch', 'otherEmail'),
               associations: associations.build(),
               lieuDeVie: lieuDeVie,
-              groupeOuSeul: groupeOuSeul,
+              groupeOuSeul: BuiltValueNullFieldError.checkNotNull(groupeOuSeul, 'BuildBinomePairMatch', 'groupeOuSeul'),
               horairesDeTravail: horairesDeTravail.build(),
-              enligneOuNon: enligneOuNon,
+              enligneOuNon: BuiltValueNullFieldError.checkNotNull(enligneOuNon, 'BuildBinomePairMatch', 'enligneOuNon'),
               matieresPreferees: matieresPreferees.build());
     } catch (_) {
       String _$failedField;

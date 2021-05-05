@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tinterapp/Logic/blocs/shared/associations/associations_bloc.dart';
@@ -37,7 +36,6 @@ class AssociationsTab extends StatefulWidget {
 }
 
 class _AssociationsTabState extends State<AssociationsTab> {
-  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
   int _keyboardVisibilitySubscriberId;
   bool isSearching = false;
   String searchString = "";
@@ -47,8 +45,7 @@ class _AssociationsTabState extends State<AssociationsTab> {
   void initState() {
     super.initState();
     _panelController = PanelController();
-    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
-      onChange: (bool visible) {
+    KeyboardVisibilityController().onChange.listen((bool visible) {
         if (!visible) {
           FocusScope.of(context).unfocus();
           if (searchString == "") {
@@ -57,12 +54,6 @@ class _AssociationsTabState extends State<AssociationsTab> {
         }
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
-    super.dispose();
   }
 
   @override
@@ -116,7 +107,7 @@ class _AssociationsTabState extends State<AssociationsTab> {
                   panelBuilder: (ScrollController scrollController) {
                     return AllAssociationsSheetBody(
                       scrollController: scrollController,
-                      keyboardMargin: KeyboardVisibility.isVisible
+                      keyboardMargin: KeyboardVisibilityProvider.isKeyboardVisible(context)
                           ? MediaQuery.of(context).viewInsets.bottom
                           : 0,
                       width: constraints.maxWidth,
