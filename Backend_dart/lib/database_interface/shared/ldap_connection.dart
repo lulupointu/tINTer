@@ -58,6 +58,8 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
     if (error.osError.message == 'Connection refused') {
       await connection.close();
       throw ConnectionToLDAPRefused(error.osError.message, false);
+    } else {
+      throw error;
     }
   } catch (e) {
     await connection.close();
