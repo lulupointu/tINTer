@@ -17,8 +17,6 @@ Future<void> main() async {
   File _logFile = File('/home/df/logs');
   IOSink _logFileSink = _logFile.openWrite(mode: FileMode.append);
 
-  print(Platform.environment);
-
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     _logFileSink.writeln(
