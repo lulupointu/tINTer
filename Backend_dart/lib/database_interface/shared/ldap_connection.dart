@@ -29,12 +29,19 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
   );
 
   try {
+    _logger.info('Opening LDAP connection');
+    await connection.open();
+
+    _logger.info('Binding LDAP connection');
+    await connection.bind();
+
     // Perform search operation
 
     var base = "uid=$login,ou=People,dc=int-evry,dc=fr";
     var filter = Filter.present("objectClass");
     var attrs = ["uid", "givenName", "sn", "mail"];
 
+    _logger.info('Perform LDAP search');
     var searchResult = await connection.search(base, filter, attrs);
     await for (SearchEntry entry in searchResult.stream) {
       userJson = {
