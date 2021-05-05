@@ -34,7 +34,7 @@ Future<void> authenticationCheckThenRoute(HttpRequest req) async {
           ..close();
       return;
     } catch (error) {
-      _authenticationLogger.warning("Unexpected error caught", error);
+      _authenticationLogger.warning("Unexpected error caught (${error.runtimeType}):", error);
       await req.response
         ..statusCode = HttpStatus.badRequest
         ..close();
