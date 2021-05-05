@@ -49,6 +49,7 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
                 : School.IMTBS)
             .serialize()
       };
+      print('USER JSON: $userJson');
     }
   } on LdapResultInvalidCredentialsException {
     await connection.close();
