@@ -14,8 +14,10 @@ Logger _serverLogger = Logger('Server');
 Future<void> main() async {
   Stream<HttpRequest> server;
 
-  File _logFile = File('~/logs');
+  File _logFile = File('/home/df/logs');
   IOSink _logFileSink = _logFile.openWrite(mode: FileMode.append);
+
+  print(Platform.environment);
 
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
@@ -27,6 +29,7 @@ Future<void> main() async {
     server = await HttpServer.bind(InternetAddress.anyIPv4, 443);
   } catch (e) {
     _serverLogger.log(Level.SHOUT, "Couldn't bind to port 443: $e", e);
+    await _logFileSink.close();
     exit(-1);
   }
 
@@ -37,7 +40,7 @@ Future<void> main() async {
 
   _serverLogger.info('Connecting to notification server (Firebase Cloud messaging)');
   fcmAPI.initializeApp(
-      secret: jsonDecode(File('~/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
+      secret: jsonDecode(File('/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
           .readAsStringSync()));
   try {
     await for (HttpRequest req in server) {
