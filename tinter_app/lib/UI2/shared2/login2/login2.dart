@@ -7,8 +7,9 @@ class TinterAuthenticationTab2 extends StatelessWidget {
       child: Scaffold(
         body: Center(
           child: ElevatedButton(
-            onPressed: login != '' && password != '' ? connect : null,
-
+            child: Text(
+              'ccccccc',
+            ),
           ),
         ),
       ),
