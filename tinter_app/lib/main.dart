@@ -47,6 +47,8 @@ import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/login2/login2.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
+import 'UI2/shared2/login2/login3.dart';
+
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 NotificationHandler notificationHandler;
@@ -222,12 +224,12 @@ main() {
                       )
                     ),
                     textTheme: TextTheme(
-                      headline1: TextStyle(fontSize: 70),
-                      headline2 : TextStyle(fontSize: 50),
-                      headline3 : TextStyle(fontSize: 30),
-                      headline4 : TextStyle(fontSize: 20),
-                      headline5 : TextStyle(fontSize: 15),
-                      headline6 : TextStyle(fontSize: 12),
+                      headline1: TextStyle(fontSize: 70, color: Colors.black87),
+                      headline2 : TextStyle(fontSize: 50, color: Colors.black87),
+                      headline3 : TextStyle(fontSize: 30, color: Colors.black87),
+                      headline4 : TextStyle(fontSize: 20, color: Colors.black87),
+                      headline5 : TextStyle(fontSize: 15, color: Colors.black87),
+                      headline6 : TextStyle(fontSize: 12, color: Colors.black87),
                     ),
                     fontFamily: 'OpenSans',
                     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -275,7 +277,7 @@ class Tinter extends StatelessWidget {
           }
           return SplashScreen();
         } else if (!(authenticationState is AuthenticationSuccessfulState)) {
-          return TinterAuthenticationTab2();
+          return TinterAuthenticationTab3();
         }
 
         // next check on the user state
