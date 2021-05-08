@@ -204,13 +204,32 @@ main() {
                 child: MaterialApp(
                   debugShowCheckedModeBanner: false,
                   theme: ThemeData(
-                    primaryColor: Colors.red,
+                    primaryColor: Color(0xff79BFC9),
+                    accentColor: Color(0xffFF6868),
+                    scaffoldBackgroundColor: Color(0xffF4F4F8),
+                    cardTheme: CardTheme(
+                      color: Colors.white,
+                      shadowColor: Colors.black,
+                      elevation: 5.0,
+                    ),
                     appBarTheme: AppBarTheme(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Color(0xff79BFC9),
+                      textTheme: TextTheme(
+                        headline1: TextStyle(
+                          color : Colors.white,
+                          fontSize: 20.0,
+                        )
+                      )
                     ),
                     textTheme: TextTheme(
                       headline1: TextStyle(fontSize: 70),
+                      headline2 : TextStyle(fontSize: 50),
+                      headline3 : TextStyle(fontSize: 30),
+                      headline4 : TextStyle(fontSize: 20),
+                      headline5 : TextStyle(fontSize: 15),
+                      headline6 : TextStyle(fontSize: 12),
                     ),
+                    fontFamily: 'OpenSans',
                     elevatedButtonTheme: ElevatedButtonThemeData(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.resolveWith((state) {
