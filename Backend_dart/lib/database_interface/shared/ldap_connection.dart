@@ -41,7 +41,7 @@ Future<Map<String, String>> getUserInfoFromLDAP({@required login, @required pass
     var filter = Filter.present("objectClass");
     var attrs = ["uid", "givenName", "sn", "mail"];
 
-    _logger.info('Perform LDAP search');
+    _logger.info('Perform LDAP ');
     var searchResult = await connection.search(base, filter, attrs);
     await for (SearchEntry entry in searchResult.stream) {
       userJson = {
