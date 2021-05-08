@@ -44,6 +44,7 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/tinter_bottom_navigation_bar.dart';
 import 'package:tinterapp/UI/shared/splash_screen/splash_screen.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
+import 'package:tinterapp/UI2/shared2/login2/login2.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -197,10 +198,35 @@ main() {
                   ChangeNotifierProvider<TinterTheme>(create: (_) => TinterTheme()),
                   ChangeNotifierProvider<TinterTabs>(create: (_) => TinterTabs()),
                   ChangeNotifierProvider<SelectedScolaire>(create: (_) => SelectedScolaire()),
-                  ChangeNotifierProvider<SelectedAssociatif>(create: (_) => SelectedAssociatif()),
+                  ChangeNotifierProvider<SelectedAssociatif>(
+                      create: (_) => SelectedAssociatif()),
                 ],
                 child: MaterialApp(
                   debugShowCheckedModeBanner: false,
+                  theme: ThemeData(
+                    primaryColor: Colors.red,
+                    appBarTheme: AppBarTheme(
+                      backgroundColor: Colors.blue,
+                    ),
+                    textTheme: TextTheme(
+                      headline1: TextStyle(fontSize: 70),
+                    ),
+                    elevatedButtonTheme: ElevatedButtonThemeData(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.resolveWith((state) {
+                          // ignore: missing_enum_constant_in_switch
+                          switch (state.first) {
+                            case MaterialState.disabled:
+                              // TODO: Handle this case.
+                              return;
+                          }
+
+                          // Default state
+                          return;
+                        }),
+                      ),
+                    ),
+                  ),
                   home: SafeArea(
                     child: Tinter(),
                   ),
@@ -230,7 +256,7 @@ class Tinter extends StatelessWidget {
           }
           return SplashScreen();
         } else if (!(authenticationState is AuthenticationSuccessfulState)) {
-          return TinterAuthenticationTab();
+          return TinterAuthenticationTab2();
         }
 
         // next check on the user state

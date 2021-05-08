@@ -4,6 +4,7 @@ import 'package:tinterapp/Logic/models/serializers.dart';
 
 part 'association.g.dart';
 
+
 abstract class Association implements Built<Association, AssociationBuilder> {
   String get name;
   String get description;
