@@ -250,10 +250,17 @@ main() {
                     cardTheme: CardTheme(
                       color: Colors.white,
                       shadowColor: Colors.black,
+                      margin: EdgeInsets.zero,
                       elevation: 5.0,
                     ),
                     elevatedButtonTheme: ElevatedButtonThemeData(
                       style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all(
+                          TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.0,
+                          )
+                        ),
                         shadowColor: MaterialStateProperty.all(Colors.black),
                         elevation: MaterialStateProperty.all(5.0),
                         backgroundColor: MaterialStateProperty.resolveWith(
@@ -273,7 +280,7 @@ main() {
                       ),
                     ),
                     textTheme: TextTheme(
-                      headline1: TextStyle(fontSize: 70, color: Colors.black87),
+                      headline1: TextStyle(fontSize: 60, color: Colors.black87),
                       headline2: TextStyle(fontSize: 50, color: Colors.black87),
                       headline3: TextStyle(fontSize: 30, color: Colors.black87),
                       headline4: TextStyle(fontSize: 20, color: Colors.black87),
