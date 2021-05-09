@@ -44,23 +44,24 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 75.0),
-                child: Align(
+        Flexible(
+          flex: KeyboardVisibilityProvider.isKeyboardVisible(context) ? 1 : 0,
+          child: SingleChildScrollView(
+            reverse: true,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 75.0),
+                  child: Align(
                     alignment: Alignment.topCenter,
                     child: RichText(
-                        text: TextSpan(
-                            text: 't',
-                            style: Theme.of(context).textTheme.headline1.copyWith(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400),
-                            children: <TextSpan>[
+                      text: TextSpan(
+                        text: 't',
+                        style: Theme.of(context).textTheme.headline1.copyWith(
+                            color: Colors.black87, fontWeight: FontWeight.w400),
+                        children: <TextSpan>[
                           TextSpan(
                               text: 'int',
                               style: Theme.of(context)
@@ -77,14 +78,18 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
                                   .copyWith(
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w400)),
-                        ]))),
-              ),
-              LoginFormAndLogo(),
-            ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                LoginFormAndLogo(),
+              ],
+            ),
           ),
         ),
-        Container(
-          child: Expanded(
+        if (!KeyboardVisibilityProvider.isKeyboardVisible(context))
+          Expanded(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 30.0),
               child: Align(
@@ -96,28 +101,33 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
                       'Un problème ou une question ?',
                       style: Theme.of(context).textTheme.headline5,
                     ),
-                    TextButton(
-                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: () {
-                        showDialog(
+                    ButtonTheme(
+                      minWidth: 0,
+                      height: 0,
+                      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0), //adds padding inside the button
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, //limits the touch area to the button area
+                      child: FlatButton(
+                        onPressed: () {
+                          showDialog(
                             context: context,
                             builder: (BuildContext context) => SimpleDialog(
-                                  children: [
-                                    Text(
-                                      'ToDo',
-                                      textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
-                                    ),
-                                  ],
-                                ));
-                      },
-                      child: Text(
-                        'Rejoignez-nous !',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(color: Color(0xff738ADB)),
+                              children: [
+                                Text(
+                                  'ToDo',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Rejoignez-nous !',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(color: Color(0xff738ADB)),
+                        ),
                       ),
                     ),
                   ],
@@ -125,7 +135,6 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
               ),
             ),
           ),
-        ),
       ]),
     );
   }
@@ -145,7 +154,7 @@ class HelpOnLogin extends StatelessWidget {
           showDialog(
               context: context,
               builder: (BuildContext context) => SimpleDialog(
-                elevation: 5.0,
+                    elevation: 5.0,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
@@ -185,6 +194,12 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
 
   @override
   void initState() {
+    _loginController.addListener(() {
+      setState(() {});
+    });
+    _passwordController.addListener(() {
+      setState(() {});
+    });
     KeyboardVisibilityController().onChange.listen((bool visible) {
       if (!visible) {
         _passwordVisible = false;
@@ -281,81 +296,79 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
             color: Colors.white,
             shadowColor: Colors.black,
             elevation: 5.0,
-            child: Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: TextField(
-                  focusNode: _passwordFocusNode,
-                  controller: _passwordController,
-                  textInputAction: TextInputAction.done,
-                  obscureText: !_passwordVisible,
-                  onEditingComplete: () {
-                    _passwordFocusNode.unfocus();
-                    _onAuthenticationTry();
-                  },
-                  style: TextStyle(textBaseline: TextBaseline.alphabetic),
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration: InputDecoration(
-                    suffixIconConstraints: BoxConstraints(),
-                    suffixIcon: Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        icon: Icon(
-                          _passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _passwordVisible = !_passwordVisible;
-                          });
-                        },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: TextField(
+                focusNode: _passwordFocusNode,
+                controller: _passwordController,
+                textInputAction: TextInputAction.done,
+                obscureText: !_passwordVisible,
+                onEditingComplete: () {
+                  _passwordFocusNode.unfocus();
+                  _onAuthenticationTry();
+                },
+                style: TextStyle(textBaseline: TextBaseline.alphabetic),
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  suffixIconConstraints: BoxConstraints(),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      icon: Icon(
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).primaryColor,
                       ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
                     ),
-                    labelText: 'Mot de passe',
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    labelStyle: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(color: Colors.black38),
                   ),
+                  labelText: 'Mot de passe',
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(color: Colors.black38),
                 ),
               ),
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 40.0, left: 80.0, right: 80.0),
+          padding: const EdgeInsets.only(top: 40.0, left: 80.0, right: 80.0, bottom: 20.0),
           child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (BuildContext context, AuthenticationState state) {
               final bool isLoading = (state is AuthenticationLoadingState);
+              final isEmpty = _loginController.text.isEmpty ||
+                  _passwordController.text.isEmpty;
               return LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  return TextButton(
-                    onPressed: isLoading ? null : _onAuthenticationTry,
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      color: Theme.of(context).primaryColor.withOpacity(0.5),
-                      shadowColor: Colors.black,
-                      elevation: 5.0,
+                  return ElevatedButton(
+                    onPressed: isEmpty
+                        ? null
+                        : isLoading
+                            ? () {}
+                            : _onAuthenticationTry,
+                    child: Align(
+                      alignment: Alignment.center,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Se connecter',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(color: Colors.white),
-                          ),
+                        child: Text(
+                          'Se connecter',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(color: Colors.white),
                         ),
                       ),
                     ),
