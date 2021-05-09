@@ -28,12 +28,12 @@ class AuthenticationWrongCredentialError extends AuthenticationError {
 
 class AuthenticationBadTokenError extends AuthenticationError {
   @override
-  String getMessage() => 'Token rejeté, tentez de vous reconnecter';
+  String getMessage() => 'Token rejeté, tentez de vous reconnecter.';
 }
 
 class AuthenticationEmptyCredentialError extends AuthenticationError {
   @override
-  String getMessage() => 'Le login et le mot de passe ne doivent pas être vides';
+  String getMessage() => 'Le login et le mot de passe ne doivent pas être vides.';
 }
 
 class NotAuthenticatedError extends AuthenticationError {

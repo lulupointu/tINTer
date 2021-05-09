@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,12 +84,28 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
                         'Un problème ou une question ?',
                         style: Theme.of(context).textTheme.headline5,
                       ),
-                      Text(
-                        'Rejoignez-nous !',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(color: Color(0xff738ADB)),
+                      TextButton(
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => SimpleDialog(
+                                children: [
+                                  Text(
+                                    'ToDo',
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context).textTheme.headline4,
+                                  ),
+                                ],
+                              ));
+                        },
+                        child: Text(
+                          'Rejoignez-nous !',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(color: Color(0xff738ADB)),
+                        ),
                       ),
                     ],
                   ),
@@ -177,8 +194,28 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (BuildContext context, AuthenticationState state) {
+          final hasError = state is AuthenticationFailureState;
+
+          return Padding(
+            padding: const EdgeInsets.only(top: 30.0, left: 40.0, right: 20.0),
+            child: Row(
+              children: [
+                Text(
+                  hasError && displayError
+                      ? (state as AuthenticationFailureState)
+                      .error
+                      .getMessage()
+                      : '',
+                  style: Theme.of(context).textTheme.headline6.copyWith(color: Theme.of(context).errorColor),
+                ),
+              ],
+            ),
+          );
+        }),
         Padding(
-          padding: const EdgeInsets.only(top: 50.0, left: 40.0, right: 40.0),
+          padding: const EdgeInsets.only(top: 10.0, left: 40.0, right: 40.0),
           child: Card(
             margin: EdgeInsets.zero,
             color: Colors.white,
@@ -252,7 +289,9 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
                         padding: EdgeInsets.zero,
                         constraints: BoxConstraints(),
                         icon: Icon(
-                          _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                          _passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: Theme.of(context).primaryColor,
                         ),
                         onPressed: () {
@@ -280,24 +319,36 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 40.0, left: 80.0, right: 80.0),
-          child: Card(
-            margin: EdgeInsets.zero,
-            color: Theme.of(context).primaryColor.withOpacity(0.5),
-            shadowColor: Colors.black,
-            elevation: 5.0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Se connecter',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(color: Colors.white),
-                ),
-              ),
-            ),
+          child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (BuildContext context, AuthenticationState state) {
+              final bool isLoading = (state is AuthenticationLoadingState);
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return TextButton(
+                    onPressed: isLoading ? null : _onAuthenticationTry,
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      color: Theme.of(context).primaryColor.withOpacity(0.5),
+                      shadowColor: Colors.black,
+                      elevation: 5.0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Se connecter',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       ],

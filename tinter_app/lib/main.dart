@@ -208,6 +208,7 @@ main() {
                   theme: ThemeData(
                     primaryColor: Color(0xff79BFC9),
                     accentColor: Color(0xffFF6868),
+                    errorColor: Color(0xffF44848),
                     scaffoldBackgroundColor: Color(0xffF4F4F8),
                     cardTheme: CardTheme(
                       color: Colors.white,
