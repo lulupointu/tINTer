@@ -47,44 +47,40 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(children: [
-        Expanded(
-          flex: 5,
-          child: SizedBox(
-            height: 1000.0,
-            child: ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 75.0),
-                  child: Align(
-                      alignment: Alignment.topCenter,
-                      child: RichText(
-                          text: TextSpan(
-                              text: 't',
-                              style: Theme.of(context).textTheme.headline1.copyWith(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w400),
-                              children: <TextSpan>[
-                            TextSpan(
-                                text: 'int',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    .copyWith(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.w400)),
-                            TextSpan(
-                                text: 'er',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    .copyWith(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.w400)),
-                          ]))),
-                ),
-                LoginFormAndLogo(),
-              ],
-            ),
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 75.0),
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    child: RichText(
+                        text: TextSpan(
+                            text: 't',
+                            style: Theme.of(context).textTheme.headline1.copyWith(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w400),
+                            children: <TextSpan>[
+                          TextSpan(
+                              text: 'int',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1
+                                  .copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.w400)),
+                          TextSpan(
+                              text: 'er',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1
+                                  .copyWith(
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400)),
+                        ]))),
+              ),
+              LoginFormAndLogo(),
+            ],
           ),
         ),
         Container(
@@ -149,6 +145,7 @@ class HelpOnLogin extends StatelessWidget {
           showDialog(
               context: context,
               builder: (BuildContext context) => SimpleDialog(
+                elevation: 5.0,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
