@@ -46,75 +46,91 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 75.0),
-            child: Align(
-                alignment: Alignment.topCenter,
-                child: RichText(
-                    text: TextSpan(
-                        text: 't',
-                        style: Theme.of(context).textTheme.headline1.copyWith(
-                            color: Colors.black87, fontWeight: FontWeight.w400),
-                        children: <TextSpan>[
-                      TextSpan(
-                          text: 'int',
-                          style: Theme.of(context).textTheme.headline1.copyWith(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w400)),
-                      TextSpan(
-                          text: 'er',
-                          style: Theme.of(context).textTheme.headline1.copyWith(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w400)),
-                    ]))),
+      body: Column(children: [
+        Expanded(
+          flex: 5,
+          child: SizedBox(
+            height: 1000.0,
+            child: ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 75.0),
+                  child: Align(
+                      alignment: Alignment.topCenter,
+                      child: RichText(
+                          text: TextSpan(
+                              text: 't',
+                              style: Theme.of(context).textTheme.headline1.copyWith(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w400),
+                              children: <TextSpan>[
+                            TextSpan(
+                                text: 'int',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    .copyWith(
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.w400)),
+                            TextSpan(
+                                text: 'er',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    .copyWith(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w400)),
+                          ]))),
+                ),
+                LoginFormAndLogo(),
+              ],
+            ),
           ),
-          LoginFormAndLogo(),
-          Container(
-            child: Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 30.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Un problème ou une question ?',
-                        style: Theme.of(context).textTheme.headline5,
+        ),
+        Container(
+          child: Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Un problème ou une question ?',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => SimpleDialog(
+                                  children: [
+                                    Text(
+                                      'ToDo',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
+                                  ],
+                                ));
+                      },
+                      child: Text(
+                        'Rejoignez-nous !',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: Color(0xff738ADB)),
                       ),
-                      TextButton(
-                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => SimpleDialog(
-                                children: [
-                                  Text(
-                                    'ToDo',
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(context).textTheme.headline4,
-                                  ),
-                                ],
-                              ));
-                        },
-                        child: Text(
-                          'Rejoignez-nous !',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(color: Color(0xff738ADB)),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 }
@@ -204,11 +220,12 @@ class _LoginFormAndLogoState extends State<LoginFormAndLogo> {
               children: [
                 Text(
                   hasError && displayError
-                      ? (state as AuthenticationFailureState)
-                      .error
-                      .getMessage()
+                      ? (state as AuthenticationFailureState).error.getMessage()
                       : '',
-                  style: Theme.of(context).textTheme.headline6.copyWith(color: Theme.of(context).errorColor),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(color: Theme.of(context).errorColor),
                 ),
               ],
             ),
