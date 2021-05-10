@@ -20,6 +20,7 @@ import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.d
 import 'package:tinterapp/UI/shared/user_profile/associations.dart';
 import 'package:tinterapp/UI/shared/user_profile/options.dart';
 import 'package:tinterapp/UI/shared/user_profile/snap_scroll_physics.dart';
+import 'package:tinterapp/UI2/shared2/associations.dart';
 import 'package:tinterapp/UI2/shared2/options2.dart';
 import 'package:tinterapp/main.dart';
 
@@ -1058,7 +1059,7 @@ class AssociationsRectangle extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AssociationsTab()),
+                  MaterialPageRoute(builder: (context) => AssociationsTab2()),
                 );
               },
               icon: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
