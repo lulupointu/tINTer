@@ -122,182 +122,195 @@ main() {
       .then((_) {
     runApp(
       KeyboardVisibilityProvider(
-        child: KeyboardDismissOnTap(
-          child: BlocProvider(
-            create: (BuildContext context) => AuthenticationBloc(
-                authenticationRepository: authenticationRepository),
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider<UserBloc>(
-                  create: (BuildContext context) => UserBloc(
-                    userRepository: userRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<BinomePairBloc>(
-                  create: (BuildContext context) => BinomePairBloc(
-                    binomePairRepository: binomePairRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<MatchedMatchesBloc>(
-                  create: (BuildContext context) => MatchedMatchesBloc(
-                    matchedMatchesRepository: matchedMatchesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<DiscoverMatchesBloc>(
-                  create: (BuildContext context) => DiscoverMatchesBloc(
-                    discoverMatchesRepository: discoverMatchesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<MatchedBinomesBloc>(
-                  create: (BuildContext context) => MatchedBinomesBloc(
-                    matchedBinomesRepository: matchedBinomesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<DiscoverBinomesBloc>(
-                  create: (BuildContext context) => DiscoverBinomesBloc(
-                    discoverBinomesRepository: discoverBinomesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<MatchedBinomePairMatchesBloc>(
-                  create: (BuildContext context) =>
-                      MatchedBinomePairMatchesBloc(
-                    matchedBinomePairMatchesRepository:
-                        matchedBinomePairMatchesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<DiscoverBinomePairMatchesBloc>(
-                  create: (BuildContext context) =>
-                      DiscoverBinomePairMatchesBloc(
-                    discoverBinomePairMatchesRepository:
-                        discoverBinomePairMatchesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<UserAssociatifSearchBloc>(
-                  create: (BuildContext context) => UserAssociatifSearchBloc(
-                    userRepository: userRepository,
-                    matchedMatchesRepository: matchedMatchesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<UserScolaireSearchBloc>(
-                  create: (BuildContext context) => UserScolaireSearchBloc(
-                    userRepository: userRepository,
-                    matchedBinomesRepository: matchedBinomesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<BinomePairSearchBloc>(
-                  create: (BuildContext context) => BinomePairSearchBloc(
-                    binomePairRepository: binomePairRepository,
-                    matchedBinomePairMatchesRepository:
-                        matchedBinomePairMatchesRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<AssociationsBloc>(
-                  create: (BuildContext context) => AssociationsBloc(
-                    associationsRepository: associationsRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-                BlocProvider<MatieresBloc>(
-                  create: (BuildContext context) => MatieresBloc(
-                    matieresRepository: matieresRepository,
-                    authenticationBloc:
-                        BlocProvider.of<AuthenticationBloc>(context),
-                  ),
-                ),
-              ],
-              child: MultiProvider(
-                providers: [
-                  ChangeNotifierProvider<TinterTheme>(
-                      create: (_) => TinterTheme()),
-                  ChangeNotifierProvider<TinterTabs>(
-                      create: (_) => TinterTabs()),
-                  ChangeNotifierProvider<SelectedScolaire>(
-                      create: (_) => SelectedScolaire()),
-                  ChangeNotifierProvider<SelectedAssociatif>(
-                      create: (_) => SelectedAssociatif()),
-                ],
-                child: MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  theme: ThemeData(
-                    primaryColor: Color(0xff79BFC9),
-                    accentColor: Color(0xffFF6868),
-                    errorColor: Color(0xffF44848),
-                    disabledColor: Color(0xffBCBCBC),
-                    scaffoldBackgroundColor: Color(0xffF4F4F8),
-                    cardTheme: CardTheme(
-                      color: Colors.white,
-                      shadowColor: Colors.black,
-                      margin: EdgeInsets.zero,
-                      elevation: 5.0,
+        child: KeyboardVisibilityBuilder(
+          builder: (_, bool isKeyboardVisible) {
+            if (!isKeyboardVisible) WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+            return KeyboardDismissOnTap(
+              child: BlocProvider(
+                create: (BuildContext context) => AuthenticationBloc(
+                    authenticationRepository: authenticationRepository),
+                child: MultiBlocProvider(
+                  providers: [
+                    BlocProvider<UserBloc>(
+                      create: (BuildContext context) => UserBloc(
+                        userRepository: userRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
                     ),
-                    elevatedButtonTheme: ElevatedButtonThemeData(
-                      style: ButtonStyle(
-                        minimumSize: (MaterialStateProperty.all(Size(250, 50))),
-                        textStyle: MaterialStateProperty.all(
-                          TextStyle(
+                    BlocProvider<BinomePairBloc>(
+                      create: (BuildContext context) => BinomePairBloc(
+                        binomePairRepository: binomePairRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<MatchedMatchesBloc>(
+                      create: (BuildContext context) => MatchedMatchesBloc(
+                        matchedMatchesRepository: matchedMatchesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<DiscoverMatchesBloc>(
+                      create: (BuildContext context) => DiscoverMatchesBloc(
+                        discoverMatchesRepository: discoverMatchesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<MatchedBinomesBloc>(
+                      create: (BuildContext context) => MatchedBinomesBloc(
+                        matchedBinomesRepository: matchedBinomesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<DiscoverBinomesBloc>(
+                      create: (BuildContext context) => DiscoverBinomesBloc(
+                        discoverBinomesRepository: discoverBinomesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<MatchedBinomePairMatchesBloc>(
+                      create: (BuildContext context) =>
+                          MatchedBinomePairMatchesBloc(
+                        matchedBinomePairMatchesRepository:
+                            matchedBinomePairMatchesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<DiscoverBinomePairMatchesBloc>(
+                      create: (BuildContext context) =>
+                          DiscoverBinomePairMatchesBloc(
+                        discoverBinomePairMatchesRepository:
+                            discoverBinomePairMatchesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<UserAssociatifSearchBloc>(
+                      create: (BuildContext context) =>
+                          UserAssociatifSearchBloc(
+                        userRepository: userRepository,
+                        matchedMatchesRepository: matchedMatchesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<UserScolaireSearchBloc>(
+                      create: (BuildContext context) => UserScolaireSearchBloc(
+                        userRepository: userRepository,
+                        matchedBinomesRepository: matchedBinomesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<BinomePairSearchBloc>(
+                      create: (BuildContext context) => BinomePairSearchBloc(
+                        binomePairRepository: binomePairRepository,
+                        matchedBinomePairMatchesRepository:
+                            matchedBinomePairMatchesRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<AssociationsBloc>(
+                      create: (BuildContext context) => AssociationsBloc(
+                        associationsRepository: associationsRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<MatieresBloc>(
+                      create: (BuildContext context) => MatieresBloc(
+                        matieresRepository: matieresRepository,
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                      ),
+                    ),
+                  ],
+                  child: MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider<TinterTheme>(
+                          create: (_) => TinterTheme()),
+                      ChangeNotifierProvider<TinterTabs>(
+                          create: (_) => TinterTabs()),
+                      ChangeNotifierProvider<SelectedScolaire>(
+                          create: (_) => SelectedScolaire()),
+                      ChangeNotifierProvider<SelectedAssociatif>(
+                          create: (_) => SelectedAssociatif()),
+                    ],
+                    child: MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                      theme: ThemeData(
+                        primaryColor: Color(0xff79BFC9),
+                        accentColor: Color(0xffFF6868),
+                        errorColor: Color(0xffF44848),
+                        disabledColor: Color(0xffBCBCBC),
+                        scaffoldBackgroundColor: Color(0xffF4F4F8),
+                        cardTheme: CardTheme(
+                          color: Colors.white,
+                          shadowColor: Colors.black,
+                          margin: EdgeInsets.zero,
+                          elevation: 5.0,
+                        ),
+                        elevatedButtonTheme: ElevatedButtonThemeData(
+                          style: ButtonStyle(
+                            minimumSize:
+                                (MaterialStateProperty.all(Size(250, 50))),
+                            textStyle: MaterialStateProperty.all(TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.0,
+                            )),
+                            shadowColor:
+                                MaterialStateProperty.all(Colors.black),
+                            elevation: MaterialStateProperty.all(5.0),
+                            backgroundColor: MaterialStateProperty.resolveWith(
+                              (states) =>
+                                  states.contains(MaterialState.disabled)
+                                      ? Color(0xffBCBCBC)
+                                      : Color(0xff79BFC9),
+                            ),
+                          ),
+                        ),
+                        appBarTheme: AppBarTheme(
+                          iconTheme: IconThemeData(
                             color: Colors.white,
-                            fontSize: 15.0,
-                          )
+                          ),
+                          backgroundColor: Color(0xff79BFC9),
+                          centerTitle: true,
+                          titleTextStyle: TextStyle(color: Colors.white),
+                          toolbarTextStyle: TextStyle(color: Colors.white),
                         ),
-                        shadowColor: MaterialStateProperty.all(Colors.black),
-                        elevation: MaterialStateProperty.all(5.0),
-                        backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) => states.contains(MaterialState.disabled)
-                              ? Color(0xffBCBCBC)
-                              : Color(0xff79BFC9),
+                        textTheme: TextTheme(
+                          headline1:
+                              TextStyle(fontSize: 60, color: Colors.black87),
+                          headline2:
+                              TextStyle(fontSize: 50, color: Colors.black87),
+                          headline3:
+                              TextStyle(fontSize: 30, color: Colors.black87),
+                          headline4:
+                              TextStyle(fontSize: 20, color: Colors.black87),
+                          headline5:
+                              TextStyle(fontSize: 15, color: Colors.black87),
+                          headline6:
+                              TextStyle(fontSize: 12, color: Colors.black87),
                         ),
+                        fontFamily: 'OpenSans',
                       ),
-                    ),
-                    appBarTheme: AppBarTheme(
-                      iconTheme: IconThemeData(
-                        color: Colors.white,
+                      home: SafeArea(
+                        child: Tinter(),
                       ),
-                      backgroundColor: Color(0xff79BFC9),
-                      centerTitle: true,
-                      titleTextStyle: TextStyle(color: Colors.white),
-                      toolbarTextStyle: TextStyle(color: Colors.white),
+                      navigatorObservers: [routeObserver],
                     ),
-                    textTheme: TextTheme(
-                      headline1: TextStyle(fontSize: 60, color: Colors.black87),
-                      headline2: TextStyle(fontSize: 50, color: Colors.black87),
-                      headline3: TextStyle(fontSize: 30, color: Colors.black87),
-                      headline4: TextStyle(fontSize: 20, color: Colors.black87),
-                      headline5: TextStyle(fontSize: 15, color: Colors.black87),
-                      headline6: TextStyle(fontSize: 12, color: Colors.black87),
-                    ),
-                    fontFamily: 'OpenSans',
                   ),
-                  home: SafeArea(
-                    child: Tinter(),
-                  ),
-                  navigatorObservers: [routeObserver],
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

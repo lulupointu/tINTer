@@ -28,7 +28,7 @@ List<String> goutsMusicaux = [
   'Reggae',
   'Country',
   'Funk',
-  'Afro',
+  'Affro',
   'Gospel',
   'Variété',
   'Classique',
