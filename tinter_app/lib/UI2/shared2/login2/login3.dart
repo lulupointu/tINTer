@@ -59,9 +59,10 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
           ),
         ),
         if (!KeyboardVisibilityProvider.isKeyboardVisible(context))
-          ProblemOrQuestion(),
+          Expanded(child: ProblemOrQuestion()),
       ]),
     );
+    
   }
 }
 
@@ -113,49 +114,47 @@ class ProblemOrQuestion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 30.0),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Un problème ou une question ?',
-                style: Theme.of(context).textTheme.headline5,
-              ),
-              ButtonTheme(
-                minWidth: 0,
-                height: 0,
-                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0), //adds padding inside the button
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, //limits the touch area to the button area
-                child: FlatButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => SimpleDialog(
-                        children: [
-                          Text(
-                            'ToDo',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Rejoignez-nous !',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5
-                        .copyWith(color: Color(0xff738ADB)),
-                  ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30.0),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Un problème ou une question ?',
+              style: Theme.of(context).textTheme.headline5,
+            ),
+            ButtonTheme(
+              minWidth: 0,
+              height: 0,
+              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0), //adds padding inside the button
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, //limits the touch area to the button area
+              child: FlatButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => SimpleDialog(
+                      children: [
+                        Text(
+                          'ToDo',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: Text(
+                  'Rejoignez-nous !',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: Color(0xff738ADB)),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
