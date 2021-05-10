@@ -20,6 +20,7 @@ import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.d
 import 'package:tinterapp/UI/shared/user_profile/associations.dart';
 import 'package:tinterapp/UI/shared/user_profile/options.dart';
 import 'package:tinterapp/UI/shared/user_profile/snap_scroll_physics.dart';
+import 'package:tinterapp/UI2/shared2/options2.dart';
 import 'package:tinterapp/main.dart';
 
 import '../shared_element/slider_label.dart';
@@ -249,7 +250,7 @@ class _UserTabState extends State<UserTab> with RouteAware {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => OptionsTab()),
+                      MaterialPageRoute(builder: (context) => OptionsTab2()),
                     );
                   },
                   icon: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {

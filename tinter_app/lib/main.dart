@@ -255,6 +255,7 @@ main() {
                     ),
                     elevatedButtonTheme: ElevatedButtonThemeData(
                       style: ButtonStyle(
+                        minimumSize: (MaterialStateProperty.all(Size(250, 50))),
                         textStyle: MaterialStateProperty.all(
                           TextStyle(
                             color: Colors.white,
@@ -271,13 +272,13 @@ main() {
                       ),
                     ),
                     appBarTheme: AppBarTheme(
-                      backgroundColor: Color(0xff79BFC9),
-                      textTheme: TextTheme(
-                        headline1: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                        ),
+                      iconTheme: IconThemeData(
+                        color: Colors.white,
                       ),
+                      backgroundColor: Color(0xff79BFC9),
+                      centerTitle: true,
+                      titleTextStyle: TextStyle(color: Colors.white),
+                      toolbarTextStyle: TextStyle(color: Colors.white),
                     ),
                     textTheme: TextTheme(
                       headline1: TextStyle(fontSize: 60, color: Colors.black87),
