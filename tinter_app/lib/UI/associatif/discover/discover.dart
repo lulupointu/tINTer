@@ -17,6 +17,7 @@ import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
+import 'package:tinterapp/UI2/shared2/recherche_etudiant2.dart';
 
 class DiscoverAssociatifTab extends StatelessWidget implements TinterTab {
   @override
@@ -168,7 +169,7 @@ class StudentSearch extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SearchStudentAssociatifTab()),
+                      builder: (context) => SearchStudentAssociatifTab2()),
                 );
               },
               child: Center(

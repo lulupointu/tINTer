@@ -65,96 +65,7 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
           children: [
-            Card(
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(top: 15.0, bottom: 15.0, left: 15.0),
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Mes associations',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            child: Card(
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 6.0),
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Text(
-                                        "Nom de l'asso",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 0.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: 80,
-                                        width: 80,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color:
-                                                  Colors.black.withOpacity(0.6),
-                                              width: 3,
-                                            )),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Icon(
-                                          Icons.info_outline,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                        Icon(
-                                          Icons.favorite,
-                                          color: Theme.of(context).accentColor,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.center,
-                              ),
-                            ),
-                            width: 144,
-                            height: 144,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Theme.of(context).primaryColor,
-                                  width: 2.0,
-                                  style: BorderStyle.solid),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
+            LikedAssociationsWidget2()
           ],
         ),
       ),
@@ -176,5 +87,105 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
       isSearching = false;
       searchString = "";
     });
+  }
+}
+
+class LikedAssociationsWidget2 extends StatelessWidget {
+  const LikedAssociationsWidget2({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 15.0, bottom: 15.0, left: 15.0),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Mes associations',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Row(
+                children: [
+                  Container(
+                    child: Card(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 6.0),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                "Nom de l'asso",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 0.0),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color:
+                                          Colors.black.withOpacity(0.6),
+                                      width: 3,
+                                    )),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                Icon(
+                                  Icons.favorite,
+                                  color: Theme.of(context).accentColor,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                    ),
+                    width: 144,
+                    height: 144,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Theme.of(context).primaryColor,
+                          width: 2.0,
+                          style: BorderStyle.solid),
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(5.0)),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
