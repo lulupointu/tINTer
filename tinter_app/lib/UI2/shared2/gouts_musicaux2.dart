@@ -53,17 +53,19 @@ class GoutsMusicauxTab2 extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: SingleChildScrollView(
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 30.0,
-              runSpacing: 30.0,
-              children: [
-                for (String goutMusical in goutsMusicaux)
-                  goutMusicalChip(goutMusical)
-              ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: SingleChildScrollView(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 30.0,
+                runSpacing: 30.0,
+                children: [
+                  for (String goutMusical in goutsMusicaux)
+                    goutMusicalChip(goutMusical)
+                ],
+              ),
             ),
           ),
         ),
@@ -107,7 +109,7 @@ Widget goutMusicalChip(String goutMusical) {
           }
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+          padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -127,7 +129,7 @@ Widget goutMusicalChip(String goutMusical) {
           ),
           child: Text(
             goutMusical,
-            style: Theme.of(context).textTheme.headline6.copyWith(color : Colors.black),
+            style: Theme.of(context).textTheme.headline6.copyWith(color : Colors.black, fontSize: 13.0),
           ),
         ),
       );

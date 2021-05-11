@@ -91,105 +91,117 @@ class _SearchStudentAssociatifTab2State
                   ),
                   child: Card(
                     child: Center(
-                      child: TextField(
-                        obscureText: false,
-                        focusNode: searchBarFocusNode,
-                        controller: searchController,
-                        textInputAction: TextInputAction.search,
-                        style: TextStyle(textBaseline: TextBaseline.alphabetic),
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.zero,
-                            labelText: "Nom ou prénom d'un.e étudiant.e",
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            labelStyle: Theme.of(context)
-                                .textTheme
-                                .headline6
-                                .copyWith(color: Colors.black38),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            suffixIcon: (changedSearchString?.isCompleted ==
-                                    false)
-                                ? Image.asset(
-                                    'assets/discover/loading.gif',
-                                    scale: 4,
-                                  )
-                                : (searchString != '')
-                                    ? IconButton(
-                                        onPressed: () {
-                                          changedSearchString?.cancel();
-                                          searchString = '';
-                                          searchController.clear();
-                                          setState(() {});
-                                        },
-                                        icon: Icon(
-                                          Icons.close,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      )
-                                    : null),
-                        onChanged: (String text) {
-                          changedSearchString?.cancel();
-                          setState(() {});
-                          changedSearchString =
-                              CancelableOperation.fromFuture(Future.delayed(
-                            Duration(milliseconds: 500),
-                          )).then((_) => setState(() => searchString = text));
-                        },
+                      child: Container(
+                        height: 50,
+                        child: TextField(
+                          obscureText: false,
+                          focusNode: searchBarFocusNode,
+                          controller: searchController,
+                          textInputAction: TextInputAction.search,
+                          style: TextStyle(textBaseline: TextBaseline.alphabetic),
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(
+                                bottom: 20,
+                              ),
+                              labelText: "Nom ou prénom d'un.e étudiant.e",
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              labelStyle: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(color: Colors.black38),
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              suffixIcon: (changedSearchString?.isCompleted ==
+                                      false)
+                                  ? Image.asset(
+                                      'assets/discover/loading.gif',
+                                      scale: 4,
+                                    )
+                                  : (searchString != '')
+                                      ? IconButton(
+                                          onPressed: () {
+                                            changedSearchString?.cancel();
+                                            searchString = '';
+                                            searchController.clear();
+                                            setState(() {});
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            color: Theme.of(context).primaryColor,
+                                          ),
+                                        )
+                                      : null),
+                          onChanged: (String text) {
+                            changedSearchString?.cancel();
+                            setState(() {});
+                            changedSearchString =
+                                CancelableOperation.fromFuture(Future.delayed(
+                              Duration(milliseconds: 500),
+                            )).then((_) => setState(() => searchString = text));
+                          },
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
               Flexible(
-                child: SingleChildScrollView(
-                  child: BlocBuilder<UserAssociatifSearchBloc,
-                          UserAssociatifSearchState>(
-                      builder: (BuildContext context,
-                          UserAssociatifSearchState userSearchState) {
-                    if (!(userSearchState
-                        is UserAssociatifSearchLoadSuccessfulState))
-                      return Center(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onPanDown: (_) {
+                      WidgetsBinding.instance.focusManager.primaryFocus
+                          ?.unfocus();
+                  },
+                  child: SingleChildScrollView(
+                    child: BlocBuilder<UserAssociatifSearchBloc,
+                            UserAssociatifSearchState>(
+                        builder: (BuildContext context,
+                            UserAssociatifSearchState userSearchState) {
+                      if (!(userSearchState
+                          is UserAssociatifSearchLoadSuccessfulState))
+                        return Center(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      List<SearchedUserAssociatif>
+                          _allSearchedUsersAssociatifs = (userSearchState
+                                  as UserAssociatifSearchLoadSuccessfulState)
+                              .searchedUsers;
+                      _allSearchedUsersAssociatifs.sort(
+                          (SearchedUserAssociatif searchedUserA,
+                                  SearchedUserAssociatif searchedUserB) =>
+                              searchedUserA.name
+                                  .toLowerCase()
+                                  .compareTo(searchedUserB.name.toLowerCase()));
+                      RegExp searchedStringRegex =
+                          RegExp(searchString, caseSensitive: false);
+                      List<
+                          SearchedUserAssociatif> _searchedUsers = (searchString ==
+                              '')
+                          ? []
+                          : _allSearchedUsersAssociatifs
+                              .where((SearchedUserAssociatif searchedUser) =>
+                                  searchedStringRegex.hasMatch(
+                                      '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
+                              .toList();
+                      return Column(
+                        children: [
+                          for (SearchedUserAssociatif searchedUser
+                              in _searchedUsers)
+                            userResume(searchedUser, context)
+                        ],
                       );
-                    List<SearchedUserAssociatif> _allSearchedUsersAssociatifs =
-                        (userSearchState
-                                as UserAssociatifSearchLoadSuccessfulState)
-                            .searchedUsers;
-                    _allSearchedUsersAssociatifs.sort(
-                        (SearchedUserAssociatif searchedUserA,
-                                SearchedUserAssociatif searchedUserB) =>
-                            searchedUserA.name
-                                .toLowerCase()
-                                .compareTo(searchedUserB.name.toLowerCase()));
-                    RegExp searchedStringRegex =
-                        RegExp(searchString, caseSensitive: false);
-                    List<
-                        SearchedUserAssociatif> _searchedUsers = (searchString ==
-                            '')
-                        ? []
-                        : _allSearchedUsersAssociatifs
-                            .where((SearchedUserAssociatif searchedUser) =>
-                                searchedStringRegex.hasMatch(
-                                    '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
-                            .toList();
-                    return Column(
-                      children: [
-                        for (SearchedUserAssociatif searchedUser
-                            in _searchedUsers)
-                          userResume(searchedUser, context)
-                      ],
-                    );
-                  }),
+                    }),
+                  ),
                 ),
               ),
             ],
@@ -216,6 +228,7 @@ Widget userResume(SearchedUserAssociatif searchedUser, BuildContext context) {
           padding: const EdgeInsets.symmetric(vertical: 5.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -245,9 +258,15 @@ Widget userResume(SearchedUserAssociatif searchedUser, BuildContext context) {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            searchedUser.name + ' ' + searchedUser.surname,
-                            style: Theme.of(context).textTheme.headline5,
+                          Container(
+                            padding: EdgeInsets.zero,
+                            width: 170.0,
+                            child: Text(
+                              searchedUser.name + ' ' + searchedUser.surname,
+                              style: Theme.of(context).textTheme.headline5,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () =>
