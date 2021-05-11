@@ -143,8 +143,9 @@ class UserAssociatifSearchBloc
 
     List<SearchedUserAssociatif> newSearchedUsersAssociatifs =
         List<SearchedUserAssociatif>.from(oldSearchedUsersAssociatifs);
+    var index = newSearchedUsersAssociatifs.indexOf(event.searchedUser);
     newSearchedUsersAssociatifs.remove(event.searchedUser);
-    newSearchedUsersAssociatifs.add(newSearchedUserAssociatif);
+    newSearchedUsersAssociatifs.insert(index, newSearchedUserAssociatif);
 
     print('Replacing the liked or ignored user');
 
