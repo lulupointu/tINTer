@@ -269,49 +269,80 @@ Widget userResume(SearchedUserAssociatif searchedUser, BuildContext context) {
                           ],
                         ),
                         child: searchedUser.liked
-                            ? Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Déjà matché",
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
-                                    ),
-                                    Icon(
-                                      Icons.favorite,
-                                      color: Theme.of(context).accentColor,
-                                      size: 15,
-                                    ),
-                                  ],
+                            ? GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<UserAssociatifSearchBloc>(
+                                            context)
+                                        .add(searchedUser.liked
+                                            ? UserAssociatifSearchIgnoreEvent(
+                                                ignoredSearchedUserAssociatif:
+                                                    searchedUser)
+                                            : UserAssociatifSearchLikeEvent(
+                                                likedSearchedUserAssociatif:
+                                                    searchedUser)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 3.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Déjà matché",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
+                                      ),
+                                      Container(
+                                        child: Icon(
+                                          Icons.favorite,
+                                          color: Theme.of(context).accentColor,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               )
-                            : Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Matcher",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .copyWith(color: Colors.white),
-                                    ),
-                                    Icon(
-                                      Icons.favorite,
-                                      color: Colors.white,
-                                      size: 15,
-                                    ),
-                                  ],
+                            : GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<UserAssociatifSearchBloc>(
+                                            context)
+                                        .add(searchedUser.liked
+                                            ? UserAssociatifSearchIgnoreEvent(
+                                                ignoredSearchedUserAssociatif:
+                                                    searchedUser)
+                                            : UserAssociatifSearchLikeEvent(
+                                                likedSearchedUserAssociatif:
+                                                    searchedUser)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 3.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Matcher",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                      Icon(
+                                        Icons.favorite,
+                                        color: Colors.white,
+                                        size: 15,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
