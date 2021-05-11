@@ -243,101 +243,65 @@ Widget userResume(SearchedUserAssociatif searchedUser, BuildContext context) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        searchedUser.surname + ' ' + searchedUser.name,
+                        searchedUser.name + ' ' + searchedUser.surname,
                         style: Theme.of(context).textTheme.headline5,
                       ),
-                      // Text(
-                      //   "Année : 1A",
-                      //   style: Theme.of(context).textTheme.headline6,
-                      // ),
-                      Container(
-                        width: searchedUser.liked ? 115 : 90,
-                        height: 25,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: searchedUser.liked
-                              ? Colors.white
-                              : Theme.of(context).accentColor,
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(3, 3),
-                            ),
-                          ],
-                        ),
-                        child: searchedUser.liked
-                            ? GestureDetector(
-                                onTap: () =>
-                                    BlocProvider.of<UserAssociatifSearchBloc>(
-                                            context)
-                                        .add(searchedUser.liked
-                                            ? UserAssociatifSearchIgnoreEvent(
-                                                ignoredSearchedUserAssociatif:
-                                                    searchedUser)
-                                            : UserAssociatifSearchLikeEvent(
-                                                likedSearchedUserAssociatif:
-                                                    searchedUser)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 3.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Déjà matché",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6,
-                                      ),
-                                      Container(
-                                        child: Icon(
-                                          Icons.favorite,
-                                          color: Theme.of(context).accentColor,
-                                          size: 15,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: () =>
-                                    BlocProvider.of<UserAssociatifSearchBloc>(
-                                            context)
-                                        .add(searchedUser.liked
-                                            ? UserAssociatifSearchIgnoreEvent(
-                                                ignoredSearchedUserAssociatif:
-                                                    searchedUser)
-                                            : UserAssociatifSearchLikeEvent(
-                                                likedSearchedUserAssociatif:
-                                                    searchedUser)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 3.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Matcher",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(color: Colors.white),
-                                      ),
-                                      Icon(
-                                        Icons.favorite,
-                                        color: Colors.white,
-                                        size: 15,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                      GestureDetector(
+                        onTap: () => BlocProvider.of<UserAssociatifSearchBloc>(
+                                context)
+                            .add(searchedUser.liked
+                                ? UserAssociatifSearchIgnoreEvent(
+                                    ignoredSearchedUserAssociatif: searchedUser)
+                                : UserAssociatifSearchLikeEvent(
+                                    likedSearchedUserAssociatif: searchedUser)),
+                        child: Container(
+                          width: searchedUser.liked ? 115 : 90,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: searchedUser.liked
+                                ? Colors.white
+                                : Theme.of(context).accentColor,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: Offset(3, 3),
                               ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 3.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  searchedUser.liked
+                                      ? "Déjà matché"
+                                      : "Matcher",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: searchedUser.liked
+                                              ? Colors.black87
+                                              : Colors.white),
+                                ),
+                                Icon(
+                                  Icons.favorite,
+                                  color: searchedUser.liked
+                                      ? Theme.of(context).accentColor
+                                      : Colors.white,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
