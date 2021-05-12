@@ -176,12 +176,6 @@ class _SearchStudentAssociatifTab2State
                           _allSearchedUsersAssociatifs = (userSearchState
                                   as UserAssociatifSearchLoadSuccessfulState)
                               .searchedUsers;
-                      _allSearchedUsersAssociatifs.sort(
-                          (SearchedUserAssociatif searchedUserA,
-                                  SearchedUserAssociatif searchedUserB) =>
-                              searchedUserA.name
-                                  .toLowerCase()
-                                  .compareTo(searchedUserB.name.toLowerCase()));
                       RegExp searchedStringRegex =
                           RegExp(searchString, caseSensitive: false);
                       List<

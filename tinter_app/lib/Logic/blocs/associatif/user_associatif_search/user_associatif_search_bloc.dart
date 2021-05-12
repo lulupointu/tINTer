@@ -78,6 +78,16 @@ class UserAssociatifSearchBloc
       print(error);
       yield UserAssociatifSearchLoadFailedState();
     }
+
+    searchedUsers
+        .sort((SearchedUserAssociatif searchedUserA, SearchedUserAssociatif searchedUserB) {
+      final compareNames =
+          searchedUserA.name.toLowerCase().compareTo(searchedUserB.name.toLowerCase());
+      return (compareNames == 0)
+          ? searchedUserA.surname.toLowerCase().compareTo(searchedUserB.surname.toLowerCase())
+          : compareNames;
+    });
+
     yield UserAssociatifSearchLoadSuccessfulState(searchedUsers: searchedUsers);
   }
 
@@ -99,6 +109,16 @@ class UserAssociatifSearchBloc
       yield UserAssociatifSearchRefreshingFailedState(
           searchedUsers: (state as UserAssociatifSearchLoadSuccessfulState).searchedUsers);
     }
+
+    searchedUsers
+        .sort((SearchedUserAssociatif searchedUserA, SearchedUserAssociatif searchedUserB) {
+      final compareNames =
+      searchedUserA.name.toLowerCase().compareTo(searchedUserB.name.toLowerCase());
+      return (compareNames == 0)
+          ? searchedUserA.surname.toLowerCase().compareTo(searchedUserB.surname.toLowerCase())
+          : compareNames;
+    });
+
     yield UserAssociatifSearchLoadSuccessfulState(searchedUsers: searchedUsers);
   }
 
