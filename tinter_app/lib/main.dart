@@ -124,7 +124,8 @@ main() {
       KeyboardVisibilityProvider(
         child: KeyboardVisibilityBuilder(
           builder: (_, bool isKeyboardVisible) {
-            if (!isKeyboardVisible) WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+            if (!isKeyboardVisible)
+              WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
             return KeyboardDismissOnTap(
               child: BlocProvider(
                 create: (BuildContext context) => AuthenticationBloc(
@@ -304,7 +305,8 @@ main() {
                           activeTrackColor: Color(0xff79BFC9),
                           inactiveTrackColor: Color(0xffCECECE),
                           thumbColor: Color(0xffCECECE),
-                        )
+                          valueIndicatorColor: Color(0xff79BFC9),
+                        ),
                       ),
                       home: SafeArea(
                         child: Tinter(),

@@ -106,60 +106,58 @@ class AttiranceVieAssoRectangle2 extends StatelessWidget {
 class FeteOuCoursRectangle2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Préférence entre vie scolaire et associative',
+              style: Theme.of(context).textTheme.headline5,
             ),
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Text(
-                'Cours ou soirée?',
-                style: tinterTheme.textStyle.headline2,
-              );
-            }),
-          ),
+            Row(
+              children: [
+                Icon(
+                  Icons.school_rounded,
+                  color: Theme.of(context).primaryColor,
+                ),
+                SliderTheme(
+                  data: Theme.of(context).sliderTheme.copyWith(inactiveTrackColor: Theme.of(context).accentColor),
+                  child: BlocBuilder<UserBloc, UserState>(
+                    builder: (BuildContext context, UserState userState) {
+                      if (!(userState is UserLoadSuccessState)) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Expanded(
+                        child: Slider(
+                          value: (userState as UserLoadSuccessState)
+                              .user
+                              .feteOuCours,
+                          onChanged: (value) =>
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..feteOuCours = value),
+                                ),
+                              ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Icon(
+                  Icons.celebration,
+                  color: Theme.of(context).accentColor,
+                ),
+              ],
+            )
+          ],
         ),
-        SizedBox(
-          height: 15,
-        ),
-        Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return SliderTheme(
-              data: tinterTheme.slider.enabled,
-              child: child,
-            );
-          },
-          child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return Slider(
-                    value: (userState as UserLoadSuccessState).user.feteOuCours,
-                    onChanged: (value) =>
-                        BlocProvider.of<UserBloc>(context).add(
-                      UserStateChangedEvent(
-                        newState: (userState as UserLoadSuccessState)
-                            .user
-                            .rebuild((u) => u..feteOuCours = value),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              leftLabel: 'Cours',
-              rightLabel: 'Soirée'),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -167,62 +165,58 @@ class FeteOuCoursRectangle2 extends StatelessWidget {
 class AideOuSortirRectangle2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Parain qui aide ou avec qui sortir ?',
+              style: Theme.of(context).textTheme.headline5,
             ),
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Text(
-                'Parrain qui aide ou avec qui sortir?',
-                style: tinterTheme.textStyle.headline2,
-                textAlign: TextAlign.start,
-              );
-            }),
-          ),
+            Row(
+              children: [
+                Icon(
+                  Icons.support,
+                  color: Theme.of(context).primaryColor,
+                ),
+                SliderTheme(
+                  data: Theme.of(context).sliderTheme.copyWith(inactiveTrackColor: Theme.of(context).accentColor),
+                  child: BlocBuilder<UserBloc, UserState>(
+                    builder: (BuildContext context, UserState userState) {
+                      if (!(userState is UserLoadSuccessState)) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Expanded(
+                        child: Slider(
+                          value: (userState as UserLoadSuccessState)
+                              .user
+                              .aideOuSortir,
+                          onChanged: (value) =>
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..aideOuSortir = value),
+                                ),
+                              ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Icon(
+                  Icons.sports_bar_rounded,
+                  color: Theme.of(context).accentColor,
+                ),
+              ],
+            )
+          ],
         ),
-        SizedBox(
-          height: 15,
-        ),
-        Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return SliderTheme(
-              data: tinterTheme.slider.enabled,
-              child: child,
-            );
-          },
-          child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return Slider(
-                    value:
-                        (userState as UserLoadSuccessState).user.aideOuSortir,
-                    onChanged: (value) =>
-                        BlocProvider.of<UserBloc>(context).add(
-                      UserStateChangedEvent(
-                        newState: (userState as UserLoadSuccessState)
-                            .user
-                            .rebuild((u) => u..aideOuSortir = value),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              leftLabel: 'Aide',
-              rightLabel: 'Sortir'),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -230,56 +224,54 @@ class AideOuSortirRectangle2 extends StatelessWidget {
 class OrganisationEvenementsRectangle2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Organiser des événements ?',
+              style: Theme.of(context).textTheme.headline5,
             ),
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Text(
-                'Aime organiser les événements?',
-                style: tinterTheme.textStyle.headline2,
-                textAlign: TextAlign.start,
-              );
-            }),
-          ),
-        ),
-        Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return SliderTheme(
-              data: tinterTheme.slider.enabled,
-              child: child,
-            );
-          },
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (BuildContext context, UserState userState) {
-              if (!(userState is UserLoadSuccessState)) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return Slider(
-                value: (userState as UserLoadSuccessState)
-                    .user
-                    .organisationEvenements,
-                onChanged: (value) => BlocProvider.of<UserBloc>(context).add(
-                  UserStateChangedEvent(
-                    newState: (userState as UserLoadSuccessState)
-                        .user
-                        .rebuild((u) => u..organisationEvenements = value),
+            Row(
+              children: [
+                Icon(
+                  Icons.event_available_rounded,
+                  color: Theme.of(context).primaryColor,
+                ),
+                SliderTheme(
+                  data: Theme.of(context).sliderTheme,
+                  child: BlocBuilder<UserBloc, UserState>(
+                    builder: (BuildContext context, UserState userState) {
+                      if (!(userState is UserLoadSuccessState)) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Expanded(
+                        child: Slider(
+                          value: (userState as UserLoadSuccessState)
+                              .user
+                              .organisationEvenements,
+                          onChanged: (value) =>
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..organisationEvenements = value),
+                                ),
+                              ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              );
-            },
-          ),
+              ],
+            )
+          ],
         ),
-      ],
+      ),
     );
   }
 }

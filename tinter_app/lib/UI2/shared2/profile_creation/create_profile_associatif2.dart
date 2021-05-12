@@ -87,65 +87,20 @@ class CreateProfileAssociatif2 extends StatelessWidget {
           ),
         ),
         separator,
-        HidingRectangle(
-          child: InformationRectangle(
-            child: Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: AssociationsRectangle(),
-            ),
-          ),
-          text: 'Clique pour choisir tes associations.',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AssociationsTab()),
-            );
-          },
+        InformationRectangle(
+          child: AttiranceVieAssoRectangle2(),
         ),
         separator,
-        HidingRectangle(
-          child: InformationRectangle(
-            child: AttiranceVieAssoRectangle2(),
-          ),
-          text: 'Clique pour dire à quel point te plait la vie associative.',
+        InformationRectangle(
+          child: FeteOuCoursRectangle2(),
         ),
         separator,
-        HidingRectangle(
-          child: InformationRectangle(
-            child: FeteOuCoursRectangle(),
-          ),
-          text: 'Clique pour dire si tu es plutôt fête ou cours.',
+        InformationRectangle(
+          child: AideOuSortirRectangle2(),
         ),
         separator,
-        HidingRectangle(
-          child: InformationRectangle(
-            child: AideOuSortirRectangle(),
-          ),
-          text:
-              "Clique pour dire si tu préféres un parrain qui t'aide scolairement ou avec qui sortir.",
-        ),
-        separator,
-        HidingRectangle(
-          child: InformationRectangle(
-            child: OrganisationEvenementsRectangle(),
-          ),
-          text: 'Clique pour dire si tu aimes organiser des événements.',
-        ),
-        separator,
-        HidingRectangle(
-          child: InformationRectangle(
-            child: Padding(
-              padding: EdgeInsets.only(top: 15.0, left: 20.0, bottom: 5.0),
-              child: GoutsMusicauxRectangle(),
-            ),
-          ),
-          text: 'Clique pour choisir tes goûts musicaux.',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
-            );
-          },
+        InformationRectangle(
+          child: OrganisationEvenementsRectangle2(),
         ),
       ],
     );
