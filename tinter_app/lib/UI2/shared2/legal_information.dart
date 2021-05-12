@@ -28,12 +28,13 @@ class LegalInformation extends StatelessWidget {
           child: Card(
             child: Center(
               child: Text(
-                "Les informations collectées sur \n"
-                "cette application sont uniquement \n"
-                " utilisées à l'intérieur de celle-ci. \n\n"
-                "Aucune information relative \n"
-                "à l'activité sur l'application \n"
-                "n'est collectée.",
+                "Hébergeur de l'application :\n\n"
+                "Télécom SudParis\n"
+                "9 rue Charles Fourier\n"
+                "91011 Evry Cedex\n"
+                "Tel.: + 33 1 60 76 40 40\n"
+                "lucas.delsol@telecom-sudparis.eu\n"
+                "SIRET 180 092 025 00055 - APE 8542Z",
                 textAlign: TextAlign.center,
               ),
             ),
