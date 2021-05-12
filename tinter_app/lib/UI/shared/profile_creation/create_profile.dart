@@ -17,6 +17,7 @@ import 'package:tinterapp/UI/scolaire/profile_creation/create_profile_scolaire.d
 import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.dart';
 import 'package:tinterapp/UI/shared/user_profile/snap_scroll_physics.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_associatif2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_scolaire2.dart';
 
 import '../shared_element/const.dart';
 
@@ -154,7 +155,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
                               key: _scolaireFormKey,
                               child: Offstage(
                                 offstage: tinterTheme.theme != MyTheme.light,
-                                child: CreateProfileScolaire(
+                                child: CreateProfileScolaire2(
                                   separator: separator,
                                 ),
                               ),
