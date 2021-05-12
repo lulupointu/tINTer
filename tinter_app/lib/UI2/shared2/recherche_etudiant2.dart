@@ -23,7 +23,6 @@ class _SearchStudentAssociatifTab2State
     'separator': 0.05,
   };
 
-  int _keyboardVisibilitySubscriberId;
   FocusNode searchBarFocusNode = FocusNode();
   String searchString = '';
   CancelableOperation changedSearchString;
@@ -224,113 +223,114 @@ Widget userResume(SearchedUserAssociatif searchedUser, BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10.0, top: 5.0, bottom: 5.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Colors.black.withOpacity(0.6),
-                            width: 3.0,
-                            style: BorderStyle.solid),
-                      ),
-                      child: getProfilePictureFromLogin(
-                        login: searchedUser.login,
-                        height: 60,
-                        width: 60,
+              Expanded(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10.0, top: 5.0, bottom: 5.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                              color: Colors.black.withOpacity(0.6),
+                              width: 3.0,
+                              style: BorderStyle.solid),
+                        ),
+                        child: getProfilePictureFromLogin(
+                          login: searchedUser.login,
+                          height: 60,
+                          width: 60,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Container(
-                      height: 55,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.zero,
-                            width: 170.0,
-                            child: Text(
-                              searchedUser.name + ' ' + searchedUser.surname,
-                              style: Theme.of(context).textTheme.headline5,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () =>
-                                BlocProvider.of<UserAssociatifSearchBloc>(
-                                        context)
-                                    .add(searchedUser.liked
-                                        ? UserAssociatifSearchIgnoreEvent(
-                                            ignoredSearchedUserAssociatif:
-                                                searchedUser)
-                                        : UserAssociatifSearchLikeEvent(
-                                            likedSearchedUserAssociatif:
-                                                searchedUser)),
-                            child: Container(
-                              width: searchedUser.liked ? 115 : 90,
-                              height: 25,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                color: searchedUser.liked
-                                    ? Colors.white
-                                    : Theme.of(context).accentColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(3, 3),
-                                  ),
-                                ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Container(
+                        height: 55,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.zero,
+                              child: Text(
+                                searchedUser.name + ' ' + searchedUser.surname,
+                                style: Theme.of(context).textTheme.headline5,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 3.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      searchedUser.liked
-                                          ? "Déjà matché"
-                                          : "Matcher",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .copyWith(
-                                              color: searchedUser.liked
-                                                  ? Colors.black87
-                                                  : Colors.white),
-                                    ),
-                                    Icon(
-                                      Icons.favorite,
-                                      color: searchedUser.liked
-                                          ? Theme.of(context).accentColor
-                                          : Colors.white,
-                                      size: 15,
+                            ),
+                            GestureDetector(
+                              onTap: () =>
+                                  BlocProvider.of<UserAssociatifSearchBloc>(
+                                          context)
+                                      .add(searchedUser.liked
+                                          ? UserAssociatifSearchIgnoreEvent(
+                                              ignoredSearchedUserAssociatif:
+                                                  searchedUser)
+                                          : UserAssociatifSearchLikeEvent(
+                                              likedSearchedUserAssociatif:
+                                                  searchedUser)),
+                              child: Container(
+                                width: searchedUser.liked ? 115 : 90,
+                                height: 25,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  color: searchedUser.liked
+                                      ? Colors.white
+                                      : Theme.of(context).accentColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15.0)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 1,
+                                      blurRadius: 2,
+                                      offset: Offset(3, 3),
                                     ),
                                   ],
                                 ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 3.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        searchedUser.liked
+                                            ? "Déjà matché"
+                                            : "Matcher",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                color: searchedUser.liked
+                                                    ? Colors.black87
+                                                    : Colors.white),
+                                      ),
+                                      Icon(
+                                        Icons.favorite,
+                                        color: searchedUser.liked
+                                            ? Theme.of(context).accentColor
+                                            : Colors.white,
+                                        size: 15,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 10.0),
+                padding: const EdgeInsets.only(right: 10.0, left: 10.0),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
