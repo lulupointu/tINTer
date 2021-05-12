@@ -300,6 +300,11 @@ main() {
                               TextStyle(fontSize: 12, color: Colors.black87),
                         ),
                         fontFamily: 'OpenSans',
+                        sliderTheme: SliderThemeData(
+                          activeTrackColor: Color(0xff79BFC9),
+                          inactiveTrackColor: Color(0xffCECECE),
+                          thumbColor: Color(0xffCECECE),
+                        )
                       ),
                       home: SafeArea(
                         child: Tinter(),
