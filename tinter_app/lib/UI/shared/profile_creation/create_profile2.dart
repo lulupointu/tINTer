@@ -46,34 +46,27 @@ class _UserCreationTabState2 extends State<UserCreationTab2> {
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                     child: Column(
                       children: [
-                        Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: Colors.white,
-                                  width: 3.0,
-                                  style: BorderStyle.solid),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(1, 1),
-                                ),
-                              ]),
-                        ),
+                        HoveringUserPicture(size: 95.0),
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
-                          child: Text(
-                            'Matthieu Guillot',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(color: Colors.white),
+                          child: BlocBuilder<UserBloc, UserState>(
+                            builder:
+                                (BuildContext context, UserState userState) {
+                              return Text(
+                                ((userState is NewUserState))
+                                    ? userState.user.name +
+                                        " " +
+                                        userState.user.surname
+                                    : 'En chargement...',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(color: Colors.white),
+                              );
+                            },
                           ),
                         ),
                         Text(
@@ -83,7 +76,6 @@ class _UserCreationTabState2 extends State<UserCreationTab2> {
                               .headline6
                               .copyWith(color: Colors.white),
                         ),
-                        HoveringUserPicture(size: 80.0),
                       ],
                     ),
                   ),
@@ -160,12 +152,14 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
+          border: Border.all(
+              color: Colors.white, width: 3.5, style: BorderStyle.solid),
           boxShadow: [
             BoxShadow(
-              color: Colors.black,
+              color: Colors.black.withOpacity(0.6),
               spreadRadius: 0,
-              blurRadius: 3,
-              offset: Offset(0, 3),
+              blurRadius: 5,
+              offset: Offset(0.5, 0.5),
             ),
           ],
         ),
@@ -190,16 +184,21 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
                 ClipPath(
                   clipper: ModifyProfilePictureClipper(),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+                    filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
                     child: Container(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.white.withOpacity(0.3),
                     ),
                   ),
                 ),
                 Align(
                   alignment: AlignmentDirectional.bottomCenter,
-                  child: Icon(
-                    Icons.add,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 3.0),
+                    child: Icon(
+                      Icons.camera_enhance_rounded,
+                      color: Colors.black.withOpacity(0.65),
+                      size: 23.0,
+                    ),
                   ),
                 ),
               ],
@@ -318,8 +317,8 @@ class FolderOrCameraOverlay extends StatelessWidget {
                                     BoxShadow(
                                       color: Colors.black,
                                       spreadRadius: 0,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      offset: Offset(1, 1),
                                     ),
                                   ],
                                   color: Colors.white,
@@ -363,14 +362,14 @@ class FolderOrCameraOverlay extends StatelessWidget {
                                     BoxShadow(
                                       color: Colors.black,
                                       spreadRadius: 0,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      offset: Offset(1, 1),
                                     ),
                                   ],
                                   color: Colors.white,
                                 ),
                                 child: Icon(
-                                  Icons.folder_open,
+                                  Icons.folder_open_outlined,
                                   size: littleWidgetSize - 10,
                                 ),
                               ),
