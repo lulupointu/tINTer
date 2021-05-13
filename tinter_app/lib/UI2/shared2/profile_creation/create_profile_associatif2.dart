@@ -49,63 +49,8 @@ class CreateProfileAssociatif2 extends StatelessWidget {
             ],
           ),
         ),
-        separator,
-        NextButton2a1(),
       ],
     );
-  }
-}
-
-class NextButton2a1 extends StatelessWidget {
-  const NextButton2a1({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
-        builder: (BuildContext context, UserState userState) {
-      if (!(userState is UserLoadSuccessState)) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
-        ),
-        height: 65,
-        child: ElevatedButton(
-          onPressed:
-              (userState as UserLoadSuccessState).user.associations.length ==
-                          0 ||
-                      (userState as UserLoadSuccessState)
-                              .user
-                              .goutsMusicaux
-                              .length ==
-                          0
-                  ? null
-                  : () {},
-          style: ElevatedButton.styleFrom(
-            shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                topRight: Radius.circular(15.0),
-              ),
-            ),
-          ),
-          child: Center(
-            child: Text(
-              "Créer mon profil",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      );
-    });
   }
 }
 

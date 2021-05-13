@@ -5,7 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/almost_there.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_associatif2.dart';
 
 import '../shared_element/const.dart';
@@ -28,14 +30,15 @@ class _UserCreationTabState2 extends State<UserCreationTab2> {
           children: [
             ProfileHeader(),
             Padding(
-              padding: const EdgeInsets.only(
-                  top: 40.0),
+              padding: const EdgeInsets.only(top: 40.0),
               child: CreateProfileAssociatif2(
                 separator: SizedBox(
                   height: 20.0,
                 ),
               ),
             ),
+            separator,
+            NextButton2a1(),
           ],
         ),
       ),
@@ -95,7 +98,7 @@ class ProfileHeader extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Nouveau',
+                      'Nouvel utilisateur',
                       style: Theme.of(context)
                           .textTheme
                           .headline5
@@ -423,4 +426,69 @@ class ModifyProfilePictureClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+class NextButton2a1 extends StatelessWidget {
+  const NextButton2a1({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(
+        builder: (BuildContext context, UserState userState) {
+      if (!(userState is UserLoadSuccessState)) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+        ),
+        height: 65,
+        child: ElevatedButton(
+          onPressed:
+              (userState as UserLoadSuccessState).user.associations.length ==
+                          0 ||
+                      (userState as UserLoadSuccessState)
+                              .user
+                              .goutsMusicaux
+                              .length ==
+                          0
+                  ? null
+                  : () {
+                      UserState userState =
+                          BlocProvider.of<UserBloc>(context).state;
+                      if (userState is NewUserState) {
+                        if (userState.user.school == School.TSP &&
+                            userState.user.year == TSPYear.TSP1A) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AlmostThere()),
+                          );
+                        }
+                      }
+                    },
+          style: ElevatedButton.styleFrom(
+            shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                topRight: Radius.circular(15.0),
+              ),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              "Créer mon profil",
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    });
+  }
 }
