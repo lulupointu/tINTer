@@ -48,6 +48,7 @@ import 'package:tinterapp/UI2/shared2/login2/login2.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
 import 'UI2/shared2/login2/login3.dart';
+import 'UI/shared/profile_creation/create_profile2.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -359,7 +360,7 @@ class Tinter extends StatelessWidget {
             } else if (userState is NewUserSavingState) {
               return SplashScreen();
             } else if (userState is NewUserState) {
-              return UserCreationTab();
+              return UserCreationTab2();
             } else if (userState is KnownUserState) {
               // If user if TSP 1A, check if he has a binome pair
               if (userState.user.year == TSPYear.TSP1A &&
