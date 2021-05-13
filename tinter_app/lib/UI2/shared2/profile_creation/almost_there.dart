@@ -103,13 +103,75 @@ class AlmostThereExample extends StatelessWidget {
                   },
                 ),
               ),
-              Text(
-                'Nouvel utilisateur',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: Colors.white),
-              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 3.0),
+                child: Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    Container(
+                      height: 25,
+                      width: 180,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Theme.of(context).disabledColor,
+                        border: Border.all(color: Colors.white, width: 2.5, style: BorderStyle.solid),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(25.0),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 25,
+                      width: 110,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 2.0, right: 20.0),
+                        child: Center(
+                            child: Text(
+                              'scolaire',
+                              style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14.0),
+                            )),
+                      ),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Theme.of(context).disabledColor,
+                        border: Border.all(
+                            color: Colors.white,
+                            width: 2.5,
+                            style: BorderStyle.solid),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(25.0),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right:0,
+                      child: Container(
+                        height: 25,
+                        width: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 2.0),
+                          child: Center(
+                              child: Text(
+                                'associatif',
+                                style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14.0),
+                              ),),
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Theme.of(context).primaryColor,
+                          border: Border.all(
+                              color: Colors.white,
+                              width: 2.5,
+                              style: BorderStyle.solid),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(25.0),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),
