@@ -48,7 +48,7 @@ class GoutsMusicauxTab2 extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Goûts musicaux',
+          'Mes goûts musicaux',
           style: TextStyle(color: Colors.white),
         ),
       ),

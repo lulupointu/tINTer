@@ -8,6 +8,8 @@ import 'package:tinterapp/UI/scolaire/user_profile/matieres.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 
+import '../matieres2.dart';
+
 class UserScolaireProfile extends StatelessWidget {
   final Widget separator;
 
@@ -71,7 +73,10 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
           children: [
             Text(
               "J'habite à la MAISEL",
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headline5,
             ),
             Container(
               decoration: BoxDecoration(
@@ -86,92 +91,106 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
               ),
               child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
-                if (!(userState is NewUserState)) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                              newState: (userState as NewUserState)
-                                  .user
-                                  .rebuild(
-                                      (b) => b..lieuDeVie = LieuDeVie.maisel))),
-                      child: Container(
-                        width: 45,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as NewUserState).user.lieuDeVie ==
+                    if (!(userState is NewUserState)) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () =>
+                              BlocProvider.of<UserBloc>(context).add(
+                                  UserStateChangedEvent(
+                                      newState: (userState as NewUserState)
+                                          .user
+                                          .rebuild(
+                                              (b) =>
+                                          b
+                                            ..lieuDeVie = LieuDeVie.maisel))),
+                          child: Container(
+                            width: 45,
+                            height: 35,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              color: Theme
+                                  .of(context)
+                                  .primaryColor
+                                  .withOpacity(
+                                  (userState as NewUserState).user.lieuDeVie ==
                                       LieuDeVie.maisel
-                                  ? 1
-                                  : 0.4),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5.0),
-                              bottomLeft: Radius.circular(5.0)),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Oui',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(
+                                      ? 1
+                                      : 0.4),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(5.0),
+                                  bottomLeft: Radius.circular(5.0)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Oui',
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(
                                     color: Colors.black.withOpacity(
                                         (userState as NewUserState)
-                                                    .user
-                                                    .lieuDeVie ==
-                                                LieuDeVie.maisel
+                                            .user
+                                            .lieuDeVie ==
+                                            LieuDeVie.maisel
                                             ? 0.87
                                             : 0.38)),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                              newState: (userState as NewUserState)
-                                  .user
-                                  .rebuild(
-                                      (b) => b..lieuDeVie = LieuDeVie.other))),
-                      child: Container(
-                        width: 45,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as NewUserState).user.lieuDeVie ==
+                        GestureDetector(
+                          onTap: () =>
+                              BlocProvider.of<UserBloc>(context).add(
+                                  UserStateChangedEvent(
+                                      newState: (userState as NewUserState)
+                                          .user
+                                          .rebuild(
+                                              (b) =>
+                                          b
+                                            ..lieuDeVie = LieuDeVie.other))),
+                          child: Container(
+                            width: 45,
+                            height: 35,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              color: Theme
+                                  .of(context)
+                                  .primaryColor
+                                  .withOpacity(
+                                  (userState as NewUserState).user.lieuDeVie ==
                                       LieuDeVie.maisel
-                                  ? 0.4
-                                  : 1),
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(5.0),
-                              bottomRight: Radius.circular(5.0)),
-                        ),
-                        child: Center(
-                          child: Text('Non',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(
+                                      ? 0.4
+                                      : 1),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(5.0),
+                                  bottomRight: Radius.circular(5.0)),
+                            ),
+                            child: Center(
+                              child: Text('Non',
+                                  style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(
                                       color: Colors.black.withOpacity(
                                           (userState as NewUserState)
-                                                      .user
-                                                      .lieuDeVie ==
-                                                  LieuDeVie.maisel
+                                              .user
+                                              .lieuDeVie ==
+                                              LieuDeVie.maisel
                                               ? 0.38
                                               : 0.87))),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                );
-              }),
+                      ],
+                    );
+                  }),
             )
           ],
         ),
@@ -190,215 +209,254 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
           children: [
             Text(
               "Mes horaires de travail préférés",
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headline5,
             ),
             SizedBox(
               height: 15.0,
             ),
             BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState userState) {
-              if (!(userState is UserLoadSuccessState)) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => BlocProvider.of<UserBloc>(context).add(
-                        UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((b) {
-                      if ((userState as UserLoadSuccessState)
-                          .user
-                          .horairesDeTravail
-                          .contains(HoraireDeTravail.morning)) {
-                        b..horairesDeTravail.remove(HoraireDeTravail.morning);
-                      } else {
-                        b..horairesDeTravail.add(HoraireDeTravail.morning);
-                      }
-                    }))),
-                    child: Container(
-                      width: 60,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as UserLoadSuccessState)
+                  if (!(userState is UserLoadSuccessState)) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () =>
+                            BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                    newState: (userState as UserLoadSuccessState)
+                                        .user
+                                        .rebuild((b) {
+                                      if ((userState as UserLoadSuccessState)
+                                          .user
+                                          .horairesDeTravail
+                                          .contains(HoraireDeTravail.morning)) {
+                                        b
+                                          ..horairesDeTravail.remove(
+                                              HoraireDeTravail.morning);
+                                      } else {
+                                        b
+                                          ..horairesDeTravail.add(
+                                              HoraireDeTravail.morning);
+                                      }
+                                    }))),
+                        child: Container(
+                          width: 60,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: Theme
+                                .of(context)
+                                .primaryColor
+                                .withOpacity(
+                                (userState as UserLoadSuccessState)
                                     .user
                                     .horairesDeTravail
                                     .contains(HoraireDeTravail.morning)
-                                ? 1
-                                : 0.4),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(5.0),
-                            bottomLeft: Radius.circular(5.0)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Matin',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(
+                                    ? 1
+                                    : 0.4),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                bottomLeft: Radius.circular(5.0)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Matin',
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
                                   color: Colors.black.withOpacity((userState
-                                              as UserLoadSuccessState)
-                                          .user
-                                          .horairesDeTravail
-                                          .contains(HoraireDeTravail.morning)
+                                  as UserLoadSuccessState)
+                                      .user
+                                      .horairesDeTravail
+                                      .contains(HoraireDeTravail.morning)
                                       ? 0.87
                                       : 0.38)),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => BlocProvider.of<UserBloc>(context).add(
-                        UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((b) {
-                      if ((userState as UserLoadSuccessState)
-                          .user
-                          .horairesDeTravail
-                          .contains(HoraireDeTravail.afternoon)) {
-                        b
-                          ..horairesDeTravail
-                              .remove(HoraireDeTravail.afternoon);
-                      } else {
-                        b..horairesDeTravail.add(HoraireDeTravail.afternoon);
-                      }
-                    }))),
-                    child: Container(
-                      width: 100,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as NewUserState)
+                      GestureDetector(
+                        onTap: () =>
+                            BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                    newState: (userState as UserLoadSuccessState)
+                                        .user
+                                        .rebuild((b) {
+                                      if ((userState as UserLoadSuccessState)
+                                          .user
+                                          .horairesDeTravail
+                                          .contains(
+                                          HoraireDeTravail.afternoon)) {
+                                        b
+                                          ..horairesDeTravail
+                                              .remove(
+                                              HoraireDeTravail.afternoon);
+                                      } else {
+                                        b
+                                          ..horairesDeTravail.add(
+                                              HoraireDeTravail.afternoon);
+                                      }
+                                    }))),
+                        child: Container(
+                          width: 100,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: Theme
+                                .of(context)
+                                .primaryColor
+                                .withOpacity(
+                                (userState as NewUserState)
                                     .user
                                     .horairesDeTravail
                                     .contains(HoraireDeTravail.afternoon)
-                                ? 1
-                                : 0.4),
-                      ),
-                      child: Center(
-                        child: Text('Après-midi',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(
+                                    ? 1
+                                    : 0.4),
+                          ),
+                          child: Center(
+                            child: Text('Après-midi',
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(
                                     color: Colors.black.withOpacity((userState
-                                                as UserLoadSuccessState)
-                                            .user
-                                            .horairesDeTravail
-                                            .contains(
-                                                HoraireDeTravail.afternoon)
+                                    as UserLoadSuccessState)
+                                        .user
+                                        .horairesDeTravail
+                                        .contains(
+                                        HoraireDeTravail.afternoon)
                                         ? 0.87
                                         : 0.38))),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => BlocProvider.of<UserBloc>(context).add(
-                        UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((b) {
-                      if ((userState as UserLoadSuccessState)
-                          .user
-                          .horairesDeTravail
-                          .contains(HoraireDeTravail.evening)) {
-                        b..horairesDeTravail.remove(HoraireDeTravail.evening);
-                      } else {
-                        b..horairesDeTravail.add(HoraireDeTravail.evening);
-                      }
-                    }))),
-                    child: Container(
-                      width: 60,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as UserLoadSuccessState)
+                      GestureDetector(
+                        onTap: () =>
+                            BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                    newState: (userState as UserLoadSuccessState)
+                                        .user
+                                        .rebuild((b) {
+                                      if ((userState as UserLoadSuccessState)
+                                          .user
+                                          .horairesDeTravail
+                                          .contains(HoraireDeTravail.evening)) {
+                                        b
+                                          ..horairesDeTravail.remove(
+                                              HoraireDeTravail.evening);
+                                      } else {
+                                        b
+                                          ..horairesDeTravail.add(
+                                              HoraireDeTravail.evening);
+                                      }
+                                    }))),
+                        child: Container(
+                          width: 60,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: Theme
+                                .of(context)
+                                .primaryColor
+                                .withOpacity(
+                                (userState as UserLoadSuccessState)
                                     .user
                                     .horairesDeTravail
                                     .contains(HoraireDeTravail.evening)
-                                ? 1
-                                : 0.4),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Soir',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(
+                                    ? 1
+                                    : 0.4),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Soir',
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
                                   color: Colors.black.withOpacity((userState
-                                              as UserLoadSuccessState)
-                                          .user
-                                          .horairesDeTravail
-                                          .contains(HoraireDeTravail.evening)
+                                  as UserLoadSuccessState)
+                                      .user
+                                      .horairesDeTravail
+                                      .contains(HoraireDeTravail.evening)
                                       ? 0.87
                                       : 0.38)),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => BlocProvider.of<UserBloc>(context).add(
-                        UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((b) {
-                      if ((userState as UserLoadSuccessState)
-                          .user
-                          .horairesDeTravail
-                          .contains(HoraireDeTravail.night)) {
-                        b..horairesDeTravail.remove(HoraireDeTravail.night);
-                      } else {
-                        b..horairesDeTravail.add(HoraireDeTravail.night);
-                      }
-                    }))),
-                    child: Container(
-                      width: 60,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as UserLoadSuccessState)
+                      GestureDetector(
+                        onTap: () =>
+                            BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                    newState: (userState as UserLoadSuccessState)
+                                        .user
+                                        .rebuild((b) {
+                                      if ((userState as UserLoadSuccessState)
+                                          .user
+                                          .horairesDeTravail
+                                          .contains(HoraireDeTravail.night)) {
+                                        b
+                                          ..horairesDeTravail.remove(
+                                              HoraireDeTravail.night);
+                                      } else {
+                                        b
+                                          ..horairesDeTravail.add(
+                                              HoraireDeTravail.night);
+                                      }
+                                    }))),
+                        child: Container(
+                          width: 60,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: Theme
+                                .of(context)
+                                .primaryColor
+                                .withOpacity(
+                                (userState as UserLoadSuccessState)
                                     .user
                                     .horairesDeTravail
                                     .contains(HoraireDeTravail.night)
-                                ? 1
-                                : 0.4),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(5.0),
-                            bottomRight: Radius.circular(5.0)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Nuit',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(
+                                    ? 1
+                                    : 0.4),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5.0),
+                                bottomRight: Radius.circular(5.0)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Nuit',
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
                                   color: Colors.black.withOpacity((userState
-                                              as NewUserState)
-                                          .user
-                                          .horairesDeTravail
-                                          .contains(HoraireDeTravail.night)
+                                  as NewUserState)
+                                      .user
+                                      .horairesDeTravail
+                                      .contains(HoraireDeTravail.night)
                                       ? 0.87
                                       : 0.38)),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              );
-            }),
+                    ],
+                  );
+                }),
           ],
         ),
       ),
@@ -409,62 +467,71 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
 class GroupeOuSeulRectangle2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Travailler seul ou en groupe ?',
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headline5,
             ),
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Text(
-                'Préfères-tu travailler seul.e ou en groupe?',
-                style: tinterTheme.textStyle.headline2,
-                textAlign: TextAlign.start,
-              );
-            }),
-          ),
+            Row(
+              children: [
+                Icon(
+                  Icons.person_rounded,
+                  color: Theme
+                      .of(context)
+                      .primaryColor,
+                ),
+                SliderTheme(
+                  data: Theme
+                      .of(context)
+                      .sliderTheme
+                      .copyWith(inactiveTrackColor: Theme
+                      .of(context)
+                      .accentColor),
+                  child: BlocBuilder<UserBloc, UserState>(
+                    builder: (BuildContext context, UserState userState) {
+                      if (!(userState is UserLoadSuccessState)) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Expanded(
+                        child: Slider(
+                          value: (userState as UserLoadSuccessState)
+                              .user
+                              .groupeOuSeul,
+                          onChanged: (value) =>
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..groupeOuSeul = value),
+                                ),
+                              ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Icon(
+                  Icons.group_rounded,
+                  color: Theme
+                      .of(context)
+                      .accentColor,
+                ),
+              ],
+            )
+          ],
         ),
-        SizedBox(
-          height: 15,
-        ),
-        Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return SliderTheme(
-              data: tinterTheme.slider.enabled,
-              child: child,
-            );
-          },
-          child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return Slider(
-                    value:
-                        (userState as UserLoadSuccessState).user.groupeOuSeul,
-                    onChanged: (value) =>
-                        BlocProvider.of<UserBloc>(context).add(
-                      UserStateChangedEvent(
-                        newState: (userState as UserLoadSuccessState)
-                            .user
-                            .rebuild((u) => u..groupeOuSeul = value),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              leftLabel: 'Seul',
-              rightLabel: 'Groupe'),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -472,62 +539,71 @@ class GroupeOuSeulRectangle2 extends StatelessWidget {
 class EnLigneOuPresentielRectangle2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 20,
-              right: 20,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Travailler en ligne ou à l'école ?",
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headline5,
             ),
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Text(
-                'Préfères-tu travailler en ligne ou à l\'école?',
-                style: tinterTheme.textStyle.headline2,
-                textAlign: TextAlign.start,
-              );
-            }),
-          ),
+            Row(
+              children: [
+                Icon(
+                  Icons.wifi,
+                  color: Theme
+                      .of(context)
+                      .primaryColor,
+                ),
+                SliderTheme(
+                  data: Theme
+                      .of(context)
+                      .sliderTheme
+                      .copyWith(inactiveTrackColor: Theme
+                      .of(context)
+                      .accentColor),
+                  child: BlocBuilder<UserBloc, UserState>(
+                    builder: (BuildContext context, UserState userState) {
+                      if (!(userState is UserLoadSuccessState)) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Expanded(
+                        child: Slider(
+                          value: (userState as UserLoadSuccessState)
+                              .user
+                              .enligneOuNon,
+                          onChanged: (value) =>
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..enligneOuNon = value),
+                                ),
+                              ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Icon(
+                  Icons.school_rounded,
+                  color: Theme
+                      .of(context)
+                      .accentColor,
+                ),
+              ],
+            )
+          ],
         ),
-        SizedBox(
-          height: 15,
-        ),
-        Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return SliderTheme(
-              data: tinterTheme.slider.enabled,
-              child: child,
-            );
-          },
-          child: DiscoverSlider(
-              slider: BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return Slider(
-                    value:
-                        (userState as UserLoadSuccessState).user.enligneOuNon,
-                    onChanged: (value) =>
-                        BlocProvider.of<UserBloc>(context).add(
-                      UserStateChangedEvent(
-                        newState: (userState as UserLoadSuccessState)
-                            .user
-                            .rebuild((u) => u..enligneOuNon = value),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              leftLabel: 'En ligne',
-              rightLabel: 'A l\'école'),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -535,91 +611,36 @@ class EnLigneOuPresentielRectangle2 extends StatelessWidget {
 class MatieresRectangle2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MatieresTab()),
+          MaterialPageRoute(builder: (context) => MatieresTab2()),
         );
       },
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Align(
-                alignment: AlignmentDirectional.topStart,
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                  return Text(
-                    'Matières préférées',
-                    style: tinterTheme.textStyle.headline2,
-                  );
-                }),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: 30.0, vertical: 25.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Sélectionner mes matières préférées',
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline5,
               ),
-              SizedBox(
-                height: 5,
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Theme
+                    .of(context)
+                    .primaryColor,
               ),
-              BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 15,
-                    children: (userState as UserLoadSuccessState)
-                                .user
-                                .matieresPreferees
-                                .length ==
-                            0
-                        ? [
-                            Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Chip(
-                                label: Text('Aucune'),
-                                labelStyle: tinterTheme.textStyle.chipLiked,
-                                backgroundColor:
-                                    tinterTheme.colors.primaryAccent,
-                              );
-                            }),
-                          ]
-                        : <Widget>[
-                            for (String musicStyle
-                                in (userState as UserLoadSuccessState)
-                                    .user
-                                    .matieresPreferees)
-                              Consumer<TinterTheme>(
-                                  builder: (context, tinterTheme, child) {
-                                return Chip(
-                                  label: Text(musicStyle),
-                                  labelStyle: tinterTheme.textStyle.chipLiked,
-                                  backgroundColor:
-                                      tinterTheme.colors.primaryAccent,
-                                );
-                              })
-                          ],
-                  );
-                },
-              )
             ],
           ),
-          Positioned.fill(
-            child: Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Icon(
-                  Icons.arrow_forward_ios,
-                  size: 30,
-                  color: tinterTheme.colors.primaryAccent,
-                );
-              }),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

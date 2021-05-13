@@ -306,6 +306,7 @@ main() {
                           inactiveTrackColor: Color(0xffCECECE),
                           thumbColor: Color(0xffCECECE),
                           valueIndicatorColor: Color(0xff79BFC9),
+                          trackHeight: 5.0,
                         ),
                       ),
                       home: SafeArea(
