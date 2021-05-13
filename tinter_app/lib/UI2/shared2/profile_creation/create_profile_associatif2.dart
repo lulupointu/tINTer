@@ -27,82 +27,156 @@ class CreateProfileAssociatif2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        PrimoEntrantRectangle(),
-        separator,
-        YearRectangle(),
-        separator,
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AssociationsTab()),
-            );
-          },
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 30.0, vertical: 25.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Sélectionner mes associations',
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ],
-              ),
-            ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          child: Column(
+            children: [
+              PrimoEntrantRectangle(),
+              separator,
+              YearRectangle(),
+              separator,
+              AttiranceVieAssoRectangle2(),
+              separator,
+              FeteOuCoursRectangle2(),
+              separator,
+              AideOuSortirRectangle2(),
+              separator,
+              OrganisationEvenementsRectangle2(),
+              separator,
+              DefineAssociations(),
+              separator,
+              DefineMusicTaste(),
+            ],
           ),
         ),
         separator,
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => GoutsMusicauxTab2()),
-            );
-          },
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 30.0, vertical: 25.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Définir mes goûts musicaux',
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        separator,
-        InformationRectangle(
-          child: AttiranceVieAssoRectangle2(),
-        ),
-        separator,
-        InformationRectangle(
-          child: FeteOuCoursRectangle2(),
-        ),
-        separator,
-        InformationRectangle(
-          child: AideOuSortirRectangle2(),
-        ),
-        separator,
-        InformationRectangle(
-          child: OrganisationEvenementsRectangle2(),
-        ),
+        NextButton2a1(),
       ],
+    );
+  }
+}
+
+class NextButton2a1 extends StatelessWidget {
+  const NextButton2a1({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(
+        builder: (BuildContext context, UserState userState) {
+      if (!(userState is UserLoadSuccessState)) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+        ),
+        height: 65,
+        child: ElevatedButton(
+          onPressed:
+              (userState as UserLoadSuccessState).user.associations.length ==
+                          0 ||
+                      (userState as UserLoadSuccessState)
+                              .user
+                              .goutsMusicaux
+                              .length ==
+                          0
+                  ? null
+                  : () {},
+          style: ElevatedButton.styleFrom(
+            shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                topRight: Radius.circular(15.0),
+              ),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              "Créer mon profil",
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class DefineMusicTaste extends StatelessWidget {
+  const DefineMusicTaste({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => GoutsMusicauxTab2()),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 25.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Définir mes goûts musicaux',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Theme.of(context).primaryColor,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DefineAssociations extends StatelessWidget {
+  const DefineAssociations({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AssociationsTab()),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 25.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Sélectionner mes associations',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Theme.of(context).primaryColor,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -231,7 +305,7 @@ class YearRectangle extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Mon année d'étude",
+              "Mon année scolaire",
               style: Theme.of(context).textTheme.headline5,
             ),
             Container(

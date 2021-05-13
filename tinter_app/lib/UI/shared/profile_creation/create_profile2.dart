@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_associatif2.dart';
 
 import '../shared_element/const.dart';
 
@@ -26,65 +26,88 @@ class _UserCreationTabState2 extends State<UserCreationTab2> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 60.0),
-                child: Container(
-                  width: 250,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(10.0),
-                        bottomRight: Radius.circular(10.0)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: Offset(1, 1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: Column(
-                      children: [
-                        HoveringUserPicture(size: 95.0),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: BlocBuilder<UserBloc, UserState>(
-                            builder:
-                                (BuildContext context, UserState userState) {
-                              return Text(
-                                ((userState is NewUserState))
-                                    ? userState.user.name +
-                                        " " +
-                                        userState.user.surname
-                                    : 'En chargement...',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(color: Colors.white),
-                              );
-                            },
-                          ),
-                        ),
-                        Text(
-                          'Nouveau',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              .copyWith(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
+            ProfileHeader(),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 40.0),
+              child: CreateProfileAssociatif2(
+                separator: SizedBox(
+                  height: 20.0,
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProfileHeader extends StatelessWidget {
+  const ProfileHeader({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 60.0),
+            child: Container(
+              width: 275,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 2,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Column(
+                  children: [
+                    HoveringUserPicture(size: 95.0),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: BlocBuilder<UserBloc, UserState>(
+                        builder: (BuildContext context, UserState userState) {
+                          return Text(
+                            ((userState is NewUserState))
+                                ? userState.user.name +
+                                    " " +
+                                    userState.user.surname
+                                : 'En chargement...',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline4
+                                .copyWith(color: Colors.white),
+                          );
+                        },
+                      ),
+                    ),
+                    Text(
+                      'Nouveau',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -196,7 +219,7 @@ class _HoveringUserPictureState extends State<HoveringUserPicture> {
                     padding: const EdgeInsets.only(bottom: 3.0),
                     child: Icon(
                       Icons.camera_enhance_rounded,
-                      color: Colors.black.withOpacity(0.65),
+                      color: Colors.black.withOpacity(0.55),
                       size: 23.0,
                     ),
                   ),
