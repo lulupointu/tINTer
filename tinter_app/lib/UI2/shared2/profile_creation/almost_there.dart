@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
+import 'package:tinterapp/UI/shared/profile_creation/create_profil_final_2.dart';
 import 'package:tinterapp/UI/shared/profile_creation/create_profile2.dart';
+
+import '../legal_information.dart';
 
 main() => runApp(MaterialApp(
       home: AlmostThere(),
@@ -11,48 +15,60 @@ class AlmostThere extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
-            child: Card(
+          Positioned.fill(
+            child: SingleChildScrollView(
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Center(
-                      child: Text(
-                        'Tu y es presque !',
-                        style: Theme.of(context).textTheme.headline3,
+                    padding: const EdgeInsets.only(
+                        left: 30.0, right: 30.0, top: 50.0, bottom: 30.0),
+                    child: Card(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20.0),
+                            child: Center(
+                              child: Text(
+                                'Tu y es presque !',
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 20.0),
+                            child: Text(
+                              "Comme tu es en première année, nous allons te présenter une fonctionnalité importante de l'application. Sur la page 'Profil', "
+                              "tu verras que tu as la possibilité de switch entre deux modes : 'Scolaire' et 'Associatif'.",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                          ),
+                          AlmostThereExample(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 20.0),
+                            child: Text(
+                              "Tu peux switch entre ces deux modes autant de fois que tu le souhaites. Le mode 'Scolaire' te "
+                              "permettra de trouver un binôme pour ta scolarité à TSP et le mode 'Associatif' des parains.",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 20.0),
-                    child: Text(
-                      "Comme tu es en première année, nous allons te présenter une fonctionnalité importante de l'application. Sur la page 'Profil', "
-                      "tu verras que tu as la possibilité de switch entre deux modes : 'Scolaire' et 'Associatif'.",
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                  ),
-                  AlmostThereExample(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 20.0),
-                    child: Text(
-                      "Tu peux switch entre ces deux modes autant de fois que tu le souhaites. Le mode 'Scolaire' te "
-                      "permettra de trouver un binôme pour ta scolarité à TSP et le mode 'Associatif' des parains.",
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline5,
                     ),
                   ),
                 ],
               ),
             ),
-          )
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: NextButton2a2(),
+          ),
         ],
       ),
     );
@@ -86,7 +102,7 @@ class AlmostThereExample extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
           child: Column(
             children: [
-              HoveringUserPicture(size: 95.0),
+              HoveringUserPicture2(size: 95.0),
               Padding(
                 padding: const EdgeInsets.only(top: 5.0),
                 child: BlocBuilder<UserBloc, UserState>(
@@ -106,7 +122,7 @@ class AlmostThereExample extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 5.0, bottom: 3.0),
                 child: SwitchButton(),
-              )
+              ),
             ],
           ),
         ),
@@ -116,7 +132,6 @@ class AlmostThereExample extends StatelessWidget {
 }
 
 class SwitchButton extends StatefulWidget {
-
   const SwitchButton({Key key}) : super(key: key);
 
   @override
@@ -157,7 +172,7 @@ class _SwitchButtonState extends State<SwitchButton> {
                 height: 25,
                 width: 110,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 2.0, left: 20.0),
+                  padding: const EdgeInsets.only(bottom: 2.0, left: 22.0),
                   child: Center(
                     child: Text(
                       'associatif',
@@ -172,7 +187,9 @@ class _SwitchButtonState extends State<SwitchButton> {
                   shape: BoxShape.rectangle,
                   color: Theme.of(context).disabledColor,
                   border: Border.all(
-                      color: Colors.white, width: 2.5, style: BorderStyle.solid),
+                      color: Colors.white,
+                      width: 2.5,
+                      style: BorderStyle.solid),
                   borderRadius: BorderRadius.all(
                     Radius.circular(25.0),
                   ),
@@ -245,6 +262,47 @@ class _SwitchButtonState extends State<SwitchButton> {
             ),
           )
       ],
+    );
+  }
+}
+
+class NextButton2a2 extends StatelessWidget {
+  const NextButton2a2({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+      ),
+      height: 65,
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UserCreationFinalizingTab2()),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.only(
+              topLeft: Radius.circular(15.0),
+              topRight: Radius.circular(15.0),
+            ),
+          ),
+        ),
+        child: Center(
+          child: Text(
+            "Créer mon profil",
+            style: Theme.of(context)
+                .textTheme
+                .headline5
+                .copyWith(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -12,18 +12,21 @@ class CreateProfileScolaire2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        MaiselOuNonRectangle2(),
-        separator,
-        HoraireDeTravailRectangle2(),
-        separator,
-        GroupeOuSeulRectangle2(),
-        separator,
-        EnLigneOuPresentielRectangle2(),
-        separator,
-        MatieresRectangle2(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Column(
+        children: <Widget>[
+          MaiselOuNonRectangle2(),
+          separator,
+          HoraireDeTravailRectangle2(),
+          separator,
+          GroupeOuSeulRectangle2(),
+          separator,
+          EnLigneOuPresentielRectangle2(),
+          separator,
+          MatieresRectangle2(),
+        ],
+      ),
     );
   }
 }

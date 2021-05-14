@@ -78,7 +78,7 @@ class ProfileHeader extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Column(
                   children: [
-                    HoveringUserPicture(size: 95.0),
+                    HoveringUserPicture2(size: 95.0),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: BlocBuilder<UserBloc, UserState>(
@@ -115,16 +115,16 @@ class ProfileHeader extends StatelessWidget {
   }
 }
 
-class HoveringUserPicture extends StatefulWidget {
+class HoveringUserPicture2 extends StatefulWidget {
   final double size;
 
-  HoveringUserPicture({@required this.size});
+  HoveringUserPicture2({@required this.size});
 
   @override
-  _HoveringUserPictureState createState() => _HoveringUserPictureState();
+  _HoveringUserPicture2State createState() => _HoveringUserPicture2State();
 }
 
-class _HoveringUserPictureState extends State<HoveringUserPicture> {
+class _HoveringUserPicture2State extends State<HoveringUserPicture2> {
   final GlobalKey hoveringUserPictureKey = GlobalKey();
   final Duration _folderOrCameraOverlayAnimationDuration =
       Duration(milliseconds: 200);
@@ -447,28 +447,36 @@ class NextButton2a1 extends StatelessWidget {
         ),
         height: 65,
         child: ElevatedButton(
-          onPressed:
-              (userState as UserLoadSuccessState).user.associations.length ==
-                          0 ||
-                      (userState as UserLoadSuccessState)
-                              .user
-                              .goutsMusicaux
-                              .length ==
-                          0
-                  ? null
-                  : () {
-                      UserState userState =
-                          BlocProvider.of<UserBloc>(context).state;
-                      if (userState is NewUserState) {
-                        if (userState.user.school == School.TSP &&
-                            userState.user.year == TSPYear.TSP1A) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AlmostThere()),
-                          );
-                        }
-                      }
-                    },
+          onPressed: (userState as UserLoadSuccessState)
+                          .user
+                          .associations
+                          .length ==
+                      0 ||
+                  (userState as UserLoadSuccessState)
+                          .user
+                          .goutsMusicaux
+                          .length ==
+                      0
+              ? null
+              : () {
+                  UserState userState =
+                      BlocProvider.of<UserBloc>(context).state;
+                  if (userState is NewUserState) {
+                    if (userState.user.school == School.TSP &&
+                        userState.user.year == TSPYear.TSP1A) {
+                      BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+                      //ouvrir AlmostThere
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AlmostThere()),
+                      );
+                    }
+                    else {
+                      BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+                      //ouvrir le profil
+                    }
+                  }
+                },
           style: ElevatedButton.styleFrom(
             shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.only(
