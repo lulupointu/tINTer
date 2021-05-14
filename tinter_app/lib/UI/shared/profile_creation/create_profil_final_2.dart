@@ -143,7 +143,7 @@ class NextButton2a3 extends StatelessWidget {
                       0
               ? null
               : () {
-                  BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+                  //BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => UserTab()),

@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/almost_there.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_associatif2.dart';
 
@@ -464,7 +465,7 @@ class NextButton2a1 extends StatelessWidget {
                   if (userState is NewUserState) {
                     if (userState.user.school == School.TSP &&
                         userState.user.year == TSPYear.TSP1A) {
-                      BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+                      //BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
                       //ouvrir AlmostThere
                       Navigator.push(
                         context,
@@ -472,8 +473,11 @@ class NextButton2a1 extends StatelessWidget {
                       );
                     }
                     else {
-                      BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
-                      //ouvrir le profil
+                      //BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => UserTab()),
+                      );
                     }
                   }
                 },
