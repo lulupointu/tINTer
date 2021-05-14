@@ -8,18 +8,18 @@ import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/almost_there.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_associatif2.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_scolaire2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/associative_to_scolaire2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/associative_criteria_list2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/scolaire_criteria_list2.dart';
 
-import 'create_profile2.dart';
+import 'associative_profile2.dart';
 
-class UserCreationFinalizingTab2 extends StatefulWidget {
+class ScolaireProfile2 extends StatefulWidget {
   @override
   _UserCreationTabState2 createState() => _UserCreationTabState2();
 }
 
-class _UserCreationTabState2 extends State<UserCreationFinalizingTab2> {
+class _UserCreationTabState2 extends State<ScolaireProfile2> {
   Widget separator = SizedBox(
     height: 25,
   );
@@ -33,7 +33,7 @@ class _UserCreationTabState2 extends State<UserCreationFinalizingTab2> {
             ProfileHeader(),
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
-              child: CreateProfileScolaire2(
+              child: ScolaireCriteriaList2(
                 separator: SizedBox(
                   height: 20.0,
                 ),

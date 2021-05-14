@@ -1,26 +1,25 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
-import 'package:tinterapp/UI/associatif/user_profile/gout_musicaux.dart';
-import 'package:tinterapp/UI/associatif/user_profile/user_associatif_profile.dart';
-import 'package:tinterapp/UI/shared/profile_creation/create_profile.dart';
-import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/associations.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/user_associatif_profile2.dart';
 
 import '../gouts_musicaux2.dart';
 
-class CreateProfileAssociatif2 extends StatelessWidget {
+class AssociativeCriteriaList2 extends StatelessWidget {
   final Widget separator;
 
-  const CreateProfileAssociatif2({
+  final bool isAssociationPressed;
+
+  final void Function() onAssociationPressed;
+
+  const AssociativeCriteriaList2({
     Key key,
     @required this.separator,
+    @required this.isAssociationPressed,
+    @required this.onAssociationPressed,
   }) : super(key: key);
 
   @override
@@ -43,7 +42,10 @@ class CreateProfileAssociatif2 extends StatelessWidget {
               separator,
               OrganisationEvenementsRectangle2(),
               separator,
-              DefineAssociations(),
+              DefineAssociations(
+                isAssociationPressed: isAssociationPressed,
+                onAssociationPressed: onAssociationPressed,
+              ),
               separator,
               DefineMusicTaste(),
             ],
@@ -91,14 +93,20 @@ class DefineMusicTaste extends StatelessWidget {
 }
 
 class DefineAssociations extends StatelessWidget {
+  final bool isAssociationPressed;
+  final void Function() onAssociationPressed;
+
   const DefineAssociations({
     Key key,
+    @required this.isAssociationPressed,
+    @required this.onAssociationPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        onAssociationPressed();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => AssociationsTab()),

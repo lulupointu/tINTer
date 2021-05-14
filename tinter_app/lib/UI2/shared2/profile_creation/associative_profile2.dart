@@ -7,21 +7,31 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/almost_there.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_associatif2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/associative_criteria_list2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
 
-import '../shared_element/const.dart';
+class AssociativeProfile2 extends StatefulWidget {
 
-class UserCreationTab2 extends StatefulWidget {
+  final void Function({@required AccountCreationMode accountCreationMode}) onAccountCreationModeChanged;
+
+  const AssociativeProfile2({Key key, @required this.onAccountCreationModeChanged}) : super(key: key);
+
   @override
-  _UserCreationTabState2 createState() => _UserCreationTabState2();
+  _AssociativeProfile2State createState() => _AssociativeProfile2State();
 }
 
-class _UserCreationTabState2 extends State<UserCreationTab2> {
+class _AssociativeProfile2State extends State<AssociativeProfile2> {
   Widget separator = SizedBox(
     height: 25,
   );
+
+  bool isAssociationPressed = false;
+
+  void onAssociationPressed() {
+    setState(() {
+      isAssociationPressed = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +42,16 @@ class _UserCreationTabState2 extends State<UserCreationTab2> {
             ProfileHeader(),
             Padding(
               padding: const EdgeInsets.only(top: 40.0),
-              child: CreateProfileAssociatif2(
+              child: AssociativeCriteriaList2(
+                isAssociationPressed: isAssociationPressed,
+                onAssociationPressed: onAssociationPressed,
                 separator: SizedBox(
                   height: 20.0,
                 ),
               ),
             ),
             separator,
-            NextButton2a1(),
+            AssociativeNextButton(isAssociationPressed: isAssociationPressed, onAccountCreationModeChanged: widget.onAccountCreationModeChanged),
           ],
         ),
       ),
@@ -429,8 +441,13 @@ class ModifyProfilePictureClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-class NextButton2a1 extends StatelessWidget {
-  const NextButton2a1({Key key}) : super(key: key);
+class AssociativeNextButton extends StatelessWidget {
+  const AssociativeNextButton({Key key, @required this.isAssociationPressed, @required this.onAccountCreationModeChanged})
+      : super(key: key);
+
+  final bool isAssociationPressed;
+
+  final void Function({@required AccountCreationMode accountCreationMode}) onAccountCreationModeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -448,11 +465,7 @@ class NextButton2a1 extends StatelessWidget {
         ),
         height: 65,
         child: ElevatedButton(
-          onPressed: (userState as UserLoadSuccessState)
-                          .user
-                          .associations
-                          .length ==
-                      0 ||
+          onPressed: !isAssociationPressed ||
                   (userState as UserLoadSuccessState)
                           .user
                           .goutsMusicaux
@@ -465,19 +478,9 @@ class NextButton2a1 extends StatelessWidget {
                   if (userState is NewUserState) {
                     if (userState.user.school == School.TSP &&
                         userState.user.year == TSPYear.TSP1A) {
-                      //BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
-                      //ouvrir AlmostThere
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AlmostThere()),
-                      );
-                    }
-                    else {
-                      //BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UserTab()),
-                      );
+                      onAccountCreationModeChanged(accountCreationMode: AccountCreationMode.associatifToScolaire);
+                    } else {
+                      BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
                     }
                   }
                 },

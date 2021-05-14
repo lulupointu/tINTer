@@ -2,16 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
-import 'package:tinterapp/UI/shared/profile_creation/create_profil_final_2.dart';
-import 'package:tinterapp/UI/shared/profile_creation/create_profile2.dart';
+import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/scolaire_profile2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/associative_profile2.dart';
 
 import '../legal_information.dart';
 
 main() => runApp(MaterialApp(
-      home: AlmostThere(),
+      home: AssociativeToScolaire2(),
     ));
 
-class AlmostThere extends StatelessWidget {
+class AssociativeToScolaire2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,7 +122,7 @@ class AlmostThereExample extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5.0, bottom: 3.0),
-                child: SwitchButton(),
+                child: AssociatifToScolaireButton(),
               ),
             ],
           ),
@@ -279,10 +280,6 @@ class NextButton2a2 extends StatelessWidget {
       height: 65,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UserCreationFinalizingTab2()),
-          );
         },
         style: ElevatedButton.styleFrom(
           shape: new RoundedRectangleBorder(

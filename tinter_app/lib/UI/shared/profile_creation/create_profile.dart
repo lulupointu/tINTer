@@ -16,8 +16,8 @@ import 'package:tinterapp/UI/associatif/profile_creation/create_profile_associat
 import 'package:tinterapp/UI/scolaire/profile_creation/create_profile_scolaire.dart';
 import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.dart';
 import 'package:tinterapp/UI/shared/user_profile/snap_scroll_physics.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_associatif2.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/create_profile_scolaire2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/associative_criteria_list2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/scolaire_criteria_list2.dart';
 
 import '../shared_element/const.dart';
 
@@ -146,7 +146,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
                               key: _associatifFormKey,
                               child: Offstage(
                                 offstage: tinterTheme.theme != MyTheme.dark,
-                                child: CreateProfileAssociatif2(
+                                child: AssociativeCriteriaList2(
                                   separator: separator,
                                 ),
                               ),
@@ -155,7 +155,7 @@ class _UserCreationTabState extends State<UserCreationTab> {
                               key: _scolaireFormKey,
                               child: Offstage(
                                 offstage: tinterTheme.theme != MyTheme.light,
-                                child: CreateProfileScolaire2(
+                                child: ScolaireCriteriaList2(
                                   separator: separator,
                                 ),
                               ),

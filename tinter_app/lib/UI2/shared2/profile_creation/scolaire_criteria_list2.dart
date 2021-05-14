@@ -5,10 +5,10 @@ import 'package:tinterapp/UI/shared/profile_creation/create_profile.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/user_scolaire_profile2.dart';
 
-class CreateProfileScolaire2 extends StatelessWidget {
+class ScolaireCriteriaList2 extends StatelessWidget {
   final Widget separator;
 
-  const CreateProfileScolaire2({Key key, @required this.separator,}) : super(key: key);
+  const ScolaireCriteriaList2({Key key, @required this.separator,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
