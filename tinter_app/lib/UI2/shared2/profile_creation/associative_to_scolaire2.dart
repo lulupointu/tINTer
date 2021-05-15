@@ -68,7 +68,7 @@ class AssociativeToScolaire2 extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: NextButton2a2(),
+            child: AssociativeToScolaireButton(),
           ),
         ],
       ),
@@ -267,8 +267,8 @@ class _SwitchButtonState extends State<SwitchButton> {
   }
 }
 
-class NextButton2a2 extends StatelessWidget {
-  const NextButton2a2({Key key}) : super(key: key);
+class AssociativeToScolaireButton extends StatelessWidget {
+  const AssociativeToScolaireButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

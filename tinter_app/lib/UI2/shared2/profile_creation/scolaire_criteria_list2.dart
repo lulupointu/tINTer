@@ -8,7 +8,16 @@ import 'package:tinterapp/UI2/shared2/profile_creation/user_scolaire_profile2.da
 class ScolaireCriteriaList2 extends StatelessWidget {
   final Widget separator;
 
-  const ScolaireCriteriaList2({Key key, @required this.separator,}) : super(key: key);
+  final bool isMatieresPressed;
+
+  final void Function() onMatieresPressed;
+
+  const ScolaireCriteriaList2({
+    Key key,
+    @required this.separator,
+    @required this.isMatieresPressed,
+    @required this.onMatieresPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,10 @@ class ScolaireCriteriaList2 extends StatelessWidget {
           separator,
           EnLigneOuPresentielRectangle2(),
           separator,
-          MatieresRectangle2(),
+          MatieresRectangle2(
+            isMatieresPressed: isMatieresPressed,
+            onMatieresPressed: onMatieresPressed,
+          ),
         ],
       ),
     );

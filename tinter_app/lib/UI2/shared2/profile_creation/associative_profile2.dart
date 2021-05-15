@@ -11,10 +11,12 @@ import 'package:tinterapp/UI2/shared2/profile_creation/associative_criteria_list
 import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
 
 class AssociativeProfile2 extends StatefulWidget {
+  final void Function({@required AccountCreationMode accountCreationMode})
+      onAccountCreationModeChanged;
 
-  final void Function({@required AccountCreationMode accountCreationMode}) onAccountCreationModeChanged;
-
-  const AssociativeProfile2({Key key, @required this.onAccountCreationModeChanged}) : super(key: key);
+  const AssociativeProfile2(
+      {Key key, @required this.onAccountCreationModeChanged})
+      : super(key: key);
 
   @override
   _AssociativeProfile2State createState() => _AssociativeProfile2State();
@@ -33,6 +35,14 @@ class _AssociativeProfile2State extends State<AssociativeProfile2> {
     });
   }
 
+  bool isMusicTastePressed = false;
+
+  void onMusicTastePressed() {
+    setState(() {
+      isMusicTastePressed = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,14 +54,20 @@ class _AssociativeProfile2State extends State<AssociativeProfile2> {
               padding: const EdgeInsets.only(top: 40.0),
               child: AssociativeCriteriaList2(
                 isAssociationPressed: isAssociationPressed,
+                isMusicTastePressed: isMusicTastePressed,
                 onAssociationPressed: onAssociationPressed,
+                onMusicTastePressed: onMusicTastePressed,
                 separator: SizedBox(
                   height: 20.0,
                 ),
               ),
             ),
             separator,
-            AssociativeNextButton(isAssociationPressed: isAssociationPressed, onAccountCreationModeChanged: widget.onAccountCreationModeChanged),
+            AssociativeNextButton(
+                isAssociationPressed: isAssociationPressed,
+                isMusicTastePressed: isMusicTastePressed,
+                onAccountCreationModeChanged:
+                    widget.onAccountCreationModeChanged),
           ],
         ),
       ),
@@ -442,12 +458,19 @@ class ModifyProfilePictureClipper extends CustomClipper<Path> {
 }
 
 class AssociativeNextButton extends StatelessWidget {
-  const AssociativeNextButton({Key key, @required this.isAssociationPressed, @required this.onAccountCreationModeChanged})
-      : super(key: key);
+  const AssociativeNextButton({
+    Key key,
+    @required this.isAssociationPressed,
+    @required this.onAccountCreationModeChanged,
+    @required this.isMusicTastePressed,
+  }) : super(key: key);
 
   final bool isAssociationPressed;
 
-  final void Function({@required AccountCreationMode accountCreationMode}) onAccountCreationModeChanged;
+  final bool isMusicTastePressed;
+
+  final void Function({@required AccountCreationMode accountCreationMode})
+      onAccountCreationModeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -465,12 +488,7 @@ class AssociativeNextButton extends StatelessWidget {
         ),
         height: 65,
         child: ElevatedButton(
-          onPressed: !isAssociationPressed ||
-                  (userState as UserLoadSuccessState)
-                          .user
-                          .goutsMusicaux
-                          .length ==
-                      0
+          onPressed: !isAssociationPressed || !isMusicTastePressed
               ? null
               : () {
                   UserState userState =
@@ -478,7 +496,9 @@ class AssociativeNextButton extends StatelessWidget {
                   if (userState is NewUserState) {
                     if (userState.user.school == School.TSP &&
                         userState.user.year == TSPYear.TSP1A) {
-                      onAccountCreationModeChanged(accountCreationMode: AccountCreationMode.associatifToScolaire);
+                      onAccountCreationModeChanged(
+                          accountCreationMode:
+                              AccountCreationMode.associatifToScolaire);
                     } else {
                       BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
                     }

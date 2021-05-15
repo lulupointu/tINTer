@@ -13,13 +13,19 @@ class AssociativeCriteriaList2 extends StatelessWidget {
 
   final bool isAssociationPressed;
 
+  final bool isMusicTastePressed;
+
   final void Function() onAssociationPressed;
+
+  final void Function() onMusicTastePressed;
 
   const AssociativeCriteriaList2({
     Key key,
     @required this.separator,
     @required this.isAssociationPressed,
     @required this.onAssociationPressed,
+    @required this.isMusicTastePressed,
+    @required this.onMusicTastePressed,
   }) : super(key: key);
 
   @override
@@ -47,7 +53,10 @@ class AssociativeCriteriaList2 extends StatelessWidget {
                 onAssociationPressed: onAssociationPressed,
               ),
               separator,
-              DefineMusicTaste(),
+              DefineMusicTaste(
+                isMusicTastePressed: isMusicTastePressed,
+                onMusicTastePressed: onMusicTastePressed,
+              ),
             ],
           ),
         ),
@@ -57,14 +66,20 @@ class AssociativeCriteriaList2 extends StatelessWidget {
 }
 
 class DefineMusicTaste extends StatelessWidget {
+  final bool isMusicTastePressed;
+  final void Function() onMusicTastePressed;
+
   const DefineMusicTaste({
     Key key,
+    @required this.isMusicTastePressed,
+    @required this.onMusicTastePressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        onMusicTastePressed();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => GoutsMusicauxTab2()),

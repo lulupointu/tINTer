@@ -16,13 +16,21 @@ import 'associative_profile2.dart';
 
 class ScolaireProfile2 extends StatefulWidget {
   @override
-  _UserCreationTabState2 createState() => _UserCreationTabState2();
+  _ScolaireProfile2State createState() => _ScolaireProfile2State();
 }
 
-class _UserCreationTabState2 extends State<ScolaireProfile2> {
+class _ScolaireProfile2State extends State<ScolaireProfile2> {
   Widget separator = SizedBox(
     height: 25,
   );
+
+  bool isMatieresPressed = false;
+
+  void onMatieresPressed() {
+    setState(() {
+      isMatieresPressed = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +45,12 @@ class _UserCreationTabState2 extends State<ScolaireProfile2> {
                 separator: SizedBox(
                   height: 20.0,
                 ),
+                onMatieresPressed: onMatieresPressed,
+                isMatieresPressed: isMatieresPressed,
               ),
             ),
             separator,
-            NextButton2a3(),
+            ScolaireNextButton(),
           ],
         ),
       ),
@@ -117,8 +127,8 @@ class ProfileHeader extends StatelessWidget {
   }
 }
 
-class NextButton2a3 extends StatelessWidget {
-  const NextButton2a3({Key key}) : super(key: key);
+class ScolaireNextButton extends StatelessWidget {
+  const ScolaireNextButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -137,10 +147,10 @@ class NextButton2a3 extends StatelessWidget {
         height: 65,
         child: ElevatedButton(
           onPressed: (userState as UserLoadSuccessState)
-                          .user
-                          .matieresPreferees
-                          .length ==
-                      0
+                      .user
+                      .matieresPreferees
+                      .length ==
+                  0
               ? null
               : () {
                   //BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
