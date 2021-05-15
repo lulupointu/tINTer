@@ -370,10 +370,9 @@ class UserResume extends StatelessWidget {
                     width: 60,
                     child: Card(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
+                            padding: const EdgeInsets.only(top: 3.0),
                             child: Text('Score',
                                 style: Theme.of(context).textTheme.headline6),
                           ),
