@@ -1,6 +1,7 @@
 import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:tinter_backend/database_interface/scolaire/binome_pairs_profiles_table.dart';
+import 'package:tinter_backend/database_interface/scolaire/relation_score_scolaire_table.dart';
 import 'package:tinter_backend/database_interface/scolaire/relation_status_scolaire_table.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
@@ -13,13 +14,17 @@ class SearchedUserScolaireTable {
   // WARNING: the name must have only lower case letter.
   final PostgreSQLConnection database;
 
+  RelationsScoreScolaireTable relationsScoreScolaireTable;
+
   SearchedUserScolaireTable({
     @required this.database,
-  });
+  }) : relationsScoreScolaireTable =
+            RelationsScoreScolaireTable(database: database);
 
   Future<Map<String, SearchedUserScolaire>> getAllExceptOneFromLogin(
       {@required String login}) async {
-    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
+    _logger.info(
+        'Executing function getAllExceptOneFromLogin with args: login=${login}');
 
     String getAllExceptOneFromLoginQuery =
         "SELECT ${UsersTable.name}.login, name, surname, \"statusScolaire\" FROM "
@@ -34,8 +39,8 @@ class SearchedUserScolaireTable {
         "JOIN ${UsersTable.name} "
         "ON ${RelationsStatusScolaireTable.name}.\"otherLogin\"=${UsersTable.name}.login ";
 
-    final Future query =
-        database.mappedResultsQuery(getAllExceptOneFromLoginQuery, substitutionValues: {
+    final Future query = database
+        .mappedResultsQuery(getAllExceptOneFromLoginQuery, substitutionValues: {
       'login': login,
     });
 
@@ -44,15 +49,20 @@ class SearchedUserScolaireTable {
         for (Map<String, Map<String, dynamic>> queryResult in queryResults)
           queryResult[UsersTable.name]['login']: SearchedUserScolaire.fromJson({
             ...queryResult[UsersTable.name],
+            'score': relationsScoreScolaireTable.getFromLogins(
+                login: login,
+                otherLogin: queryResult[UsersTable.name]['login']),
             'liked': _getLikeOrNotFromRelationStatusScolaire(
                 EnumRelationStatusScolaire.valueOf(
-                    queryResult[RelationsStatusScolaireTable.name]['statusScolaire']))
+                    queryResult[RelationsStatusScolaireTable.name]
+                        ['statusScolaire']))
           })
       };
     });
   }
 
-  bool _getLikeOrNotFromRelationStatusScolaire(EnumRelationStatusScolaire relationStatus) {
+  bool _getLikeOrNotFromRelationStatusScolaire(
+      EnumRelationStatusScolaire relationStatus) {
     _logger.info(
         'Executing function _getLikeOrNotFromRelationStatusScolaire with args: relationStatus=${relationStatus}');
 

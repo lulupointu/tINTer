@@ -9,6 +9,7 @@ abstract class SearchedUserScolaire implements Built<SearchedUserScolaire, Searc
   String get name;
   String get surname;
   bool get liked;
+  int get score;
 
   SearchedUserScolaire._();
   factory SearchedUserScolaire([void Function(SearchedUserScolaireBuilder) updates]) = _$SearchedUserScolaire;
