@@ -34,6 +34,8 @@ class _$SearchedUserAssociatifSerializer
           specifiedType: const FullType(String)),
       'liked',
       serializers.serialize(object.liked, specifiedType: const FullType(bool)),
+      'score',
+      serializers.serialize(object.score, specifiedType: const FullType(int)),
     ];
 
     return result;
@@ -67,6 +69,10 @@ class _$SearchedUserAssociatifSerializer
           result.liked = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'score':
+          result.score = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
       }
     }
 
@@ -83,12 +89,15 @@ class _$SearchedUserAssociatif extends SearchedUserAssociatif {
   final String surname;
   @override
   final bool liked;
+  @override
+  final int score;
 
   factory _$SearchedUserAssociatif(
           [void Function(SearchedUserAssociatifBuilder) updates]) =>
       (new SearchedUserAssociatifBuilder()..update(updates)).build();
 
-  _$SearchedUserAssociatif._({this.login, this.name, this.surname, this.liked})
+  _$SearchedUserAssociatif._(
+      {this.login, this.name, this.surname, this.liked, this.score})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         login, 'SearchedUserAssociatif', 'login');
@@ -98,6 +107,8 @@ class _$SearchedUserAssociatif extends SearchedUserAssociatif {
         surname, 'SearchedUserAssociatif', 'surname');
     BuiltValueNullFieldError.checkNotNull(
         liked, 'SearchedUserAssociatif', 'liked');
+    BuiltValueNullFieldError.checkNotNull(
+        score, 'SearchedUserAssociatif', 'score');
   }
 
   @override
@@ -116,14 +127,16 @@ class _$SearchedUserAssociatif extends SearchedUserAssociatif {
         login == other.login &&
         name == other.name &&
         surname == other.surname &&
-        liked == other.liked;
+        liked == other.liked &&
+        score == other.score;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, login.hashCode), name.hashCode), surname.hashCode),
-        liked.hashCode));
+        $jc($jc($jc($jc(0, login.hashCode), name.hashCode), surname.hashCode),
+            liked.hashCode),
+        score.hashCode));
   }
 
   @override
@@ -132,7 +145,8 @@ class _$SearchedUserAssociatif extends SearchedUserAssociatif {
           ..add('login', login)
           ..add('name', name)
           ..add('surname', surname)
-          ..add('liked', liked))
+          ..add('liked', liked)
+          ..add('score', score))
         .toString();
   }
 }
@@ -157,6 +171,10 @@ class SearchedUserAssociatifBuilder
   bool get liked => _$this._liked;
   set liked(bool liked) => _$this._liked = liked;
 
+  int _score;
+  int get score => _$this._score;
+  set score(int score) => _$this._score = score;
+
   SearchedUserAssociatifBuilder();
 
   SearchedUserAssociatifBuilder get _$this {
@@ -166,6 +184,7 @@ class SearchedUserAssociatifBuilder
       _name = $v.name;
       _surname = $v.surname;
       _liked = $v.liked;
+      _score = $v.score;
       _$v = null;
     }
     return this;
@@ -193,7 +212,9 @@ class SearchedUserAssociatifBuilder
             surname: BuiltValueNullFieldError.checkNotNull(
                 surname, 'SearchedUserAssociatif', 'surname'),
             liked: BuiltValueNullFieldError.checkNotNull(
-                liked, 'SearchedUserAssociatif', 'liked'));
+                liked, 'SearchedUserAssociatif', 'liked'),
+            score: BuiltValueNullFieldError.checkNotNull(
+                score, 'SearchedUserAssociatif', 'score'));
     replace(_$result);
     return _$result;
   }

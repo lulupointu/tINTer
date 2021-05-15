@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
+import 'package:tinter_backend/database_interface/associatif/relation_score_associatif_table.dart';
 import 'package:tinter_backend/database_interface/associatif/relation_status_associatif_table.dart';
 import 'package:meta/meta.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
@@ -12,11 +13,14 @@ class SearchedUserAssociatifTable {
   // WARNING: the name must have only lower case letter.
   final PostgreSQLConnection database;
 
+  final RelationsScoreAssociatifTable relationsScoreAssociatifTable;
+
   SearchedUserAssociatifTable({
     @required this.database,
-  });
+  }) : relationsScoreAssociatifTable = RelationsScoreAssociatifTable(database: database);
 
-  Future<Map<String, SearchedUserAssociatif>> getAllExceptOneFromLogin({@required String login}) async {
+  Future<Map<String, SearchedUserAssociatif>> getAllExceptOneFromLogin(
+      {@required String login}) async {
     _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
 
     final Future query = database.mappedResultsQuery(
@@ -35,16 +39,20 @@ class SearchedUserAssociatifTable {
         for (Map<String, Map<String, dynamic>> query in queryResults)
           query[UsersTable.name]['login']: SearchedUserAssociatif.fromJson({
             ...query[UsersTable.name],
+            'score': relationsScoreAssociatifTable.getFromLogins(login: login, otherLogin: query[UsersTable.name]['login']),
             'liked': _getLikeOrNotFromRelationStatusAssociatif(
-                EnumRelationStatusAssociatif.valueOf(query[RelationsStatusAssociatifTable.name]['statusAssociatif']))
+                EnumRelationStatusAssociatif.valueOf(
+                    query[RelationsStatusAssociatifTable.name]['statusAssociatif']))
           })
       };
     });
   }
 
   bool _getLikeOrNotFromRelationStatusAssociatif(EnumRelationStatusAssociatif relationStatus) {
-    _logger.info('Executing function _getLikeOrNotFromRelationStatusAssociatif with args: relationStatus=${relationStatus}');
-    return (relationStatus == EnumRelationStatusAssociatif.ignored || relationStatus == EnumRelationStatusAssociatif.none)
+    _logger.info(
+        'Executing function _getLikeOrNotFromRelationStatusAssociatif with args: relationStatus=${relationStatus}');
+    return (relationStatus == EnumRelationStatusAssociatif.ignored ||
+            relationStatus == EnumRelationStatusAssociatif.none)
         ? false
         : true;
   }

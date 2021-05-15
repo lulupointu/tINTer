@@ -9,6 +9,7 @@ abstract class SearchedUserAssociatif implements Built<SearchedUserAssociatif, S
   String get name;
   String get surname;
   bool get liked;
+  int get score;
 
   SearchedUserAssociatif._();
   factory SearchedUserAssociatif([void Function(SearchedUserAssociatifBuilder) updates]) = _$SearchedUserAssociatif;
