@@ -77,7 +77,8 @@ class _OptionsTab2State extends State<OptionsTab2>
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => LegalInformation()),
+                            MaterialPageRoute(
+                                builder: (context) => LegalInformation()),
                           );
                         },
                         child: Padding(
@@ -116,8 +117,57 @@ class _OptionsTab2State extends State<OptionsTab2>
                               Theme.of(context).errorColor),
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
-                          BlocProvider.of<UserBloc>(context).add(DeleteUserAccountEvent());
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) => SimpleDialog(
+                              elevation: 5.0,
+                              contentPadding: EdgeInsets.all(20.0),
+                              children: [
+                                Text(
+                                  'Es-tu sûr de vouloir supprimer ton profil ?',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                SizedBox(
+                                  height: 15.0,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                          Navigator.pop(context);
+                                          BlocProvider.of<UserBloc>(context).add(DeleteUserAccountEvent());
+                                        },
+                                        child: Text('Oui'),
+                                      ),
+                                      width: 100.0,
+                                      height: 40.0,
+                                    ),
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    SizedBox(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        child: Text('Annuler'),
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all(Theme.of(context).accentColor),
+                                        ),
+                                      ),
+                                      width: 100.0,
+                                      height: 40.0,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
