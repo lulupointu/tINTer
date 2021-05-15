@@ -160,7 +160,7 @@ class LikedAssociationsWidget2 extends StatelessWidget {
                                 ),
                                 Icon(
                                   Icons.favorite,
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).indicatorColor,
                                 )
                               ],
                             ),

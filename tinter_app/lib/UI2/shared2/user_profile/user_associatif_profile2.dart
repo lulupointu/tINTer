@@ -81,14 +81,18 @@ class AttiranceVieAssoRectangle2 extends StatelessWidget {
                           value: (userState as UserLoadSuccessState)
                               .user
                               .attiranceVieAsso,
-                          onChanged: (value) =>
-                              BlocProvider.of<UserBloc>(context).add(
+                          onChanged: (value) {
+                            BlocProvider.of<UserBloc>(context).add(
                             UserStateChangedEvent(
                               newState: (userState as UserLoadSuccessState)
                                   .user
                                   .rebuild((u) => u..attiranceVieAsso = value),
                             ),
-                          ),
+                          );
+                            print((userState as UserLoadSuccessState)
+                                .user
+                                .aideOuSortir);
+                          },
                         ),
                       );
                     },
@@ -123,7 +127,7 @@ class FeteOuCoursRectangle2 extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
                 SliderTheme(
-                  data: Theme.of(context).sliderTheme.copyWith(inactiveTrackColor: Theme.of(context).accentColor),
+                  data: Theme.of(context).sliderTheme.copyWith(inactiveTrackColor: Theme.of(context).indicatorColor),
                   child: BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                       if (!(userState is UserLoadSuccessState)) {
@@ -151,7 +155,7 @@ class FeteOuCoursRectangle2 extends StatelessWidget {
                 ),
                 Icon(
                   Icons.celebration,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).indicatorColor,
                 ),
               ],
             )
@@ -182,7 +186,7 @@ class AideOuSortirRectangle2 extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
                 SliderTheme(
-                  data: Theme.of(context).sliderTheme.copyWith(inactiveTrackColor: Theme.of(context).accentColor),
+                  data: Theme.of(context).sliderTheme.copyWith(inactiveTrackColor: Theme.of(context).indicatorColor),
                   child: BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                       if (!(userState is UserLoadSuccessState)) {
@@ -210,7 +214,7 @@ class AideOuSortirRectangle2 extends StatelessWidget {
                 ),
                 Icon(
                   Icons.sports_bar_rounded,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).indicatorColor,
                 ),
               ],
             )

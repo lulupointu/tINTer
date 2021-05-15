@@ -8,25 +8,30 @@ class AssociatifToScolaireButton2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          border: Border.all(
-              color: Colors.white, width: 3.0, style: BorderStyle.solid),
-          //color: tinterTheme.colors.primaryAccent,
-          color: Color(0xffCECECE),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              spreadRadius: 0.3,
-              blurRadius: 5,
-              offset: Offset(1, 1),
-            ),
-          ],
-        ),
+      return SizedBox(
         height: 28,
         child: Stack(
           children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                border: Border.all(
+                  color: Colors.white,
+                  width: 3.0,
+                  style: BorderStyle.solid,
+                ),
+                //color: tinterTheme.colors.primaryAccent,
+                color: Color(0xffCECECE),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    spreadRadius: 0.3,
+                    blurRadius: 5,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+              ),
+            ),
             AnimatedAlign(
               duration: Duration(milliseconds: 200),
               curve: Curves.easeIn,
@@ -37,11 +42,15 @@ class AssociatifToScolaireButton2 extends StatelessWidget {
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 200),
                   decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.white,
+                        width: 3.0,
+                        style: BorderStyle.solid),
                     borderRadius: BorderRadius.circular(20.0),
                     //color: tinterTheme.colors.primary,
                     color: tinterTheme.theme == MyTheme.dark
                         ? Theme.of(context).primaryColor
-                        : Theme.of(context).accentColor,
+                        : Theme.of(context).indicatorColor,
                   ),
                 ),
               ),

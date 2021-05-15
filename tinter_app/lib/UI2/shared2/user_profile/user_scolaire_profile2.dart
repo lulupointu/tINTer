@@ -419,7 +419,7 @@ class GroupeOuSeulRectangle2 extends StatelessWidget {
                 ),
                 SliderTheme(
                   data: Theme.of(context).sliderTheme.copyWith(
-                      inactiveTrackColor: Theme.of(context).accentColor),
+                      inactiveTrackColor: Theme.of(context).indicatorColor),
                   child: BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                       if (!(userState is UserLoadSuccessState)) {
@@ -447,7 +447,7 @@ class GroupeOuSeulRectangle2 extends StatelessWidget {
                 ),
                 Icon(
                   Icons.group_rounded,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).indicatorColor,
                 ),
               ],
             )
@@ -480,7 +480,7 @@ class EnLigneOuPresentielRectangle2 extends StatelessWidget {
                 ),
                 SliderTheme(
                   data: Theme.of(context).sliderTheme.copyWith(
-                      inactiveTrackColor: Theme.of(context).accentColor),
+                      inactiveTrackColor: Theme.of(context).indicatorColor),
                   child: BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                       if (!(userState is UserLoadSuccessState)) {
@@ -508,7 +508,7 @@ class EnLigneOuPresentielRectangle2 extends StatelessWidget {
                 ),
                 Icon(
                   Icons.school_rounded,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).indicatorColor,
                 ),
               ],
             )

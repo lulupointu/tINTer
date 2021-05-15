@@ -94,7 +94,7 @@ class _OptionsTab2State extends State<OptionsTab2>
                       child: ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).accentColor),
+                              Theme.of(context).indicatorColor),
                         ),
                         onPressed: () {
                           Navigator.pop(context);
@@ -117,10 +117,11 @@ class _OptionsTab2State extends State<OptionsTab2>
                               Theme.of(context).errorColor),
                         ),
                         onPressed: () {
-                          showDialog(
+                          showGeneralDialog(
+                            transitionDuration: Duration(milliseconds: 300),
                             barrierDismissible: false,
                             context: context,
-                            builder: (BuildContext context) => SimpleDialog(
+                            pageBuilder: (context, animation, _) => SimpleDialog(
                               elevation: 5.0,
                               contentPadding: EdgeInsets.all(20.0),
                               children: [
@@ -161,7 +162,7 @@ class _OptionsTab2State extends State<OptionsTab2>
                                           backgroundColor:
                                               MaterialStateProperty.all(
                                                   Theme.of(context)
-                                                      .accentColor),
+                                                      .indicatorColor),
                                         ),
                                       ),
                                       width: 100.0,

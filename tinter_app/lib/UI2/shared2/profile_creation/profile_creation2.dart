@@ -18,8 +18,8 @@ class ProfileCreation2 extends StatefulWidget {
 }
 
 class _ProfileCreation2State extends State<ProfileCreation2> {
-
-  void onAccountCreationModeChanged({@required AccountCreationMode accountCreationMode}) {
+  void onAccountCreationModeChanged(
+      {@required AccountCreationMode accountCreationMode}) {
     setState(() {
       this.accountCreationMode = accountCreationMode;
     });
@@ -29,17 +29,26 @@ class _ProfileCreation2State extends State<ProfileCreation2> {
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
+
     switch (accountCreationMode) {
       case AccountCreationMode.associatif:
-        return AssociativeProfile2(onAccountCreationModeChanged: onAccountCreationModeChanged);
+        child = AssociativeProfile2(
+            onAccountCreationModeChanged: onAccountCreationModeChanged);
         break;
       case AccountCreationMode.associatifToScolaire:
-        return AssociativeToScolaire2(onAccountCreationModeChanged: onAccountCreationModeChanged,);
+        child = AssociativeToScolaire2(
+          onAccountCreationModeChanged: onAccountCreationModeChanged,
+        );
         break;
       case AccountCreationMode.scolaire:
-        return ScolaireProfile2();
+        child = ScolaireProfile2();
         break;
     }
-    throw Exception('This should NEVER happen.');
+
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 300),
+      child: child,
+    );
   }
 }

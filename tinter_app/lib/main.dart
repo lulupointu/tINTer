@@ -247,7 +247,8 @@ main() {
                       debugShowCheckedModeBanner: false,
                       theme: ThemeData(
                         primaryColor: Color(0xff79BFC9),
-                        accentColor: Color(0xffFF6868),
+                        accentColor: Color(0xff79BFC9),
+                        indicatorColor: Color(0xffFF6868),
                         errorColor: Color(0xffF44848),
                         disabledColor: Color(0xffBCBCBC),
                         scaffoldBackgroundColor: Color(0xffF4F4F8),

@@ -305,7 +305,7 @@ class UserResume extends StatelessWidget {
                                       shape: BoxShape.rectangle,
                                       color: searchedUser.liked
                                           ? Colors.white
-                                          : Theme.of(context).accentColor,
+                                          : Theme.of(context).indicatorColor,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15.0)),
                                       boxShadow: [
@@ -339,7 +339,7 @@ class UserResume extends StatelessWidget {
                                           Icon(
                                             Icons.favorite,
                                             color: searchedUser.liked
-                                                ? Theme.of(context).accentColor
+                                                ? Theme.of(context).indicatorColor
                                                 : Colors.white,
                                             size: 15,
                                           ),
@@ -361,7 +361,7 @@ class UserResume extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).indicatorColor,
                           width: 2.0,
                           style: BorderStyle.solid),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
