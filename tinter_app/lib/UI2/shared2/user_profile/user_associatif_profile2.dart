@@ -185,7 +185,7 @@ class AideOuSortirRectangle2 extends StatelessWidget {
           children: [
             Text(
               randomGender == Gender.M
-                  ? 'Parain qui aide ou avec qui sortir ?'
+                  ? 'Parrain qui aide ou avec qui sortir ?'
                   : 'Marraine qui aide ou avec qui sortir ?',
               style: Theme.of(context).textTheme.headline5,
             ),
