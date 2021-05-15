@@ -50,7 +50,7 @@ class _ScolaireProfile2State extends State<ScolaireProfile2> {
               ),
             ),
             separator,
-            ScolaireNextButton(),
+            ScolaireNextButton(isMatieresPressed: isMatieresPressed,),
           ],
         ),
       ),
@@ -128,7 +128,9 @@ class ProfileHeader extends StatelessWidget {
 }
 
 class ScolaireNextButton extends StatelessWidget {
-  const ScolaireNextButton({Key key}) : super(key: key);
+  const ScolaireNextButton({Key key, @required this.isMatieresPressed}) : super(key: key);
+
+  final bool isMatieresPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -146,18 +148,8 @@ class ScolaireNextButton extends StatelessWidget {
         ),
         height: 65,
         child: ElevatedButton(
-          onPressed: (userState as UserLoadSuccessState)
-                      .user
-                      .matieresPreferees
-                      .length ==
-                  0
-              ? null
-              : () {
-                  //BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserTab()),
-                  );
+          onPressed: !isMatieresPressed ? null : () {
+                  BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
                 },
           style: ElevatedButton.styleFrom(
             shape: new RoundedRectangleBorder(
