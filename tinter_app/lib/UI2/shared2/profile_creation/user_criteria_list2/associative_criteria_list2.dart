@@ -272,7 +272,7 @@ class YearRectangle extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              "Mon année scolaire",
+              "Mon année scolaire actuelle",
               style: Theme.of(context).textTheme.headline5,
             ),
             SizedBox(

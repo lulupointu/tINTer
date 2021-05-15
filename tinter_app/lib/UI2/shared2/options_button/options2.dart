@@ -140,7 +140,8 @@ class _OptionsTab2State extends State<OptionsTab2>
                                         onPressed: () {
                                           Navigator.pop(context, false);
                                           Navigator.pop(context);
-                                          BlocProvider.of<UserBloc>(context).add(DeleteUserAccountEvent());
+                                          BlocProvider.of<UserBloc>(context)
+                                              .add(DeleteUserAccountEvent());
                                         },
                                         child: Text('Oui'),
                                       ),
@@ -157,7 +158,10 @@ class _OptionsTab2State extends State<OptionsTab2>
                                         },
                                         child: Text('Annuler'),
                                         style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(Theme.of(context).accentColor),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Theme.of(context)
+                                                      .accentColor),
                                         ),
                                       ),
                                       width: 100.0,
@@ -172,7 +176,10 @@ class _OptionsTab2State extends State<OptionsTab2>
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 30.0, vertical: 15.0),
-                          child: Text('Supprimer mon profil'),
+                          child: Text(
+                            'Supprimer mon profil',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     ),

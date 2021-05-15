@@ -45,6 +45,7 @@ import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
+import 'UI/shared/shared_element/HomogeniusRoundedRectSliderTrackShape.dart';
 import 'UI2/shared2/login2.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -305,6 +306,7 @@ main() {
                           thumbColor: Color(0xffCECECE),
                           valueIndicatorColor: Color(0xff79BFC9),
                           trackHeight: 5.0,
+                          trackShape: HomogeniusRoundedRectSliderTrackShape(),
                         ),
                       ),
                       home: SafeArea(

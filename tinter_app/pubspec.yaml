@@ -48,6 +48,7 @@ dependencies:
   flutter_local_notifications: ^5.0.0+3
   firebase_core: ^1.1.0
   analyzer: ^1.5.0
+  syncfusion_flutter_core: ^19.1.63
 
 #dependency_overrides:
 #  analyzer: '0.39.14'
