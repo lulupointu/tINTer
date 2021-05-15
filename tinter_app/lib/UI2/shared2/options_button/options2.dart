@@ -104,7 +104,7 @@ class _OptionsTab2State extends State<OptionsTab2>
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 30.0, vertical: 15.0),
-                          child: Text('Déconnexion'),
+                          child: Text('Se déconnecter'),
                         ),
                       ),
                     ),
@@ -178,7 +178,7 @@ class _OptionsTab2State extends State<OptionsTab2>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 30.0, vertical: 15.0),
                           child: Text(
-                            'Supprimer mon profil',
+                            'Supprimer mon compte',
                             textAlign: TextAlign.center,
                           ),
                         ),
