@@ -34,7 +34,7 @@ class _ProfileCreation2State extends State<ProfileCreation2> {
         return AssociativeProfile2(onAccountCreationModeChanged: onAccountCreationModeChanged);
         break;
       case AccountCreationMode.associatifToScolaire:
-        return AssociativeToScolaire2();
+        return AssociativeToScolaire2(onAccountCreationModeChanged: onAccountCreationModeChanged,);
         break;
       case AccountCreationMode.scolaire:
         return ScolaireProfile2();

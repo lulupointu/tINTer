@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/associative_to_scolaire2.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/associative_criteria_list2.dart';
@@ -34,6 +36,9 @@ class _ScolaireProfile2State extends State<ScolaireProfile2> {
 
   @override
   Widget build(BuildContext context) {
+
+    Provider.of<TinterTheme>(context).theme = MyTheme.light;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -90,7 +95,7 @@ class ProfileHeader extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Column(
                   children: [
-                    HoveringUserPicture2(size: 95.0),
+                    HoveringUserPicture2(size: 95.0, showModifyOption: true,),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: BlocBuilder<UserBloc, UserState>(

@@ -107,7 +107,7 @@ class ProfileHeader extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Column(
                   children: [
-                    HoveringUserPicture2(size: 95.0),
+                    HoveringUserPicture2(size: 95.0, showModifyOption: true,),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: BlocBuilder<UserBloc, UserState>(
@@ -146,8 +146,9 @@ class ProfileHeader extends StatelessWidget {
 
 class HoveringUserPicture2 extends StatefulWidget {
   final double size;
+  final bool showModifyOption;
 
-  HoveringUserPicture2({@required this.size});
+  HoveringUserPicture2({@required this.size, @required this.showModifyOption});
 
   @override
   _HoveringUserPicture2State createState() => _HoveringUserPicture2State();
@@ -236,7 +237,7 @@ class _HoveringUserPicture2State extends State<HoveringUserPicture2> {
                         .profilePictureLocalPath,
                     height: widget.size,
                     width: widget.size),
-                ClipPath(
+                if (widget.showModifyOption) ClipPath(
                   clipper: ModifyProfilePictureClipper(),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
@@ -245,7 +246,7 @@ class _HoveringUserPicture2State extends State<HoveringUserPicture2> {
                     ),
                   ),
                 ),
-                Align(
+                if (widget.showModifyOption) Align(
                   alignment: AlignmentDirectional.bottomCenter,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 3.0),

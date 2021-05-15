@@ -268,143 +268,134 @@ class YearRectangle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        child: Column(
           children: [
             Text(
               "Mon année scolaire",
               style: Theme.of(context).textTheme.headline5,
             ),
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(1, 1),
-                  ),
-                ],
-              ),
-              child: BlocBuilder<UserBloc, UserState>(
-                  builder: (BuildContext context, UserState userState) {
-                if (!(userState is NewUserState)) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                              newState: (userState as NewUserState)
-                                  .user
-                                  .rebuild((b) => b..year = TSPYear.TSP1A))),
-                      child: Container(
-                        width: 45,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as NewUserState).user.year ==
-                                      TSPYear.TSP1A
-                                  ? 1
-                                  : 0.4),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5.0),
-                              bottomLeft: Radius.circular(5.0)),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '1A',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(
-                                    color: Colors.black.withOpacity(
-                                        (userState as NewUserState).user.year ==
-                                                TSPYear.TSP1A
-                                            ? 0.87
-                                            : 0.38)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                              newState: (userState as NewUserState)
-                                  .user
-                                  .rebuild((b) => b..year = TSPYear.TSP2A))),
-                      child: Container(
-                        width: 45,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as NewUserState).user.year ==
-                                      TSPYear.TSP2A
-                                  ? 1
-                                  : 0.4),
-                        ),
-                        child: Center(
-                          child: Text('2A',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(
-                                      color: Colors.black.withOpacity(
-                                          (userState as NewUserState)
-                                                      .user
-                                                      .year ==
-                                                  TSPYear.TSP2A
-                                              ? 0.87
-                                              : 0.38))),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                              newState: (userState as NewUserState)
-                                  .user
-                                  .rebuild((b) => b..year = TSPYear.TSP3A))),
-                      child: Container(
-                        width: 45,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as NewUserState).user.year ==
-                                      TSPYear.TSP3A
-                                  ? 1
-                                  : 0.4),
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(5.0),
-                              bottomRight: Radius.circular(5.0)),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '3A',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(
-                                    color: Colors.black.withOpacity(
-                                        (userState as NewUserState).user.year ==
-                                                TSPYear.TSP3A
-                                            ? 0.87
-                                            : 0.38)),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
+            SizedBox(
+              height: 15.0,
+            ),
+            BlocBuilder<UserBloc, UserState>(
+                builder: (BuildContext context, UserState userState) {
+              if (!(userState is NewUserState)) {
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
-              }),
-            )
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => BlocProvider.of<UserBloc>(context).add(
+                        UserStateChangedEvent(
+                            newState: (userState as NewUserState)
+                                .user
+                                .rebuild((b) => b..year = TSPYear.TSP1A))),
+                    child: Container(
+                      width: 45,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Theme.of(context).primaryColor.withOpacity(
+                            (userState as NewUserState).user.year ==
+                                    TSPYear.TSP1A
+                                ? 1
+                                : 0.4),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5.0),
+                            bottomLeft: Radius.circular(5.0)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '1A',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(
+                                  color: Colors.black.withOpacity(
+                                      (userState as NewUserState).user.year ==
+                                              TSPYear.TSP1A
+                                          ? 0.87
+                                          : 0.38)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => BlocProvider.of<UserBloc>(context).add(
+                        UserStateChangedEvent(
+                            newState: (userState as NewUserState)
+                                .user
+                                .rebuild((b) => b..year = TSPYear.TSP2A))),
+                    child: Container(
+                      width: 45,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Theme.of(context).primaryColor.withOpacity(
+                            (userState as NewUserState).user.year ==
+                                    TSPYear.TSP2A
+                                ? 1
+                                : 0.4),
+                      ),
+                      child: Center(
+                        child: Text('2A',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: Colors.black.withOpacity(
+                                        (userState as NewUserState)
+                                                    .user
+                                                    .year ==
+                                                TSPYear.TSP2A
+                                            ? 0.87
+                                            : 0.38))),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => BlocProvider.of<UserBloc>(context).add(
+                        UserStateChangedEvent(
+                            newState: (userState as NewUserState)
+                                .user
+                                .rebuild((b) => b..year = TSPYear.TSP3A))),
+                    child: Container(
+                      width: 45,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Theme.of(context).primaryColor.withOpacity(
+                            (userState as NewUserState).user.year ==
+                                    TSPYear.TSP3A
+                                ? 1
+                                : 0.4),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(5.0),
+                            bottomRight: Radius.circular(5.0)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '3A',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(
+                                  color: Colors.black.withOpacity(
+                                      (userState as NewUserState).user.year ==
+                                              TSPYear.TSP3A
+                                          ? 0.87
+                                          : 0.38)),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              );
+            })
           ],
         ),
       ),

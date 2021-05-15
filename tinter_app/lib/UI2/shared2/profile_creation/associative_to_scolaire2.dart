@@ -3,16 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/scolaire_profile2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/associative_profile2.dart';
 
+import '../associatif_to_scolaire_button2.dart';
 import '../legal_information.dart';
 
 main() => runApp(MaterialApp(
       home: AssociativeToScolaire2(),
     ));
 
-class AssociativeToScolaire2 extends StatelessWidget {
+class AssociativeToScolaire2 extends StatefulWidget {
+  final void Function({@required AccountCreationMode accountCreationMode})
+      onAccountCreationModeChanged;
+
+  const AssociativeToScolaire2(
+      {Key key, @required this.onAccountCreationModeChanged})
+      : super(key: key);
+
+  @override
+  _AssociativeToScolaire2State createState() => _AssociativeToScolaire2State();
+}
+
+class _AssociativeToScolaire2State extends State<AssociativeToScolaire2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +36,7 @@ class AssociativeToScolaire2 extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(
-                        left: 30.0, right: 30.0, top: 50.0, bottom: 30.0),
+                    padding: const EdgeInsets.all(30.0),
                     child: Card(
                       child: Column(
                         children: [
@@ -47,13 +59,13 @@ class AssociativeToScolaire2 extends StatelessWidget {
                               style: Theme.of(context).textTheme.headline5,
                             ),
                           ),
-                          AlmostThereExample(),
+                          AssociativeToScolaireProfileHeader(),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
                             child: Text(
                               "Tu peux switch entre ces deux modes autant de fois que tu le souhaites. Le mode 'Scolaire' te "
-                              "permettra de trouver un binôme pour ta scolarité à TSP et le mode 'Associatif' des parains.",
+                              "permettra de trouver un binôme pour ta scolarité à TSP et le mode 'Associatif' des parains et marraines.",
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline5,
                             ),
@@ -68,7 +80,7 @@ class AssociativeToScolaire2 extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: AssociativeToScolaireButton(),
+            child: AssociativeToScolaireButton(onAccountCreationModeChanged: widget.onAccountCreationModeChanged,),
           ),
         ],
       ),
@@ -76,8 +88,8 @@ class AssociativeToScolaire2 extends StatelessWidget {
   }
 }
 
-class AlmostThereExample extends StatelessWidget {
-  const AlmostThereExample({Key key}) : super(key: key);
+class AssociativeToScolaireProfileHeader extends StatelessWidget {
+  const AssociativeToScolaireProfileHeader({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +115,7 @@ class AlmostThereExample extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
           child: Column(
             children: [
-              HoveringUserPicture2(size: 95.0),
+              HoveringUserPicture2(size: 95.0, showModifyOption: false,),
               Padding(
                 padding: const EdgeInsets.only(top: 5.0),
                 child: BlocBuilder<UserBloc, UserState>(
@@ -121,8 +133,8 @@ class AlmostThereExample extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 5.0, bottom: 3.0),
-                child: AssociatifToScolaireButton(),
+                padding: const EdgeInsets.only(top: 5.0, bottom: 3.0, left: 30.0, right: 30.0),
+                child: AssociatifToScolaireButton2(),
               ),
             ],
           ),
@@ -132,143 +144,13 @@ class AlmostThereExample extends StatelessWidget {
   }
 }
 
-class SwitchButton extends StatefulWidget {
-  const SwitchButton({Key key}) : super(key: key);
-
-  @override
-  _SwitchButtonState createState() => _SwitchButtonState();
-}
-
-class _SwitchButtonState extends State<SwitchButton> {
-  bool isAsso = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.centerLeft,
-      children: [
-        Container(
-          height: 25,
-          width: 180,
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Theme.of(context).disabledColor,
-            border: Border.all(
-                color: Colors.white, width: 2.5, style: BorderStyle.solid),
-            borderRadius: BorderRadius.all(
-              Radius.circular(25.0),
-            ),
-          ),
-        ),
-        if (!isAsso)
-          Positioned(
-            right: 0,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isAsso = !isAsso;
-                });
-              },
-              child: Container(
-                height: 25,
-                width: 110,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 2.0, left: 22.0),
-                  child: Center(
-                    child: Text(
-                      'associatif',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 14.0),
-                    ),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Theme.of(context).disabledColor,
-                  border: Border.all(
-                      color: Colors.white,
-                      width: 2.5,
-                      style: BorderStyle.solid),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(25.0),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        GestureDetector(
-          onTap: () {
-            if (isAsso) {
-              setState(() {
-                isAsso = !isAsso;
-              });
-            }
-          },
-          child: Container(
-            height: 25,
-            width: isAsso ? 110 : 100,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 2.0, right: isAsso ? 20.0 : 0.0),
-              child: Center(
-                  child: Text(
-                'scolaire',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(fontSize: 14.0),
-              )),
-            ),
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              color: isAsso
-                  ? Theme.of(context).disabledColor
-                  : Theme.of(context).accentColor,
-              border: Border.all(
-                  color: Colors.white, width: 2.5, style: BorderStyle.solid),
-              borderRadius: BorderRadius.all(
-                Radius.circular(25.0),
-              ),
-            ),
-          ),
-        ),
-        if (isAsso)
-          Positioned(
-            right: 0,
-            child: Container(
-              height: 25,
-              width: 100,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 2.0),
-                child: Center(
-                  child: Text(
-                    'associatif',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 14.0),
-                  ),
-                ),
-              ),
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: Theme.of(context).primaryColor,
-                border: Border.all(
-                    color: Colors.white, width: 2.5, style: BorderStyle.solid),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(25.0),
-                ),
-              ),
-            ),
-          )
-      ],
-    );
-  }
-}
-
 class AssociativeToScolaireButton extends StatelessWidget {
-  const AssociativeToScolaireButton({Key key}) : super(key: key);
+  final void Function({@required AccountCreationMode accountCreationMode})
+      onAccountCreationModeChanged;
+
+  const AssociativeToScolaireButton(
+      {Key key, @required this.onAccountCreationModeChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -280,6 +162,8 @@ class AssociativeToScolaireButton extends StatelessWidget {
       height: 65,
       child: ElevatedButton(
         onPressed: () {
+          onAccountCreationModeChanged(
+              accountCreationMode: AccountCreationMode.scolaire);
         },
         style: ElevatedButton.styleFrom(
           shape: new RoundedRectangleBorder(
