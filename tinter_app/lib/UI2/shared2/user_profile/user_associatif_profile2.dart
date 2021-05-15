@@ -55,7 +55,8 @@ class AttiranceVieAssoRectangle2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -85,12 +86,13 @@ class AttiranceVieAssoRectangle2 extends StatelessWidget {
                               .attiranceVieAsso,
                           onChanged: (value) {
                             BlocProvider.of<UserBloc>(context).add(
-                            UserStateChangedEvent(
-                              newState: (userState as UserLoadSuccessState)
-                                  .user
-                                  .rebuild((u) => u..attiranceVieAsso = value),
-                            ),
-                          );
+                              UserStateChangedEvent(
+                                newState: (userState as UserLoadSuccessState)
+                                    .user
+                                    .rebuild(
+                                        (u) => u..attiranceVieAsso = value),
+                              ),
+                            );
                             print((userState as UserLoadSuccessState)
                                 .user
                                 .aideOuSortir);
@@ -114,22 +116,24 @@ class FeteOuCoursRectangle2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Préférence entre vie scolaire et associative',
+              'Préférence entre vie associative et scolaire',
               style: Theme.of(context).textTheme.headline5,
             ),
             Row(
               children: [
                 Icon(
-                  Icons.school_rounded,
+                  Icons.celebration,
                   color: Theme.of(context).primaryColor,
                 ),
                 SliderTheme(
-                  data: Theme.of(context).sliderTheme.copyWith(inactiveTrackColor: Theme.of(context).indicatorColor),
+                  data: Theme.of(context).sliderTheme.copyWith(
+                      inactiveTrackColor: Theme.of(context).indicatorColor),
                   child: BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                       if (!(userState is UserLoadSuccessState)) {
@@ -142,21 +146,22 @@ class FeteOuCoursRectangle2 extends StatelessWidget {
                           value: (userState as UserLoadSuccessState)
                               .user
                               .feteOuCours,
-                          onChanged: (value) =>
-                              BlocProvider.of<UserBloc>(context).add(
-                                UserStateChangedEvent(
-                                  newState: (userState as UserLoadSuccessState)
-                                      .user
-                                      .rebuild((u) => u..feteOuCours = value),
-                                ),
+                          onChanged: (value) {
+                            BlocProvider.of<UserBloc>(context).add(
+                              UserStateChangedEvent(
+                                newState: (userState as UserLoadSuccessState)
+                                    .user
+                                    .rebuild((u) => u..feteOuCours = value),
                               ),
+                            );
+                          },
                         ),
                       );
                     },
                   ),
                 ),
                 Icon(
-                  Icons.celebration,
+                  Icons.school_rounded,
                   color: Theme.of(context).indicatorColor,
                 ),
               ],
@@ -173,22 +178,26 @@ class AideOuSortirRectangle2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              randomGender == Gender.M ? 'Parain qui aide ou avec qui sortir ?' : 'Maraine qui aide ou avec qui sortir ?',
+              randomGender == Gender.M
+                  ? 'Parain qui aide ou avec qui sortir ?'
+                  : 'Marraine qui aide ou avec qui sortir ?',
               style: Theme.of(context).textTheme.headline5,
             ),
             Row(
               children: [
                 Icon(
-                  Icons.support,
+                  Icons.sports_bar_rounded,
                   color: Theme.of(context).primaryColor,
                 ),
                 SliderTheme(
-                  data: Theme.of(context).sliderTheme.copyWith(inactiveTrackColor: Theme.of(context).indicatorColor),
+                  data: Theme.of(context).sliderTheme.copyWith(
+                      inactiveTrackColor: Theme.of(context).indicatorColor),
                   child: BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
                       if (!(userState is UserLoadSuccessState)) {
@@ -201,21 +210,22 @@ class AideOuSortirRectangle2 extends StatelessWidget {
                           value: (userState as UserLoadSuccessState)
                               .user
                               .aideOuSortir,
-                          onChanged: (value) =>
-                              BlocProvider.of<UserBloc>(context).add(
-                                UserStateChangedEvent(
-                                  newState: (userState as UserLoadSuccessState)
-                                      .user
-                                      .rebuild((u) => u..aideOuSortir = value),
-                                ),
+                          onChanged: (value) {
+                            BlocProvider.of<UserBloc>(context).add(
+                              UserStateChangedEvent(
+                                newState: (userState as UserLoadSuccessState)
+                                    .user
+                                    .rebuild((u) => u..aideOuSortir = value),
                               ),
+                            );
+                          },
                         ),
                       );
                     },
                   ),
                 ),
                 Icon(
-                  Icons.sports_bar_rounded,
+                  Icons.support,
                   color: Theme.of(context).indicatorColor,
                 ),
               ],
@@ -232,7 +242,8 @@ class OrganisationEvenementsRectangle2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -262,12 +273,13 @@ class OrganisationEvenementsRectangle2 extends StatelessWidget {
                               .organisationEvenements,
                           onChanged: (value) =>
                               BlocProvider.of<UserBloc>(context).add(
-                                UserStateChangedEvent(
-                                  newState: (userState as UserLoadSuccessState)
-                                      .user
-                                      .rebuild((u) => u..organisationEvenements = value),
-                                ),
-                              ),
+                            UserStateChangedEvent(
+                              newState: (userState as UserLoadSuccessState)
+                                  .user
+                                  .rebuild(
+                                      (u) => u..organisationEvenements = value),
+                            ),
+                          ),
                         ),
                       );
                     },

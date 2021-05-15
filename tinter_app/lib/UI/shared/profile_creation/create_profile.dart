@@ -146,20 +146,16 @@ class _UserCreationTabState extends State<UserCreationTab> {
                               key: _associatifFormKey,
                               child: Offstage(
                                 offstage: tinterTheme.theme != MyTheme.dark,
-                                child: AssociativeCriteriaList2(
-                                  separator: separator,
+                                child: CreateProfileAssociatif(separator: separator),
                                 ),
                               ),
-                            ),
                             Form(
                               key: _scolaireFormKey,
                               child: Offstage(
                                 offstage: tinterTheme.theme != MyTheme.light,
-                                child: ScolaireCriteriaList2(
-                                  separator: separator,
+                                child: CreateProfileScolaire(separator: separator),
                                 ),
                               ),
-                            ),
                           ],
                         );
                       },

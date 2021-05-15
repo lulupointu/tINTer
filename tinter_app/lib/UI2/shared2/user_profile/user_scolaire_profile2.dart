@@ -408,13 +408,13 @@ class GroupeOuSeulRectangle2 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Travailler seul.e ou en groupe ?',
+              'Travailler à plusieurs ou seul.e ?',
               style: Theme.of(context).textTheme.headline5,
             ),
             Row(
               children: [
                 Icon(
-                  Icons.person_rounded,
+                  Icons.group_rounded,
                   color: Theme.of(context).primaryColor,
                 ),
                 SliderTheme(
@@ -432,21 +432,22 @@ class GroupeOuSeulRectangle2 extends StatelessWidget {
                           value: (userState as UserLoadSuccessState)
                               .user
                               .groupeOuSeul,
-                          onChanged: (value) =>
-                              BlocProvider.of<UserBloc>(context).add(
-                            UserStateChangedEvent(
-                              newState: (userState as UserLoadSuccessState)
-                                  .user
-                                  .rebuild((u) => u..groupeOuSeul = value),
-                            ),
-                          ),
+                          onChanged: (value) {
+                            BlocProvider.of<UserBloc>(context).add(
+                              UserStateChangedEvent(
+                                newState: (userState as UserLoadSuccessState)
+                                    .user
+                                    .rebuild((u) => u..groupeOuSeul = value),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
                   ),
                 ),
                 Icon(
-                  Icons.group_rounded,
+                  Icons.person_rounded,
                   color: Theme.of(context).indicatorColor,
                 ),
               ],
@@ -469,13 +470,13 @@ class EnLigneOuPresentielRectangle2 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Travailler en ligne ou à l'école ?",
+              "Travailler à l'école ou en ligne ?",
               style: Theme.of(context).textTheme.headline5,
             ),
             Row(
               children: [
                 Icon(
-                  Icons.wifi,
+                  Icons.school_rounded,
                   color: Theme.of(context).primaryColor,
                 ),
                 SliderTheme(
@@ -493,21 +494,22 @@ class EnLigneOuPresentielRectangle2 extends StatelessWidget {
                           value: (userState as UserLoadSuccessState)
                               .user
                               .enligneOuNon,
-                          onChanged: (value) =>
-                              BlocProvider.of<UserBloc>(context).add(
-                            UserStateChangedEvent(
-                              newState: (userState as UserLoadSuccessState)
-                                  .user
-                                  .rebuild((u) => u..enligneOuNon = value),
-                            ),
-                          ),
+                          onChanged: (value) {
+                            BlocProvider.of<UserBloc>(context).add(
+                              UserStateChangedEvent(
+                                newState: (userState as UserLoadSuccessState)
+                                    .user
+                                    .rebuild((u) => u..enligneOuNon = value),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
                   ),
                 ),
                 Icon(
-                  Icons.school_rounded,
+                  Icons.wifi,
                   color: Theme.of(context).indicatorColor,
                 ),
               ],
