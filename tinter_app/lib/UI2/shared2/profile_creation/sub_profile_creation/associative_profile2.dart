@@ -10,7 +10,7 @@ import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
-import 'package:tinterapp/UI2/random_gender.dart';
+import 'package:tinterapp/UI2/shared2/random_gender.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/user_criteria_list2/associative_criteria_list2.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
 
@@ -138,8 +138,7 @@ class ProfileHeader extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      randomGender == Gender.M ?
-                      'Nouvel utilisateur' : 'Nouvelle utilisatrice',
+                      'Nouveau compte',
                       style: Theme.of(context)
                           .textTheme
                           .headline5

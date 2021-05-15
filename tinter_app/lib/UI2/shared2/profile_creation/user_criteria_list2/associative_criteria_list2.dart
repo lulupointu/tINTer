@@ -159,7 +159,7 @@ class PrimoEntrantRectangle extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Je suis primo entrant',
+              'Je suis primo entrant.e',
               style: Theme.of(context).textTheme.headline5,
             ),
             Container(

@@ -7,6 +7,8 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/user_criteria_panel2/gouts_musicaux2.dart';
 
+import '../random_gender.dart';
+
 class UserAssociatifProfile extends StatelessWidget {
   final Widget separator;
 
@@ -176,7 +178,7 @@ class AideOuSortirRectangle2 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Parain qui aide ou avec qui sortir ?',
+              randomGender == Gender.M ? 'Parain qui aide ou avec qui sortir ?' : 'Maraine qui aide ou avec qui sortir ?',
               style: Theme.of(context).textTheme.headline5,
             ),
             Row(
@@ -235,7 +237,7 @@ class OrganisationEvenementsRectangle2 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Organiser des événements ?',
+              "Envie d'organiser des événements ?",
               style: Theme.of(context).textTheme.headline5,
             ),
             Row(

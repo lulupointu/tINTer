@@ -5,6 +5,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
 main() => runApp(MaterialApp(
       home: SearchStudentAssociatifTab2(),
@@ -69,7 +70,7 @@ class _SearchStudentAssociatifTab2State
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Rechercher un.e étudiant.e',
+          randomGender == Gender.M ? 'Rechercher un étudiant' : 'Rechercher une étudiante',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -104,7 +105,7 @@ class _SearchStudentAssociatifTab2State
                               contentPadding: EdgeInsets.only(
                                 bottom: 20,
                               ),
-                              labelText: "Nom ou prénom d'un.e étudiant.e",
+                              labelText: randomGender == Gender.M ? "Nom ou prénom d'un étudiant" : "Nom ou prénom d'une étudiante",
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               enabledBorder: InputBorder.none,

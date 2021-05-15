@@ -172,13 +172,14 @@ class HelpOnLogin extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
         onPressed: () {
-          showDialog(
+          showGeneralDialog(
+              transitionDuration: Duration(milliseconds: 300),
               context: context,
-              builder: (BuildContext context) => SimpleDialog(
+              pageBuilder: (BuildContext context, animation, _) => SimpleDialog(
                     elevation: 5.0,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
+                        padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
                           'Aide',
                           textAlign: TextAlign.center,
@@ -187,11 +188,20 @@ class HelpOnLogin extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            left: 20.0, right: 20.0, top: 10.0, bottom: 20.0),
+                            left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
                         child: Text(
                           "Le login et le mot de passe à utiliser sont ceux de l'école.",
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headline5,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 75.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: Text("C'est compris"),
                         ),
                       ),
                     ],

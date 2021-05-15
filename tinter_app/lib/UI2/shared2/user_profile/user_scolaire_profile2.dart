@@ -191,7 +191,7 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              "Mes horaires de travail préférés",
+              "Mes horaires préférés pour travailler",
               style: Theme.of(context).textTheme.headline5,
             ),
             SizedBox(
@@ -408,7 +408,7 @@ class GroupeOuSeulRectangle2 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Travailler seul ou en groupe ?',
+              'Travailler seul.e ou en groupe ?',
               style: Theme.of(context).textTheme.headline5,
             ),
             Row(
