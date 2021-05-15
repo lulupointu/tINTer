@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
+import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/user_criteria_list2/associative_criteria_list2.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
 
@@ -30,16 +32,20 @@ class _AssociativeProfile2State extends State<AssociativeProfile2> {
   bool isAssociationPressed = false;
 
   void onAssociationPressed() {
-    setState(() {
-      isAssociationPressed = true;
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {
+        isAssociationPressed = true;
+      });
     });
   }
 
   bool isMusicTastePressed = false;
 
   void onMusicTastePressed() {
-    setState(() {
-      isMusicTastePressed = true;
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {
+        isMusicTastePressed = true;
+      });
     });
   }
 
@@ -107,7 +113,10 @@ class ProfileHeader extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Column(
                   children: [
-                    HoveringUserPicture2(size: 95.0, showModifyOption: true,),
+                    HoveringUserPicture2(
+                      size: 95.0,
+                      showModifyOption: true,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: BlocBuilder<UserBloc, UserState>(
@@ -237,26 +246,28 @@ class _HoveringUserPicture2State extends State<HoveringUserPicture2> {
                         .profilePictureLocalPath,
                     height: widget.size,
                     width: widget.size),
-                if (widget.showModifyOption) ClipPath(
-                  clipper: ModifyProfilePictureClipper(),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
-                    child: Container(
-                      color: Colors.white.withOpacity(0.3),
+                if (widget.showModifyOption)
+                  ClipPath(
+                    clipper: ModifyProfilePictureClipper(),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
+                      child: Container(
+                        color: Colors.white.withOpacity(0.3),
+                      ),
                     ),
                   ),
-                ),
-                if (widget.showModifyOption) Align(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 3.0),
-                    child: Icon(
-                      Icons.camera_enhance_rounded,
-                      color: Colors.black.withOpacity(0.55),
-                      size: 23.0,
+                if (widget.showModifyOption)
+                  Align(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 3.0),
+                      child: Icon(
+                        Icons.camera_enhance_rounded,
+                        color: Colors.black.withOpacity(0.55),
+                        size: 23.0,
+                      ),
                     ),
                   ),
-                ),
               ],
             );
           },
@@ -501,6 +512,8 @@ class AssociativeNextButton extends StatelessWidget {
                           accountCreationMode:
                               AccountCreationMode.associatifToScolaire);
                     } else {
+                      Provider.of<TinterTheme>(context, listen: false).theme =
+                          MyTheme.dark;
                       BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
                     }
                   }

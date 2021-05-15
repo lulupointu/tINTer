@@ -29,16 +29,15 @@ class _ScolaireProfile2State extends State<ScolaireProfile2> {
   bool isMatieresPressed = false;
 
   void onMatieresPressed() {
-    setState(() {
-      isMatieresPressed = true;
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {
+        isMatieresPressed = true;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
-    Provider.of<TinterTheme>(context).theme = MyTheme.light;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -55,7 +54,9 @@ class _ScolaireProfile2State extends State<ScolaireProfile2> {
               ),
             ),
             separator,
-            ScolaireNextButton(isMatieresPressed: isMatieresPressed,),
+            ScolaireNextButton(
+              isMatieresPressed: isMatieresPressed,
+            ),
           ],
         ),
       ),
@@ -95,7 +96,10 @@ class ProfileHeader extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Column(
                   children: [
-                    HoveringUserPicture2(size: 95.0, showModifyOption: true,),
+                    HoveringUserPicture2(
+                      size: 95.0,
+                      showModifyOption: true,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: BlocBuilder<UserBloc, UserState>(
@@ -133,7 +137,8 @@ class ProfileHeader extends StatelessWidget {
 }
 
 class ScolaireNextButton extends StatelessWidget {
-  const ScolaireNextButton({Key key, @required this.isMatieresPressed}) : super(key: key);
+  const ScolaireNextButton({Key key, @required this.isMatieresPressed})
+      : super(key: key);
 
   final bool isMatieresPressed;
 
@@ -153,7 +158,11 @@ class ScolaireNextButton extends StatelessWidget {
         ),
         height: 65,
         child: ElevatedButton(
-          onPressed: !isMatieresPressed ? null : () {
+          onPressed: !isMatieresPressed
+              ? null
+              : () {
+                  Provider.of<TinterTheme>(context, listen: false).theme =
+                      MyTheme.light;
                   BlocProvider.of<UserBloc>(context).add(UserSaveEvent());
                 },
           style: ElevatedButton.styleFrom(
