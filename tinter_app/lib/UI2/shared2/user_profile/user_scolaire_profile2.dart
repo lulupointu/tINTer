@@ -8,7 +8,7 @@ import 'package:tinterapp/UI/scolaire/user_profile/matieres.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 
-import '../matieres2.dart';
+import '../user_criteria_panel2/matieres2.dart';
 
 class UserScolaireProfile extends StatelessWidget {
   final Widget separator;

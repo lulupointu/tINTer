@@ -10,9 +10,9 @@ import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/associative_to_scolaire2.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/associative_criteria_list2.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/scolaire_criteria_list2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/sub_profile_creation/associative_to_scolaire2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/user_criteria_list2/associative_criteria_list2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/user_criteria_list2/scolaire_criteria_list2.dart';
 
 import 'associative_profile2.dart';
 

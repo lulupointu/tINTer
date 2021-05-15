@@ -38,18 +38,14 @@ import 'package:tinterapp/UI/associatif/discover/discover.dart';
 import 'package:tinterapp/UI/associatif/matches/matches.dart';
 import 'package:tinterapp/UI/scolaire/binomes/binomes.dart';
 import 'package:tinterapp/UI/scolaire/shared/discover_scolaire_tab.dart';
-import 'package:tinterapp/UI/shared/login/login.dart';
-import 'package:tinterapp/UI/shared/profile_creation/create_profile.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/tinter_bottom_navigation_bar.dart';
 import 'package:tinterapp/UI/shared/splash_screen/splash_screen.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
-import 'package:tinterapp/UI2/shared2/login2/login2.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
-import 'UI2/shared2/login2/login3.dart';
-import 'UI2/shared2/profile_creation/associative_profile2.dart';
+import 'UI2/shared2/login2.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 

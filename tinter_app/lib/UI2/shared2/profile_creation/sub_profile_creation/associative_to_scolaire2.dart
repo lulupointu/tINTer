@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/associative_profile2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/sub_profile_creation/associative_profile2.dart';
 
-import '../associatif_to_scolaire_button2.dart';
-import '../legal_information.dart';
+import '../../associatif_to_scolaire_button2.dart';
+import '../../options_button/legal_information2.dart';
 
 main() => runApp(MaterialApp(
       home: AssociativeToScolaire2(),

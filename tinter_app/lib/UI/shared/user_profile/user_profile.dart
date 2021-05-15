@@ -20,8 +20,8 @@ import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.d
 import 'package:tinterapp/UI/shared/user_profile/associations.dart';
 import 'package:tinterapp/UI/shared/user_profile/options.dart';
 import 'package:tinterapp/UI/shared/user_profile/snap_scroll_physics.dart';
-import 'package:tinterapp/UI2/shared2/associations.dart';
-import 'package:tinterapp/UI2/shared2/options2.dart';
+import 'package:tinterapp/UI2/shared2/associations2.dart';
+import 'package:tinterapp/UI2/shared2/options_button/options2.dart';
 import 'package:tinterapp/main.dart';
 
 import '../shared_element/slider_label.dart';

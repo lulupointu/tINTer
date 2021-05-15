@@ -3,7 +3,7 @@ import 'package:tinterapp/UI/scolaire/user_profile/matieres.dart';
 import 'package:tinterapp/UI/scolaire/user_profile/user_scolaire_profile.dart';
 import 'package:tinterapp/UI/shared/profile_creation/create_profile.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/user_scolaire_profile2.dart';
+import 'package:tinterapp/UI2/shared2/user_profile/user_scolaire_profile2.dart';
 
 class ScolaireCriteriaList2 extends StatelessWidget {
   final Widget separator;

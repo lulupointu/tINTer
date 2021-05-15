@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/associative_to_scolaire2.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/scolaire_profile2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/sub_profile_creation/associative_to_scolaire2.dart';
+import 'package:tinterapp/UI2/shared2/profile_creation/sub_profile_creation/scolaire_profile2.dart';
 
-import 'associative_profile2.dart';
+import 'sub_profile_creation/associative_profile2.dart';
 
 enum AccountCreationMode {
   associatif,
