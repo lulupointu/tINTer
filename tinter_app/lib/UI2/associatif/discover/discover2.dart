@@ -415,8 +415,8 @@ class _MatchesFlockState extends State<MatchesFlock>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              width: 2,
-                              color: tinterTheme.colors.secondary,
+                              width: 2.5,
+                              color: Theme.of(context).indicatorColor,
                             ),
                           ),
                           height: constraints.maxHeight *
@@ -454,8 +454,8 @@ class _MatchesFlockState extends State<MatchesFlock>
                           height: constraints.maxHeight *
                                   MatchesFlock.fractions['separator'] -
                               20,
-                          width: 1.5,
-                          color: tinterTheme.colors.primaryAccent,
+                          width: 2.0,
+                          color: Theme.of(context).indicatorColor,
                         ),
                       ),
                     ),
@@ -475,8 +475,8 @@ class _MatchesFlockState extends State<MatchesFlock>
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            width: 2,
-                            color: tinterTheme.colors.secondary,
+                            width: 2.5,
+                            color: Theme.of(context).indicatorColor,
                           ),
                         ),
                         height: constraints.maxHeight *
@@ -513,8 +513,8 @@ class _MatchesFlockState extends State<MatchesFlock>
                         height: constraints.maxHeight *
                                 MatchesFlock.fractions['separator'] -
                             20,
-                        width: 1.5,
-                        color: tinterTheme.colors.primaryAccent,
+                        width: 2,
+                        color: Theme.of(context).indicatorColor,
                       ),
                     ),
                   ],
@@ -537,7 +537,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                           shape: BoxShape.circle,
                           border: Border.all(
                             width: 2 + 2 * animationController.value,
-                            color: tinterTheme.colors.secondary,
+                            color: Theme.of(context).indicatorColor,
                           ),
                         ),
                         height: constraints.maxHeight *
@@ -593,8 +593,8 @@ class _MatchesFlockState extends State<MatchesFlock>
                           height: constraints.maxHeight *
                                   MatchesFlock.fractions['separator'] -
                               20,
-                          width: 1.5,
-                          color: tinterTheme.colors.primaryAccent,
+                          width: 2,
+                          color: Theme.of(context).indicatorColor,
                         ),
                       ),
                     ),
@@ -611,7 +611,8 @@ class _MatchesFlockState extends State<MatchesFlock>
                               (constraints.maxHeight *
                                       MatchesFlock.fractions['smallHead'] +
                                   constraints.maxHeight *
-                                      MatchesFlock.fractions['separator']),
+                                      MatchesFlock.fractions['separator']) +
+                          10.0,
                       child: Opacity(
                         opacity: animationController.value,
                         child: Container(
@@ -625,7 +626,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                                       .matches[0]
                                       .name,
                                   group: nameAndSurnameAutoSizeGroup,
-                                  style: tinterTheme.textStyle.headline2,
+                                  style: Theme.of(context).textTheme.headline5,
                                 ),
                               ),
                               Expanded(
@@ -634,7 +635,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                                       .matches[0]
                                       .surname,
                                   group: nameAndSurnameAutoSizeGroup,
-                                  style: tinterTheme.textStyle.headline2,
+                                  style: Theme.of(context).textTheme.headline5,
                                 ),
                               ),
                             ],
@@ -820,8 +821,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                }
-                else if (index == 1) {
+                } else if (index == 1) {
                   return Align(
                     alignment: Alignment.center,
                     child: Stack(
@@ -844,12 +844,37 @@ class _MatchInformationState extends State<MatchInformation> {
                                         Theme.of(context).textTheme.headline4,
                                   ),
                                 ),
-                                Text(
-                                  '95',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline1
-                                      .copyWith(fontWeight: FontWeight.w400),
+                                BlocBuilder<DiscoverMatchesBloc,
+                                    DiscoverMatchesState>(
+                                  buildWhen:
+                                      (DiscoverMatchesState previousState,
+                                          DiscoverMatchesState state) {
+                                    if (previousState
+                                        is DiscoverMatchesSavingNewStatusState) {
+                                      return false;
+                                    }
+                                    return true;
+                                  },
+                                  builder: (BuildContext context,
+                                      DiscoverMatchesState state) {
+                                    if (!(state
+                                        is DiscoverMatchesLoadSuccessState)) {
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                    return Text(
+                                      (state as DiscoverMatchesLoadSuccessState)
+                                          .matches[0]
+                                          .score
+                                          .toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          .copyWith(
+                                              fontWeight: FontWeight.w400),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -864,8 +889,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                   transitionDuration:
                                       Duration(milliseconds: 300),
                                   context: context,
-                                  pageBuilder: (BuildContext context,
-                                          animation, _) =>
+                                  pageBuilder: (BuildContext context, animation,
+                                          _) =>
                                       SimpleDialog(
                                         elevation: 5.0,
                                         children: [
@@ -896,9 +921,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                             ),
                                           ),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 75.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 75.0),
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 Navigator.pop(context, false);
