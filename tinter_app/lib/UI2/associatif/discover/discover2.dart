@@ -12,10 +12,8 @@ import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
-import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
-import 'package:tinterapp/UI/shared/shared_element/custom_track_shape.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/UI2/associatif/discover/recherche_etudiant2.dart';
 
@@ -866,7 +864,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                                 onPressed: () {
                                                   Navigator.pop(context, false);
                                                 },
-                                                child: Text("C'est compris"),
+                                                child: Text("Continuer"),
                                               ),
                                             ),
                                           ],

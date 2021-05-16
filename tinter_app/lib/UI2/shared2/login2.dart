@@ -201,7 +201,7 @@ class HelpOnLogin extends StatelessWidget {
                           onPressed: () {
                             Navigator.pop(context, false);
                           },
-                          child: Text("C'est compris"),
+                          child: Text("Continuer"),
                         ),
                       ),
                     ],

@@ -55,9 +55,12 @@ class AttiranceVieAssoRectangle2 extends StatelessWidget {
             ),
             Row(
               children: [
-                Icon(
-                  Icons.celebration,
-                  color: Theme.of(context).primaryColor,
+                Padding(
+                  padding: const EdgeInsets.only(right: 15.0),
+                  child: Icon(
+                    Icons.celebration,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
                 SliderTheme(
                   data: Theme.of(context).sliderTheme,
@@ -131,19 +134,22 @@ class FeteOuCoursRectangle2 extends StatelessWidget {
                         );
                       }
                       return Expanded(
-                        child: Slider(
-                          value: (userState as UserLoadSuccessState)
-                              .user
-                              .feteOuCours,
-                          onChanged: (value) {
-                            BlocProvider.of<UserBloc>(context).add(
-                              UserStateChangedEvent(
-                                newState: (userState as UserLoadSuccessState)
-                                    .user
-                                    .rebuild((u) => u..feteOuCours = value),
-                              ),
-                            );
-                          },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Slider(
+                            value: (userState as UserLoadSuccessState)
+                                .user
+                                .feteOuCours,
+                            onChanged: (value) {
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..feteOuCours = value),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       );
                     },
@@ -195,19 +201,22 @@ class AideOuSortirRectangle2 extends StatelessWidget {
                         );
                       }
                       return Expanded(
-                        child: Slider(
-                          value: (userState as UserLoadSuccessState)
-                              .user
-                              .aideOuSortir,
-                          onChanged: (value) {
-                            BlocProvider.of<UserBloc>(context).add(
-                              UserStateChangedEvent(
-                                newState: (userState as UserLoadSuccessState)
-                                    .user
-                                    .rebuild((u) => u..aideOuSortir = value),
-                              ),
-                            );
-                          },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Slider(
+                            value: (userState as UserLoadSuccessState)
+                                .user
+                                .aideOuSortir,
+                            onChanged: (value) {
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..aideOuSortir = value),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       );
                     },
@@ -242,9 +251,12 @@ class OrganisationEvenementsRectangle2 extends StatelessWidget {
             ),
             Row(
               children: [
-                Icon(
-                  Icons.event_available_rounded,
-                  color: Theme.of(context).primaryColor,
+                Padding(
+                  padding: const EdgeInsets.only(right: 15.0),
+                  child: Icon(
+                    Icons.event_available_rounded,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
                 SliderTheme(
                   data: Theme.of(context).sliderTheme,

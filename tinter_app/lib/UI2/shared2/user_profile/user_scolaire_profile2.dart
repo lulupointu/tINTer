@@ -406,19 +406,22 @@ class GroupeOuSeulRectangle2 extends StatelessWidget {
                         );
                       }
                       return Expanded(
-                        child: Slider(
-                          value: (userState as UserLoadSuccessState)
-                              .user
-                              .groupeOuSeul,
-                          onChanged: (value) {
-                            BlocProvider.of<UserBloc>(context).add(
-                              UserStateChangedEvent(
-                                newState: (userState as UserLoadSuccessState)
-                                    .user
-                                    .rebuild((u) => u..groupeOuSeul = value),
-                              ),
-                            );
-                          },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Slider(
+                            value: (userState as UserLoadSuccessState)
+                                .user
+                                .groupeOuSeul,
+                            onChanged: (value) {
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..groupeOuSeul = value),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       );
                     },
@@ -468,19 +471,22 @@ class EnLigneOuPresentielRectangle2 extends StatelessWidget {
                         );
                       }
                       return Expanded(
-                        child: Slider(
-                          value: (userState as UserLoadSuccessState)
-                              .user
-                              .enligneOuNon,
-                          onChanged: (value) {
-                            BlocProvider.of<UserBloc>(context).add(
-                              UserStateChangedEvent(
-                                newState: (userState as UserLoadSuccessState)
-                                    .user
-                                    .rebuild((u) => u..enligneOuNon = value),
-                              ),
-                            );
-                          },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Slider(
+                            value: (userState as UserLoadSuccessState)
+                                .user
+                                .enligneOuNon,
+                            onChanged: (value) {
+                              BlocProvider.of<UserBloc>(context).add(
+                                UserStateChangedEvent(
+                                  newState: (userState as UserLoadSuccessState)
+                                      .user
+                                      .rebuild((u) => u..enligneOuNon = value),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       );
                     },
