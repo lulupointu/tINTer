@@ -16,6 +16,7 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/UI2/associatif/discover/recherche_etudiant2.dart';
+import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
 class DiscoverAssociatifTab2 extends StatelessWidget implements TinterTab {
   @override
@@ -1101,102 +1102,152 @@ class _MatchInformationState extends State<MatchInformation> {
                     ),
                   );
                 } else if (index == 4) {
-                  return informationRectangle(
-                    context: context,
+                  return Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 5),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
                           Text(
-                            'Parrain qui aide ou avec qui sortir?',
-                            style: tinterTheme.textStyle.headline2,
-                            textAlign: TextAlign.center,
+                            randomGender == Gender.M
+                                ? 'Parrain qui aide ou avec qui sortir ?'
+                                : 'Marraine qui aide ou avec qui sortir ?',
+                            style: Theme.of(context).textTheme.headline5,
                           ),
                           SizedBox(
-                            height: 15,
+                            height: 10,
                           ),
-                          discoverSlider(
-                              context,
-                              SliderTheme(
-                                data: tinterTheme.slider.disabled,
-                                child: BlocBuilder<DiscoverMatchesBloc,
-                                    DiscoverMatchesState>(
-                                  builder: (BuildContext context,
-                                      DiscoverMatchesState state) {
-                                    if (!(state
-                                        is DiscoverMatchesLoadSuccessState)) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    return TweenAnimationBuilder(
-                                      tween: Tween<double>(
-                                          begin: 0.5,
-                                          end: (state
-                                                  as DiscoverMatchesLoadSuccessState)
-                                              .matches[0]
-                                              .aideOuSortir),
-                                      duration: Duration(milliseconds: 300),
-                                      builder: (BuildContext context, value,
-                                          Widget child) {
-                                        return Slider(
-                                          value: value,
-                                          onChanged: null,
-                                        );
-                                      },
-                                    );
-                                  },
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.sports_bar_rounded,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 22.0,
                                 ),
                               ),
-                              leftLabel: 'Aide',
-                              rightLabel: 'Sortir'),
+                              Expanded(
+                                child: SliderTheme(
+                                  data: Theme.of(context).sliderTheme.copyWith(
+                                        disabledActiveTrackColor:
+                                            Theme.of(context).primaryColor,
+                                        disabledThumbColor: Color(0xffCECECE),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0),
+                                        trackHeight: 6.0,
+                                        disabledInactiveTrackColor:
+                                            Theme.of(context).indicatorColor,
+                                      ),
+                                  child: BlocBuilder<DiscoverMatchesBloc,
+                                      DiscoverMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverMatchesState state) {
+                                      if (!(state
+                                          is DiscoverMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return TweenAnimationBuilder(
+                                        tween: Tween<double>(
+                                            begin: 0.5,
+                                            end: (state
+                                                    as DiscoverMatchesLoadSuccessState)
+                                                .matches[0]
+                                                .aideOuSortir),
+                                        duration: Duration(milliseconds: 300),
+                                        builder: (BuildContext context, value,
+                                            Widget child) {
+                                          return Slider(
+                                            value: value,
+                                            onChanged: null,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Icon(
+                                  Icons.support_rounded,
+                                  color: Theme.of(context).indicatorColor,
+                                  size: 22.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
                   );
                 } else if (index == 5) {
-                  return informationRectangle(
-                    context: context,
+                  return Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
                           Text(
-                            'Aime organiser les événements?',
-                            style: tinterTheme.textStyle.headline2,
-                            textAlign: TextAlign.center,
+                            "Envie d'organiser des événements ?",
+                            style: Theme.of(context).textTheme.headline5,
                           ),
-                          SliderTheme(
-                            data: tinterTheme.slider.disabled,
-                            child: BlocBuilder<DiscoverMatchesBloc,
-                                DiscoverMatchesState>(
-                              builder: (BuildContext context,
-                                  DiscoverMatchesState state) {
-                                if (!(state
-                                    is DiscoverMatchesLoadSuccessState)) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                                return TweenAnimationBuilder(
-                                  tween: Tween<double>(
-                                      begin: 0.5,
-                                      end: (state
-                                              as DiscoverMatchesLoadSuccessState)
-                                          .matches[0]
-                                          .organisationEvenements),
-                                  duration: Duration(milliseconds: 300),
-                                  builder: (BuildContext context, value,
-                                      Widget child) {
-                                    return Slider(
-                                      value: value,
-                                      onChanged: null,
-                                    );
-                                  },
-                                );
-                              },
-                            ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.event_available_rounded,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 22.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: SliderTheme(
+                                  data: Theme.of(context).sliderTheme.copyWith(
+                                        disabledActiveTrackColor:
+                                            Theme.of(context).primaryColor,
+                                        disabledThumbColor: Color(0xffCECECE),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0),
+                                        trackHeight: 6.0,
+                                      ),
+                                  child: BlocBuilder<DiscoverMatchesBloc,
+                                      DiscoverMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverMatchesState state) {
+                                      if (!(state
+                                          is DiscoverMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return TweenAnimationBuilder(
+                                        tween: Tween<double>(
+                                            begin: 0.5,
+                                            end: (state
+                                                    as DiscoverMatchesLoadSuccessState)
+                                                .matches[0]
+                                                .organisationEvenements),
+                                        duration: Duration(milliseconds: 300),
+                                        builder: (BuildContext context, value,
+                                            Widget child) {
+                                          return Slider(
+                                            value: value,
+                                            onChanged: null,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ],
                       ),
