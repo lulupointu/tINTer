@@ -786,234 +786,317 @@ class _MatchInformationState extends State<MatchInformation> {
                     padding: EdgeInsets.only(top: 20.0),
                     child: Align(
                       alignment: Alignment.center,
-                      child: Container(
-                        height: 125,
-                        width: 125,
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5.0),
-                                child: Text(
-                                  'Score',
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Container(
+                            height: 125,
+                            width: 125,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
-                              Text(
-                                '95',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    .copyWith(fontWeight: FontWeight.w400),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Text(
+                                      'Score',
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
+                                  ),
+                                  Text(
+                                    '95',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline1
+                                        .copyWith(fontWeight: FontWeight.w400),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 5.0, bottom: 5.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                showGeneralDialog(
+                                    transitionDuration:
+                                        Duration(milliseconds: 300),
+                                    context: context,
+                                    pageBuilder: (BuildContext context,
+                                            animation, _) =>
+                                        SimpleDialog(
+                                          elevation: 5.0,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0),
+                                              child: Text(
+                                                'Aide',
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20.0,
+                                                  right: 20.0,
+                                                  top: 10.0,
+                                                  bottom: 10.0),
+                                              child: Text(
+                                                "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                                " Il est basé sur les critères renseignés dans le profil.",
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 75.0),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, false);
+                                                },
+                                                child: Text("C'est compris"),
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                              },
+                              child: Icon(
+                                Icons.help_outline_outlined,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 } else if (index == 1) {
                   return Card(
-                    child: informationRectangle(
-                      context: context,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15.0, top: 10.0, bottom: 10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Associations',
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              child: Stack(
-                                alignment: AlignmentDirectional.centerStart,
-                                children: <Widget>[
-                                  Container(
-                                    height: 60,
-                                    child: BlocBuilder<DiscoverMatchesBloc,
-                                        DiscoverMatchesState>(
-                                      builder: (BuildContext context,
-                                          DiscoverMatchesState state) {
-                                        if (!(state
-                                            is DiscoverMatchesLoadSuccessState)) {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                        return AnimatedSwitcher(
-                                          duration: Duration(milliseconds: 300),
-                                          child: ListView.separated(
-                                            key: GlobalKey(),
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: (state
-                                                    as DiscoverMatchesLoadSuccessState)
-                                                .matches[0]
-                                                .associations
-                                                .length,
-                                            separatorBuilder:
-                                                (BuildContext context,
-                                                    int index) {
-                                              return SizedBox(
-                                                width: 5,
-                                              );
-                                            },
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return associationBubble(
-                                                  context,
-                                                  (state as DiscoverMatchesLoadSuccessState)
-                                                      .matches[0]
-                                                      .associations[index]);
-                                            },
-                                          ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15.0, top: 10.0, bottom: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Associations',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            width: double.infinity,
+                            child: Stack(
+                              alignment: AlignmentDirectional.centerStart,
+                              children: <Widget>[
+                                Container(
+                                  height: 60,
+                                  child: BlocBuilder<DiscoverMatchesBloc,
+                                      DiscoverMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverMatchesState state) {
+                                      if (!(state
+                                          is DiscoverMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
                                         );
-                                      },
-                                    ),
+                                      }
+                                      return AnimatedSwitcher(
+                                        duration: Duration(milliseconds: 300),
+                                        child: ListView.separated(
+                                          key: GlobalKey(),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: (state
+                                                  as DiscoverMatchesLoadSuccessState)
+                                              .matches[0]
+                                              .associations
+                                              .length,
+                                          separatorBuilder:
+                                              (BuildContext context,
+                                                  int index) {
+                                            return SizedBox(
+                                              width: 5,
+                                            );
+                                          },
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return associationBubble(
+                                                context,
+                                                (state as DiscoverMatchesLoadSuccessState)
+                                                    .matches[0]
+                                                    .associations[index]);
+                                          },
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 } else if (index == 2) {
                   return Card(
-                    child: informationRectangle(
-                      context: context,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Attirance pour la vie associative',
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10.0),
-                                  child: Icon(
-                                    Icons.celebration,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 22.0,
-                                  ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Attirance pour la vie associative',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.celebration,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 22.0,
                                 ),
-                                Expanded(
-                                  child: SliderTheme(
-                                    data: Theme.of(context)
-                                        .sliderTheme
-                                        .copyWith(
-                                          disabledActiveTrackColor:
-                                              Theme.of(context).primaryColor,
-                                          disabledThumbColor: Color(0xffCECECE),
-                                          overlayShape: RoundSliderOverlayShape(
-                                              overlayRadius: 0.0),
-                                          trackHeight: 6.0,
-                                        ),
-                                    child: BlocBuilder<DiscoverMatchesBloc,
-                                        DiscoverMatchesState>(
-                                      builder: (BuildContext context,
-                                          DiscoverMatchesState state) {
-                                        if (!(state
-                                            is DiscoverMatchesLoadSuccessState)) {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                        return TweenAnimationBuilder(
-                                          tween: Tween<double>(
-                                              begin: 0.5,
-                                              end: (state
-                                                      as DiscoverMatchesLoadSuccessState)
-                                                  .matches[0]
-                                                  .attiranceVieAsso),
-                                          duration: Duration(milliseconds: 300),
-                                          builder: (BuildContext context, value,
-                                              Widget child) {
-                                            return Slider(
-                                              value: value,
-                                              onChanged: null,
-                                            );
-                                          },
+                              ),
+                              Expanded(
+                                child: SliderTheme(
+                                  data: Theme.of(context).sliderTheme.copyWith(
+                                        disabledActiveTrackColor:
+                                            Theme.of(context).primaryColor,
+                                        disabledThumbColor: Color(0xffCECECE),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0),
+                                        trackHeight: 6.0,
+                                      ),
+                                  child: BlocBuilder<DiscoverMatchesBloc,
+                                      DiscoverMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverMatchesState state) {
+                                      if (!(state
+                                          is DiscoverMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
                                         );
-                                      },
-                                    ),
+                                      }
+                                      return TweenAnimationBuilder(
+                                        tween: Tween<double>(
+                                            begin: 0.5,
+                                            end: (state
+                                                    as DiscoverMatchesLoadSuccessState)
+                                                .matches[0]
+                                                .attiranceVieAsso),
+                                        duration: Duration(milliseconds: 300),
+                                        builder: (BuildContext context, value,
+                                            Widget child) {
+                                          return Slider(
+                                            value: value,
+                                            onChanged: null,
+                                          );
+                                        },
+                                      );
+                                    },
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   );
                 } else if (index == 3) {
-                  return informationRectangle(
-                    context: context,
+                  return Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 5),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
                           Text(
-                            'Cours ou soirée?',
-                            style: tinterTheme.textStyle.headline2,
+                            'Préférence entre vie scolaire et associative',
+                            style: Theme.of(context).textTheme.headline5,
                           ),
                           SizedBox(
-                            height: 15,
+                            height: 10,
                           ),
-                          discoverSlider(
-                              context,
-                              SliderTheme(
-                                data: tinterTheme.slider.disabled,
-                                child: BlocBuilder<DiscoverMatchesBloc,
-                                    DiscoverMatchesState>(
-                                  builder: (BuildContext context,
-                                      DiscoverMatchesState state) {
-                                    if (!(state
-                                        is DiscoverMatchesLoadSuccessState)) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    return TweenAnimationBuilder(
-                                      tween: Tween<double>(
-                                          begin: 0.5,
-                                          end: (state
-                                                  as DiscoverMatchesLoadSuccessState)
-                                              .matches[0]
-                                              .feteOuCours),
-                                      duration: Duration(milliseconds: 300),
-                                      builder: (BuildContext context, value,
-                                          Widget child) {
-                                        return Slider(
-                                          value: value,
-                                          onChanged: null,
-                                        );
-                                      },
-                                    );
-                                  },
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.celebration,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 22.0,
                                 ),
                               ),
-                              leftLabel: 'Cours',
-                              rightLabel: 'Soirée'),
+                              Expanded(
+                                child: SliderTheme(
+                                  data: Theme.of(context).sliderTheme.copyWith(
+                                        disabledActiveTrackColor:
+                                            Theme.of(context).primaryColor,
+                                        disabledThumbColor: Color(0xffCECECE),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0),
+                                        trackHeight: 6.0,
+                                        disabledInactiveTrackColor:
+                                            Theme.of(context).indicatorColor,
+                                      ),
+                                  child: BlocBuilder<DiscoverMatchesBloc,
+                                      DiscoverMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverMatchesState state) {
+                                      if (!(state
+                                          is DiscoverMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return TweenAnimationBuilder(
+                                        tween: Tween<double>(
+                                            begin: 0.5,
+                                            end: (state
+                                                    as DiscoverMatchesLoadSuccessState)
+                                                .matches[0]
+                                                .feteOuCours),
+                                        duration: Duration(milliseconds: 300),
+                                        builder: (BuildContext context, value,
+                                            Widget child) {
+                                          return Slider(
+                                            value: value,
+                                            onChanged: null,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Icon(
+                                  Icons.school_rounded,
+                                  color: Theme.of(context).indicatorColor,
+                                  size: 22.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
