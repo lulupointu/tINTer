@@ -774,7 +774,7 @@ class _MatchInformationState extends State<MatchInformation> {
           child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
             return ListView.separated(
               controller: informationController,
-              itemCount: 7,
+              itemCount: 8,
               separatorBuilder: (BuildContext context, int index) {
                 return Container(
                   height: 20,
@@ -783,104 +783,141 @@ class _MatchInformationState extends State<MatchInformation> {
               itemBuilder: (BuildContext context, int index) {
                 if (index == 0) {
                   return Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                    padding: const EdgeInsets.only(top: 15.0),
                     child: Align(
-                      alignment: Alignment.center,
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Container(
-                            height: 125,
-                            width: 125,
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5.0),
-                                    child: Text(
-                                      'Score',
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
-                                    ),
-                                  ),
-                                  Text(
-                                    '95',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline1
-                                        .copyWith(fontWeight: FontWeight.w400),
-                                  ),
-                                ],
-                              ),
-                            ),
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        height: 35,
+                        width: 145,
+                        child: Center(
+                          child: Text(
+                            'mode associatif',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(color: Colors.white),
                           ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 5.0, bottom: 5.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                showGeneralDialog(
-                                    transitionDuration:
-                                        Duration(milliseconds: 300),
-                                    context: context,
-                                    pageBuilder: (BuildContext context,
-                                            animation, _) =>
-                                        SimpleDialog(
-                                          elevation: 5.0,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0),
-                                              child: Text(
-                                                'Aide',
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline4,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20.0,
-                                                  right: 20.0,
-                                                  top: 10.0,
-                                                  bottom: 10.0),
-                                              child: Text(
-                                                "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                                " Il est basé sur les critères renseignés dans le profil.",
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 75.0),
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context, false);
-                                                },
-                                                child: Text("Continuer"),
-                                              ),
-                                            ),
-                                          ],
-                                        ));
-                              },
-                              child: Icon(
-                                Icons.help_outline_outlined,
-                              ),
-                            ),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
                           ),
-                        ],
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 4.0,
+                            style: BorderStyle.solid,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(3, 3),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
-                } else if (index == 1) {
+                }
+                else if (index == 1) {
+                  return Align(
+                    alignment: Alignment.center,
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        Container(
+                          height: 125,
+                          width: 125,
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Text(
+                                    'Score',
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                ),
+                                Text(
+                                  '95',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      .copyWith(fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(right: 5.0, bottom: 5.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              showGeneralDialog(
+                                  transitionDuration:
+                                      Duration(milliseconds: 300),
+                                  context: context,
+                                  pageBuilder: (BuildContext context,
+                                          animation, _) =>
+                                      SimpleDialog(
+                                        elevation: 5.0,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10.0),
+                                            child: Text(
+                                              'Aide',
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20.0,
+                                                right: 20.0,
+                                                top: 10.0,
+                                                bottom: 10.0),
+                                            child: Text(
+                                              "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                              " Il est basé sur les critères renseignés dans le profil.",
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 75.0),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context, false);
+                                              },
+                                              child: Text("Continuer"),
+                                            ),
+                                          ),
+                                        ],
+                                      ));
+                            },
+                            child: Icon(
+                              Icons.help_outline_outlined,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (index == 2) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -950,7 +987,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 2) {
+                } else if (index == 3) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1021,7 +1058,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 3) {
+                } else if (index == 4) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1101,7 +1138,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 4) {
+                } else if (index == 5) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1183,7 +1220,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 5) {
+                } else if (index == 6) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1253,49 +1290,75 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 6) {
+                } else if (index == 7) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: informationRectangle(
-                      context: context,
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Goûts musicaux',
-                            style: tinterTheme.textStyle.headline2,
-                          ),
-                          BlocBuilder<DiscoverMatchesBloc,
-                              DiscoverMatchesState>(
-                            builder: (BuildContext context,
-                                DiscoverMatchesState state) {
-                              if (!(state is DiscoverMatchesLoadSuccessState)) {
-                                return Center(
-                                  child: CircularProgressIndicator(),
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Goûts musicaux',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            BlocBuilder<DiscoverMatchesBloc,
+                                DiscoverMatchesState>(
+                              builder: (BuildContext context,
+                                  DiscoverMatchesState state) {
+                                if (!(state
+                                    is DiscoverMatchesLoadSuccessState)) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return AnimatedSwitcher(
+                                  duration: Duration(milliseconds: 300),
+                                  child: Wrap(
+                                    alignment: WrapAlignment.center,
+                                    key: GlobalKey(),
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: <Widget>[
+                                      for (String musicStyle in (state
+                                              as DiscoverMatchesLoadSuccessState)
+                                          .matches[0]
+                                          .goutsMusicaux)
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15.0, vertical: 6.0),
+                                          decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                                spreadRadius: 0.2,
+                                                blurRadius: 5,
+                                                offset: Offset(2, 2),
+                                              )
+                                            ],
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0)),
+                                            border: Border.all(
+                                                color: (Theme.of(context)
+                                                    .primaryColor),
+                                                width: 3.0,
+                                                style: BorderStyle.solid),
+                                            color: Colors.white,
+                                          ),
+                                          child: Text(musicStyle),
+                                        ),
+                                    ],
+                                  ),
                                 );
-                              }
-                              return AnimatedSwitcher(
-                                duration: Duration(milliseconds: 300),
-                                child: Wrap(
-                                  key: GlobalKey(),
-                                  spacing: 15,
-                                  children: <Widget>[
-                                    for (String musicStyle in (state
-                                            as DiscoverMatchesLoadSuccessState)
-                                        .matches[0]
-                                        .goutsMusicaux)
-                                      Chip(
-                                        label: Text(musicStyle),
-                                        labelStyle:
-                                            tinterTheme.textStyle.chipLiked,
-                                        backgroundColor:
-                                            tinterTheme.colors.primaryAccent,
-                                      )
-                                  ],
-                                ),
-                              );
-                            },
-                          )
-                        ],
+                              },
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   );
