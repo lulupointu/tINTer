@@ -15,6 +15,7 @@ import 'package:tinterapp/Logic/models/associatif/match.dart';
 import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
+import 'package:tinterapp/UI/shared/shared_element/custom_track_shape.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/UI2/associatif/discover/recherche_etudiant2.dart';
 
@@ -1029,7 +1030,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            'Préférence entre vie scolaire et associative',
+                            'Préférence entre vie associative et scolaire',
                             style: Theme.of(context).textTheme.headline5,
                           ),
                           SizedBox(
