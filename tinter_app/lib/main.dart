@@ -39,17 +39,14 @@ import 'package:tinterapp/UI/associatif/matches/matches.dart';
 import 'package:tinterapp/UI/scolaire/binomes/binomes.dart';
 import 'package:tinterapp/UI/scolaire/shared/discover_scolaire_tab.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
-import 'package:tinterapp/UI/shared/shared_element/tinter_bottom_navigation_bar.dart';
 import 'package:tinterapp/UI/shared/splash_screen/splash_screen.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
-import 'UI/shared/profile_creation/create_profile.dart';
 import 'UI/shared/shared_element/homogenius_rounded_rectslider_trackshape.dart';
 import 'UI2/shared2/login2.dart';
+import 'UI2/shared2/tinter_bottom_navigation_bar2.dart';
 import 'UI2/shared2/user_profile/user_profile2.dart';
-import 'UI2/shared2/user_profile/user_profile3.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -448,7 +445,7 @@ class _TinterHomeState extends State<TinterHome> {
             return Scaffold(
               backgroundColor: tinterTheme.colors.background,
               body: child,
-              bottomNavigationBar: CustomBottomNavigationBar(
+              bottomNavigationBar: CustomBottomNavigationBar2(
                 onTap: (int index) =>
                     Provider.of<TinterTabs>(context, listen: false)
                         .selectedTabIndex = index,

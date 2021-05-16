@@ -6,7 +6,7 @@ import 'package:tinterapp/UI/associatif/user_profile/gout_musicaux.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/user_criteria_panel2/gouts_musicaux2.dart';
-import 'package:tinterapp/UI2/shared2/user_profile/user_profile3.dart';
+import 'package:tinterapp/UI2/shared2/user_profile/user_profile2.dart';
 
 import '../random_gender.dart';
 
