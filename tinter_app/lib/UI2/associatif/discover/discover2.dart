@@ -24,7 +24,7 @@ class DiscoverAssociatifTab extends StatelessWidget implements TinterTab {
   Widget build(BuildContext context) {
     // Update to last information
     if (BlocProvider.of<DiscoverMatchesBloc>(context).state
-        is DiscoverMatchesLoadSuccessState) {
+    is DiscoverMatchesLoadSuccessState) {
       BlocProvider.of<DiscoverMatchesBloc>(context)
           .add(DiscoverMatchesRefreshEvent());
     } else {
@@ -127,7 +127,7 @@ class DiscoverRight extends StatelessWidget {
               padding: const EdgeInsets.only(top: 15.0),
               child: Container(
                 height: ((this.appHeight - 8 * 2 - 50 - 15) -
-                        this.appHeight * 1 / 2) /
+                    this.appHeight * 1 / 2) /
                     (1 -
                         (1 / 2 * MatchesFlock.fractions['bigHead'] +
                             MatchesFlock.fractions['nameAndSurname'])),
@@ -251,10 +251,10 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
     ignoreController = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
     ignoreAnimation =
-        CurveTween(curve: Curves.easeOut).animate(ignoreController)
-          ..addListener(() {
-            setState(() {});
-          });
+    CurveTween(curve: Curves.easeOut).animate(ignoreController)
+      ..addListener(() {
+        setState(() {});
+      });
     super.initState();
   }
 
@@ -270,63 +270,63 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
           builder: (context, DiscoverMatchesState discoverMatchesState) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Flexible(
-              child: IconButton(
-                padding: EdgeInsets.all(0.0),
-                iconSize: 60,
-                color: tinterTheme.colors.secondary,
-                icon: FlareActor(
-                  'assets/icons/Heart.flr',
-                  color: tinterTheme.colors.secondary,
-                  fit: BoxFit.contain,
-                  controller: CustomFlareController(
-                      controller: likeController,
-                      forwardAnimationName: 'Validate'),
-                ),
-                onPressed:
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Flexible(
+                  child: IconButton(
+                    padding: EdgeInsets.all(0.0),
+                    iconSize: 60,
+                    color: tinterTheme.colors.secondary,
+                    icon: FlareActor(
+                      'assets/icons/Heart.flr',
+                      color: tinterTheme.colors.secondary,
+                      fit: BoxFit.contain,
+                      controller: CustomFlareController(
+                          controller: likeController,
+                          forwardAnimationName: 'Validate'),
+                    ),
+                    onPressed:
                     discoverMatchesState is DiscoverMatchesSavingNewStatusState
                         ? null
                         : () {
-                            likeController.forward().whenComplete(() =>
-                                likeController.animateTo(0,
-                                    duration: Duration(seconds: 0)));
-                            BlocProvider.of<DiscoverMatchesBloc>(context)
-                                .add(DiscoverMatchLikeEvent());
-                          },
-              ),
-            ),
-            Flexible(
-              child: IconButton(
-                padding: EdgeInsets.all(0.0),
-                iconSize: 60,
-                color: tinterTheme.colors.secondary,
-                icon: FlareActor(
-                  'assets/icons/Clear.flr',
-                  color: tinterTheme.colors.secondary,
-                  fit: BoxFit.contain,
-                  controller: CustomFlareController(
-                    controller: ignoreController,
-                    forwardAnimationName: 'Ignore',
+                      likeController.forward().whenComplete(() =>
+                          likeController.animateTo(0,
+                              duration: Duration(seconds: 0)));
+                      BlocProvider.of<DiscoverMatchesBloc>(context)
+                          .add(DiscoverMatchLikeEvent());
+                    },
                   ),
                 ),
-                onPressed:
+                Flexible(
+                  child: IconButton(
+                    padding: EdgeInsets.all(0.0),
+                    iconSize: 60,
+                    color: tinterTheme.colors.secondary,
+                    icon: FlareActor(
+                      'assets/icons/Clear.flr',
+                      color: tinterTheme.colors.secondary,
+                      fit: BoxFit.contain,
+                      controller: CustomFlareController(
+                        controller: ignoreController,
+                        forwardAnimationName: 'Ignore',
+                      ),
+                    ),
+                    onPressed:
                     discoverMatchesState is DiscoverMatchesSavingNewStatusState
                         ? null
                         : () {
-                            ignoreController.forward().whenComplete(() =>
-                                ignoreController.animateTo(0,
-                                    duration: Duration(seconds: 0)));
-                            BlocProvider.of<DiscoverMatchesBloc>(context)
-                                .add(DiscoverMatchIgnoreEvent());
-                          },
-              ),
-            ),
-          ],
-        );
-      });
+                      ignoreController.forward().whenComplete(() =>
+                          ignoreController.animateTo(0,
+                              duration: Duration(seconds: 0)));
+                      BlocProvider.of<DiscoverMatchesBloc>(context)
+                          .add(DiscoverMatchIgnoreEvent());
+                    },
+                  ),
+                ),
+              ],
+            );
+          });
     });
   }
 }
@@ -382,20 +382,20 @@ class _MatchesFlockState extends State<MatchesFlock>
           return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
               buildWhen: (DiscoverMatchesState previousState,
                   DiscoverMatchesState state) {
-            if (state is DiscoverMatchesSavingNewStatusState) {
-              previousFirstMatch =
-                  (previousState as DiscoverMatchesLoadSuccessState)
-                      .matches
-                      .first;
-              animationController
-                  .animateTo(0, duration: Duration(milliseconds: 0))
-                  .whenComplete(() => animationController.forward());
-            }
-            if (previousState is DiscoverMatchesSavingNewStatusState) {
-              return false;
-            }
-            return true;
-          }, builder: (BuildContext context, DiscoverMatchesState state) {
+                if (state is DiscoverMatchesSavingNewStatusState) {
+                  previousFirstMatch =
+                      (previousState as DiscoverMatchesLoadSuccessState)
+                          .matches
+                          .first;
+                  animationController
+                      .animateTo(0, duration: Duration(milliseconds: 0))
+                      .whenComplete(() => animationController.forward());
+                }
+                if (previousState is DiscoverMatchesSavingNewStatusState) {
+                  return false;
+                }
+                return true;
+              }, builder: (BuildContext context, DiscoverMatchesState state) {
             if (!(state is DiscoverMatchesLoadSuccessState)) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -408,8 +408,8 @@ class _MatchesFlockState extends State<MatchesFlock>
                 alignment: AlignmentDirectional.topCenter,
                 children: <Widget>[
                   if ((state as DiscoverMatchesLoadSuccessState)
-                          .matches
-                          .length >=
+                      .matches
+                      .length >=
                       3) ...[
                     // First head
                     Positioned(
@@ -431,13 +431,13 @@ class _MatchesFlockState extends State<MatchesFlock>
                           child: Center(
                             child: getProfilePictureFromLocalPathOrLogin(
                                 login:
-                                    (state as DiscoverMatchesLoadSuccessState)
-                                        .matches[2]
-                                        .login,
+                                (state as DiscoverMatchesLoadSuccessState)
+                                    .matches[2]
+                                    .login,
                                 localPath:
-                                    (state as DiscoverMatchesLoadSuccessState)
-                                        .matches[2]
-                                        .profilePictureLocalPath,
+                                (state as DiscoverMatchesLoadSuccessState)
+                                    .matches[2]
+                                    .profilePictureLocalPath,
                                 height: constraints.maxHeight *
                                     MatchesFlock.fractions['smallHead'],
                                 width: constraints.maxHeight *
@@ -450,14 +450,14 @@ class _MatchesFlockState extends State<MatchesFlock>
                     // First separator
                     Positioned(
                       top: constraints.maxHeight *
-                              MatchesFlock.fractions['smallHead'] +
+                          MatchesFlock.fractions['smallHead'] +
                           10 -
                           50 * (1 - animationController.value),
                       child: Opacity(
                         opacity: animationController.value,
                         child: Container(
                           height: constraints.maxHeight *
-                                  MatchesFlock.fractions['separator'] -
+                              MatchesFlock.fractions['separator'] -
                               20,
                           width: 1.5,
                           color: tinterTheme.colors.primaryAccent,
@@ -466,8 +466,8 @@ class _MatchesFlockState extends State<MatchesFlock>
                     ),
                   ],
                   if ((state as DiscoverMatchesLoadSuccessState)
-                          .matches
-                          .length >=
+                      .matches
+                      .length >=
                       2) ...[
                     // Second head
                     Positioned(
@@ -494,9 +494,9 @@ class _MatchesFlockState extends State<MatchesFlock>
                                   .matches[1]
                                   .login,
                               localPath:
-                                  (state as DiscoverMatchesLoadSuccessState)
-                                      .matches[1]
-                                      .profilePictureLocalPath,
+                              (state as DiscoverMatchesLoadSuccessState)
+                                  .matches[1]
+                                  .profilePictureLocalPath,
                               height: constraints.maxHeight *
                                   MatchesFlock.fractions['smallHead'],
                               width: constraints.maxHeight *
@@ -508,7 +508,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                     // Second separator
                     Positioned(
                       top: constraints.maxHeight *
-                              MatchesFlock.fractions['smallHead'] +
+                          MatchesFlock.fractions['smallHead'] +
                           10 +
                           constraints.maxHeight *
                               (MatchesFlock.fractions['smallHead'] +
@@ -516,7 +516,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                               animationController.value,
                       child: Container(
                         height: constraints.maxHeight *
-                                MatchesFlock.fractions['separator'] -
+                            MatchesFlock.fractions['separator'] -
                             20,
                         width: 1.5,
                         color: tinterTheme.colors.primaryAccent,
@@ -524,13 +524,13 @@ class _MatchesFlockState extends State<MatchesFlock>
                     ),
                   ],
                   if ((state as DiscoverMatchesLoadSuccessState)
-                          .matches
-                          .length >=
+                      .matches
+                      .length >=
                       1) ...[
                     // Third head
                     Positioned(
                       top: constraints.maxHeight *
-                              MatchesFlock.fractions['smallHead'] +
+                          MatchesFlock.fractions['smallHead'] +
                           constraints.maxHeight *
                               MatchesFlock.fractions['separator'] +
                           constraints.maxHeight *
@@ -546,13 +546,13 @@ class _MatchesFlockState extends State<MatchesFlock>
                           ),
                         ),
                         height: constraints.maxHeight *
-                                MatchesFlock.fractions['smallHead'] +
+                            MatchesFlock.fractions['smallHead'] +
                             constraints.maxHeight *
                                 (MatchesFlock.fractions['bigHead'] -
                                     MatchesFlock.fractions['smallHead']) *
                                 animationController.value,
                         width: constraints.maxHeight *
-                                MatchesFlock.fractions['smallHead'] +
+                            MatchesFlock.fractions['smallHead'] +
                             constraints.maxHeight *
                                 (MatchesFlock.fractions['bigHead'] -
                                     MatchesFlock.fractions['smallHead']) *
@@ -563,17 +563,17 @@ class _MatchesFlockState extends State<MatchesFlock>
                                   .matches[0]
                                   .login,
                               localPath:
-                                  (state as DiscoverMatchesLoadSuccessState)
-                                      .matches[0]
-                                      .profilePictureLocalPath,
+                              (state as DiscoverMatchesLoadSuccessState)
+                                  .matches[0]
+                                  .profilePictureLocalPath,
                               height: constraints.maxHeight *
-                                      MatchesFlock.fractions['smallHead'] +
+                                  MatchesFlock.fractions['smallHead'] +
                                   constraints.maxHeight *
                                       (MatchesFlock.fractions['bigHead'] -
                                           MatchesFlock.fractions['smallHead']) *
                                       animationController.value,
                               width: constraints.maxHeight *
-                                      MatchesFlock.fractions['smallHead'] +
+                                  MatchesFlock.fractions['smallHead'] +
                                   constraints.maxHeight *
                                       (MatchesFlock.fractions['bigHead'] -
                                           MatchesFlock.fractions['smallHead']) *
@@ -585,7 +585,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                     // Third separator
                     Positioned(
                       top: constraints.maxHeight *
-                              MatchesFlock.fractions['smallHead'] +
+                          MatchesFlock.fractions['smallHead'] +
                           constraints.maxHeight *
                               MatchesFlock.fractions['separator'] +
                           constraints.maxHeight *
@@ -596,7 +596,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                         opacity: 1 - animationController.value,
                         child: Container(
                           height: constraints.maxHeight *
-                                  MatchesFlock.fractions['separator'] -
+                              MatchesFlock.fractions['separator'] -
                               20,
                           width: 1.5,
                           color: tinterTheme.colors.primaryAccent,
@@ -607,14 +607,14 @@ class _MatchesFlockState extends State<MatchesFlock>
                     // Name and surname
                     Positioned(
                       top: constraints.maxHeight *
-                              MatchesFlock.fractions['smallHead'] +
+                          MatchesFlock.fractions['smallHead'] +
                           constraints.maxHeight *
                               MatchesFlock.fractions['separator'] +
                           constraints.maxHeight *
                               MatchesFlock.fractions['bigHead'] +
                           animationController.value *
                               (constraints.maxHeight *
-                                      MatchesFlock.fractions['smallHead'] +
+                                  MatchesFlock.fractions['smallHead'] +
                                   constraints.maxHeight *
                                       MatchesFlock.fractions['separator']),
                       child: Opacity(
@@ -652,7 +652,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                     // Third head
                     Positioned(
                       top: constraints.maxHeight *
-                              MatchesFlock.fractions['smallHead'] +
+                          MatchesFlock.fractions['smallHead'] +
                           constraints.maxHeight *
                               MatchesFlock.fractions['separator'] +
                           constraints.maxHeight *
@@ -678,7 +678,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                             child: getProfilePictureFromLocalPathOrLogin(
                               login: previousFirstMatch.login,
                               localPath:
-                                  previousFirstMatch.profilePictureLocalPath,
+                              previousFirstMatch.profilePictureLocalPath,
                               height: constraints.maxHeight *
                                   MatchesFlock.fractions['bigHead'],
                               width: constraints.maxHeight *
@@ -692,7 +692,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                     // Name and surname of the third head
                     Positioned(
                       top: constraints.maxHeight *
-                              MatchesFlock.fractions['smallHead'] +
+                          MatchesFlock.fractions['smallHead'] +
                           constraints.maxHeight *
                               MatchesFlock.fractions['separator'] +
                           constraints.maxHeight *
@@ -808,9 +808,9 @@ class _MatchInformationState extends State<MatchInformation> {
                                     DiscoverMatchesState>(
                                   buildWhen:
                                       (DiscoverMatchesState previousState,
-                                          DiscoverMatchesState state) {
+                                      DiscoverMatchesState state) {
                                     if (previousState
-                                        is DiscoverMatchesSavingNewStatusState) {
+                                    is DiscoverMatchesSavingNewStatusState) {
                                       return false;
                                     }
                                     return true;
@@ -818,7 +818,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                   builder: (BuildContext context,
                                       DiscoverMatchesState state) {
                                     if (!(state
-                                        is DiscoverMatchesLoadSuccessState)) {
+                                    is DiscoverMatchesLoadSuccessState)) {
                                       return Center(
                                         child: CircularProgressIndicator(),
                                       );
@@ -860,7 +860,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                       color:
-                                          tinterTheme.colors.defaultTextColor,
+                                      tinterTheme.colors.defaultTextColor,
                                       width: 2),
                                 ),
                                 height: 20,
@@ -870,7 +870,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                     '?',
                                     style: TextStyle(
                                       color:
-                                          tinterTheme.colors.defaultTextColor,
+                                      tinterTheme.colors.defaultTextColor,
                                     ),
                                   ),
                                 ),
@@ -909,7 +909,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                   builder: (BuildContext context,
                                       DiscoverMatchesState state) {
                                     if (!(state
-                                        is DiscoverMatchesLoadSuccessState)) {
+                                    is DiscoverMatchesLoadSuccessState)) {
                                       return Center(
                                         child: CircularProgressIndicator(),
                                       );
@@ -921,7 +921,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
                                         itemCount: (state
-                                                as DiscoverMatchesLoadSuccessState)
+                                        as DiscoverMatchesLoadSuccessState)
                                             .matches[0]
                                             .associations
                                             .length,
@@ -978,7 +978,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                 tween: Tween<double>(
                                     begin: 0.5,
                                     end: (state
-                                            as DiscoverMatchesLoadSuccessState)
+                                    as DiscoverMatchesLoadSuccessState)
                                         .matches[0]
                                         .attiranceVieAsso),
                                 duration: Duration(milliseconds: 300),
@@ -1021,7 +1021,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                 builder: (BuildContext context,
                                     DiscoverMatchesState state) {
                                   if (!(state
-                                      is DiscoverMatchesLoadSuccessState)) {
+                                  is DiscoverMatchesLoadSuccessState)) {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );
@@ -1030,7 +1030,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                     tween: Tween<double>(
                                         begin: 0.5,
                                         end: (state
-                                                as DiscoverMatchesLoadSuccessState)
+                                        as DiscoverMatchesLoadSuccessState)
                                             .matches[0]
                                             .feteOuCours),
                                     duration: Duration(milliseconds: 300),
@@ -1076,7 +1076,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                 builder: (BuildContext context,
                                     DiscoverMatchesState state) {
                                   if (!(state
-                                      is DiscoverMatchesLoadSuccessState)) {
+                                  is DiscoverMatchesLoadSuccessState)) {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );
@@ -1085,7 +1085,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                     tween: Tween<double>(
                                         begin: 0.5,
                                         end: (state
-                                                as DiscoverMatchesLoadSuccessState)
+                                        as DiscoverMatchesLoadSuccessState)
                                             .matches[0]
                                             .aideOuSortir),
                                     duration: Duration(milliseconds: 300),
@@ -1133,7 +1133,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                 tween: Tween<double>(
                                     begin: 0.5,
                                     end: (state
-                                            as DiscoverMatchesLoadSuccessState)
+                                    as DiscoverMatchesLoadSuccessState)
                                         .matches[0]
                                         .organisationEvenements),
                                 duration: Duration(milliseconds: 300),
@@ -1178,15 +1178,15 @@ class _MatchInformationState extends State<MatchInformation> {
                                 spacing: 15,
                                 children: <Widget>[
                                   for (String musicStyle in (state
-                                          as DiscoverMatchesLoadSuccessState)
+                                  as DiscoverMatchesLoadSuccessState)
                                       .matches[0]
                                       .goutsMusicaux)
                                     Chip(
                                       label: Text(musicStyle),
                                       labelStyle:
-                                          tinterTheme.textStyle.chipLiked,
+                                      tinterTheme.textStyle.chipLiked,
                                       backgroundColor:
-                                          tinterTheme.colors.primaryAccent,
+                                      tinterTheme.colors.primaryAccent,
                                     )
                                 ],
                               ),
@@ -1209,9 +1209,9 @@ class _MatchInformationState extends State<MatchInformation> {
 
   Widget informationRectangle(
       {@required BuildContext context,
-      @required Widget child,
-      double width,
-      double height}) {
+        @required Widget child,
+        double width,
+        double height}) {
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
@@ -1331,7 +1331,7 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
           Expanded(
             child: Center(
               child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+              Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -1346,7 +1346,7 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
                     AutoSizeText(
                       "Il n'y a plus de match à découvrir pour l'instant.\nDemande à d'autres étudiant.e.s de s'inscrire!",
                       style:
-                          tinterTheme.textStyle.headline2.copyWith(height: 2),
+                      tinterTheme.textStyle.headline2.copyWith(height: 2),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
