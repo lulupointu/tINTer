@@ -22,14 +22,18 @@ import 'package:tinterapp/UI/shared/user_profile/associatif_to_scolaire_button.d
 import 'package:tinterapp/UI/shared/user_profile/snap_scroll_physics.dart';
 import 'package:tinterapp/UI2/shared2/associations2.dart';
 import 'package:tinterapp/UI2/shared2/options_button/options2.dart';
+import 'package:tinterapp/UI2/shared2/user_profile/user_associatif_profile2.dart';
+import 'package:tinterapp/UI2/shared2/user_profile/user_scolaire_profile2.dart';
 import 'package:tinterapp/main.dart';
 
-class UserTab extends StatefulWidget implements TinterTab {
+import '../associatif_to_scolaire_button2.dart';
+
+class UserTab2 extends StatefulWidget implements TinterTab {
   @override
-  _UserTabState createState() => _UserTabState();
+  _UserTab2State createState() => _UserTab2State();
 }
 
-class _UserTabState extends State<UserTab> with RouteAware {
+class _UserTab2State extends State<UserTab2> with RouteAware {
   Widget separator = SizedBox(
     height: 40,
   );
@@ -178,10 +182,10 @@ class _UserTabState extends State<UserTab> with RouteAware {
                           );
                         },
                         child: tinterTheme.theme == MyTheme.dark
-                            ? UserAssociatifProfile(
+                            ? UserAssociatifProfile2(
                           separator: separator,
                         )
-                            : UserScolaireProfile(
+                            : UserScolaireProfile2(
                           separator: separator,
                         ),
                       );
@@ -334,7 +338,7 @@ class HoveringUserInformation extends StatelessWidget {
                               : ((userState as UserLoadSuccessState).user.school == School.TSP &&
                               (userState as UserLoadSuccessState).user.year ==
                                   TSPYear.TSP1A)
-                              ? AssociatifToScolaireButton()
+                              ? AssociatifToScolaireButton2()
                               : AutoSizeText(
                             (userState as UserLoadSuccessState).user.email,
                             style: tinterTheme.textStyle.headline2,

@@ -9,10 +9,10 @@ import 'package:tinterapp/UI2/shared2/user_criteria_panel2/gouts_musicaux2.dart'
 
 import '../random_gender.dart';
 
-class UserAssociatifProfile extends StatelessWidget {
+class UserAssociatifProfile2 extends StatelessWidget {
   final Widget separator;
 
-  const UserAssociatifProfile({Key key, @required this.separator})
+  const UserAssociatifProfile2({Key key, @required this.separator})
       : super(key: key);
 
   @override

@@ -48,6 +48,7 @@ import 'package:tinterapp/notifications_handler.dart';
 import 'UI/shared/profile_creation/create_profile.dart';
 import 'UI/shared/shared_element/homogenius_rounded_rectslider_trackshape.dart';
 import 'UI2/shared2/login2.dart';
+import 'UI2/shared2/user_profile/user_profile2.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -409,12 +410,12 @@ class TinterHome extends StatefulWidget {
   final List<TinterTab> tabsAssociatif = [
     MatchsTab(),
     DiscoverAssociatifTab(),
-    UserTab()
+    UserTab2()
   ];
   final List<TinterTab> tabsScolaire = [
     BinomesTab(),
     DiscoverScolaireTab(),
-    UserTab()
+    UserTab2()
   ];
 
   // final List<Widget> tabsAssociatif = [MatchsTab(), DiscoverAssociatifTab(), UserTab()];

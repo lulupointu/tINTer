@@ -10,53 +10,27 @@ import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 
 import '../user_criteria_panel2/matieres2.dart';
 
-class UserScolaireProfile extends StatelessWidget {
+class UserScolaireProfile2 extends StatelessWidget {
   final Widget separator;
 
-  const UserScolaireProfile({Key key, @required this.separator})
+  const UserScolaireProfile2({Key key, @required this.separator})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        InformationRectangle(
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
-            child: MaiselOuNonRectangle2(),
-          ),
-        ),
+        MaiselOuNonRectangle2(),
         separator,
-        InformationRectangle(
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
-            child: HoraireDeTravailRectangle2(),
-          ),
-        ),
+        HoraireDeTravailRectangle2(),
         separator,
-        InformationRectangle(
-          child: Padding(
-            padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-            child: AssociationsRectangle(),
-          ),
-        ),
+        AssociationsRectangle(),
         separator,
-        InformationRectangle(
-          child: GroupeOuSeulRectangle2(),
-        ),
+        GroupeOuSeulRectangle2(),
         separator,
-        InformationRectangle(
-          child: EnLigneOuPresentielRectangle2(),
-        ),
+        EnLigneOuPresentielRectangle2(),
         separator,
-        InformationRectangle(
-          child: Padding(
-            padding: EdgeInsets.only(top: 15.0, left: 20.0, bottom: 5.0),
-            child: MatieresRectangle2(),
-          ),
-        ),
+        MatieresRectangle2(),
       ],
     );
   }
@@ -88,7 +62,7 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
               ),
               child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
-                if (!(userState is NewUserState)) {
+                if (!(userState is UserLoadSuccessState)) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
@@ -98,7 +72,7 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
                     GestureDetector(
                       onTap: () => BlocProvider.of<UserBloc>(context).add(
                           UserStateChangedEvent(
-                              newState: (userState as NewUserState)
+                              newState: (userState as UserLoadSuccessState)
                                   .user
                                   .rebuild(
                                       (b) => b..lieuDeVie = LieuDeVie.maisel))),
@@ -108,7 +82,7 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as NewUserState).user.lieuDeVie ==
+                              (userState as UserLoadSuccessState).user.lieuDeVie ==
                                       LieuDeVie.maisel
                                   ? 1
                                   : 0.4),
@@ -124,7 +98,7 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
                                 .headline5
                                 .copyWith(
                                     color: Colors.black.withOpacity(
-                                        (userState as NewUserState)
+                                        (userState as UserLoadSuccessState)
                                                     .user
                                                     .lieuDeVie ==
                                                 LieuDeVie.maisel
@@ -137,7 +111,7 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
                     GestureDetector(
                       onTap: () => BlocProvider.of<UserBloc>(context).add(
                           UserStateChangedEvent(
-                              newState: (userState as NewUserState)
+                              newState: (userState as UserLoadSuccessState)
                                   .user
                                   .rebuild(
                                       (b) => b..lieuDeVie = LieuDeVie.other))),
@@ -147,7 +121,7 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as NewUserState).user.lieuDeVie ==
+                              (userState as UserLoadSuccessState).user.lieuDeVie ==
                                       LieuDeVie.maisel
                                   ? 0.4
                                   : 1),
@@ -162,7 +136,7 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
                                   .headline5
                                   .copyWith(
                                       color: Colors.black.withOpacity(
-                                          (userState as NewUserState)
+                                          (userState as UserLoadSuccessState)
                                                       .user
                                                       .lieuDeVie ==
                                                   LieuDeVie.maisel
@@ -274,7 +248,7 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as NewUserState)
+                            (userState as UserLoadSuccessState)
                                     .user
                                     .horairesDeTravail
                                     .contains(HoraireDeTravail.afternoon)
@@ -377,7 +351,7 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
                           'Nuit',
                           style: Theme.of(context).textTheme.headline5.copyWith(
                               color: Colors.black.withOpacity(
-                                  (userState as NewUserState)
+                                  (userState as UserLoadSuccessState)
                                           .user
                                           .horairesDeTravail
                                           .contains(HoraireDeTravail.night)
