@@ -265,61 +265,98 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
           builder: (context, DiscoverMatchesState discoverMatchesState) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Flexible(
-              child: IconButton(
-                padding: EdgeInsets.all(0.0),
-                iconSize: 60,
-                color: tinterTheme.colors.secondary,
-                icon: FlareActor(
-                  'assets/icons/Heart.flr',
-                  color: tinterTheme.colors.secondary,
-                  fit: BoxFit.contain,
-                  controller: CustomFlareController(
-                      controller: likeController,
-                      forwardAnimationName: 'Validate'),
-                ),
-                onPressed:
-                    discoverMatchesState is DiscoverMatchesSavingNewStatusState
-                        ? null
-                        : () {
-                            likeController.forward().whenComplete(() =>
-                                likeController.animateTo(0,
-                                    duration: Duration(seconds: 0)));
-                            BlocProvider.of<DiscoverMatchesBloc>(context)
-                                .add(DiscoverMatchLikeEvent());
-                          },
-              ),
-            ),
-            Flexible(
-              child: IconButton(
-                padding: EdgeInsets.all(0.0),
-                iconSize: 60,
-                color: tinterTheme.colors.secondary,
-                icon: FlareActor(
-                  'assets/icons/Clear.flr',
-                  color: tinterTheme.colors.secondary,
-                  fit: BoxFit.contain,
-                  controller: CustomFlareController(
-                    controller: ignoreController,
-                    forwardAnimationName: 'Ignore',
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 4,
+                        blurRadius: 4,
+                        offset: Offset(1, 1),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: IconButton(
+                      padding: EdgeInsets.all(0.0),
+                      iconSize: 35,
+                      color: Theme.of(context).indicatorColor,
+                      icon: FlareActor(
+                        'assets/icons/Heart.flr',
+                        color: Theme.of(context).indicatorColor,
+                        fit: BoxFit.contain,
+                        controller: CustomFlareController(
+                            controller: likeController,
+                            forwardAnimationName: 'Validate'),
+                      ),
+                      onPressed: discoverMatchesState
+                              is DiscoverMatchesSavingNewStatusState
+                          ? null
+                          : () {
+                              likeController.forward().whenComplete(() =>
+                                  likeController.animateTo(0,
+                                      duration: Duration(seconds: 0)));
+                              BlocProvider.of<DiscoverMatchesBloc>(context)
+                                  .add(DiscoverMatchLikeEvent());
+                            },
+                    ),
                   ),
                 ),
-                onPressed:
-                    discoverMatchesState is DiscoverMatchesSavingNewStatusState
-                        ? null
-                        : () {
-                            ignoreController.forward().whenComplete(() =>
-                                ignoreController.animateTo(0,
-                                    duration: Duration(seconds: 0)));
-                            BlocProvider.of<DiscoverMatchesBloc>(context)
-                                .add(DiscoverMatchIgnoreEvent());
-                          },
               ),
-            ),
-          ],
+              Flexible(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 4,
+                        blurRadius: 4,
+                        offset: Offset(1, 1),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: IconButton(
+                      padding: EdgeInsets.all(0.0),
+                      iconSize: 35,
+                      color: Theme.of(context).indicatorColor,
+                      icon: FlareActor(
+                        'assets/icons/Clear.flr',
+                        color: Theme.of(context).indicatorColor,
+                        fit: BoxFit.contain,
+                        controller: CustomFlareController(
+                          controller: ignoreController,
+                          forwardAnimationName: 'Ignore',
+                        ),
+                      ),
+                      onPressed: discoverMatchesState
+                              is DiscoverMatchesSavingNewStatusState
+                          ? null
+                          : () {
+                              ignoreController.forward().whenComplete(() =>
+                                  ignoreController.animateTo(0,
+                                      duration: Duration(seconds: 0)));
+                              BlocProvider.of<DiscoverMatchesBloc>(context)
+                                  .add(DiscoverMatchIgnoreEvent());
+                            },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       });
     });
@@ -1015,7 +1052,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+                          left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -1045,6 +1082,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                         overlayShape: RoundSliderOverlayShape(
                                             overlayRadius: 0.0),
                                         trackHeight: 6.0,
+                                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                                       ),
                                   child: BlocBuilder<DiscoverMatchesBloc,
                                       DiscoverMatchesState>(
@@ -1117,6 +1155,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                         trackHeight: 6.0,
                                         disabledInactiveTrackColor:
                                             Theme.of(context).indicatorColor,
+                                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                                       ),
                                   child: BlocBuilder<DiscoverMatchesBloc,
                                       DiscoverMatchesState>(
@@ -1199,6 +1238,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                         trackHeight: 6.0,
                                         disabledInactiveTrackColor:
                                             Theme.of(context).indicatorColor,
+                                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                                       ),
                                   child: BlocBuilder<DiscoverMatchesBloc,
                                       DiscoverMatchesState>(
@@ -1248,7 +1288,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+                          left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
                           Text(
@@ -1277,6 +1317,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                         overlayShape: RoundSliderOverlayShape(
                                             overlayRadius: 0.0),
                                         trackHeight: 6.0,
+                                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                                       ),
                                   child: BlocBuilder<DiscoverMatchesBloc,
                                       DiscoverMatchesState>(

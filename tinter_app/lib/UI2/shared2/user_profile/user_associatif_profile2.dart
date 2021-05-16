@@ -45,7 +45,7 @@ class AttiranceVieAssoRectangle2 extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.only(
-            left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+            left: 20.0, right: 30.0, top: 15.0, bottom: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -241,7 +241,7 @@ class OrganisationEvenementsRectangle2 extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.only(
-            left: 20.0, right: 20.0, top: 15.0, bottom: 10.0),
+            left: 20.0, right: 30.0, top: 15.0, bottom: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
