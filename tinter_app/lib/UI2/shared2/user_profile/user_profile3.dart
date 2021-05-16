@@ -236,7 +236,7 @@ class SaveModificationsOverlay extends StatelessWidget {
                               child: AutoSizeText(
                                 (userState is KnownUserSavingFailedState)
                                     ? 'Echec de la sauvegarde, réessayer ?'
-                                    : 'Sauvegarder vos modifications',
+                                    : 'Sauvegarder mes modifications',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5
