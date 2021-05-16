@@ -7,6 +7,7 @@ import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/UI/scolaire/user_profile/matieres.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
+import 'package:tinterapp/UI2/shared2/user_profile/user_profile3.dart';
 
 import '../user_criteria_panel2/matieres2.dart';
 
@@ -26,7 +27,7 @@ class UserScolaireProfile2 extends StatelessWidget {
           separator,
           HoraireDeTravailRectangle2(),
           separator,
-          AssociationsRectangle(),
+          AssociationsRectangle2(),
           separator,
           GroupeOuSeulRectangle2(),
           separator,

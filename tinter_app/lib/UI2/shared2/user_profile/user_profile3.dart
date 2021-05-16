@@ -217,166 +217,112 @@ class SaveModificationsOverlay extends StatelessWidget {
                 return Consumer<TinterTheme>(
                     builder: (context, tinterTheme, child) {
                   return AnimatedContainer(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15.0),
+                        topRight: Radius.circular(15.0),
+                      ),
+                    ),
                     duration: Duration(milliseconds: 300),
-                    color: tinterTheme.colors.background,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 5.0),
-                          child: Center(
-                            child: AutoSizeText(
-                              (userState is KnownUserSavingFailedState)
-                                  ? 'Echec de la sauvegarde, réessayer?'
-                                  : 'Des modifications ont été effectuées',
-                              style: tinterTheme.textStyle.headline2,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: AnimatedSwitcher(
-                              duration: Duration(milliseconds: 200),
-                              child: TweenAnimationBuilder(
-                                duration: Duration(milliseconds: 200),
-                                tween: Tween<double>(
-                                    begin: 0,
-                                    end: (userState is KnownUserSavingState ||
-                                            userState is KnownUserSavedState)
-                                        ? 1
-                                        : 0),
-                                builder: (BuildContext context, double value,
-                                    Widget child) {
-                                  return Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            (1 - value) * 10.0 + value * 2.0),
-                                    child: (userState is KnownUserSavingState ||
-                                            userState is KnownUserSavedState)
-                                        ? LayoutBuilder(
-                                            builder: (BuildContext context,
-                                                BoxConstraints
-                                                    smallConstraints) {
-                                              return AnimatedContainer(
-                                                duration:
-                                                    Duration(milliseconds: 300),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.0),
-                                                  color: tinterTheme
-                                                      .colors.secondary,
-                                                ),
-                                                width: value *
-                                                        smallConstraints
-                                                            .maxHeight +
-                                                    4 +
-                                                    (1 - value) *
-                                                        (constraints.maxWidth *
-                                                                2 /
-                                                                3 +
-                                                            constraints
-                                                                    .maxWidth *
-                                                                1 /
-                                                                9),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Center(
-                                                    child: AnimatedSwitcher(
-                                                      duration: Duration(
-                                                          milliseconds: 100),
-                                                      child: value == 1
-                                                          ? Center(
-                                                              child:
-                                                                  CircularProgressIndicator(
-                                                                valueColor:
-                                                                    AlwaysStoppedAnimation<
-                                                                        Color>(
-                                                                  tinterTheme
-                                                                      .colors
-                                                                      .defaultTextColor,
-                                                                ),
-                                                                strokeWidth: 3,
-                                                              ),
-                                                            )
-                                                          : Container(),
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          )
-                                        : child,
-                                  );
-                                },
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: InkWell(
-                                        splashColor: Colors.transparent,
-                                        onTap: () => BlocProvider.of<UserBloc>(
-                                                context)
-                                            .add(UserUndoUnsavedChangesEvent()),
-                                        child: Center(
-                                          child: AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            width: constraints.maxWidth / 3,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                              color:
-                                                  tinterTheme.colors.secondary,
-                                            ),
-                                            child: Center(
-                                              child: AutoSizeText(
-                                                'Annuler',
-                                                style: tinterTheme
-                                                    .textStyle.headline2,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5.0),
+                            child: Center(
+                              child: AutoSizeText(
+                                (userState is KnownUserSavingFailedState)
+                                    ? 'Echec de la sauvegarde, réessayer ?'
+                                    : 'Sauvegarder vos modifications',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(
+                                      color: Colors.white,
                                     ),
-                                    Expanded(
-                                      child: InkWell(
-                                        splashColor: Colors.transparent,
-                                        onTap: () =>
-                                            BlocProvider.of<UserBloc>(context)
-                                                .add(UserSaveEvent()),
-                                        child: Center(
-                                          child: AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            width: constraints.maxWidth / 3,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                              color:
-                                                  tinterTheme.colors.secondary,
-                                            ),
-                                            child: Center(
-                                              child: AutoSizeText(
-                                                'Valider',
-                                                style: tinterTheme
-                                                    .textStyle.headline2,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                maxLines: 1,
                               ),
                             ),
                           ),
-                        )
-                      ],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  BlocProvider.of<UserBloc>(context)
+                                      .add(UserSaveEvent());
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(7.5),
+                                    ),
+                                    border: Border.all(
+                                        color: Colors.white,
+                                        width: 2.0,
+                                        style: BorderStyle.solid),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0,
+                                      vertical: 3.0,
+                                    ),
+                                    child: Text(
+                                      'OUI',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          .copyWith(
+                                            color: Colors.white,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 25.0,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  BlocProvider.of<UserBloc>(context)
+                                      .add(UserUndoUnsavedChangesEvent());
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).errorColor,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(7.5),
+                                    ),
+                                    border: Border.all(
+                                        color: Colors.white,
+                                        width: 2.0,
+                                        style: BorderStyle.solid),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0,
+                                      vertical: 3.0,
+                                    ),
+                                    child: Text(
+                                      'NON',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          .copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 });
@@ -406,8 +352,8 @@ class AssociationsRectangle2 extends StatelessWidget {
         children: [
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 20.0, top: 15.0, bottom: 15.0),
+              padding:
+                  const EdgeInsets.only(left: 20.0, top: 15.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -436,58 +382,59 @@ class AssociationsRectangle2 extends StatelessWidget {
                         );
                       }
                       return (userState as UserLoadSuccessState)
-                          .user
-                          .associations
-                          .length ==
-                          0
+                                  .user
+                                  .associations
+                                  .length ==
+                              0
                           ? Container(
-                        height: 30.0,
-                        child: Row(
-                          children: [
-                            Text(
-                              'Aucune association sélectionée',
-                              style:
-                              Theme.of(context).textTheme.headline5,
-                            ),
-                            Expanded(
-                              child: SizedBox(),
-                            ),
-                          ],
-                        ),
-                      )
+                              height: 30.0,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Aucune association sélectionée',
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(),
+                                  ),
+                                ],
+                              ),
+                            )
                           : Container(
-                        height: 60.0,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 65.0),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: (userState as UserLoadSuccessState)
-                                .user
-                                .associations
-                                .length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  right: (index ==
-                                      (userState as UserLoadSuccessState)
-                                          .user
-                                          .associations
-                                          .length -
-                                          1)
-                                      ? 48.0
-                                      : 8.0,
+                              height: 60.0,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 65.0),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: (userState as UserLoadSuccessState)
+                                      .user
+                                      .associations
+                                      .length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        right: (index ==
+                                                (userState as UserLoadSuccessState)
+                                                        .user
+                                                        .associations
+                                                        .length -
+                                                    1)
+                                            ? 48.0
+                                            : 8.0,
+                                      ),
+                                      child: associationBubble(
+                                          context,
+                                          (userState as UserLoadSuccessState)
+                                              .user
+                                              .associations[index]),
+                                    );
+                                  },
                                 ),
-                                child: associationBubble(
-                                    context,
-                                    (userState as UserLoadSuccessState)
-                                        .user
-                                        .associations[index]),
-                              );
-                            },
-                          ),
-                        ),
-                      );
+                              ),
+                            );
                     },
                   )
                 ],
