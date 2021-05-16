@@ -247,7 +247,7 @@ class _UserTab2State extends State<UserTab2> with RouteAware {
                     );
                   }),
                 ),
-              )
+              ),
             ],
           );
         },

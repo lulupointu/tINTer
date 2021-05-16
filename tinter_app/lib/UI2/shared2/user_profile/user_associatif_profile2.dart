@@ -283,90 +283,37 @@ class OrganisationEvenementsRectangle2 extends StatelessWidget {
 }
 
 class GoutsMusicauxRectangle2 extends StatelessWidget {
+
+  const GoutsMusicauxRectangle2({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => GoutsMusicauxTab2()),
         );
       },
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Align(
-                alignment: AlignmentDirectional.topStart,
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                  return Text(
-                    'Goûts musicaux',
-                    style: tinterTheme.textStyle.headline2,
-                  );
-                }),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 25.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Modifier mes goûts musicaux',
+                style: Theme.of(context).textTheme.headline5,
               ),
-              BlocBuilder<UserBloc, UserState>(
-                builder: (BuildContext context, UserState userState) {
-                  if (!(userState is UserLoadSuccessState)) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 15,
-                    children: (userState as UserLoadSuccessState)
-                                .user
-                                .goutsMusicaux
-                                .length ==
-                            0
-                        ? [
-                            Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Chip(
-                                label: Text('Aucun'),
-                                labelStyle: tinterTheme.textStyle.chipLiked,
-                                backgroundColor:
-                                    tinterTheme.colors.primaryAccent,
-                              );
-                            }),
-                          ]
-                        : <Widget>[
-                            for (String musicStyle
-                                in (userState as UserLoadSuccessState)
-                                    .user
-                                    .goutsMusicaux)
-                              Consumer<TinterTheme>(
-                                  builder: (context, tinterTheme, child) {
-                                return Chip(
-                                  label: Text(musicStyle),
-                                  labelStyle: tinterTheme.textStyle.chipLiked,
-                                  backgroundColor:
-                                      tinterTheme.colors.primaryAccent,
-                                );
-                              })
-                          ],
-                  );
-                },
-              )
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Theme.of(context).primaryColor,
+              ),
             ],
           ),
-          Positioned.fill(
-            child: Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Icon(
-                  Icons.arrow_forward_ios,
-                  size: 30,
-                  color: tinterTheme.colors.primaryAccent,
-                );
-              }),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

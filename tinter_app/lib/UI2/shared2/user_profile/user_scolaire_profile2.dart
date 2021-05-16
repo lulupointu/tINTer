@@ -18,20 +18,23 @@ class UserScolaireProfile2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        MaiselOuNonRectangle2(),
-        separator,
-        HoraireDeTravailRectangle2(),
-        separator,
-        AssociationsRectangle(),
-        separator,
-        GroupeOuSeulRectangle2(),
-        separator,
-        EnLigneOuPresentielRectangle2(),
-        separator,
-        MatieresRectangle2(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Column(
+        children: <Widget>[
+          MaiselOuNonRectangle2(),
+          separator,
+          HoraireDeTravailRectangle2(),
+          separator,
+          AssociationsRectangle(),
+          separator,
+          GroupeOuSeulRectangle2(),
+          separator,
+          EnLigneOuPresentielRectangle2(),
+          separator,
+          MatieresRectangle2WithoutListener(),
+        ],
+      ),
     );
   }
 }
@@ -495,11 +498,11 @@ class EnLigneOuPresentielRectangle2 extends StatelessWidget {
   }
 }
 
-class MatieresRectangle2 extends StatelessWidget {
+class MatieresRectangle2WithListener extends StatelessWidget {
   final bool isMatieresPressed;
   final void Function() onMatieresPressed;
 
-  const MatieresRectangle2(
+  const MatieresRectangle2WithListener(
       {Key key,
       @required this.isMatieresPressed,
       @required this.onMatieresPressed})
@@ -536,3 +539,41 @@ class MatieresRectangle2 extends StatelessWidget {
     );
   }
 }
+
+class MatieresRectangle2WithoutListener extends StatelessWidget {
+
+  const MatieresRectangle2WithoutListener(
+      {Key key,})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MatieresTab2()),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 25.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Modifier mes matières préférées',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Theme.of(context).primaryColor,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

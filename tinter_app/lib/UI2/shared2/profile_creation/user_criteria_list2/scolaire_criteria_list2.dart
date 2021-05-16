@@ -33,7 +33,7 @@ class ScolaireCriteriaList2 extends StatelessWidget {
           separator,
           EnLigneOuPresentielRectangle2(),
           separator,
-          MatieresRectangle2(
+          MatieresRectangle2WithListener(
             isMatieresPressed: isMatieresPressed,
             onMatieresPressed: onMatieresPressed,
           ),
