@@ -234,7 +234,7 @@ class _HoveringUserPicture2State extends State<HoveringUserPicture2> {
         width: widget.size,
         child: BlocBuilder<UserBloc, UserState>(
           builder: (BuildContext context, UserState userState) {
-            if (!(userState is NewUserState)) {
+            if (!(userState is UserLoadSuccessState)) {
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -242,8 +242,8 @@ class _HoveringUserPicture2State extends State<HoveringUserPicture2> {
             return Stack(
               children: [
                 getProfilePictureFromLocalPathOrLogin(
-                    login: (userState as NewUserState).user.login,
-                    localPath: (userState as NewUserState)
+                    login: (userState as UserLoadSuccessState).user.login,
+                    localPath: (userState as UserLoadSuccessState)
                         .user
                         .profilePictureLocalPath,
                     height: widget.size,

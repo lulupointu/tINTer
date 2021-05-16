@@ -17,35 +17,23 @@ class UserAssociatifProfile2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        InformationRectangle(
-          padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-          child: AssociationsRectangle(),
-        ),
-        separator,
-        InformationRectangle(
-          child: AttiranceVieAssoRectangle2(),
-        ),
-        separator,
-        InformationRectangle(
-          child: FeteOuCoursRectangle2(),
-        ),
-        separator,
-        InformationRectangle(
-          child: AideOuSortirRectangle2(),
-        ),
-        separator,
-        InformationRectangle(
-          child: OrganisationEvenementsRectangle2(),
-        ),
-        separator,
-        InformationRectangle(
-          padding:
-              EdgeInsets.only(top: 15.0, left: 20.0, bottom: 5.0, right: 20),
-          child: GoutsMusicauxRectangle2(),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Column(
+        children: <Widget>[
+          AssociationsRectangle(),
+          separator,
+          AttiranceVieAssoRectangle2(),
+          separator,
+          FeteOuCoursRectangle2(),
+          separator,
+          AideOuSortirRectangle2(),
+          separator,
+          OrganisationEvenementsRectangle2(),
+          separator,
+          GoutsMusicauxRectangle2(),
+        ],
+      ),
     );
   }
 }
