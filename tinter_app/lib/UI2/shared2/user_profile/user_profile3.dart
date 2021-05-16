@@ -401,94 +401,107 @@ class AssociationsRectangle2 extends StatelessWidget {
           MaterialPageRoute(builder: (context) => AssociationsTab()),
         );
       },
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.only(
-              left: 20.0, right: 0.0, top: 15.0, bottom: 15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+      child: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 20.0, top: 15.0, bottom: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Mes associations',
-                    style: Theme.of(context).textTheme.headline5,
+                  Row(
+                    children: [
+                      Text(
+                        'Mes associations',
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: SizedBox(),
+                  SizedBox(
+                    height: 10.0,
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Stack(
-                children: [
-                  Container(
-                    height: 60,
-                    child: BlocBuilder<UserBloc, UserState>(
-                      builder: (BuildContext context, UserState userState) {
-                        if (!(userState is UserLoadSuccessState)) {
-                          return Center(
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (BuildContext context, UserState userState) {
+                      if (!(userState is UserLoadSuccessState)) {
+                        return Center(
+                          child: Container(
+                            height: 60,
                             child: CircularProgressIndicator(),
-                          );
-                        }
-                        return (userState as UserLoadSuccessState)
-                                    .user
-                                    .associations
-                                    .length ==
-                                0
-                            ? Row(
-                                children: [
-                                  Text(
-                                    'Aucune association sélectionée.',
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                  Expanded(
-                                    child: SizedBox(),
-                                  ),
-                                ],
-                              )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: (userState as UserLoadSuccessState)
-                                    .user
-                                    .associations
-                                    .length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                      right: (index ==
-                                              (userState as UserLoadSuccessState)
-                                                      .user
-                                                      .associations
-                                                      .length -
-                                                  1)
-                                          ? 48.0
-                                          : 8.0,
-                                    ),
-                                    child: associationBubble(
-                                        context,
-                                        (userState as UserLoadSuccessState)
-                                            .user
-                                            .associations[index]),
-                                  );
-                                },
+                          ),
+                        );
+                      }
+                      return (userState as UserLoadSuccessState)
+                          .user
+                          .associations
+                          .length ==
+                          0
+                          ? Container(
+                        height: 30.0,
+                        child: Row(
+                          children: [
+                            Text(
+                              'Aucune association sélectionée',
+                              style:
+                              Theme.of(context).textTheme.headline5,
+                            ),
+                            Expanded(
+                              child: SizedBox(),
+                            ),
+                          ],
+                        ),
+                      )
+                          : Container(
+                        height: 60.0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 65.0),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: (userState as UserLoadSuccessState)
+                                .user
+                                .associations
+                                .length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  right: (index ==
+                                      (userState as UserLoadSuccessState)
+                                          .user
+                                          .associations
+                                          .length -
+                                          1)
+                                      ? 48.0
+                                      : 8.0,
+                                ),
+                                child: associationBubble(
+                                    context,
+                                    (userState as UserLoadSuccessState)
+                                        .user
+                                        .associations[index]),
                               );
-                      },
-                    ),
-                  ),
-                  //Icon(
-                  //  Icons.arrow_forward_ios_rounded,
-                  //  color: Theme.of(context).primaryColor,
-                  //),
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(right: 25.0),
+            child: Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
       ),
     );
   }
