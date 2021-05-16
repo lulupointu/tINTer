@@ -405,82 +405,87 @@ class AssociationsRectangle2 extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(
               left: 20.0, right: 0.0, top: 15.0, bottom: 15.0),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
                   Text(
                     'Mes associations',
                     style: Theme.of(context).textTheme.headline5,
                   ),
-                  SizedBox(
-                    height: 10.0,
+                  Expanded(
+                    child: SizedBox(),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: 60,
-                        child: BlocBuilder<UserBloc, UserState>(
-                          builder: (BuildContext context, UserState userState) {
-                            if (!(userState is UserLoadSuccessState)) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            return (userState as UserLoadSuccessState)
-                                        .user
-                                        .associations
-                                        .length ==
-                                    0
-                                ? Text(
+                ],
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Stack(
+                children: [
+                  Container(
+                    height: 60,
+                    child: BlocBuilder<UserBloc, UserState>(
+                      builder: (BuildContext context, UserState userState) {
+                        if (!(userState is UserLoadSuccessState)) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return (userState as UserLoadSuccessState)
+                                    .user
+                                    .associations
+                                    .length ==
+                                0
+                            ? Row(
+                                children: [
+                                  Text(
                                     'Aucune association sélectionée.',
                                     style:
                                         Theme.of(context).textTheme.headline5,
-                                  )
-                                : ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount:
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(),
+                                  ),
+                                ],
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: (userState as UserLoadSuccessState)
+                                    .user
+                                    .associations
+                                    .length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      right: (index ==
+                                              (userState as UserLoadSuccessState)
+                                                      .user
+                                                      .associations
+                                                      .length -
+                                                  1)
+                                          ? 48.0
+                                          : 8.0,
+                                    ),
+                                    child: associationBubble(
+                                        context,
                                         (userState as UserLoadSuccessState)
                                             .user
-                                            .associations
-                                            .length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                          right: (index ==
-                                                  (userState as UserLoadSuccessState)
-                                                          .user
-                                                          .associations
-                                                          .length -
-                                                      1)
-                                              ? 48.0
-                                              : 8.0,
-                                        ),
-                                        child: associationBubble(
-                                            context,
-                                            (userState as UserLoadSuccessState)
-                                                .user
-                                                .associations[index]),
-                                      );
-                                    },
+                                            .associations[index]),
                                   );
-                          },
-                        ),
-                      ),
-                    ],
-                  )
+                                },
+                              );
+                      },
+                    ),
+                  ),
+                  //Icon(
+                  //  Icons.arrow_forward_ios_rounded,
+                  //  color: Theme.of(context).primaryColor,
+                  //),
                 ],
-              ),
-              Expanded(
-                child: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
+              )
             ],
           ),
         ),

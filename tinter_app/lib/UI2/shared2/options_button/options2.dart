@@ -126,7 +126,7 @@ class _OptionsTab2State extends State<OptionsTab2>
                               contentPadding: EdgeInsets.all(20.0),
                               children: [
                                 Text(
-                                  'Es-tu sûr de vouloir supprimer ton profil ?',
+                                  'Es-tu sûr de vouloir supprimer ton compte ?',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
