@@ -1059,7 +1059,7 @@ class AssociationsRectangle extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AssociationsTab2()),
+                  MaterialPageRoute(builder: (context) => AssociationsTab()),
                 );
               },
               icon: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {

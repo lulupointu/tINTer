@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
+import 'package:tinterapp/Logic/models/associatif/association.dart';
+import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
+import 'package:tinterapp/UI/shared/user_profile/associations.dart';
 import 'package:tinterapp/UI2/shared2/options_button/options2.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/sub_profile_creation/associative_profile2.dart';
 import 'package:tinterapp/UI2/shared2/user_profile/user_associatif_profile2.dart';
@@ -63,7 +66,8 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
                         MaterialPageRoute(builder: (context) => OptionsTab2()),
                       );
                     },
-                    icon: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    icon: Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
                       return Icon(
                         Icons.settings,
                         size: 24,
@@ -381,6 +385,125 @@ class SaveModificationsOverlay extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class AssociationsRectangle2 extends StatelessWidget {
+  const AssociationsRectangle2({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AssociationsTab()),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.only(
+              left: 20.0, right: 0.0, top: 15.0, bottom: 15.0),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Mes associations',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 60,
+                        child: BlocBuilder<UserBloc, UserState>(
+                          builder: (BuildContext context, UserState userState) {
+                            if (!(userState is UserLoadSuccessState)) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            return (userState as UserLoadSuccessState)
+                                        .user
+                                        .associations
+                                        .length ==
+                                    0
+                                ? Text(
+                                    'Aucune association sélectionée.',
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:
+                                        (userState as UserLoadSuccessState)
+                                            .user
+                                            .associations
+                                            .length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                          right: (index ==
+                                                  (userState as UserLoadSuccessState)
+                                                          .user
+                                                          .associations
+                                                          .length -
+                                                      1)
+                                              ? 48.0
+                                              : 8.0,
+                                        ),
+                                        child: associationBubble(
+                                            context,
+                                            (userState as UserLoadSuccessState)
+                                                .user
+                                                .associations[index]),
+                                      );
+                                    },
+                                  );
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              Expanded(
+                child: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget associationBubble(BuildContext context, Association association) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          border: Border.all(
+              color: Theme.of(context).primaryColor,
+              width: 2.5,
+              style: BorderStyle.solid),
+        ),
+        child: ClipOval(
+          child: getLogoFromAssociation(associationName: association.name),
+        ),
+      ),
     );
   }
 }
