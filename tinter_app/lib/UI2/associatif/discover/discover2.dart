@@ -117,7 +117,7 @@ class DiscoverRight extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: StudentSearch2(),
+              child: StudentSearch(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
@@ -141,59 +141,6 @@ class DiscoverRight extends StatelessWidget {
   }
 }
 
-class StudentSearch2 extends StatelessWidget {
-  const StudentSearch2({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SearchStudentAssociatifTab2()),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          border: Border.all(
-              color: Colors.white, width: 4.0, style: BorderStyle.solid),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: Offset(3, 3),
-            ),
-          ],
-          borderRadius: BorderRadius.all(
-            Radius.circular(15.0),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 3.0),
-                child: Icon(
-                  Icons.search_rounded,
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                randomGender == Gender.M ? "rechercher\nun étudiant" : "rechercher\nune étudiante",
-                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.15),
-                textAlign: TextAlign.left,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class LikeOrIgnore extends StatefulWidget {
   LikeOrIgnore();
@@ -1532,43 +1479,104 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-      child: Column(
-        children: [
-          WideStudentSearch(
-            height: 40,
-          ),
-          Expanded(
-            child: Center(
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.face,
-                      color: tinterTheme.colors.defaultTextColor,
-                      size: 70,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    AutoSizeText(
-                      "Il n'y a plus de match à découvrir pour l'instant.\nDemande à d'autres étudiant.e.s de s'inscrire!",
-                      style:
-                          tinterTheme.textStyle.headline2.copyWith(height: 2),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                    ),
-                  ],
-                );
-              }),
+      child: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+              child: WideStudentSearch(),
             ),
-          ),
-        ],
+            Expanded(
+              child: Center(
+                child:
+                    Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.face,
+                        color: Theme.of(context).indicatorColor,
+                        size: 70,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: AutoSizeText(
+                          "Il n'y a plus de matchs à découvrir pour l'instant. Demande à d'autres étudiant.e.s de s'inscrire !",
+                          style: Theme.of(context).textTheme.headline5.copyWith(height: 1.5),
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
+class StudentSearch extends StatelessWidget {
+  const StudentSearch({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SearchStudentAssociatifTab2()),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          border: Border.all(
+              color: Colors.white, width: 4.0, style: BorderStyle.solid),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(3, 3),
+            ),
+          ],
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 3.0),
+                child: Icon(
+                  Icons.search_rounded,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                randomGender == Gender.M ? "rechercher\nun étudiant" : "rechercher\nune étudiante",
+                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.15),
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 class WideStudentSearch extends StatelessWidget {
   final double height;
@@ -1577,74 +1585,51 @@ class WideStudentSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
-      child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-        return Container(
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(5.0),
-            ),
-            color: tinterTheme.colors.primaryAccent,
-          ),
-          child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SearchStudentAssociatifTab2()),
-              );
-            },
-            child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 30,
-                    child: Hero(
-                      tag: 'studentSearchBar',
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5.0),
-                            ),
-                            color: tinterTheme.colors.primaryAccent,
-                          ),
-                          child: TextField(
-                            enabled: false,
-                            textInputAction: TextInputAction.search,
-                            decoration: InputDecoration(
-                              focusedBorder: InputBorder.none,
-                              icon: Padding(
-                                padding: const EdgeInsets.only(left: 0),
-                                child: Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    child: AutoSizeText(
-                      'Rechercher un.e étudiant.e',
-                      style: tinterTheme.textStyle.hintLarge,
-                      maxLines: 1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SearchStudentAssociatifTab2()),
         );
-      }),
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          border: Border.all(
+              color: Colors.white, width: 4.0, style: BorderStyle.solid),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(3, 3),
+            ),
+          ],
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 3.0),
+                child: Icon(
+                  Icons.search_rounded,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                randomGender == Gender.M ? "rechercher un étudiant" : "rechercher une étudiante",
+                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.15),
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
