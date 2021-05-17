@@ -6,7 +6,6 @@ import 'package:tinter_backend/database_interface/user_management_table.dart';
 import 'package:tinter_backend/database_interface/user_table.dart';
 import 'package:tinter_backend/models/associatif/relation_score_associatif.dart';
 
-
 List<RelationScoreAssociatif> fakeListRelationScoreAssociatif = [
   RelationScoreAssociatif(
     (r) => r
@@ -130,7 +129,8 @@ class RelationsScoreAssociatifTable {
 
   Future<void> addMultiple(
       {@required List<RelationScoreAssociatif> listRelationScoreAssociatif}) async {
-    _logger.info('Executing function addMultiple with args: listRelationScoreAssociatif=${listRelationScoreAssociatif}');
+    _logger.info(
+        'Executing function addMultiple with args: listRelationScoreAssociatif=${listRelationScoreAssociatif}');
 
     if (listRelationScoreAssociatif.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
@@ -181,7 +181,8 @@ class RelationsScoreAssociatifTable {
 
   Future<void> updateMultiple(
       {@required List<RelationScoreAssociatif> listRelationScoreAssociatif}) async {
-    _logger.info('Executing function updateMultiple with args: listRelationScoreAssociatif=${listRelationScoreAssociatif}');
+    _logger.info(
+        'Executing function updateMultiple with args: listRelationScoreAssociatif=${listRelationScoreAssociatif}');
 
     if (listRelationScoreAssociatif.length == 0) return;
     final String query = "UPDATE $name AS old SET score=new.score "
@@ -214,7 +215,8 @@ class RelationsScoreAssociatifTable {
 
   Future<RelationScoreAssociatif> getFromLogins(
       {@required String login, @required otherLogin}) async {
-    _logger.info('Executing function getFromLogins with args: login=${login}, otherLogin=${otherLogin}');
+    _logger.info(
+        'Executing function getFromLogins with args: login=${login}, otherLogin=${otherLogin}');
 
     final String query = "SELECT * FROM $name WHERE loginA=@loginA AND loginB=@loginB;";
 
@@ -238,7 +240,11 @@ class RelationsScoreAssociatifTable {
             error: 'One pair of login expected but got ${sqlResults.length}');
       }
 
-      return RelationScoreAssociatif.fromJson(sqlResults[0][name]);
+      return RelationScoreAssociatif.fromJson({
+        'login': login,
+        'otherLogin': otherLogin,
+        'score': sqlResults[0][name]['score'],
+      });
     });
   }
 
@@ -251,7 +257,11 @@ class RelationsScoreAssociatifTable {
         .mappedResultsQuery(query, substitutionValues: {'login': login}).then((sqlResults) {
       return [
         for (Map<String, Map<String, dynamic>> result in sqlResults)
-          RelationScoreAssociatif.fromJson(result[name])
+          RelationScoreAssociatif.fromJson({
+            'login': login,
+            'otherLogin': result[name][result[name]['loginA'] == login ? 'loginB' : 'loginA'],
+            'score': result[name]['score'],
+          })
       ];
     });
   }
@@ -264,13 +274,18 @@ class RelationsScoreAssociatifTable {
     return database.mappedResultsQuery(query).then((sqlResults) {
       return [
         for (Map<String, Map<String, dynamic>> result in sqlResults)
-          RelationScoreAssociatif.fromJson(result[name])
+          RelationScoreAssociatif.fromJson({
+            'login': result[name]['loginA'],
+            'otherLogin': result[name]['loginB'],
+            'score': result[name]['score'],
+          })
       ];
     });
   }
 
   Future<void> removeFromLogins({@required String login, @required otherLogin}) async {
-    _logger.info('Executing function removeFromLogins with args: login=${login}, otherLogin=${otherLogin}');
+    _logger.info(
+        'Executing function removeFromLogins with args: login=${login}, otherLogin=${otherLogin}');
 
     final String query = "DELETE FROM $name WHERE loginA=@loginA AND loginB=@loginB;";
 
