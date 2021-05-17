@@ -112,11 +112,12 @@ class DiscoverRight extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
         child: Column(
           children: <Widget>[
-            StudentSearch(
-              height: 50,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: StudentSearch2(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
@@ -140,82 +141,55 @@ class DiscoverRight extends StatelessWidget {
   }
 }
 
-class StudentSearch extends StatelessWidget {
-  final double height;
-
-  const StudentSearch({Key key, @required this.height}) : super(key: key);
+class StudentSearch2 extends StatelessWidget {
+  const StudentSearch2({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
-      child: Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-            height: height,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5.0),
-              ),
-              color: tinterTheme.colors.secondary,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SearchStudentAssociatifTab2()),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          border: Border.all(
+              color: Colors.white, width: 4.0, style: BorderStyle.solid),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(3, 3),
             ),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SearchStudentAssociatifTab2()),
-                );
-              },
-              child: Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 30,
-                      child: Hero(
-                        tag: 'studentSearchBar',
-                        child: Material(
-                          color: Colors.transparent,
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                              color: tinterTheme.colors.secondary,
-                            ),
-                            child: TextField(
-                              enabled: false,
-                              textInputAction: TextInputAction.search,
-                              decoration: InputDecoration(
-                                focusedBorder: InputBorder.none,
-                                icon: Padding(
-                                  padding: const EdgeInsets.only(left: 0),
-                                  child: Icon(
-                                    Icons.search,
-                                    color: tinterTheme.colors.primaryAccent,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: AutoSizeText(
-                        'Rechercher\nun.e étudiant.e',
-                        style: tinterTheme.textStyle.hint,
-                        maxLines: 2,
-                      ),
-                    ),
-                  ],
+          ],
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 3.0),
+                child: Icon(
+                  Icons.search_rounded,
+                  color: Colors.white,
                 ),
               ),
-            ),
-          );
-        },
+              Text(
+                randomGender == Gender.M ? "rechercher\nun étudiant" : "rechercher\nune étudiante",
+                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.15),
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1082,7 +1056,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                         overlayShape: RoundSliderOverlayShape(
                                             overlayRadius: 0.0),
                                         trackHeight: 6.0,
-                                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+                                        thumbShape: RoundSliderThumbShape(
+                                            enabledThumbRadius: 8.0),
                                       ),
                                   child: BlocBuilder<DiscoverMatchesBloc,
                                       DiscoverMatchesState>(
@@ -1155,7 +1130,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                         trackHeight: 6.0,
                                         disabledInactiveTrackColor:
                                             Theme.of(context).indicatorColor,
-                                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+                                        thumbShape: RoundSliderThumbShape(
+                                            enabledThumbRadius: 8.0),
                                       ),
                                   child: BlocBuilder<DiscoverMatchesBloc,
                                       DiscoverMatchesState>(
@@ -1238,7 +1214,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                         trackHeight: 6.0,
                                         disabledInactiveTrackColor:
                                             Theme.of(context).indicatorColor,
-                                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+                                        thumbShape: RoundSliderThumbShape(
+                                            enabledThumbRadius: 8.0),
                                       ),
                                   child: BlocBuilder<DiscoverMatchesBloc,
                                       DiscoverMatchesState>(
@@ -1317,7 +1294,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                         overlayShape: RoundSliderOverlayShape(
                                             overlayRadius: 0.0),
                                         trackHeight: 6.0,
-                                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+                                        thumbShape: RoundSliderThumbShape(
+                                            enabledThumbRadius: 8.0),
                                       ),
                                   child: BlocBuilder<DiscoverMatchesBloc,
                                       DiscoverMatchesState>(
