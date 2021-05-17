@@ -165,7 +165,7 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
           children: [
             Text(
@@ -247,7 +247,7 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
                       }
                     }))),
                     child: Container(
-                      width: 100,
+                      width: 65,
                       height: 35,
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
@@ -260,7 +260,7 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
                                 : 0.4),
                       ),
                       child: Center(
-                        child: Text('Après-midi',
+                        child: Text('Aprem',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5
@@ -527,12 +527,12 @@ class MatieresRectangle2WithListener extends StatelessWidget {
       },
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 25.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Sélectionner mes matières préférées',
+                'Choisir mes matières préférées',
                 style: Theme.of(context).textTheme.headline5,
               ),
               Icon(
@@ -564,12 +564,12 @@ class MatieresRectangle2WithoutListener extends StatelessWidget {
       },
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 25.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Modifier mes matières préférées',
+                'Choisir mes matières préférées',
                 style: Theme.of(context).textTheme.headline5,
               ),
               Icon(

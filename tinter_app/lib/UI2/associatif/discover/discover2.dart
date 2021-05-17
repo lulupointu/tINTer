@@ -1557,12 +1557,12 @@ class StudentSearch extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(right: 3.0),
+                padding: const EdgeInsets.only(right: 5.0),
                 child: Icon(
                   Icons.search_rounded,
                   color: Colors.white,
@@ -1570,7 +1570,7 @@ class StudentSearch extends StatelessWidget {
               ),
               Text(
                 randomGender == Gender.M ? "rechercher\nun étudiant" : "rechercher\nune étudiante",
-                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.15),
+                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.1),
                 textAlign: TextAlign.left,
               ),
             ],

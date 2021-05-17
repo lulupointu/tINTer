@@ -156,6 +156,7 @@ class UserAssociatifSearchBloc
         ..login = event.searchedUser.login
         ..name = event.searchedUser.name
         ..surname = event.searchedUser.surname
+        ..score = event.searchedUser.score
         ..liked = event.newStatus == MatchStatus.ignored ? false : true,
     );
 

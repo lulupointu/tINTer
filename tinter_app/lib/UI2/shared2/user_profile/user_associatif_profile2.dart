@@ -312,12 +312,12 @@ class GoutsMusicauxRectangle2 extends StatelessWidget {
       },
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 25.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Modifier mes goûts musicaux',
+                'Choisir mes goûts musicaux',
                 style: Theme.of(context).textTheme.headline5,
               ),
               Icon(

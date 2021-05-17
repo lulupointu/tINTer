@@ -442,7 +442,7 @@ class AssociationsRectangle2 extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 25.0),
+            padding: const EdgeInsets.only(right: 20.0),
             child: Icon(
               Icons.arrow_forward_ios_rounded,
               color: Theme.of(context).primaryColor,

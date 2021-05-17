@@ -378,7 +378,7 @@ class UserResume extends StatelessWidget {
                                 style: Theme.of(context).textTheme.headline6),
                           ),
                           Text(
-                            '95',
+                            searchedUser.score.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .headline4
