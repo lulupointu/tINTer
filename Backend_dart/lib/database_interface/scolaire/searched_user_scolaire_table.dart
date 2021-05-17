@@ -44,17 +44,20 @@ class SearchedUserScolaireTable {
       'login': login,
     });
 
-    return query.then((queryResults) {
+    return query.then((queryResults) async {
+      final scores = <int>[];
+      for (Map<String, Map<String, dynamic>> query in queryResults)
+        scores.add((await relationsScoreScolaireTable.getFromLogins(
+        login: login, otherLogin: query[UsersTable.name]['login']))
+            .score);
       return {
-        for (Map<String, Map<String, dynamic>> queryResult in queryResults)
-          queryResult[UsersTable.name]['login']: SearchedUserScolaire.fromJson({
-            ...queryResult[UsersTable.name],
-            'score': relationsScoreScolaireTable.getFromLogins(
-                login: login,
-                otherLogin: queryResult[UsersTable.name]['login']),
+        for (var i = 0; i < queryResults.length; i++)
+          queryResults[i][UsersTable.name]['login']: SearchedUserScolaire.fromJson({
+            ...queryResults[i][UsersTable.name],
+            'score': scores[i],
             'liked': _getLikeOrNotFromRelationStatusScolaire(
                 EnumRelationStatusScolaire.valueOf(
-                    queryResult[RelationsStatusScolaireTable.name]
+                    queryResults[i][RelationsStatusScolaireTable.name]
                         ['statusScolaire']))
           })
       };
