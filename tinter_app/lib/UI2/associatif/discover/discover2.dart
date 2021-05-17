@@ -1283,71 +1283,74 @@ class _MatchInformationState extends State<MatchInformation> {
                 } else if (index == 7) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Goûts musicaux',
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            BlocBuilder<DiscoverMatchesBloc,
-                                DiscoverMatchesState>(
-                              builder: (BuildContext context,
-                                  DiscoverMatchesState state) {
-                                if (!(state
-                                    is DiscoverMatchesLoadSuccessState)) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                                return AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 300),
-                                  child: Wrap(
-                                    alignment: WrapAlignment.center,
-                                    key: GlobalKey(),
-                                    spacing: 8,
-                                    runSpacing: 8,
-                                    children: <Widget>[
-                                      for (String musicStyle in (state
-                                              as DiscoverMatchesLoadSuccessState)
-                                          .matches[0]
-                                          .goutsMusicaux)
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 15.0, vertical: 6.0),
-                                          decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.2),
-                                                spreadRadius: 0.2,
-                                                blurRadius: 5,
-                                                offset: Offset(2, 2),
-                                              )
-                                            ],
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0)),
-                                            border: Border.all(
-                                                color: (Theme.of(context)
-                                                    .primaryColor),
-                                                width: 3.0,
-                                                style: BorderStyle.solid),
-                                            color: Colors.white,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                'Goûts musicaux',
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              BlocBuilder<DiscoverMatchesBloc,
+                                  DiscoverMatchesState>(
+                                builder: (BuildContext context,
+                                    DiscoverMatchesState state) {
+                                  if (!(state
+                                      is DiscoverMatchesLoadSuccessState)) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return AnimatedSwitcher(
+                                    duration: Duration(milliseconds: 300),
+                                    child: Wrap(
+                                      alignment: WrapAlignment.center,
+                                      key: GlobalKey(),
+                                      spacing: 8,
+                                      runSpacing: 8,
+                                      children: <Widget>[
+                                        for (String musicStyle in (state
+                                                as DiscoverMatchesLoadSuccessState)
+                                            .matches[0]
+                                            .goutsMusicaux)
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15.0, vertical: 6.0),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  spreadRadius: 0.2,
+                                                  blurRadius: 5,
+                                                  offset: Offset(2, 2),
+                                                )
+                                              ],
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.0)),
+                                              border: Border.all(
+                                                  color: (Theme.of(context)
+                                                      .primaryColor),
+                                                  width: 3.0,
+                                                  style: BorderStyle.solid),
+                                              color: Colors.white,
+                                            ),
+                                            child: Text(musicStyle),
                                           ),
-                                          child: Text(musicStyle),
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            )
-                          ],
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

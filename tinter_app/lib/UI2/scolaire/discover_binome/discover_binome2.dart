@@ -1404,23 +1404,23 @@ class _BinomeInformationState extends State<BinomeInformation> {
                               Expanded(
                                 child: SliderTheme(
                                   data: Theme.of(context).sliderTheme.copyWith(
-                                    disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
-                                    disabledThumbColor: Color(0xffCECECE),
-                                    overlayShape: RoundSliderOverlayShape(
-                                        overlayRadius: 0.0),
-                                    trackHeight: 6.0,
-                                    disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                    thumbShape: RoundSliderThumbShape(
-                                        enabledThumbRadius: 8.0),
-                                  ),
+                                        disabledActiveTrackColor:
+                                            Theme.of(context).primaryColor,
+                                        disabledThumbColor: Color(0xffCECECE),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0),
+                                        trackHeight: 6.0,
+                                        disabledInactiveTrackColor:
+                                            Theme.of(context).indicatorColor,
+                                        thumbShape: RoundSliderThumbShape(
+                                            enabledThumbRadius: 8.0),
+                                      ),
                                   child: BlocBuilder<DiscoverBinomesBloc,
                                       DiscoverBinomesState>(
                                     builder: (BuildContext context,
                                         DiscoverBinomesState state) {
                                       if (!(state
-                                      is DiscoverBinomesLoadSuccessState)) {
+                                          is DiscoverBinomesLoadSuccessState)) {
                                         return Center(
                                           child: CircularProgressIndicator(),
                                         );
@@ -1429,7 +1429,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                         tween: Tween<double>(
                                             begin: 0.5,
                                             end: (state
-                                            as DiscoverBinomesLoadSuccessState)
+                                                    as DiscoverBinomesLoadSuccessState)
                                                 .binomes[0]
                                                 .groupeOuSeul),
                                         duration: Duration(milliseconds: 300),
@@ -1460,122 +1460,161 @@ class _BinomeInformationState extends State<BinomeInformation> {
                     ),
                   ),
                   widget.separator,
-                  informationRectangle(
-                    context: context,
+                  Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
-                          Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                            return AutoSizeText(
-                              'En ligne ou à l\'école?',
-                              style: tinterTheme.textStyle.headline2,
-                              textAlign: TextAlign.center,
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'En ligne ou à l\'école ?',
+                              style: Theme.of(context).textTheme.headline5,
                               maxLines: 1,
-                            );
-                          }),
-                          SizedBox(
-                            height: 15,
+                            ),
                           ),
-                          discoverSlider(
-                              context,
-                              Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                                  return SliderTheme(
-                                    data: tinterTheme.slider.disabled,
-                                    child: child,
-                                  );
-                                },
-                                child: BlocBuilder<DiscoverBinomesBloc,
-                                    DiscoverBinomesState>(
-                                  builder: (BuildContext context,
-                                      DiscoverBinomesState state) {
-                                    if (!(state
-                                        is DiscoverBinomesLoadSuccessState)) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    return TweenAnimationBuilder(
-                                      tween: Tween<double>(
-                                          begin: 0.5,
-                                          end: (state
-                                                  as DiscoverBinomesLoadSuccessState)
-                                              .binomes[0]
-                                              .enligneOuNon),
-                                      duration: Duration(milliseconds: 300),
-                                      builder: (BuildContext context, value,
-                                          Widget child) {
-                                        return Slider(
-                                          value: value,
-                                          onChanged: null,
-                                        );
-                                      },
-                                    );
-                                  },
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.school_rounded,
+                                  size: 22.0,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
-                              leftLabel: 'En ligne',
-                              rightLabel: 'A l\'école'),
+                              Expanded(
+                                child: SliderTheme(
+                                  data: Theme.of(context).sliderTheme.copyWith(
+                                        disabledActiveTrackColor:
+                                            Theme.of(context).primaryColor,
+                                        disabledThumbColor: Color(0xffCECECE),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0),
+                                        trackHeight: 6.0,
+                                        disabledInactiveTrackColor:
+                                            Theme.of(context).indicatorColor,
+                                        thumbShape: RoundSliderThumbShape(
+                                            enabledThumbRadius: 8.0),
+                                      ),
+                                  child: BlocBuilder<DiscoverBinomesBloc,
+                                      DiscoverBinomesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverBinomesState state) {
+                                      if (!(state
+                                          is DiscoverBinomesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return TweenAnimationBuilder(
+                                        tween: Tween<double>(
+                                            begin: 0.5,
+                                            end: (state
+                                                    as DiscoverBinomesLoadSuccessState)
+                                                .binomes[0]
+                                                .enligneOuNon),
+                                        duration: Duration(milliseconds: 300),
+                                        builder: (BuildContext context, value,
+                                            Widget child) {
+                                          return Slider(
+                                            value: value,
+                                            onChanged: null,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Icon(
+                                  Icons.wifi,
+                                  size: 22.0,
+                                  color: Theme.of(context).indicatorColor,
+                                ),
+                              )
+                            ],
+                          ),
                         ],
                       ),
                     ),
                   ),
                   widget.separator,
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: informationRectangle(
-                      context: context,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Column(
-                          children: <Widget>[
-                            Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Text(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
                                 'Matières préférées',
-                                style: tinterTheme.textStyle.headline2,
-                              );
-                            }),
-                            SizedBox(height: 8.0),
-                            BlocBuilder<DiscoverBinomesBloc,
-                                DiscoverBinomesState>(
-                              builder: (BuildContext context,
-                                  DiscoverBinomesState state) {
-                                if (!(state
-                                    is DiscoverBinomesLoadSuccessState)) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              BlocBuilder<DiscoverBinomesBloc,
+                                  DiscoverBinomesState>(
+                                builder: (BuildContext context,
+                                    DiscoverBinomesState state) {
+                                  if (!(state is DiscoverBinomesState)) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return AnimatedSwitcher(
+                                    duration: Duration(milliseconds: 300),
+                                    child: Wrap(
+                                      alignment: WrapAlignment.center,
+                                      key: GlobalKey(),
+                                      spacing: 8,
+                                      runSpacing: 8,
+                                      children: <Widget>[
+                                        for (String matierePreferee in (state
+                                                as DiscoverBinomesLoadSuccessState)
+                                            .binomes[0]
+                                            .matieresPreferees)
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15.0, vertical: 6.0),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  spreadRadius: 0.2,
+                                                  blurRadius: 5,
+                                                  offset: Offset(2, 2),
+                                                )
+                                              ],
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.0)),
+                                              border: Border.all(
+                                                  color: (Theme.of(context)
+                                                      .primaryColor),
+                                                  width: 3.0,
+                                                  style: BorderStyle.solid),
+                                              color: Colors.white,
+                                            ),
+                                            child: Text(matierePreferee),
+                                          ),
+                                      ],
+                                    ),
                                   );
-                                }
-                                return AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 300),
-                                  child: Wrap(
-                                    key: GlobalKey(),
-                                    spacing: 15,
-                                    alignment: WrapAlignment.center,
-                                    children: <Widget>[
-                                      for (String matierePreferee in (state
-                                              as DiscoverBinomesLoadSuccessState)
-                                          .binomes[0]
-                                          .matieresPreferees)
-                                        Consumer<TinterTheme>(builder:
-                                            (context, tinterTheme, child) {
-                                          return Chip(
-                                            label: Text(matierePreferee),
-                                            labelStyle:
-                                                tinterTheme.textStyle.chipLiked,
-                                            backgroundColor: tinterTheme
-                                                .colors.primaryAccent,
-                                          );
-                                        })
-                                    ],
-                                  ),
-                                );
-                              },
-                            )
-                          ],
+                                },
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1619,8 +1658,8 @@ class _BinomeInformationState extends State<BinomeInformation> {
         return Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-                color: Theme.of(context).primaryColor, width: 2.5),
+            border:
+                Border.all(color: Theme.of(context).primaryColor, width: 2.5),
           ),
           height: 60,
           width: 60,
