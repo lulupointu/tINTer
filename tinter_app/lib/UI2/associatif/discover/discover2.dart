@@ -1496,7 +1496,7 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.face,
-                        color: Theme.of(context).indicatorColor,
+                        color: Colors.black87,
                         size: 70,
                       ),
                       SizedBox(
@@ -1556,6 +1556,7 @@ class StudentSearch extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: 3.0),
