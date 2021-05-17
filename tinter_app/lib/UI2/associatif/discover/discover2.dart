@@ -903,7 +903,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 15.0, top: 10.0, bottom: 10.0),
+                          left: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
