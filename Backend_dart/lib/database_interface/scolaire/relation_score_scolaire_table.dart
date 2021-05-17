@@ -8,43 +8,43 @@ import 'package:tinter_backend/models/scolaire/relation_score_scolaire.dart';
 
 List<RelationScoreScolaire> fakeListRelationScoreScolaire = [
   RelationScoreScolaire(
-        (r) => r
+    (r) => r
       ..login = fakeUsers[0].login
       ..otherLogin = fakeUsers[1].login
       ..score = 78,
   ),
   RelationScoreScolaire(
-        (r) => r
+    (r) => r
       ..login = fakeUsers[0].login
       ..otherLogin = fakeUsers[2].login
       ..score = 98,
   ),
   RelationScoreScolaire(
-        (r) => r
+    (r) => r
       ..login = fakeUsers[0].login
       ..otherLogin = fakeUsers[3].login
       ..score = 74,
   ),
   RelationScoreScolaire(
-        (r) => r
+    (r) => r
       ..login = fakeUsers[0].login
       ..otherLogin = fakeUsers[4].login
       ..score = 45,
   ),
   RelationScoreScolaire(
-        (r) => r
+    (r) => r
       ..login = fakeUsers[1].login
       ..otherLogin = fakeUsers[2].login
       ..score = 98,
   ),
   RelationScoreScolaire(
-        (r) => r
+    (r) => r
       ..login = fakeUsers[1].login
       ..otherLogin = fakeUsers[3].login
       ..score = 74,
   ),
   RelationScoreScolaire(
-        (r) => r
+    (r) => r
       ..login = fakeUsers[1].login
       ..otherLogin = fakeUsers[4].login
       ..score = 25,
@@ -127,8 +127,10 @@ class RelationsScoreScolaireTable {
               });
   }
 
-  Future<void> addMultiple({@required List<RelationScoreScolaire> listRelationScoreScolaire}) async {
-    _logger.info('Executing function addMultiple with args: listRelationScoreScolaire=${listRelationScoreScolaire}');
+  Future<void> addMultiple(
+      {@required List<RelationScoreScolaire> listRelationScoreScolaire}) async {
+    _logger.info(
+        'Executing function addMultiple with args: listRelationScoreScolaire=${listRelationScoreScolaire}');
 
     if (listRelationScoreScolaire.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
@@ -140,7 +142,10 @@ class RelationsScoreScolaireTable {
 
     return database.query(query, substitutionValues: {
       for (int index = 0; index < listRelationScoreScolaire.length; index++)
-        ...(listRelationScoreScolaire[index].login.compareTo(listRelationScoreScolaire[index].otherLogin) < 0)
+        ...(listRelationScoreScolaire[index]
+                    .login
+                    .compareTo(listRelationScoreScolaire[index].otherLogin) <
+                0)
             ? {
                 'loginA$index': listRelationScoreScolaire[index].login,
                 'loginB$index': listRelationScoreScolaire[index].otherLogin,
@@ -174,8 +179,10 @@ class RelationsScoreScolaireTable {
               });
   }
 
-  Future<void> updateMultiple({@required List<RelationScoreScolaire> listRelationScoreScolaire}) async {
-    _logger.info('Executing function updateMultiple with args: listRelationScoreScolaire=${listRelationScoreScolaire}');
+  Future<void> updateMultiple(
+      {@required List<RelationScoreScolaire> listRelationScoreScolaire}) async {
+    _logger.info(
+        'Executing function updateMultiple with args: listRelationScoreScolaire=${listRelationScoreScolaire}');
 
     if (listRelationScoreScolaire.length == 0) return;
     final String query = "UPDATE $name AS old SET score=new.score "
@@ -189,7 +196,10 @@ class RelationsScoreScolaireTable {
 
     return database.query(query, substitutionValues: {
       for (int index = 0; index < listRelationScoreScolaire.length; index++)
-        ...(listRelationScoreScolaire[index].login.compareTo(listRelationScoreScolaire[index].otherLogin) < 0)
+        ...(listRelationScoreScolaire[index]
+                    .login
+                    .compareTo(listRelationScoreScolaire[index].otherLogin) <
+                0)
             ? {
                 'loginA$index': listRelationScoreScolaire[index].login,
                 'loginB$index': listRelationScoreScolaire[index].otherLogin,
@@ -203,8 +213,10 @@ class RelationsScoreScolaireTable {
     });
   }
 
-  Future<RelationScoreScolaire> getFromLogins({@required String login, @required otherLogin}) async {
-    _logger.info('Executing function getFromLogins with args: login=${login}, otherLogin=${otherLogin}');
+  Future<RelationScoreScolaire> getFromLogins(
+      {@required String login, @required otherLogin}) async {
+    _logger.info(
+        'Executing function getFromLogins with args: login=${login}, otherLogin=${otherLogin}');
 
     final String query = "SELECT * FROM $name WHERE loginA=@loginA AND loginB=@loginB;";
 
@@ -228,7 +240,11 @@ class RelationsScoreScolaireTable {
             error: 'One pair of login expected but got ${sqlResults.length}');
       }
 
-      return RelationScoreScolaire.fromJson(sqlResults[0][name]);
+      return RelationScoreScolaire.fromJson({
+        'login': login,
+        'otherLogin': otherLogin,
+        'score': sqlResults[0][name]['score'],
+      });
     });
   }
 
@@ -241,7 +257,11 @@ class RelationsScoreScolaireTable {
         .mappedResultsQuery(query, substitutionValues: {'login': login}).then((sqlResults) {
       return [
         for (Map<String, Map<String, dynamic>> result in sqlResults)
-          RelationScoreScolaire.fromJson(result[name])
+          RelationScoreScolaire.fromJson({
+            'login': login,
+            'otherLogin': result[name][result[name]['loginA'] == login ? 'loginB' : 'loginA'],
+            'score': result[name]['score'],
+          })
       ];
     });
   }
@@ -252,13 +272,18 @@ class RelationsScoreScolaireTable {
     return database.mappedResultsQuery(query).then((sqlResults) {
       return [
         for (Map<String, Map<String, dynamic>> result in sqlResults)
-          RelationScoreScolaire.fromJson(result[name])
+          RelationScoreScolaire.fromJson({
+            'login': result[name]['loginA'],
+            'otherLogin': result[name]['loginB'],
+            'score': result[name]['score'],
+          })
       ];
     });
   }
 
   Future<void> removeFromLogins({@required String login, @required otherLogin}) async {
-    _logger.info('Executing function removeFromLogins with args: login=${login}, otherLogin=${otherLogin}');
+    _logger.info(
+        'Executing function removeFromLogins with args: login=${login}, otherLogin=${otherLogin}');
 
     final String query = "DELETE FROM $name WHERE loginA=@loginA AND loginB=@loginB;";
 
