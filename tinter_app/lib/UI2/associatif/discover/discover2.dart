@@ -117,7 +117,7 @@ class DiscoverRight extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: StudentSearch(),
+              child: AssociatifStudentSearch(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
@@ -1526,8 +1526,8 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
   }
 }
 
-class StudentSearch extends StatelessWidget {
-  const StudentSearch({Key key}) : super(key: key);
+class AssociatifStudentSearch extends StatelessWidget {
+  const AssociatifStudentSearch({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

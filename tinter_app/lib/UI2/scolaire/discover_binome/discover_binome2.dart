@@ -19,6 +19,7 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/UI2/associatif/discover/recherche_etudiant2.dart';
+import 'package:tinterapp/UI2/scolaire/discover_binome/recherche_binome2.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
 class DiscoverBinomeTab2 extends StatelessWidget {
@@ -126,7 +127,7 @@ class DiscoverRight extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: StudentSearch(),
+              child: ScolaireStudentSearch(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
@@ -150,8 +151,8 @@ class DiscoverRight extends StatelessWidget {
   }
 }
 
-class StudentSearch extends StatelessWidget {
-  const StudentSearch({Key key}) : super(key: key);
+class ScolaireStudentSearch extends StatelessWidget {
+  const ScolaireStudentSearch({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +160,8 @@ class StudentSearch extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SearchStudentScolaireTab()),
+          MaterialPageRoute(
+              builder: (context) => SearchStudentScolaireTab2()),
         );
       },
       child: Container(
@@ -192,13 +194,8 @@ class StudentSearch extends StatelessWidget {
                 ),
               ),
               Text(
-                randomGender == Gender.M
-                    ? "rechercher\nun binôme"
-                    : "rechercher\nune binôme",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: Colors.white, height: 1.1),
+                randomGender == Gender.M ? "rechercher\nun étudiant" : "rechercher\nune étudiante",
+                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.1),
                 textAlign: TextAlign.left,
               ),
             ],
