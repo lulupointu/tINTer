@@ -160,8 +160,7 @@ class ScolaireStudentSearch extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => SearchStudentScolaireTab2()),
+          MaterialPageRoute(builder: (context) => SearchStudentScolaireTab2()),
         );
       },
       child: Container(
@@ -194,8 +193,13 @@ class ScolaireStudentSearch extends StatelessWidget {
                 ),
               ),
               Text(
-                randomGender == Gender.M ? "rechercher\nun étudiant" : "rechercher\nune étudiante",
-                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.1),
+                randomGender == Gender.M
+                    ? "rechercher\nun étudiant"
+                    : "rechercher\nune étudiante",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: Colors.white, height: 1.1),
                 textAlign: TextAlign.left,
               ),
             ],
@@ -1549,7 +1553,8 @@ class _BinomeInformationState extends State<BinomeInformation> {
                       width: double.infinity,
                       child: Card(
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                          padding:
+                              const EdgeInsets.only(top: 10.0, bottom: 15.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -1583,7 +1588,8 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                             .matieresPreferees)
                                           Container(
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 15.0, vertical: 6.0),
+                                                horizontal: 15.0,
+                                                vertical: 6.0),
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
@@ -1743,8 +1749,9 @@ class NoMoreDiscoveryBinomesWidget extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
       child: Column(
         children: [
-          WideStudentSearch(
-            height: 40,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: ScolaireWideStudentSearch(),
           ),
           Expanded(
             child: Center(
@@ -1754,7 +1761,7 @@ class NoMoreDiscoveryBinomesWidget extends StatelessWidget {
                   Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                     return Icon(
                       Icons.face,
-                      color: tinterTheme.colors.defaultTextColor,
+                      color: Colors.black87,
                       size: 70,
                     );
                   }),
@@ -1762,12 +1769,17 @@ class NoMoreDiscoveryBinomesWidget extends StatelessWidget {
                     height: 10,
                   ),
                   Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                    return AutoSizeText(
-                      "Il n'y a plus de binome à découvrir pour l'instant.\nDemande à d'autres étudiants de s'inscrire!",
-                      style:
-                          tinterTheme.textStyle.headline2.copyWith(height: 2),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: AutoSizeText(
+                        "Il n'y a plus de binômes à découvrir pour l'instant. Demande à d'autres étudiant.e.s de s'inscrire !",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(height: 1.5),
+                        textAlign: TextAlign.center,
+                        maxLines: 3,
+                      ),
                     );
                   }),
                 ],
@@ -1780,87 +1792,57 @@ class NoMoreDiscoveryBinomesWidget extends StatelessWidget {
   }
 }
 
-class WideStudentSearch extends StatelessWidget {
-  final double height;
-
-  const WideStudentSearch({Key key, @required this.height}) : super(key: key);
+class ScolaireWideStudentSearch extends StatelessWidget {
+  const ScolaireWideStudentSearch({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
-      child: Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-            height: height,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5.0),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SearchStudentScolaireTab2()),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          border: Border.all(
+              color: Colors.white, width: 4.0, style: BorderStyle.solid),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(3, 3),
+            ),
+          ],
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 3.0),
+                child: Icon(
+                  Icons.search_rounded,
+                  color: Colors.white,
+                ),
               ),
-              color: tinterTheme.colors.primaryAccent,
-            ),
-            child: child,
-          );
-        },
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SearchStudentScolaireTab()),
-            );
-          },
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 30,
-                  child: Hero(
-                    tag: 'studentSearchBar',
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5.0),
-                            ),
-                            color: tinterTheme.colors.primaryAccent,
-                          ),
-                          child: TextField(
-                            enabled: false,
-                            textInputAction: TextInputAction.search,
-                            decoration: InputDecoration(
-                              focusedBorder: InputBorder.none,
-                              icon: Padding(
-                                padding: const EdgeInsets.only(left: 0),
-                                child: Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                    return AutoSizeText(
-                      'Rechercher un.e binome',
-                      style: tinterTheme.textStyle.hintLarge,
-                      maxLines: 1,
-                    );
-                  }),
-                ),
-              ],
-            ),
+              Text(
+                randomGender == Gender.M
+                    ? "rechercher un étudiant"
+                    : "rechercher une étudiante",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: Colors.white, height: 1.15),
+                textAlign: TextAlign.left,
+              ),
+            ],
           ),
         ),
       ),

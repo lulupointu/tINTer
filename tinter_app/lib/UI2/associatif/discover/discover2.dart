@@ -112,7 +112,8 @@ class DiscoverRight extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
+        padding: const EdgeInsets.only(
+            left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
         child: Column(
           children: <Widget>[
             Padding(
@@ -140,7 +141,6 @@ class DiscoverRight extends StatelessWidget {
     );
   }
 }
-
 
 class LikeOrIgnore extends StatefulWidget {
   LikeOrIgnore();
@@ -1287,7 +1287,8 @@ class _MatchInformationState extends State<MatchInformation> {
                       width: double.infinity,
                       child: Card(
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                          padding:
+                              const EdgeInsets.only(top: 10.0, bottom: 15.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -1322,7 +1323,8 @@ class _MatchInformationState extends State<MatchInformation> {
                                             .goutsMusicaux)
                                           Container(
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 15.0, vertical: 6.0),
+                                                horizontal: 15.0,
+                                                vertical: 6.0),
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
@@ -1487,13 +1489,13 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
-              child: WideStudentSearch(),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: AssoWideStudentSearch(),
             ),
             Expanded(
               child: Center(
-                child:
-                    Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                child: Consumer<TinterTheme>(
+                    builder: (context, tinterTheme, child) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -1509,7 +1511,10 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: AutoSizeText(
                           "Il n'y a plus de matchs à découvrir pour l'instant. Demande à d'autres étudiant.e.s de s'inscrire !",
-                          style: Theme.of(context).textTheme.headline5.copyWith(height: 1.5),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(height: 1.5),
                           textAlign: TextAlign.center,
                           maxLines: 3,
                         ),
@@ -1569,8 +1574,13 @@ class AssociatifStudentSearch extends StatelessWidget {
                 ),
               ),
               Text(
-                randomGender == Gender.M ? "rechercher\nun étudiant" : "rechercher\nune étudiante",
-                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.1),
+                randomGender == Gender.M
+                    ? "rechercher\nun étudiant"
+                    : "rechercher\nune étudiante",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: Colors.white, height: 1.1),
                 textAlign: TextAlign.left,
               ),
             ],
@@ -1581,11 +1591,8 @@ class AssociatifStudentSearch extends StatelessWidget {
   }
 }
 
-
-class WideStudentSearch extends StatelessWidget {
-  final double height;
-
-  const WideStudentSearch({Key key, @required this.height}) : super(key: key);
+class AssoWideStudentSearch extends StatelessWidget {
+  const AssoWideStudentSearch({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1626,8 +1633,13 @@ class WideStudentSearch extends StatelessWidget {
                 ),
               ),
               Text(
-                randomGender == Gender.M ? "rechercher un étudiant" : "rechercher une étudiante",
-                style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white, height: 1.15),
+                randomGender == Gender.M
+                    ? "rechercher un étudiant"
+                    : "rechercher une étudiante",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: Colors.white, height: 1.15),
                 textAlign: TextAlign.left,
               ),
             ],
