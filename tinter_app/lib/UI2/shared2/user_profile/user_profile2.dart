@@ -50,61 +50,66 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
               children: [
-                ExistingProfileHeader(),
-                Align(
-                  alignment: AlignmentDirectional.topEnd,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => OptionsTab2()),
-                      );
-                    },
-                    icon: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return Icon(
-                        Icons.settings,
-                        size: 24,
-                        color: Theme.of(context).primaryColor,
-                      );
-                    }),
-                  ),
-                )
+                Stack(
+                  children: [
+                    ExistingProfileHeader(),
+                    Align(
+                      alignment: AlignmentDirectional.topEnd,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => OptionsTab2()),
+                          );
+                        },
+                        icon: Consumer<TinterTheme>(
+                            builder: (context, tinterTheme, child) {
+                          return Icon(
+                            Icons.settings,
+                            size: 24,
+                            color: Theme.of(context).primaryColor,
+                          );
+                        }),
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
+                  child:
+                      Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return AnimatedSwitcher(
+                      duration: Duration(milliseconds: 300),
+                      transitionBuilder:
+                          (Widget child, Animation<double> animation) {
+                        return SlideTransition(
+                          child: child,
+                          position: Tween<Offset>(
+                            begin: const Offset(0, 1),
+                            end: Offset.zero,
+                          ).animate(animation),
+                        );
+                      },
+                      child: tinterTheme.theme == MyTheme.dark
+                          ? UserAssociatifProfile2(
+                              separator: separator,
+                            )
+                          : UserScolaireProfile2(
+                              separator: separator,
+                            ),
+                    );
+                  }),
+                ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 300),
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                    return SlideTransition(
-                      child: child,
-                      position: Tween<Offset>(
-                        begin: const Offset(0, 1),
-                        end: Offset.zero,
-                      ).animate(animation),
-                    );
-                  },
-                  child: tinterTheme.theme == MyTheme.dark
-                      ? UserAssociatifProfile2(
-                          separator: separator,
-                        )
-                      : UserScolaireProfile2(
-                          separator: separator,
-                        ),
-                );
-              }),
-            ),
-          ],
+          ),
         ),
       ),
     );

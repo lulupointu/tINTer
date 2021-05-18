@@ -3,7 +3,6 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -31,66 +30,71 @@ class DiscoverAssociatifTab2 extends StatelessWidget implements TinterTab {
           .add(DiscoverMatchesRequestedEvent());
     }
 
-    return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(builder:
-        (BuildContext context, DiscoverMatchesState discoverMatchesState) {
-      return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (discoverMatchesState is DiscoverMatchesInitialState ||
-              discoverMatchesState is DiscoverMatchesLoadInProgressState)
-            return Center(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          if (discoverMatchesState is DiscoverMatchesLoadSuccessState &&
-              discoverMatchesState.matches.length == 0)
-            return NoMoreDiscoveryMatchesWidget();
-          return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-            return Stack(
-              children: [
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 55,
-                      child: MatchInformation(),
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(builder:
+            (BuildContext context, DiscoverMatchesState discoverMatchesState) {
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (discoverMatchesState is DiscoverMatchesInitialState ||
+                  discoverMatchesState is DiscoverMatchesLoadInProgressState)
+                return Center(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              if (discoverMatchesState is DiscoverMatchesLoadSuccessState &&
+                  discoverMatchesState.matches.length == 0)
+                return NoMoreDiscoveryMatchesWidget();
+              return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return Stack(
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 55,
+                          child: MatchInformation(),
+                        ),
+                        Expanded(
+                          flex: 45,
+                          child: DiscoverRight(constraints.maxHeight),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      flex: 45,
-                      child: DiscoverRight(constraints.maxHeight),
+                    Positioned(
+                      left: constraints.maxWidth * 55 / 100,
+                      child: SvgPicture.asset(
+                        'assets/discover/DiscoverBackground.svg',
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        height: constraints.maxHeight,
+                      ),
+                    ),
+                    Positioned(
+                      left: constraints.maxWidth * 55 / 100,
+                      child: SvgPicture.asset(
+                        'assets/discover/DiscoverTop.svg',
+                        color: Theme.of(context).primaryColor,
+                        height: constraints.maxHeight / 2,
+                      ),
+                    ),
+                    Positioned(
+                      left: constraints.maxWidth * 55 / 100,
+                      bottom: 0,
+                      child: SvgPicture.asset(
+                        'assets/discover/DiscoverBottom.svg',
+                        color: Theme.of(context).primaryColor,
+                        height: constraints.maxHeight / 2,
+                      ),
                     ),
                   ],
-                ),
-                Positioned(
-                  left: constraints.maxWidth * 55 / 100,
-                  child: SvgPicture.asset(
-                    'assets/discover/DiscoverBackground.svg',
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    height: constraints.maxHeight,
-                  ),
-                ),
-                Positioned(
-                  left: constraints.maxWidth * 55 / 100,
-                  child: SvgPicture.asset(
-                    'assets/discover/DiscoverTop.svg',
-                    color: Theme.of(context).primaryColor,
-                    height: constraints.maxHeight / 2,
-                  ),
-                ),
-                Positioned(
-                  left: constraints.maxWidth * 55 / 100,
-                  bottom: 0,
-                  child: SvgPicture.asset(
-                    'assets/discover/DiscoverBottom.svg',
-                    color: Theme.of(context).primaryColor,
-                    height: constraints.maxHeight / 2,
-                  ),
-                ),
-              ],
-            );
-          });
-        },
-      );
-    });
+                );
+              });
+            },
+          );
+        }),
+      ),
+    );
   }
 }
 

@@ -3,7 +3,6 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -13,12 +12,9 @@ import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/UI/scolaire/discover_binome/search_student.dart';
-import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
-import 'package:tinterapp/UI2/associatif/discover/recherche_etudiant2.dart';
 import 'package:tinterapp/UI2/scolaire/discover_binome/recherche_binome2.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
@@ -35,73 +31,78 @@ class DiscoverBinomeTab2 extends StatelessWidget {
           .add(DiscoverBinomesRequestedEvent());
     }
 
-    return BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(builder:
-        (BuildContext context, DiscoverBinomesState discoverBinomesState) {
-      return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (discoverBinomesState is DiscoverBinomesInitialState ||
-              discoverBinomesState is DiscoverBinomesLoadInProgressState)
-            return Center(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          if (discoverBinomesState is DiscoverBinomesLoadSuccessState &&
-              discoverBinomesState.binomes.length == 0)
-            return NoMoreDiscoveryBinomesWidget();
-          return Stack(
-            children: [
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 55,
-                    child: BinomeInformation(),
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(builder:
+            (BuildContext context, DiscoverBinomesState discoverBinomesState) {
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (discoverBinomesState is DiscoverBinomesInitialState ||
+                  discoverBinomesState is DiscoverBinomesLoadInProgressState)
+                return Center(
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
-                  Expanded(
-                    flex: 45,
-                    child: DiscoverRight(constraints.maxHeight),
+                );
+              if (discoverBinomesState is DiscoverBinomesLoadSuccessState &&
+                  discoverBinomesState.binomes.length == 0)
+                return NoMoreDiscoveryBinomesWidget();
+              return Stack(
+                children: [
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 55,
+                        child: BinomeInformation(),
+                      ),
+                      Expanded(
+                        flex: 45,
+                        child: DiscoverRight(constraints.maxHeight),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    left: constraints.maxWidth * 55 / 100,
+                    child: Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                      return SvgPicture.asset(
+                        'assets/discover/DiscoverBackground.svg',
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        height: constraints.maxHeight,
+                      );
+                    }),
+                  ),
+                  Positioned(
+                    left: constraints.maxWidth * 55 / 100,
+                    child: Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                      return SvgPicture.asset(
+                        'assets/discover/DiscoverTop.svg',
+                        color: Theme.of(context).primaryColor,
+                        height: constraints.maxHeight / 2,
+                      );
+                    }),
+                  ),
+                  Positioned(
+                    left: constraints.maxWidth * 55 / 100,
+                    bottom: 0,
+                    child: Consumer<TinterTheme>(
+                        builder: (context, tinterTheme, child) {
+                      return SvgPicture.asset(
+                        'assets/discover/DiscoverBottom.svg',
+                        color: Theme.of(context).primaryColor,
+                        height: constraints.maxHeight / 2,
+                      );
+                    }),
                   ),
                 ],
-              ),
-              Positioned(
-                left: constraints.maxWidth * 55 / 100,
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                  return SvgPicture.asset(
-                    'assets/discover/DiscoverBackground.svg',
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    height: constraints.maxHeight,
-                  );
-                }),
-              ),
-              Positioned(
-                left: constraints.maxWidth * 55 / 100,
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                  return SvgPicture.asset(
-                    'assets/discover/DiscoverTop.svg',
-                    color: Theme.of(context).primaryColor,
-                    height: constraints.maxHeight / 2,
-                  );
-                }),
-              ),
-              Positioned(
-                left: constraints.maxWidth * 55 / 100,
-                bottom: 0,
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                  return SvgPicture.asset(
-                    'assets/discover/DiscoverBottom.svg',
-                    color: Theme.of(context).primaryColor,
-                    height: constraints.maxHeight / 2,
-                  );
-                }),
-              ),
-            ],
+              );
+            },
           );
-        },
-      );
-    });
+        }),
+      ),
+    );
   }
 }
 

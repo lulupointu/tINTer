@@ -311,9 +311,7 @@ main() {
                           trackShape: HomogeniusRoundedRectSliderTrackShape(),
                         ),
                       ),
-                      home: SafeArea(
-                        child: Tinter(),
-                      ),
+                      home: Tinter(),
                       navigatorObservers: [routeObserver],
                     ),
                   ),
