@@ -919,48 +919,64 @@ class _MatchInformationState extends State<MatchInformation> {
                             child: Stack(
                               alignment: AlignmentDirectional.centerStart,
                               children: <Widget>[
-                                Container(
-                                  height: 60,
-                                  child: BlocBuilder<DiscoverMatchesBloc,
-                                      DiscoverMatchesState>(
-                                    builder: (BuildContext context,
-                                        DiscoverMatchesState state) {
-                                      if (!(state
-                                          is DiscoverMatchesLoadSuccessState)) {
-                                        return Center(
+                                BlocBuilder<DiscoverMatchesBloc,
+                                    DiscoverMatchesState>(
+                                  builder: (BuildContext context,
+                                      DiscoverMatchesState state) {
+                                    if (!(state
+                                        is DiscoverMatchesLoadSuccessState)) {
+                                      return Container(
+                                        child: Center(
                                           child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      return AnimatedSwitcher(
-                                        duration: Duration(milliseconds: 300),
-                                        child: ListView.separated(
-                                          key: GlobalKey(),
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: (state
-                                                  as DiscoverMatchesLoadSuccessState)
-                                              .matches[0]
-                                              .associations
-                                              .length,
-                                          separatorBuilder:
-                                              (BuildContext context,
-                                                  int index) {
-                                            return SizedBox(
-                                              width: 5,
-                                            );
-                                          },
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return associationBubble(
-                                                context,
-                                                (state as DiscoverMatchesLoadSuccessState)
-                                                    .matches[0]
-                                                    .associations[index]);
-                                          },
                                         ),
                                       );
-                                    },
-                                  ),
+                                    }
+                                    return (state as DiscoverMatchesLoadSuccessState)
+                                                .matches[0]
+                                                .associations
+                                                .length >=
+                                            1
+                                        ? Container(
+                                            height: 60,
+                                            child: AnimatedSwitcher(
+                                              duration:
+                                                  Duration(milliseconds: 300),
+                                              child: ListView.separated(
+                                                key: GlobalKey(),
+                                                shrinkWrap: true,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: (state
+                                                        as DiscoverMatchesLoadSuccessState)
+                                                    .matches[0]
+                                                    .associations
+                                                    .length,
+                                                separatorBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return SizedBox(
+                                                    width: 5,
+                                                  );
+                                                },
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return associationBubble(
+                                                      context,
+                                                      (state as DiscoverMatchesLoadSuccessState)
+                                                          .matches[0]
+                                                          .associations[index]);
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                        : Text(
+                                            'Aucune association sélectionnée',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          );
+                                  },
                                 ),
                               ],
                             ),
@@ -1309,46 +1325,62 @@ class _MatchInformationState extends State<MatchInformation> {
                                       child: CircularProgressIndicator(),
                                     );
                                   }
-                                  return AnimatedSwitcher(
-                                    duration: Duration(milliseconds: 300),
-                                    child: Wrap(
-                                      alignment: WrapAlignment.center,
-                                      key: GlobalKey(),
-                                      spacing: 8,
-                                      runSpacing: 8,
-                                      children: <Widget>[
-                                        for (String musicStyle in (state
-                                                as DiscoverMatchesLoadSuccessState)
-                                            .matches[0]
-                                            .goutsMusicaux)
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 15.0,
-                                                vertical: 6.0),
-                                            decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.2),
-                                                  spreadRadius: 0.2,
-                                                  blurRadius: 5,
-                                                  offset: Offset(2, 2),
-                                                )
-                                              ],
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10.0)),
-                                              border: Border.all(
-                                                  color: (Theme.of(context)
-                                                      .primaryColor),
-                                                  width: 3.0,
-                                                  style: BorderStyle.solid),
-                                              color: Colors.white,
-                                            ),
-                                            child: Text(musicStyle),
+                                  return (state as DiscoverMatchesLoadSuccessState)
+                                              .matches[0]
+                                              .goutsMusicaux
+                                              .length >=
+                                          1
+                                      ? AnimatedSwitcher(
+                                          duration: Duration(milliseconds: 300),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            key: GlobalKey(),
+                                            spacing: 8,
+                                            runSpacing: 8,
+                                            children: <Widget>[
+                                              for (String musicStyle in (state
+                                                      as DiscoverMatchesLoadSuccessState)
+                                                  .matches[0]
+                                                  .goutsMusicaux)
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15.0,
+                                                      vertical: 6.0),
+                                                  decoration: BoxDecoration(
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.2),
+                                                        spreadRadius: 0.2,
+                                                        blurRadius: 5,
+                                                        offset: Offset(2, 2),
+                                                      )
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0)),
+                                                    border: Border.all(
+                                                        color:
+                                                            (Theme.of(context)
+                                                                .primaryColor),
+                                                        width: 3.0,
+                                                        style:
+                                                            BorderStyle.solid),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Text(musicStyle),
+                                                ),
+                                            ],
                                           ),
-                                      ],
-                                    ),
-                                  );
+                                        )
+                                      : Text(
+                                          'Aucun goût musical sélectionné',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                          textAlign: TextAlign.center,
+                                        );
                                 },
                               )
                             ],
@@ -1482,10 +1514,10 @@ class NoPaddingTrackShape extends RoundedRectSliderTrackShape {
 class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-      child: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
         child: Column(
           children: [
             Padding(
@@ -1500,7 +1532,7 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.face,
+                        Icons.sentiment_very_dissatisfied_rounded,
                         color: Colors.black87,
                         size: 70,
                       ),

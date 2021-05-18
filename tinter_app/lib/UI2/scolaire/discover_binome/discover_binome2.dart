@@ -1324,48 +1324,64 @@ class _BinomeInformationState extends State<BinomeInformation> {
                             child: Stack(
                               alignment: AlignmentDirectional.centerStart,
                               children: <Widget>[
-                                Container(
-                                  height: 60,
-                                  child: BlocBuilder<DiscoverBinomesBloc,
-                                      DiscoverBinomesState>(
-                                    builder: (BuildContext context,
-                                        DiscoverBinomesState state) {
-                                      if (!(state
-                                          is DiscoverBinomesLoadSuccessState)) {
-                                        return Center(
+                                BlocBuilder<DiscoverBinomesBloc,
+                                    DiscoverBinomesState>(
+                                  builder: (BuildContext context,
+                                      DiscoverBinomesState state) {
+                                    if (!(state
+                                        is DiscoverBinomesLoadSuccessState)) {
+                                      return Container(
+                                        child: Center(
                                           child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      return AnimatedSwitcher(
-                                        duration: Duration(milliseconds: 300),
-                                        child: ListView.separated(
-                                          key: GlobalKey(),
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: (state
-                                                  as DiscoverBinomesLoadSuccessState)
-                                              .binomes[0]
-                                              .associations
-                                              .length,
-                                          separatorBuilder:
-                                              (BuildContext context,
-                                                  int index) {
-                                            return SizedBox(
-                                              width: 5,
-                                            );
-                                          },
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return associationBubble(
-                                                context,
-                                                (state as DiscoverBinomesLoadSuccessState)
-                                                    .binomes[0]
-                                                    .associations[index]);
-                                          },
                                         ),
                                       );
-                                    },
-                                  ),
+                                    }
+                                    return (state as DiscoverBinomesLoadSuccessState)
+                                                .binomes[0]
+                                                .associations
+                                                .length >=
+                                            1
+                                        ? Container(
+                                            height: 60,
+                                            child: AnimatedSwitcher(
+                                              duration:
+                                                  Duration(milliseconds: 300),
+                                              child: ListView.separated(
+                                                key: GlobalKey(),
+                                                shrinkWrap: true,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: (state
+                                                        as DiscoverBinomesLoadSuccessState)
+                                                    .binomes[0]
+                                                    .associations
+                                                    .length,
+                                                separatorBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return SizedBox(
+                                                    width: 5,
+                                                  );
+                                                },
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return associationBubble(
+                                                      context,
+                                                      (state as DiscoverBinomesLoadSuccessState)
+                                                          .binomes[0]
+                                                          .associations[index]);
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                        : Text(
+                                            'Aucune association sélectionnée',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          );
+                                  },
                                 ),
                               ],
                             ),
@@ -1574,46 +1590,60 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                       child: CircularProgressIndicator(),
                                     );
                                   }
-                                  return AnimatedSwitcher(
-                                    duration: Duration(milliseconds: 300),
-                                    child: Wrap(
-                                      alignment: WrapAlignment.center,
-                                      key: GlobalKey(),
-                                      spacing: 8,
-                                      runSpacing: 8,
-                                      children: <Widget>[
-                                        for (String matierePreferee in (state
-                                                as DiscoverBinomesLoadSuccessState)
-                                            .binomes[0]
-                                            .matieresPreferees)
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 15.0,
-                                                vertical: 6.0),
-                                            decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.2),
-                                                  spreadRadius: 0.2,
-                                                  blurRadius: 5,
-                                                  offset: Offset(2, 2),
-                                                )
-                                              ],
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10.0)),
-                                              border: Border.all(
-                                                  color: (Theme.of(context)
-                                                      .primaryColor),
-                                                  width: 3.0,
-                                                  style: BorderStyle.solid),
-                                              color: Colors.white,
-                                            ),
-                                            child: Text(matierePreferee),
+                                  return (state as DiscoverBinomesLoadSuccessState)
+                                              .binomes[0]
+                                              .matieresPreferees
+                                              .length >=
+                                          1
+                                      ? AnimatedSwitcher(
+                                          duration: Duration(milliseconds: 300),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            key: GlobalKey(),
+                                            spacing: 8,
+                                            runSpacing: 8,
+                                            children: <Widget>[
+                                              for (String matierePreferee in (state
+                                                      as DiscoverBinomesLoadSuccessState)
+                                                  .binomes[0]
+                                                  .matieresPreferees)
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15.0,
+                                                      vertical: 6.0),
+                                                  decoration: BoxDecoration(
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.2),
+                                                        spreadRadius: 0.2,
+                                                        blurRadius: 5,
+                                                        offset: Offset(2, 2),
+                                                      )
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0)),
+                                                    border: Border.all(
+                                                        color:
+                                                            (Theme.of(context)
+                                                                .primaryColor),
+                                                        width: 3.0,
+                                                        style:
+                                                            BorderStyle.solid),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Text(matierePreferee),
+                                                ),
+                                            ],
                                           ),
-                                      ],
-                                    ),
-                                  );
+                                        )
+                                      : Text('Aucune matière sélectionnée',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                          textAlign: TextAlign.center);
                                 },
                               )
                             ],
@@ -1760,7 +1790,7 @@ class NoMoreDiscoveryBinomesWidget extends StatelessWidget {
                 children: [
                   Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                     return Icon(
-                      Icons.face,
+                      Icons.sentiment_very_dissatisfied_rounded,
                       color: Colors.black87,
                       size: 70,
                     );

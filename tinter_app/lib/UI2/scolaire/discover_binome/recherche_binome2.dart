@@ -32,13 +32,13 @@ class _SearchStudentScolaireTab2State
 
   @protected
   void initState() {
-    if (BlocProvider.of<UserAssociatifSearchBloc>(context).state
-    is UserAssociatifSearchLoadSuccessfulState) {
-      BlocProvider.of<UserAssociatifSearchBloc>(context)
-          .add(UserAssociatifSearchRefreshEvent());
+    if (BlocProvider.of<UserScolaireSearchBloc>(context).state
+    is UserScolaireSearchLoadSuccessfulState) {
+      BlocProvider.of<UserScolaireSearchBloc>(context)
+          .add(UserScolaireSearchRefreshEvent());
     } else {
-      BlocProvider.of<UserAssociatifSearchBloc>(context)
-          .add(UserAssociatifSearchLoadEvent());
+      BlocProvider.of<UserScolaireSearchBloc>(context)
+          .add(UserScolaireSearchLoadEvent());
     }
 
     super.initState();
