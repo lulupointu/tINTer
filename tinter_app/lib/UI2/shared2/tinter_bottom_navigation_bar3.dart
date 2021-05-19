@@ -70,6 +70,7 @@ class _CustomBottomNavigationBar3State
               ],
             ),
             Stack(
+              key: widget.discoverIconKey,
               alignment: Alignment.center,
               children: [
                 Container(
