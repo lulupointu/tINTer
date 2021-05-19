@@ -2,15 +2,14 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/user_scolaire_search/user_scolaire_search_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
 main() => runApp(MaterialApp(
-  home: SearchStudentScolaireTab2(),
-));
+      home: SearchStudentScolaireTab2(),
+    ));
 
 class SearchStudentScolaireTab2 extends StatefulWidget {
   @override
@@ -18,8 +17,7 @@ class SearchStudentScolaireTab2 extends StatefulWidget {
       _SearchStudentScolaireTab2State();
 }
 
-class _SearchStudentScolaireTab2State
-    extends State<SearchStudentScolaireTab2> {
+class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
   final Map<String, double> fractions = {
     'top': 0.2,
     'separator': 0.05,
@@ -33,7 +31,7 @@ class _SearchStudentScolaireTab2State
   @protected
   void initState() {
     if (BlocProvider.of<UserScolaireSearchBloc>(context).state
-    is UserScolaireSearchLoadSuccessfulState) {
+        is UserScolaireSearchLoadSuccessfulState) {
       BlocProvider.of<UserScolaireSearchBloc>(context)
           .add(UserScolaireSearchRefreshEvent());
     } else {
@@ -44,7 +42,7 @@ class _SearchStudentScolaireTab2State
     super.initState();
 
     KeyboardVisibilityController().onChange.listen(
-          (bool visible) {
+      (bool visible) {
         if (!visible) {
           searchBarFocusNode.unfocus();
         }
@@ -71,7 +69,9 @@ class _SearchStudentScolaireTab2State
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          randomGender == Gender.M ? 'Rechercher un étudiant' : 'Rechercher une étudiante',
+          randomGender == Gender.M
+              ? 'Rechercher un étudiant'
+              : 'Rechercher une étudiante',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -100,20 +100,22 @@ class _SearchStudentScolaireTab2State
                           controller: searchController,
                           textInputAction: TextInputAction.search,
                           style:
-                          TextStyle(textBaseline: TextBaseline.alphabetic),
+                              TextStyle(textBaseline: TextBaseline.alphabetic),
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.only(
                                 bottom: 20,
                               ),
-                              labelText: randomGender == Gender.M ? "Nom ou prénom d'un étudiant" : "Nom ou prénom d'une étudiante",
+                              labelText: randomGender == Gender.M
+                                  ? "Nom ou prénom d'un étudiant"
+                                  : "Nom ou prénom d'une étudiante",
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               errorBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
                               floatingLabelBehavior:
-                              FloatingLabelBehavior.never,
+                                  FloatingLabelBehavior.never,
                               labelStyle: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -123,33 +125,33 @@ class _SearchStudentScolaireTab2State
                                 color: Theme.of(context).primaryColor,
                               ),
                               suffixIcon: (changedSearchString?.isCompleted ==
-                                  false)
+                                      false)
                                   ? Image.asset(
-                                'assets/discover/loading.gif',
-                                scale: 4,
-                              )
+                                      'assets/discover/loading.gif',
+                                      scale: 4,
+                                    )
                                   : (searchString != '')
-                                  ? IconButton(
-                                onPressed: () {
-                                  changedSearchString?.cancel();
-                                  searchString = '';
-                                  searchController.clear();
-                                  setState(() {});
-                                },
-                                icon: Icon(
-                                  Icons.close,
-                                  color:
-                                  Theme.of(context).primaryColor,
-                                ),
-                              )
-                                  : null),
+                                      ? IconButton(
+                                          onPressed: () {
+                                            changedSearchString?.cancel();
+                                            searchString = '';
+                                            searchController.clear();
+                                            setState(() {});
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        )
+                                      : null),
                           onChanged: (String text) {
                             changedSearchString?.cancel();
                             setState(() {});
                             changedSearchString =
                                 CancelableOperation.fromFuture(Future.delayed(
-                                  Duration(milliseconds: 500),
-                                )).then((_) => setState(() => searchString = text));
+                              Duration(milliseconds: 500),
+                            )).then((_) => setState(() => searchString = text));
                           },
                         ),
                       ),
@@ -159,62 +161,59 @@ class _SearchStudentScolaireTab2State
               ),
               searchString.isEmpty
                   ? Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: Center(
-                    child: Text(
-                        'Aucune recherche effectuée.',
-                        style: Theme.of(context).textTheme.headline5),
-                  ),
-                ),
-              )
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: Center(
+                          child: Text('Aucune recherche effectuée.',
+                              style: Theme.of(context).textTheme.headline5),
+                        ),
+                      ),
+                    )
                   : Flexible(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onPanDown: (_) {
-                    WidgetsBinding.instance.focusManager.primaryFocus
-                        ?.unfocus();
-                  },
-                  child: SingleChildScrollView(
-                    child: BlocBuilder<UserScolaireSearchBloc,
-                        UserScolaireSearchState>(
-                        builder: (BuildContext context,
-                            UserScolaireSearchState userSearchState) {
-                          if (!(userSearchState
-                          is UserScolaireSearchLoadSuccessfulState))
-                            return Center(
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onPanDown: (_) {
+                          WidgetsBinding.instance.focusManager.primaryFocus
+                              ?.unfocus();
+                        },
+                        child: SingleChildScrollView(
+                          child: BlocBuilder<UserScolaireSearchBloc,
+                                  UserScolaireSearchState>(
+                              builder: (BuildContext context,
+                                  UserScolaireSearchState userSearchState) {
+                            if (!(userSearchState
+                                is UserScolaireSearchLoadSuccessfulState))
+                              return Center(
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            List<SearchedUserScolaire>
+                                _allSearchedUsersScolaires = (userSearchState
+                                        as UserScolaireSearchLoadSuccessfulState)
+                                    .searchedUsers;
+                            RegExp searchedStringRegex =
+                                RegExp(searchString, caseSensitive: false);
+                            List<SearchedUserScolaire> _searchedUsers =
+                                (searchString == '')
+                                    ? []
+                                    : _allSearchedUsersScolaires
+                                        .where((SearchedUserScolaire
+                                                searchedUser) =>
+                                            searchedStringRegex.hasMatch(
+                                                '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
+                                        .toList();
+                            return Column(
+                              children: [
+                                for (SearchedUserScolaire searchedUser
+                                    in _searchedUsers)
+                                  new UserResume(searchedUser),
+                              ],
                             );
-                          List<SearchedUserScolaire>
-                          _allSearchedUsersScolaires = (userSearchState
-                          as UserScolaireSearchLoadSuccessfulState)
-                              .searchedUsers;
-                          _allSearchedUsersScolaires.sort((SearchedUserScolaire searchedUserA,
-                              SearchedUserScolaire searchedUserB) =>
-                              searchedUserA.name
-                                  .toLowerCase()
-                                  .compareTo(searchedUserB.name.toLowerCase()));
-                          RegExp searchedStringRegex = RegExp(searchString, caseSensitive: false);
-                          List<SearchedUserScolaire> _searchedUsers = (searchString == '')
-                          ? []
-                          : _allSearchedUsersScolaires
-                              .where((SearchedUserScolaire searchedUser) =>
-                          searchedStringRegex.hasMatch(
-                          '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
-                              .toList();
-                          return Column(
-                          children: [
-                          for (SearchedUserScolaire searchedUser
-                          in _searchedUsers)
-                          new UserResume(searchedUser),
-                          ],
-                          );
-                        }),
-                  ),
-                ),
-              ),
+                          }),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -285,7 +284,7 @@ class UserResume extends StatelessWidget {
                                           ' ' +
                                           searchedUser.surname,
                                       style:
-                                      Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headline5,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -294,14 +293,14 @@ class UserResume extends StatelessWidget {
                                 GestureDetector(
                                   onTap: () =>
                                       BlocProvider.of<UserScolaireSearchBloc>(
-                                          context)
+                                              context)
                                           .add(searchedUser.liked
-                                          ? UserScolaireSearchIgnoreEvent(
-                                          ignoredSearchedUserScolaire:
-                                          searchedUser)
-                                          : UserScolaireSearchLikeEvent(
-                                          likedSearchedUserScolaire:
-                                          searchedUser)),
+                                              ? UserScolaireSearchIgnoreEvent(
+                                                  ignoredSearchedUserScolaire:
+                                                      searchedUser)
+                                              : UserScolaireSearchLikeEvent(
+                                                  likedSearchedUserScolaire:
+                                                      searchedUser)),
                                   child: Container(
                                     width: searchedUser.liked ? 115 : 90,
                                     height: 25,
@@ -326,7 +325,7 @@ class UserResume extends StatelessWidget {
                                           horizontal: 10.0, vertical: 3.0),
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             searchedUser.liked
@@ -336,14 +335,15 @@ class UserResume extends StatelessWidget {
                                                 .textTheme
                                                 .headline6
                                                 .copyWith(
-                                                color: searchedUser.liked
-                                                    ? Colors.black87
-                                                    : Colors.white),
+                                                    color: searchedUser.liked
+                                                        ? Colors.black87
+                                                        : Colors.white),
                                           ),
                                           Icon(
                                             Icons.favorite,
                                             color: searchedUser.liked
-                                                ? Theme.of(context).indicatorColor
+                                                ? Theme.of(context)
+                                                    .indicatorColor
                                                 : Colors.white,
                                             size: 15,
                                           ),
