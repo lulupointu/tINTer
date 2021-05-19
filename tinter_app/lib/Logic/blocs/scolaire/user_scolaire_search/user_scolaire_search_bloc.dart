@@ -80,6 +80,15 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
       return;
     }
     yield UserScolaireSearchLoadSuccessfulState(searchedUsers: searchedUsers);
+
+    searchedUsers
+        .sort((SearchedUserScolaire searchedUserA, SearchedUserScolaire searchedUserB) {
+      final compareNames =
+      searchedUserA.name.toLowerCase().compareTo(searchedUserB.name.toLowerCase());
+      return (compareNames == 0)
+          ? searchedUserA.surname.toLowerCase().compareTo(searchedUserB.surname.toLowerCase())
+          : compareNames;
+    });
   }
 
   Stream<UserScolaireSearchState> _mapUserScolaireRefreshEventToState() async* {
@@ -100,6 +109,16 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
       yield UserScolaireSearchRefreshingFailedState(
           searchedUsers: (state as UserScolaireSearchLoadSuccessfulState).searchedUsers);
     }
+
+    searchedUsers
+        .sort((SearchedUserScolaire searchedUserA, SearchedUserScolaire searchedUserB) {
+      final compareNames =
+      searchedUserA.name.toLowerCase().compareTo(searchedUserB.name.toLowerCase());
+      return (compareNames == 0)
+          ? searchedUserA.surname.toLowerCase().compareTo(searchedUserB.surname.toLowerCase())
+          : compareNames;
+    });
+
     yield UserScolaireSearchLoadSuccessfulState(searchedUsers: searchedUsers);
   }
 
@@ -121,7 +140,7 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
 
   Stream<UserScolaireSearchState> _mapUserScolaireSearchChangeStatusEventEventToState(
       UserScolaireSearchChangeStatusEvent event) async* {
-    List<SearchedUserScolaire> oldSearchedUsersScolaire =
+    List<SearchedUserScolaire> oldSearchedUsersScolaires =
         (state as UserScolaireSearchLoadSuccessfulState).searchedUsers;
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
@@ -132,19 +151,26 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
 
     print('Getting the new match status');
 
-    SearchedUserScolaire newSearchedUserScolaire = event.searchedUser
-        .rebuild((s) => s..liked = event.newStatus == MatchStatus.ignored ? false : true);
+    SearchedUserScolaire newSearchedUserScolaire = SearchedUserScolaire(
+          (s) => s
+        ..login = event.searchedUser.login
+        ..name = event.searchedUser.name
+        ..surname = event.searchedUser.surname
+        ..score = event.searchedUser.score
+        ..liked = event.newStatus == MatchStatus.ignored ? false : true,
+    );
 
     print('GotIT');
 
-    List<SearchedUserScolaire> newSearchedUsersScolaire =
-        List<SearchedUserScolaire>.from(oldSearchedUsersScolaire);
-    newSearchedUsersScolaire.remove(event.searchedUser);
-    newSearchedUsersScolaire.add(newSearchedUserScolaire);
+    List<SearchedUserScolaire> newSearchedUsersScolaires =
+        List<SearchedUserScolaire>.from(oldSearchedUsersScolaires);
+    var index = newSearchedUsersScolaires.indexOf(event.searchedUser);
+    newSearchedUsersScolaires.remove(event.searchedUser);
+    newSearchedUsersScolaires.insert(index, newSearchedUserScolaire);
 
     print('Replacing the liked or ignored user');
 
-    yield UserScolaireSearchSavingNewStatusState(searchedUsers: newSearchedUsersScolaire);
+    yield UserScolaireSearchSavingNewStatusState(searchedUsers: newSearchedUsersScolaires);
 
     print('Changing state to saving');
 
@@ -159,11 +185,11 @@ class UserScolaireSearchBloc extends Bloc<UserScolaireSearchEvent, UserScolaireS
     } catch (error) {
       print(error);
       yield UserScolaireSearchSavingNewStatusFailedState(
-          searchedUsers: oldSearchedUsersScolaire);
+          searchedUsers: oldSearchedUsersScolaires);
     }
 
     print('YAHE');
-    yield UserScolaireSearchLoadSuccessfulState(searchedUsers: newSearchedUsersScolaire);
+    yield UserScolaireSearchLoadSuccessfulState(searchedUsers: newSearchedUsersScolaires);
   }
 
   void _addError(String error) {

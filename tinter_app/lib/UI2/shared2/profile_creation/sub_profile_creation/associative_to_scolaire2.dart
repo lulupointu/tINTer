@@ -80,7 +80,9 @@ class _AssociativeToScolaire2State extends State<AssociativeToScolaire2> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: AssociativeToScolaireButton(onAccountCreationModeChanged: widget.onAccountCreationModeChanged,),
+            child: AssociativeToScolaireButton(
+              onAccountCreationModeChanged: widget.onAccountCreationModeChanged,
+            ),
           ),
         ],
       ),
@@ -96,7 +98,7 @@ class AssociativeToScolaireProfileHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Container(
-        width: 275,
+        width: 280,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.only(
@@ -112,12 +114,20 @@ class AssociativeToScolaireProfileHeader extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+          padding: const EdgeInsets.only(
+            top: 10.0,
+            bottom: 10.0,
+          ),
           child: Column(
             children: [
-              HoveringUserPicture2(size: 95.0, showModifyOption: false,),
+              HoveringUserPicture2(
+                size: 95.0,
+                showModifyOption: false,
+              ),
               Padding(
-                padding: const EdgeInsets.only(top: 5.0),
+                padding: const EdgeInsets.only(
+                  top: 5.0,
+                ),
                 child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
                     return Text(
@@ -133,7 +143,10 @@ class AssociativeToScolaireProfileHeader extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 5.0, bottom: 3.0, left: 30.0, right: 30.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40.0,
+                  vertical: 5.0,
+                ),
                 child: AssociatifToScolaireButton2(),
               ),
             ],

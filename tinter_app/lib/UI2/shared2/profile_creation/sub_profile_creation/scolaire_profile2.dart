@@ -77,7 +77,7 @@ class ProfileHeader extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 60.0),
             child: Container(
-              width: 275,
+              width: 280,
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.only(

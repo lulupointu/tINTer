@@ -2,27 +2,33 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/user_scolaire_search/user_scolaire_search_bloc.dart';
+import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
+import 'package:tinterapp/UI2/shared2/user_mode.dart';
 
 main() => runApp(MaterialApp(
-      home: SearchStudentScolaireTab2(),
+      home: SearchStudentFactoriseTab(
+        userMode: UserMode.Associatif,
+      ),
     ));
 
-class SearchStudentScolaireTab2 extends StatefulWidget {
+class SearchStudentFactoriseTab extends StatefulWidget {
+  final UserMode userMode;
+
+  const SearchStudentFactoriseTab({Key key, @required this.userMode})
+      : super(key: key);
+
   @override
-  _SearchStudentScolaireTab2State createState() =>
-      _SearchStudentScolaireTab2State();
+  _SearchStudentFactoriseTabState createState() =>
+      _SearchStudentFactoriseTabState();
 }
 
-class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
-  final Map<String, double> fractions = {
-    'top': 0.2,
-    'separator': 0.05,
-  };
-
+class _SearchStudentFactoriseTabState extends State<SearchStudentFactoriseTab> {
   FocusNode searchBarFocusNode = FocusNode();
   String searchString = '';
   CancelableOperation changedSearchString;
@@ -30,13 +36,28 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
 
   @protected
   void initState() {
-    if (BlocProvider.of<UserScolaireSearchBloc>(context).state
-        is UserScolaireSearchLoadSuccessfulState) {
-      BlocProvider.of<UserScolaireSearchBloc>(context)
-          .add(UserScolaireSearchRefreshEvent());
+    if (widget.userMode == UserMode.Associatif) {
+      if (BlocProvider.of<UserAssociatifSearchBloc>(context).state
+          is UserAssociatifSearchLoadSuccessfulState) {
+        BlocProvider.of<UserAssociatifSearchBloc>(context).add(
+          UserAssociatifSearchRefreshEvent(),
+        );
+      } else {
+        BlocProvider.of<UserAssociatifSearchBloc>(context).add(
+          UserAssociatifSearchLoadEvent(),
+        );
+      }
     } else {
-      BlocProvider.of<UserScolaireSearchBloc>(context)
-          .add(UserScolaireSearchLoadEvent());
+      if (BlocProvider.of<UserScolaireSearchBloc>(context).state
+          is UserScolaireSearchLoadSuccessfulState) {
+        BlocProvider.of<UserScolaireSearchBloc>(context).add(
+          UserScolaireSearchRefreshEvent(),
+        );
+      } else {
+        BlocProvider.of<UserScolaireSearchBloc>(context).add(
+          UserScolaireSearchLoadEvent(),
+        );
+      }
     }
 
     super.initState();
@@ -72,11 +93,16 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
           randomGender == Gender.M
               ? 'Rechercher un étudiant'
               : 'Rechercher une étudiante',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 20.0,
+        ),
         child: Card(
           child: Column(
             children: [
@@ -85,10 +111,13 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
-                        color: Theme.of(context).primaryColor,
-                        width: 2.0,
-                        style: BorderStyle.solid),
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      color: Theme.of(context).primaryColor,
+                      width: 2.0,
+                      style: BorderStyle.solid,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5.0),
+                    ),
                   ),
                   child: Card(
                     child: Center(
@@ -99,8 +128,9 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
                           focusNode: searchBarFocusNode,
                           controller: searchController,
                           textInputAction: TextInputAction.search,
-                          style:
-                              TextStyle(textBaseline: TextBaseline.alphabetic),
+                          style: TextStyle(
+                            textBaseline: TextBaseline.alphabetic,
+                          ),
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.only(
@@ -162,10 +192,14 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
               searchString.isEmpty
                   ? Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
+                        padding: const EdgeInsets.only(
+                          bottom: 15.0,
+                        ),
                         child: Center(
-                          child: Text('Aucune recherche effectuée.',
-                              style: Theme.of(context).textTheme.headline5),
+                          child: Text(
+                            'Aucune recherche effectuée.',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
                         ),
                       ),
                     )
@@ -176,42 +210,13 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
                           WidgetsBinding.instance.focusManager.primaryFocus
                               ?.unfocus();
                         },
-                        child: SingleChildScrollView(
-                          child: BlocBuilder<UserScolaireSearchBloc,
-                                  UserScolaireSearchState>(
-                              builder: (BuildContext context,
-                                  UserScolaireSearchState userSearchState) {
-                            if (!(userSearchState
-                                is UserScolaireSearchLoadSuccessfulState))
-                              return Center(
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            List<SearchedUserScolaire>
-                                _allSearchedUsersScolaires = (userSearchState
-                                        as UserScolaireSearchLoadSuccessfulState)
-                                    .searchedUsers;
-                            RegExp searchedStringRegex =
-                                RegExp(searchString, caseSensitive: false);
-                            List<SearchedUserScolaire> _searchedUsers =
-                                (searchString == '')
-                                    ? []
-                                    : _allSearchedUsersScolaires
-                                        .where((SearchedUserScolaire
-                                                searchedUser) =>
-                                            searchedStringRegex.hasMatch(
-                                                '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
-                                        .toList();
-                            return Column(
-                              children: [
-                                for (SearchedUserScolaire searchedUser
-                                    in _searchedUsers)
-                                  new UserResume(searchedUser),
-                              ],
-                            );
-                          }),
-                        ),
+                        child: widget.userMode == UserMode.Associatif
+                            ? AssociatifStudentListView(
+                                searchString: searchString,
+                              )
+                            : ScolaireStudentListView(
+                                searchString: searchString,
+                              ),
                       ),
                     ),
             ],
@@ -222,10 +227,146 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
   }
 }
 
-class UserResume extends StatelessWidget {
-  final SearchedUserScolaire searchedUser;
+class AssociatifStudentListView extends StatefulWidget {
+  final String searchString;
 
-  UserResume(this.searchedUser);
+  const AssociatifStudentListView({Key key, @required this.searchString})
+      : super(key: key);
+
+  @override
+  _AssociatifStudentListViewState createState() =>
+      _AssociatifStudentListViewState();
+}
+
+class _AssociatifStudentListViewState extends State<AssociatifStudentListView> {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: BlocBuilder<UserAssociatifSearchBloc, UserAssociatifSearchState>(
+          builder: (BuildContext context,
+              UserAssociatifSearchState userSearchState) {
+        if (!(userSearchState is UserAssociatifSearchLoadSuccessfulState))
+          return Center(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        List<SearchedUserAssociatif> _allSearchedUsersAssociatifs =
+            (userSearchState as UserAssociatifSearchLoadSuccessfulState)
+                .searchedUsers;
+        RegExp searchedStringRegex =
+            RegExp(widget.searchString, caseSensitive: false);
+        List<SearchedUserAssociatif> _searchedUsers =
+            (widget.searchString == '')
+                ? []
+                : _allSearchedUsersAssociatifs
+                    .where(
+                      (SearchedUserAssociatif searchedUser) =>
+                          searchedStringRegex.hasMatch(
+                              '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'),
+                    )
+                    .toList();
+        return Column(
+          children: [
+            for (SearchedUserAssociatif searchedUser in _searchedUsers)
+              new UserResume(
+                searchedUserAssociatif: searchedUser,
+                searchedUserScolaire: null,
+                userMode: UserMode.Associatif,
+              ),
+          ],
+        );
+      }),
+    );
+  }
+}
+
+class ScolaireStudentListView extends StatefulWidget {
+  final String searchString;
+
+  const ScolaireStudentListView({Key key, @required this.searchString})
+      : super(key: key);
+
+  @override
+  _ScolaireStudentListViewState createState() =>
+      _ScolaireStudentListViewState();
+}
+
+class _ScolaireStudentListViewState extends State<ScolaireStudentListView> {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: BlocBuilder<UserScolaireSearchBloc, UserScolaireSearchState>(
+          builder:
+              (BuildContext context, UserScolaireSearchState userSearchState) {
+        if (!(userSearchState is UserScolaireSearchLoadSuccessfulState))
+          return Center(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        List<SearchedUserScolaire> _allSearchedUsersScolaires =
+            (userSearchState as UserScolaireSearchLoadSuccessfulState)
+                .searchedUsers;
+        _allSearchedUsersScolaires.sort((SearchedUserScolaire searchedUserA,
+                SearchedUserScolaire searchedUserB) =>
+            searchedUserA.name
+                .toLowerCase()
+                .compareTo(searchedUserB.name.toLowerCase()));
+        RegExp searchedStringRegex =
+            RegExp(widget.searchString, caseSensitive: false);
+        List<SearchedUserScolaire> _searchedUsers = (widget.searchString == '')
+            ? []
+            : _allSearchedUsersScolaires
+                .where((SearchedUserScolaire searchedUser) =>
+                    searchedStringRegex.hasMatch(
+                        '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
+                .toList();
+        return Column(
+          children: [
+            for (SearchedUserScolaire searchedUser in _searchedUsers)
+              new UserResume(
+                searchedUserAssociatif: null,
+                searchedUserScolaire: searchedUser,
+                userMode: UserMode.Scolaire,
+              ),
+          ],
+        );
+      }),
+    );
+  }
+}
+
+class UserResume extends StatefulWidget {
+  final SearchedUserAssociatif searchedUserAssociatif;
+  final SearchedUserScolaire searchedUserScolaire;
+  final UserMode userMode;
+
+  UserResume(
+      {@required this.searchedUserAssociatif,
+      @required this.searchedUserScolaire,
+      @required this.userMode});
+
+  @override
+  _UserResumeState createState() => _UserResumeState();
+}
+
+class _UserResumeState extends State<UserResume> {
+  var searchedUser;
+
+  void setSearchedUser() {
+    if (widget.userMode == UserMode.Scolaire) {
+      searchedUser = widget.searchedUserScolaire;
+    } else {
+      searchedUser = widget.searchedUserAssociatif;
+    }
+  }
+
+  @override
+  void initState() {
+    setSearchedUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -261,9 +402,9 @@ class UserResume extends StatelessWidget {
                                 style: BorderStyle.solid),
                           ),
                           child: getProfilePictureFromLogin(
-                            login: searchedUser.login,
                             height: 60,
                             width: 60,
+                            login: searchedUser.login,
                           ),
                         ),
                       ),
@@ -291,7 +432,19 @@ class UserResume extends StatelessWidget {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () =>
+                                  onTap: () {
+                                    if (widget.userMode ==
+                                        UserMode.Associatif) {
+                                      BlocProvider.of<UserAssociatifSearchBloc>(
+                                              context)
+                                          .add(searchedUser.liked
+                                              ? UserAssociatifSearchIgnoreEvent(
+                                                  ignoredSearchedUserAssociatif:
+                                                      searchedUser)
+                                              : UserAssociatifSearchLikeEvent(
+                                                  likedSearchedUserAssociatif:
+                                                      searchedUser));
+                                    } else {
                                       BlocProvider.of<UserScolaireSearchBloc>(
                                               context)
                                           .add(searchedUser.liked
@@ -300,7 +453,9 @@ class UserResume extends StatelessWidget {
                                                       searchedUser)
                                               : UserScolaireSearchLikeEvent(
                                                   likedSearchedUserScolaire:
-                                                      searchedUser)),
+                                                      searchedUser));
+                                    }
+                                  },
                                   child: Container(
                                     width: searchedUser.liked ? 115 : 90,
                                     height: 25,
@@ -361,7 +516,10 @@ class UserResume extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 10.0, left: 5.0),
+                  padding: const EdgeInsets.only(
+                    right: 10.0,
+                    left: 5.0,
+                  ),
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(

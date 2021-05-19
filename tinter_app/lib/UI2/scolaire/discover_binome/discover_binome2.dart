@@ -15,8 +15,10 @@ import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
+import 'package:tinterapp/UI2/associatif/discover/recherche_etudiant_factorise.dart';
 import 'package:tinterapp/UI2/scolaire/discover_binome/recherche_binome2.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
+import 'package:tinterapp/UI2/shared2/user_mode.dart';
 
 class DiscoverBinomeTab2 extends StatelessWidget {
   @override
@@ -161,7 +163,9 @@ class ScolaireStudentSearch extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SearchStudentScolaireTab2()),
+          MaterialPageRoute(
+            builder: (context) => SearchStudentScolaireTab2(),
+          ),
         );
       },
       child: Container(

@@ -66,7 +66,8 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => OptionsTab2()),
+                            MaterialPageRoute(
+                                builder: (context) => OptionsTab2()),
                           );
                         },
                         icon: Consumer<TinterTheme>(
@@ -83,8 +84,8 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-                  child:
-                      Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                  child: Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) {
                     return AnimatedSwitcher(
                       duration: Duration(milliseconds: 300),
                       transitionBuilder:
@@ -126,57 +127,56 @@ class ExistingProfileHeader extends StatelessWidget {
     return Column(
       children: [
         Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60.0),
-            child: Container(
-              width: 275,
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10.0),
-                    bottomRight: Radius.circular(10.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(1, 1),
+          child: Container(
+            width: 280,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10.0),
+                  bottomRight: Radius.circular(10.0)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 2,
+                  offset: Offset(1, 1),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Column(
+                children: [
+                  HoveringUserPicture2(
+                    size: 95.0,
+                    showModifyOption: true,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: BlocBuilder<UserBloc, UserState>(
+                      builder: (BuildContext context, UserState userState) {
+                        return Text(
+                          ((userState is UserLoadSuccessState))
+                              ? userState.user.name +
+                                  " " +
+                                  userState.user.surname
+                              : 'En chargement...',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              .copyWith(color: Colors.white),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40.0,
+                      vertical: 5.0,
+                    ),
+                    child: AssociatifToScolaireButton2(),
                   ),
                 ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Column(
-                  children: [
-                    HoveringUserPicture2(
-                      size: 95.0,
-                      showModifyOption: true,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: BlocBuilder<UserBloc, UserState>(
-                        builder: (BuildContext context, UserState userState) {
-                          return Text(
-                            ((userState is UserLoadSuccessState))
-                                ? userState.user.name +
-                                    " " +
-                                    userState.user.surname
-                                : 'En chargement...',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline4
-                                .copyWith(color: Colors.white),
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 5.0, bottom: 3.0, left: 30.0, right: 30.0),
-                      child: AssociatifToScolaireButton2(),
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
@@ -318,8 +318,8 @@ class SaveModificationsOverlay extends StatelessWidget {
                                           .textTheme
                                           .headline5
                                           .copyWith(
-                                        color: Colors.white,
-                                      ),
+                                            color: Colors.white,
+                                          ),
                                     ),
                                   ),
                                 ),
