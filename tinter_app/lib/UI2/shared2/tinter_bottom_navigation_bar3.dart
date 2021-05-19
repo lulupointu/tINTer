@@ -31,7 +31,9 @@ class _CustomBottomNavigationBar3State
     return Container(
       height: 60,
       width: MediaQuery.of(context).size.width,
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: Theme.of(context).scaffoldBackgroundColor.withOpacity(
+            0.95,
+          ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 60.0),
         child: Row(

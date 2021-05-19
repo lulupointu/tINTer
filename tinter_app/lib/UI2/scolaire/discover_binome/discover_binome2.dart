@@ -36,6 +36,7 @@ class DiscoverBinomeTab2 extends StatelessWidget {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
+        bottom: false,
         child: BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(builder:
             (BuildContext context, DiscoverBinomesState discoverBinomesState) {
           return LayoutBuilder(

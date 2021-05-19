@@ -36,6 +36,7 @@ class DiscoverBinomePairTab2 extends StatelessWidget {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
+        bottom: false,
         child: BlocBuilder<DiscoverBinomePairMatchesBloc, DiscoverBinomePairMatchesState>(builder:
             (BuildContext context, DiscoverBinomePairMatchesState discoverBinomePairMatchesState) {
           return LayoutBuilder(

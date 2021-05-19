@@ -33,6 +33,7 @@ class DiscoverAssociatifTab2 extends StatelessWidget implements TinterTab {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
+        bottom: false,
         child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(builder:
             (BuildContext context, DiscoverMatchesState discoverMatchesState) {
           return LayoutBuilder(

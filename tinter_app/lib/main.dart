@@ -47,6 +47,7 @@ import 'UI/shared/shared_element/homogenius_rounded_rectslider_trackshape.dart';
 import 'UI2/associatif/discover/discover2.dart';
 import 'UI2/scolaire/discover_scolaire_tab2.dart';
 import 'UI2/shared2/login2.dart';
+import 'UI2/shared2/stack_overflow_custom_BNB.dart';
 import 'UI2/shared2/tinter_bottom_navigation_bar3.dart';
 import 'UI2/shared2/user_profile/user_profile2.dart';
 

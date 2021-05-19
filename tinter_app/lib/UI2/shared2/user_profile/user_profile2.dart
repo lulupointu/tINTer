@@ -53,6 +53,7 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
     return Container(
       color: Theme.of(context).primaryColor,
       child: SafeArea(
+        bottom: false,
         child: Scaffold(
           body: SingleChildScrollView(
             child: Column(
