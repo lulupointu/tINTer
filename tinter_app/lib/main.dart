@@ -67,60 +67,45 @@ main() {
       AuthenticationRepository(tinterAPIClient: tinterAPIClient);
 
   final NotificationRepository notificationRepository = NotificationRepository(
-      tinterAPIClient: tinterAPIClient,
-      authenticationRepository: authenticationRepository);
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   final UserRepository userRepository = UserRepository(
-      tinterAPIClient: tinterAPIClient,
-      authenticationRepository: authenticationRepository);
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   final BinomePairRepository binomePairRepository = BinomePairRepository(
-      tinterAPIClient: tinterAPIClient,
-      authenticationRepository: authenticationRepository);
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  final MatchedMatchesRepository matchedMatchesRepository =
-      MatchedMatchesRepository(
-          tinterAPIClient: tinterAPIClient,
-          authenticationRepository: authenticationRepository);
+  final MatchedMatchesRepository matchedMatchesRepository = MatchedMatchesRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  final DiscoverMatchesRepository discoverMatchesRepository =
-      DiscoverMatchesRepository(
-          tinterAPIClient: tinterAPIClient,
-          authenticationRepository: authenticationRepository);
+  final DiscoverMatchesRepository discoverMatchesRepository = DiscoverMatchesRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  final MatchedBinomesRepository matchedBinomesRepository =
-      MatchedBinomesRepository(
-          tinterAPIClient: tinterAPIClient,
-          authenticationRepository: authenticationRepository);
+  final MatchedBinomesRepository matchedBinomesRepository = MatchedBinomesRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  final DiscoverBinomesRepository discoverBinomesRepository =
-      DiscoverBinomesRepository(
-          tinterAPIClient: tinterAPIClient,
-          authenticationRepository: authenticationRepository);
+  final DiscoverBinomesRepository discoverBinomesRepository = DiscoverBinomesRepository(
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   final MatchedBinomePairMatchesRepository matchedBinomePairMatchesRepository =
       MatchedBinomePairMatchesRepository(
           tinterAPIClient: tinterAPIClient,
           authenticationRepository: authenticationRepository);
 
-  final DiscoverBinomePairMatchesRepository
-      discoverBinomePairMatchesRepository = DiscoverBinomePairMatchesRepository(
+  final DiscoverBinomePairMatchesRepository discoverBinomePairMatchesRepository =
+      DiscoverBinomePairMatchesRepository(
           tinterAPIClient: tinterAPIClient,
           authenticationRepository: authenticationRepository);
 
   final AssociationsRepository associationsRepository = AssociationsRepository(
-      tinterAPIClient: tinterAPIClient,
-      authenticationRepository: authenticationRepository);
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
   final MatieresRepository matieresRepository = MatieresRepository(
-      tinterAPIClient: tinterAPIClient,
-      authenticationRepository: authenticationRepository);
+      tinterAPIClient: tinterAPIClient, authenticationRepository: authenticationRepository);
 
-  notificationHandler =
-      NotificationHandler(notificationRepository: notificationRepository);
+  notificationHandler = NotificationHandler(notificationRepository: notificationRepository);
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
     runApp(
       KeyboardVisibilityProvider(
         child: KeyboardVisibilityBuilder(
@@ -129,117 +114,97 @@ main() {
               WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
             return KeyboardDismissOnTap(
               child: BlocProvider(
-                create: (BuildContext context) => AuthenticationBloc(
-                    authenticationRepository: authenticationRepository),
+                create: (BuildContext context) =>
+                    AuthenticationBloc(authenticationRepository: authenticationRepository),
                 child: MultiBlocProvider(
                   providers: [
                     BlocProvider<UserBloc>(
                       create: (BuildContext context) => UserBloc(
                         userRepository: userRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<BinomePairBloc>(
                       create: (BuildContext context) => BinomePairBloc(
                         binomePairRepository: binomePairRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<MatchedMatchesBloc>(
                       create: (BuildContext context) => MatchedMatchesBloc(
                         matchedMatchesRepository: matchedMatchesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<DiscoverMatchesBloc>(
                       create: (BuildContext context) => DiscoverMatchesBloc(
                         discoverMatchesRepository: discoverMatchesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<MatchedBinomesBloc>(
                       create: (BuildContext context) => MatchedBinomesBloc(
                         matchedBinomesRepository: matchedBinomesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<DiscoverBinomesBloc>(
                       create: (BuildContext context) => DiscoverBinomesBloc(
                         discoverBinomesRepository: discoverBinomesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<MatchedBinomePairMatchesBloc>(
-                      create: (BuildContext context) =>
-                          MatchedBinomePairMatchesBloc(
-                        matchedBinomePairMatchesRepository:
-                            matchedBinomePairMatchesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                      create: (BuildContext context) => MatchedBinomePairMatchesBloc(
+                        matchedBinomePairMatchesRepository: matchedBinomePairMatchesRepository,
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<DiscoverBinomePairMatchesBloc>(
-                      create: (BuildContext context) =>
-                          DiscoverBinomePairMatchesBloc(
+                      create: (BuildContext context) => DiscoverBinomePairMatchesBloc(
                         discoverBinomePairMatchesRepository:
                             discoverBinomePairMatchesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<UserAssociatifSearchBloc>(
-                      create: (BuildContext context) =>
-                          UserAssociatifSearchBloc(
+                      create: (BuildContext context) => UserAssociatifSearchBloc(
                         userRepository: userRepository,
                         matchedMatchesRepository: matchedMatchesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<UserScolaireSearchBloc>(
                       create: (BuildContext context) => UserScolaireSearchBloc(
                         userRepository: userRepository,
                         matchedBinomesRepository: matchedBinomesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<BinomePairSearchBloc>(
                       create: (BuildContext context) => BinomePairSearchBloc(
                         binomePairRepository: binomePairRepository,
-                        matchedBinomePairMatchesRepository:
-                            matchedBinomePairMatchesRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        matchedBinomePairMatchesRepository: matchedBinomePairMatchesRepository,
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<AssociationsBloc>(
                       create: (BuildContext context) => AssociationsBloc(
                         associationsRepository: associationsRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                     BlocProvider<MatieresBloc>(
                       create: (BuildContext context) => MatieresBloc(
                         matieresRepository: matieresRepository,
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
+                        authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
                       ),
                     ),
                   ],
                   child: MultiProvider(
                     providers: [
-                      ChangeNotifierProvider<TinterTheme>(
-                          create: (_) => TinterTheme()),
-                      ChangeNotifierProvider<TinterTabs>(
-                          create: (_) => TinterTabs()),
+                      ChangeNotifierProvider<TinterTheme>(create: (_) => TinterTheme()),
+                      ChangeNotifierProvider<TinterTabs>(create: (_) => TinterTabs()),
                       ChangeNotifierProvider<SelectedScolaire>(
                           create: (_) => SelectedScolaire()),
                       ChangeNotifierProvider<SelectedAssociatif>(
@@ -262,20 +227,17 @@ main() {
                         ),
                         elevatedButtonTheme: ElevatedButtonThemeData(
                           style: ButtonStyle(
-                            minimumSize:
-                                (MaterialStateProperty.all(Size(250, 50))),
+                            minimumSize: (MaterialStateProperty.all(Size(250, 50))),
                             textStyle: MaterialStateProperty.all(TextStyle(
                               color: Colors.white,
                               fontSize: 15.0,
                             )),
-                            shadowColor:
-                                MaterialStateProperty.all(Colors.black),
+                            shadowColor: MaterialStateProperty.all(Colors.black),
                             elevation: MaterialStateProperty.all(5.0),
                             backgroundColor: MaterialStateProperty.resolveWith(
-                              (states) =>
-                                  states.contains(MaterialState.disabled)
-                                      ? Color(0xffBCBCBC)
-                                      : Color(0xff79BFC9),
+                              (states) => states.contains(MaterialState.disabled)
+                                  ? Color(0xffBCBCBC)
+                                  : Color(0xff79BFC9),
                             ),
                           ),
                         ),
@@ -289,18 +251,12 @@ main() {
                           toolbarTextStyle: TextStyle(color: Colors.white),
                         ),
                         textTheme: TextTheme(
-                          headline1:
-                              TextStyle(fontSize: 60, color: Colors.black87),
-                          headline2:
-                              TextStyle(fontSize: 50, color: Colors.black87),
-                          headline3:
-                              TextStyle(fontSize: 30, color: Colors.black87),
-                          headline4:
-                              TextStyle(fontSize: 20, color: Colors.black87),
-                          headline5:
-                              TextStyle(fontSize: 15, color: Colors.black87),
-                          headline6:
-                              TextStyle(fontSize: 12, color: Colors.black87),
+                          headline1: TextStyle(fontSize: 60, color: Colors.black87),
+                          headline2: TextStyle(fontSize: 50, color: Colors.black87),
+                          headline3: TextStyle(fontSize: 30, color: Colors.black87),
+                          headline4: TextStyle(fontSize: 20, color: Colors.black87),
+                          headline5: TextStyle(fontSize: 15, color: Colors.black87),
+                          headline6: TextStyle(fontSize: 12, color: Colors.black87),
                         ),
                         fontFamily: 'OpenSans',
                         sliderTheme: SliderThemeData(
@@ -347,8 +303,8 @@ class Tinter extends StatelessWidget {
         // next check on the user state
         return BlocBuilder<UserBloc, UserState>(
           buildWhen: (UserState previousUserState, UserState userState) {
-            if (previousUserState is KnownUserState &&
-                userState is KnownUserState) return false;
+            if (previousUserState is KnownUserState && userState is KnownUserState)
+              return false;
             return true;
           },
           builder: (BuildContext context, UserState userState) {
@@ -366,19 +322,17 @@ class Tinter extends StatelessWidget {
               if (userState.user.year == TSPYear.TSP1A &&
                   userState.user.school == School.TSP) {
                 return BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(
-                  buildWhen: (MatchedBinomesState
-                          previousMatchedBinomePairMatchesState,
+                  buildWhen: (MatchedBinomesState previousMatchedBinomePairMatchesState,
                       MatchedBinomesState matchedBinomePairMatchesState) {
                     if (previousMatchedBinomePairMatchesState
                             is MatchedBinomesLoadSuccessState &&
-                        matchedBinomePairMatchesState
-                            is MatchedBinomesLoadSuccessState) return false;
+                        matchedBinomePairMatchesState is MatchedBinomesLoadSuccessState)
+                      return false;
                     return true;
                   },
                   builder: (BuildContext context,
                       MatchedBinomesState matchedBinomePairMatchesState) {
-                    if (matchedBinomePairMatchesState
-                            is MatchedBinomesInitialState ||
+                    if (matchedBinomePairMatchesState is MatchedBinomesInitialState ||
                         matchedBinomePairMatchesState
                             is MatchedBinomesHasBinomePairCheckedFailedState) {
                       BlocProvider.of<MatchedBinomesBloc>(context)
@@ -395,8 +349,7 @@ class Tinter extends StatelessWidget {
               }
               return TinterHome();
             }
-            return Center(
-                child: Text('Error, Unknown state: ${userState.runtimeType}'));
+            return Center(child: Text('Error, Unknown state: ${userState.runtimeType}'));
           },
         );
       },
@@ -405,16 +358,8 @@ class Tinter extends StatelessWidget {
 }
 
 class TinterHome extends StatefulWidget {
-  final List<TinterTab> tabsAssociatif = [
-    MatchsTab(),
-    DiscoverAssociatifTab2(),
-    UserTab3()
-  ];
-  final List<TinterTab> tabsScolaire = [
-    BinomesTab(),
-    DiscoverScolaireTab(),
-    UserTab3()
-  ];
+  final List<TinterTab> tabsAssociatif = [MatchsTab(), DiscoverAssociatifTab2(), UserTab3()];
+  final List<TinterTab> tabsScolaire = [BinomesTab(), DiscoverScolaireTab(), UserTab3()];
 
   // final List<Widget> tabsAssociatif = [MatchsTab(), DiscoverAssociatifTab(), UserTab()];
   // final List<Widget> tabsScolaire = [BinomesTab(), DiscoverBinomeTab(), UserTab()];
@@ -448,8 +393,7 @@ class _TinterHomeState extends State<TinterHome> {
               extendBody: true,
               bottomNavigationBar: CustomBottomNavigationBar3(
                 onTap: (int index) =>
-                    Provider.of<TinterTabs>(context, listen: false)
-                        .selectedTabIndex = index,
+                    Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = index,
                 selectedIndex: tinterTabs.selectedTabIndex,
                 discoverIconKey: discoverIconKey,
               ),
@@ -470,41 +414,36 @@ class _TinterHomeState extends State<TinterHome> {
                     builder: (BuildContext context,
                         MatchedBinomesState matchedBinomePairMatchesState) {
                       // If MatchedBinomesState is in InitState, this means that the user is not a 1A
-                      if (matchedBinomePairMatchesState
-                          is MatchedBinomesInitialState) {
+                      if (matchedBinomePairMatchesState is MatchedBinomesInitialState) {
                         print('DISPLAY KJHDKSHDKQ');
                         return (tinterTheme.theme == MyTheme.dark)
                             ? widget.tabsAssociatif[tinterTabs.selectedTabIndex]
                             : widget.tabsScolaire[tinterTabs.selectedTabIndex];
                       }
                       bool _hasEverHadBinome =
-                          sharedPreferences.data.getBool('hasEverHadBinome') ??
-                              false;
+                          sharedPreferences.data.getBool('hasEverHadBinome') ?? false;
                       if ((matchedBinomePairMatchesState
                                   as MatchedBinomesHasBinomePairCheckedSuccessState)
                               .hasBinomePair &&
                           !_hasEverHadBinome &&
                           introduceBinomeOfBinomeOverlayEntry == null) {
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((timeStamp) {
+                        final overlay = Overlay.of(context);
+                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                           tinterTheme.theme = MyTheme.light;
-                          Provider.of<TinterTabs>(context, listen: false)
-                              .selectedTabIndex = 0;
+                          Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = 0;
 
                           introduceBinomeOfBinomeOverlayEntry = OverlayEntry(
                             builder: (context) {
                               return IntroduceBinomeOfBinomeOverlay(
-                                removeSelf: () =>
-                                    removeIntroduceBinomeOfBinomeOverlay(
-                                        context, sharedPreferences.data),
+                                removeSelf: () => removeIntroduceBinomeOfBinomeOverlay(
+                                    context, sharedPreferences.data),
                                 discoverIconKey: discoverIconKey,
                               );
                             },
                           );
                           // Wait for the animation of the bottom nav bar
                           Future.delayed(Duration(milliseconds: 500), () {
-                            Overlay.of(context)
-                                .insert(introduceBinomeOfBinomeOverlayEntry);
+                            overlay.insert(introduceBinomeOfBinomeOverlayEntry);
                           });
                         });
                       }
@@ -548,8 +487,7 @@ class IntroduceBinomeOfBinomeOverlay extends StatelessWidget {
   final VoidCallback removeSelf;
   final GlobalKey discoverIconKey;
 
-  IntroduceBinomeOfBinomeOverlay(
-      {@required this.removeSelf, @required this.discoverIconKey});
+  IntroduceBinomeOfBinomeOverlay({@required this.removeSelf, @required this.discoverIconKey});
 
   @override
   Widget build(BuildContext context) {
@@ -559,12 +497,10 @@ class IntroduceBinomeOfBinomeOverlay extends StatelessWidget {
 
     return GestureDetector(
       onTapUp: (details) {
-        if (details.globalPosition.dx <
-                buttonOffset.dx + buttonSize.width + 10 &&
+        if (details.globalPosition.dx < buttonOffset.dx + buttonSize.width + 10 &&
             details.globalPosition.dx > buttonOffset.dx - 10 &&
             details.globalPosition.dy > buttonOffset.dy + 10 &&
-            details.globalPosition.dy <
-                buttonOffset.dy + buttonSize.height - 10) {
+            details.globalPosition.dy < buttonOffset.dy + buttonSize.height - 10) {
           removeSelf();
         }
       },
@@ -578,13 +514,11 @@ class IntroduceBinomeOfBinomeOverlay extends StatelessWidget {
             color: Colors.black54,
             child: FractionallySizedBox(
               widthFactor: 0.85,
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                 return Center(
                   child: Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 15.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
@@ -594,9 +528,8 @@ class IntroduceBinomeOfBinomeOverlay extends StatelessWidget {
                           ),
                           Text(
                             'Nouvelle fonctionnalitée!',
-                            style: tinterTheme.textStyle.headline2.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
+                            style: tinterTheme.textStyle.headline2
+                                .copyWith(color: Colors.black, fontWeight: FontWeight.w500),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(
@@ -639,8 +572,8 @@ class InvertedClipperDiscoverIcon extends CustomClipper<Path> {
     return Path()
       ..addRect(Rect.fromLTWH(0, 0, size.width, size.height))
       ..addOval(Rect.fromCircle(
-        center: Offset(buttonOffset.dx + buttonSize.width / 2,
-            buttonOffset.dy + buttonSize.height / 2),
+        center: Offset(
+            buttonOffset.dx + buttonSize.width / 2, buttonOffset.dy + buttonSize.height / 2),
         radius: buttonSize.width / 2 + 10,
       ))
       ..fillType = PathFillType.evenOdd;
