@@ -9,7 +9,7 @@ class AssociatifToScolaireButton2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return SizedBox(
-        height: 28,
+        height: 30,
         child: Stack(
           children: [
             Container(
@@ -17,7 +17,7 @@ class AssociatifToScolaireButton2 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.0),
                 border: Border.all(
                   color: Colors.white,
-                  width: 3.0,
+                  width: 2.5,
                   style: BorderStyle.solid,
                 ),
                 //color: tinterTheme.colors.primaryAccent,
@@ -44,9 +44,17 @@ class AssociatifToScolaireButton2 extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(
                         color: Colors.white,
-                        width: 3.0,
+                        width: 2.5,
                         style: BorderStyle.solid),
                     borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 3,
+                        offset: tinterTheme.theme == MyTheme.dark ? Offset(3, 0) : Offset(-3, 0),
+                      ),
+                    ],
                     //color: tinterTheme.colors.primary,
                     color: tinterTheme.theme == MyTheme.dark
                         ? Theme.of(context).primaryColor
@@ -73,10 +81,13 @@ class AssociatifToScolaireButton2 extends StatelessWidget {
                                 end: tinterTheme.colors.defaultTextColor),
                             duration: Duration(milliseconds: 200),
                             builder: (context, animatedColor, child) {
-                              return Text(
-                                'associatif',
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 16),
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 1.0),
+                                child: Text(
+                                  'associatif',
+                                  style: TextStyle(
+                                      color: Colors.black87, fontSize: 16),
+                                ),
                               );
                             }),
                       ),
@@ -90,9 +101,12 @@ class AssociatifToScolaireButton2 extends StatelessWidget {
                         //   Provider.of<TinterTheme>(context, listen: false).changeTheme();
                       },
                       child: Center(
-                        child: Text(
-                          'scolaire',
-                          style: TextStyle(color: Colors.black87, fontSize: 16),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 1.0),
+                          child: Text(
+                            'scolaire',
+                            style: TextStyle(color: Colors.black87, fontSize: 16),
+                          ),
                         ),
                       ),
                     ),
