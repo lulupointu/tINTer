@@ -19,6 +19,7 @@ import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
+import 'package:tinterapp/UI2/scolaire/discover_quadrinome/recherche_binome_pair2.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
 import '../mode_scolaire_overlay.dart';
@@ -192,7 +193,7 @@ class BinomePairStudentSearch extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SearchStudentBinomePairTab(),
+            builder: (context) => SearchStudentBinomePairTab2(),
           ),
         );
       },
