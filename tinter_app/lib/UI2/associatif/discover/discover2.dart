@@ -1533,7 +1533,11 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
                         height: 10,
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        padding: const EdgeInsets.only(
+                          left: 20.0,
+                          right: 20.0,
+                          bottom: 60.0,
+                        ),
                         child: AutoSizeText(
                           "Il n'y a plus de matchs à découvrir pour l'instant. Demande à d'autres étudiant.e.s de s'inscrire !",
                           style: Theme.of(context)
