@@ -897,118 +897,148 @@ class _BinomePairMatchInformationState
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 70.0),
-                    child: informationRectangle(
-                      context: context,
-                      height: 150,
-                      width: 150,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Stack(
-                          children: <Widget>[
-                            Align(
-                              alignment: AlignmentDirectional.center,
+                    padding: const EdgeInsets.only(
+                      top: 70.0,
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Container(
+                            height: 125,
+                            width: 125,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
                               child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Consumer<TinterTheme>(
-                                      builder: (context, tinterTheme, child) {
-                                    return Text(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Text(
                                       'Score',
-                                      style: tinterTheme.textStyle.headline1,
-                                    );
-                                  }),
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
+                                  ),
                                   BlocBuilder<DiscoverBinomePairMatchesBloc,
-                                          DiscoverBinomePairMatchesState>(
-                                      builder: (BuildContext context,
-                                          DiscoverBinomePairMatchesState
-                                              state) {
-                                    if (!(state
-                                        is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
+                                      DiscoverBinomePairMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverBinomePairMatchesState state) {
+                                      if (!(state
+                                          is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return AnimatedSwitcher(
+                                        duration: Duration(milliseconds: 300),
+                                        transitionBuilder: (Widget child,
+                                            Animation<double> animation) {
+                                          return ScaleTransition(
+                                            child: child,
+                                            scale: animation,
+                                          );
+                                        },
+                                        child: Consumer<TinterTheme>(builder:
+                                            (context, tinterTheme, child) {
+                                          return Text(
+                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                .binomePairMatches[0]
+                                                .score
+                                                .toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline1
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                          );
+                                        }),
                                       );
-                                    }
-                                    return AnimatedSwitcher(
-                                      duration: Duration(milliseconds: 300),
-                                      transitionBuilder: (Widget child,
-                                          Animation<double> animation) {
-                                        return ScaleTransition(
-                                          child: child,
-                                          scale: animation,
-                                        );
-                                      },
-                                      child: Consumer<TinterTheme>(builder:
-                                          (context, tinterTheme, child) {
-                                        return Text(
-                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                              .binomePairMatches[0]
-                                              .score
-                                              .toString(),
-                                          key: GlobalKey(),
-                                          style: TextStyle(
-                                            fontSize: 50,
-                                            fontWeight: FontWeight.bold,
-                                            color: tinterTheme
-                                                .textStyle.headline1.color,
-                                          ),
-                                        );
-                                      }),
-                                    );
-                                  }),
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
-                            Align(
-                              alignment: AlignmentDirectional.bottomEnd,
-                              child: InkWell(
-                                onTap: () => showWhatIsScore(context),
-                                child: Consumer<TinterTheme>(
-                                    builder: (context, tinterTheme, child) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: tinterTheme
-                                              .colors.defaultTextColor,
-                                          width: 2),
-                                    ),
-                                    height: 20,
-                                    width: 20,
-                                    child: Center(
-                                      child: Text(
-                                        '?',
-                                        style: TextStyle(
-                                          color: tinterTheme
-                                              .colors.defaultTextColor,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 5.0, bottom: 5.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                showGeneralDialog(
+                                    transitionDuration:
+                                        Duration(milliseconds: 300),
+                                    context: context,
+                                    pageBuilder: (BuildContext context,
+                                            animation, _) =>
+                                        SimpleDialog(
+                                          elevation: 5.0,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0),
+                                              child: Text(
+                                                'Aide',
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20.0,
+                                                  right: 20.0,
+                                                  top: 10.0,
+                                                  bottom: 10.0),
+                                              child: Text(
+                                                "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                                " Il est basé sur les critères renseignés dans le profil.",
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 75.0),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, false);
+                                                },
+                                                child: Text("Continuer"),
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                              },
+                              child: Icon(
+                                Icons.help_outline_outlined,
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                   widget.separator,
-                  informationRectangle(
-                    context: context,
+                  Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
                           Align(
-                            alignment: AlignmentDirectional.topCenter,
-                            child: Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Text(
-                                'Lieu de vie',
-                                style: tinterTheme.textStyle.headline2,
-                              );
-                            }),
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Lieu de vie',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
                           ),
                           SizedBox(
                             height: 10,
@@ -1016,7 +1046,8 @@ class _BinomePairMatchInformationState
                           Container(
                             width: double.infinity,
                             child: Container(
-                              height: 60,
+                              height: 35,
+                              width: 90,
                               child: BlocBuilder<DiscoverBinomePairMatchesBloc,
                                   DiscoverBinomePairMatchesState>(
                                 builder: (BuildContext context,
@@ -1027,86 +1058,86 @@ class _BinomePairMatchInformationState
                                       child: CircularProgressIndicator(),
                                     );
                                   }
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Opacity(
-                                          opacity:
-                                              (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                          .binomePairMatches[0]
-                                                          .lieuDeVie !=
-                                                      LieuDeVie.maisel
-                                                  ? 0.5
-                                                  : 1,
-                                          child: Consumer<TinterTheme>(builder:
-                                              (context, tinterTheme, child) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft:
-                                                      Radius.circular(5.0),
-                                                  topLeft: Radius.circular(5.0),
-                                                ),
-                                                color: tinterTheme
-                                                    .colors.primaryAccent,
+                                  return Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Opacity(
+                                        opacity:
+                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                        .binomePairMatches[0]
+                                                        .lieuDeVie !=
+                                                    LieuDeVie.maisel
+                                                ? 0.5
+                                                : 1,
+                                        child: Consumer<TinterTheme>(builder:
+                                            (context, tinterTheme, child) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(5.0),
+                                                topLeft: Radius.circular(5.0),
                                               ),
-                                              width: 60,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'MAISEL',
-                                                    maxLines: 1,
-                                                    minFontSize: 10,
-                                                  ),
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                            width: 70,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Center(
+                                                child: AutoSizeText(
+                                                  'MAISEL',
+                                                  maxLines: 1,
+                                                  minFontSize: 10,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5,
                                                 ),
                                               ),
-                                            );
-                                          }),
-                                        ),
-                                        Opacity(
-                                          opacity:
-                                              (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                          .binomePairMatches[0]
-                                                          .lieuDeVie !=
-                                                      LieuDeVie.other
-                                                  ? 0.5
-                                                  : 1,
-                                          child: Consumer<TinterTheme>(builder:
-                                              (context, tinterTheme, child) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(5.0),
-                                                  bottomRight:
-                                                      Radius.circular(5.0),
-                                                ),
-                                                color: tinterTheme
-                                                    .colors.primaryAccent,
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                      Opacity(
+                                        opacity:
+                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                        .binomePairMatches[0]
+                                                        .lieuDeVie !=
+                                                    LieuDeVie.other
+                                                ? 0.5
+                                                : 1,
+                                        child: Consumer<TinterTheme>(builder:
+                                            (context, tinterTheme, child) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(5.0),
+                                                bottomRight:
+                                                    Radius.circular(5.0),
                                               ),
-                                              width: 60,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: Center(
-                                                  child: AutoSizeText(
-                                                    'Autre',
-                                                    maxLines: 1,
-                                                  ),
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                            width: 70,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Center(
+                                                child: AutoSizeText(
+                                                  'Autre',
+                                                  maxLines: 1,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5,
                                                 ),
                                               ),
-                                            );
-                                          }),
-                                        ),
-                                      ],
-                                    ),
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                    ],
                                   );
                                 },
                               ),
@@ -1117,21 +1148,18 @@ class _BinomePairMatchInformationState
                     ),
                   ),
                   widget.separator,
-                  informationRectangle(
-                    context: context,
+                  Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
                           Align(
-                            alignment: AlignmentDirectional.topCenter,
-                            child: Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Text(
-                                'Horaires de travail',
-                                style: tinterTheme.textStyle.headline2,
-                              );
-                            }),
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Horaires de travail',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
                           ),
                           SizedBox(
                             height: 10,
@@ -1148,159 +1176,163 @@ class _BinomePairMatchInformationState
                                     child: CircularProgressIndicator(),
                                   );
                                 }
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Wrap(
-                                    alignment: WrapAlignment.center,
-                                    spacing: 10,
-                                    runSpacing: 10,
-                                    children: [
-                                      Opacity(
-                                        opacity:
-                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                    .binomePairMatches[0]
-                                                    .horairesDeTravail
-                                                    .contains(HoraireDeTravail
-                                                        .morning)
-                                                ? 1
-                                                : 0.5,
-                                        child: Consumer<TinterTheme>(builder:
-                                            (context, tinterTheme, child) {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0),
-                                              ),
-                                              color: tinterTheme
-                                                  .colors.primaryAccent,
+                                return Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  children: [
+                                    Opacity(
+                                      opacity:
+                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .horairesDeTravail
+                                                  .contains(
+                                                      HoraireDeTravail.morning)
+                                              ? 1
+                                              : 0.5,
+                                      child: Consumer<TinterTheme>(builder:
+                                          (context, tinterTheme, child) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
                                             ),
-                                            width: 60,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 4.0,
-                                                      vertical: 10.0),
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  'Matin',
-                                                  maxLines: 1,
-                                                  minFontSize: 10,
-                                                ),
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          width: 60,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0,
+                                                vertical: 10.0),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Matin',
+                                                maxLines: 1,
+                                                minFontSize: 10,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
                                               ),
                                             ),
-                                          );
-                                        }),
-                                      ),
-                                      Opacity(
-                                        opacity:
-                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                    .binomePairMatches[0]
-                                                    .horairesDeTravail
-                                                    .contains(HoraireDeTravail
-                                                        .afternoon)
-                                                ? 1
-                                                : 0.5,
-                                        child: Consumer<TinterTheme>(builder:
-                                            (context, tinterTheme, child) {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0),
-                                              ),
-                                              color: tinterTheme
-                                                  .colors.primaryAccent,
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                    Opacity(
+                                      opacity:
+                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .horairesDeTravail
+                                                  .contains(HoraireDeTravail
+                                                      .afternoon)
+                                              ? 1
+                                              : 0.5,
+                                      child: Consumer<TinterTheme>(builder:
+                                          (context, tinterTheme, child) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
                                             ),
-                                            width: 60,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 4.0,
-                                                      vertical: 10.0),
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  'Aprem',
-                                                  maxLines: 1,
-                                                  minFontSize: 10,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                      ),
-                                      Opacity(
-                                        opacity:
-                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                    .binomePairMatches[0]
-                                                    .horairesDeTravail
-                                                    .contains(HoraireDeTravail
-                                                        .evening)
-                                                ? 1
-                                                : 0.5,
-                                        child: Consumer<TinterTheme>(builder:
-                                            (context, tinterTheme, child) {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0),
-                                              ),
-                                              color: tinterTheme
-                                                  .colors.primaryAccent,
-                                            ),
-                                            width: 60,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 4.0,
-                                                      vertical: 10.0),
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  'Soir',
-                                                  maxLines: 1,
-                                                  minFontSize: 10,
-                                                ),
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          width: 60,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0,
+                                                vertical: 10.0),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Aprem',
+                                                maxLines: 1,
+                                                minFontSize: 10,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
                                               ),
                                             ),
-                                          );
-                                        }),
-                                      ),
-                                      Opacity(
-                                        opacity:
-                                            (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                    .binomePairMatches[0]
-                                                    .horairesDeTravail
-                                                    .contains(
-                                                        HoraireDeTravail.night)
-                                                ? 1
-                                                : 0.5,
-                                        child: Consumer<TinterTheme>(builder:
-                                            (context, tinterTheme, child) {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0),
-                                              ),
-                                              color: tinterTheme
-                                                  .colors.primaryAccent,
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                    Opacity(
+                                      opacity:
+                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .horairesDeTravail
+                                                  .contains(
+                                                      HoraireDeTravail.evening)
+                                              ? 1
+                                              : 0.5,
+                                      child: Consumer<TinterTheme>(builder:
+                                          (context, tinterTheme, child) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
                                             ),
-                                            width: 60,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 4.0,
-                                                      vertical: 10.0),
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  'Nuit',
-                                                  maxLines: 1,
-                                                ),
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          width: 60,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0,
+                                                vertical: 10.0),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Soir',
+                                                maxLines: 1,
+                                                minFontSize: 10,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
                                               ),
                                             ),
-                                          );
-                                        }),
-                                      ),
-                                    ],
-                                  ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                    Opacity(
+                                      opacity:
+                                          (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .horairesDeTravail
+                                                  .contains(
+                                                      HoraireDeTravail.night)
+                                              ? 1
+                                              : 0.5,
+                                      child: Consumer<TinterTheme>(builder:
+                                          (context, tinterTheme, child) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
+                                            ),
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          width: 60,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0,
+                                                vertical: 10.0),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                'Nuit',
+                                                maxLines: 1,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ],
                                 );
                               },
                             ),
@@ -1310,20 +1342,17 @@ class _BinomePairMatchInformationState
                     ),
                   ),
                   widget.separator,
-                  informationRectangle(
-                    context: context,
+                  Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 5),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                            return Text(
-                              'Associations',
-                              style: tinterTheme.textStyle.headline2,
-                            );
-                          }),
+                          Text(
+                            'Associations',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -1332,51 +1361,64 @@ class _BinomePairMatchInformationState
                             child: Stack(
                               alignment: AlignmentDirectional.centerStart,
                               children: <Widget>[
-                                Container(
-                                  height: 60,
-                                  child: BlocBuilder<
-                                      DiscoverBinomePairMatchesBloc,
-                                      DiscoverBinomePairMatchesState>(
-                                    builder: (BuildContext context,
-                                        DiscoverBinomePairMatchesState state) {
-                                      if (!(state
-                                          is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      return AnimatedSwitcher(
-                                        duration: Duration(milliseconds: 300),
+                                BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                    DiscoverBinomePairMatchesState>(
+                                  builder: (BuildContext context,
+                                      DiscoverBinomePairMatchesState state) {
+                                    if (!(state
+                                        is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                      return Container(
                                         child: Center(
-                                          child: ListView.separated(
-                                            key: GlobalKey(),
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: (state
-                                                    as DiscoverBinomePairMatchesLoadSuccessState)
-                                                .binomePairMatches[0]
-                                                .associations
-                                                .length,
-                                            separatorBuilder:
-                                                (BuildContext context,
-                                                    int index) {
-                                              return SizedBox(
-                                                width: 5,
-                                              );
-                                            },
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return associationBubble(
-                                                  context,
-                                                  (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                                      .binomePairMatches[0]
-                                                      .associations[index]);
-                                            },
-                                          ),
+                                          child: CircularProgressIndicator(),
                                         ),
                                       );
-                                    },
-                                  ),
+                                    }
+                                    return (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                .binomePairMatches[0]
+                                                .associations
+                                                .length >=
+                                            1
+                                        ? Container(
+                                            height: 60,
+                                            child: AnimatedSwitcher(
+                                              duration:
+                                                  Duration(milliseconds: 300),
+                                              child: ListView.separated(
+                                                key: GlobalKey(),
+                                                shrinkWrap: true,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: (state
+                                                        as DiscoverBinomePairMatchesLoadSuccessState)
+                                                    .binomePairMatches[0]
+                                                    .associations
+                                                    .length,
+                                                separatorBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return SizedBox(
+                                                    width: 5,
+                                                  );
+                                                },
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return associationBubble(
+                                                      context,
+                                                      (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                                          .binomePairMatches[0]
+                                                          .associations[index]);
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                        : Text(
+                                            'Aucune association sélectionnée',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          );
+                                  },
                                 ),
                               ],
                             ),
@@ -1386,186 +1428,263 @@ class _BinomePairMatchInformationState
                     ),
                   ),
                   widget.separator,
-                  informationRectangle(
-                    context: context,
+                  Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
-                          Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                            return AutoSizeText(
-                              'Seul.e ou en groupe?',
-                              style: tinterTheme.textStyle.headline2,
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'A plusieurs ou seul.e ?',
+                              style: Theme.of(context).textTheme.headline5,
                               maxLines: 1,
-                            );
-                          }),
-                          SizedBox(
-                            height: 15,
+                            ),
                           ),
-                          discoverSlider(
-                              context,
-                              Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                                  return SliderTheme(
-                                    data: tinterTheme.slider.disabled,
-                                    child: child,
-                                  );
-                                },
-                                child: BlocBuilder<
-                                    DiscoverBinomePairMatchesBloc,
-                                    DiscoverBinomePairMatchesState>(
-                                  builder: (BuildContext context,
-                                      DiscoverBinomePairMatchesState state) {
-                                    if (!(state
-                                        is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    return TweenAnimationBuilder(
-                                      tween: Tween<double>(
-                                          begin: 0.5,
-                                          end: (state
-                                                  as DiscoverBinomePairMatchesLoadSuccessState)
-                                              .binomePairMatches[0]
-                                              .groupeOuSeul),
-                                      duration: Duration(milliseconds: 300),
-                                      builder: (BuildContext context, value,
-                                          Widget child) {
-                                        return Slider(
-                                          value: value,
-                                          onChanged: null,
-                                        );
-                                      },
-                                    );
-                                  },
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.group_rounded,
+                                  size: 22.0,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
-                              leftLabel: 'Seul',
-                              rightLabel: 'Groupe'),
+                              Expanded(
+                                child: SliderTheme(
+                                  data: Theme.of(context).sliderTheme.copyWith(
+                                    disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                    disabledThumbColor: Color(0xffCECECE),
+                                    overlayShape: RoundSliderOverlayShape(
+                                        overlayRadius: 0.0),
+                                    trackHeight: 6.0,
+                                    disabledInactiveTrackColor:
+                                    Theme.of(context).indicatorColor,
+                                    thumbShape: RoundSliderThumbShape(
+                                        enabledThumbRadius: 8.0),
+                                  ),
+                                  child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                      DiscoverBinomePairMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverBinomePairMatchesState state) {
+                                      if (!(state
+                                      is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return TweenAnimationBuilder(
+                                        tween: Tween<double>(
+                                            begin: 0.5,
+                                            end: (state
+                                            as DiscoverBinomePairMatchesLoadSuccessState)
+                                                .binomePairMatches[0]
+                                                .groupeOuSeul),
+                                        duration: Duration(milliseconds: 300),
+                                        builder: (BuildContext context, value,
+                                            Widget child) {
+                                          return Slider(
+                                            value: value,
+                                            onChanged: null,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Icon(
+                                  Icons.person_rounded,
+                                  size: 22.0,
+                                  color: Theme.of(context).indicatorColor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
                   ),
                   widget.separator,
-                  informationRectangle(
-                    context: context,
+                  Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
                       child: Column(
                         children: <Widget>[
-                          Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                            return AutoSizeText(
-                              'En ligne ou à l\'école?',
-                              style: tinterTheme.textStyle.headline2,
-                              textAlign: TextAlign.center,
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'En ligne ou à l\'école ?',
+                              style: Theme.of(context).textTheme.headline5,
                               maxLines: 1,
-                            );
-                          }),
-                          SizedBox(
-                            height: 15,
+                            ),
                           ),
-                          discoverSlider(
-                              context,
-                              Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                                  return SliderTheme(
-                                    data: tinterTheme.slider.disabled,
-                                    child: child,
-                                  );
-                                },
-                                child: BlocBuilder<
-                                    DiscoverBinomePairMatchesBloc,
-                                    DiscoverBinomePairMatchesState>(
-                                  builder: (BuildContext context,
-                                      DiscoverBinomePairMatchesState state) {
-                                    if (!(state
-                                        is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    return TweenAnimationBuilder(
-                                      tween: Tween<double>(
-                                          begin: 0.5,
-                                          end: (state
-                                                  as DiscoverBinomePairMatchesLoadSuccessState)
-                                              .binomePairMatches[0]
-                                              .enligneOuNon),
-                                      duration: Duration(milliseconds: 300),
-                                      builder: (BuildContext context, value,
-                                          Widget child) {
-                                        return Slider(
-                                          value: value,
-                                          onChanged: null,
-                                        );
-                                      },
-                                    );
-                                  },
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.school_rounded,
+                                  size: 22.0,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
-                              leftLabel: 'En ligne',
-                              rightLabel: 'A l\'école'),
+                              Expanded(
+                                child: SliderTheme(
+                                  data: Theme.of(context).sliderTheme.copyWith(
+                                    disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                    disabledThumbColor: Color(0xffCECECE),
+                                    overlayShape: RoundSliderOverlayShape(
+                                        overlayRadius: 0.0),
+                                    trackHeight: 6.0,
+                                    disabledInactiveTrackColor:
+                                    Theme.of(context).indicatorColor,
+                                    thumbShape: RoundSliderThumbShape(
+                                        enabledThumbRadius: 8.0),
+                                  ),
+                                  child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                      DiscoverBinomePairMatchesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverBinomePairMatchesState state) {
+                                      if (!(state
+                                      is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return TweenAnimationBuilder(
+                                        tween: Tween<double>(
+                                            begin: 0.5,
+                                            end: (state
+                                            as DiscoverBinomePairMatchesLoadSuccessState)
+                                                .binomePairMatches[0]
+                                                .enligneOuNon),
+                                        duration: Duration(milliseconds: 300),
+                                        builder: (BuildContext context, value,
+                                            Widget child) {
+                                          return Slider(
+                                            value: value,
+                                            onChanged: null,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Icon(
+                                  Icons.wifi,
+                                  size: 22.0,
+                                  color: Theme.of(context).indicatorColor,
+                                ),
+                              )
+                            ],
+                          ),
                         ],
                       ),
                     ),
                   ),
                   widget.separator,
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: informationRectangle(
-                      context: context,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Column(
-                          children: <Widget>[
-                            Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Text(
+                    padding: const EdgeInsets.only(bottom: 80.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Card(
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
                                 'Matières préférées',
-                                style: tinterTheme.textStyle.headline2,
-                              );
-                            }),
-                            SizedBox(height: 8.0),
-                            BlocBuilder<DiscoverBinomePairMatchesBloc,
-                                DiscoverBinomePairMatchesState>(
-                              builder: (BuildContext context,
-                                  DiscoverBinomePairMatchesState state) {
-                                if (!(state
-                                    is DiscoverBinomePairMatchesLoadSuccessState)) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                                return AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 300),
-                                  child: Wrap(
-                                    key: GlobalKey(),
-                                    spacing: 15,
-                                    alignment: WrapAlignment.center,
-                                    children: <Widget>[
-                                      for (String matierePreferee in (state
-                                              as DiscoverBinomePairMatchesLoadSuccessState)
-                                          .binomePairMatches[0]
-                                          .matieresPreferees)
-                                        Consumer<TinterTheme>(builder:
-                                            (context, tinterTheme, child) {
-                                          return Chip(
-                                            label: Text(matierePreferee),
-                                            labelStyle:
-                                                tinterTheme.textStyle.chipLiked,
-                                            backgroundColor: tinterTheme
-                                                .colors.primaryAccent,
-                                          );
-                                        })
-                                    ],
-                                  ),
-                                );
-                              },
-                            )
-                          ],
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                  DiscoverBinomePairMatchesState>(
+                                builder: (BuildContext context,
+                                    DiscoverBinomePairMatchesState state) {
+                                  if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                      .binomePairMatches[0]
+                                      .matieresPreferees
+                                      .length >=
+                                      1
+                                      ? AnimatedSwitcher(
+                                    duration: Duration(milliseconds: 300),
+                                    child: Wrap(
+                                      alignment: WrapAlignment.center,
+                                      key: GlobalKey(),
+                                      spacing: 8,
+                                      runSpacing: 8,
+                                      children: <Widget>[
+                                        for (String matierePreferee in (state
+                                        as DiscoverBinomePairMatchesLoadSuccessState)
+                                            .binomePairMatches[0]
+                                            .matieresPreferees)
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15.0,
+                                                vertical: 6.0),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  spreadRadius: 0.2,
+                                                  blurRadius: 5,
+                                                  offset: Offset(2, 2),
+                                                )
+                                              ],
+                                              borderRadius:
+                                              BorderRadius.all(
+                                                  Radius.circular(
+                                                      10.0)),
+                                              border: Border.all(
+                                                  color:
+                                                  (Theme.of(context)
+                                                      .primaryColor),
+                                                  width: 3.0,
+                                                  style:
+                                                  BorderStyle.solid),
+                                              color: Colors.white,
+                                            ),
+                                            child: Text(matierePreferee),
+                                          ),
+                                      ],
+                                    ),
+                                  )
+                                      : Text('Aucune matière sélectionnée',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5,
+                                      textAlign: TextAlign.center);
+                                },
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1610,7 +1729,9 @@ class _BinomePairMatchInformationState
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-                color: tinterTheme.textStyle.headline1.color, width: 3),
+              color: Theme.of(context).primaryColor,
+              width: 2.5,
+            ),
           ),
           height: 60,
           width: 60,

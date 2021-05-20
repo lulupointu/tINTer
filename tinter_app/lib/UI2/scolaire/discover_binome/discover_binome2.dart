@@ -1545,7 +1545,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   ),
                   widget.separator,
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
+                    padding: const EdgeInsets.only(bottom: 80.0),
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
@@ -1566,7 +1566,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                   DiscoverBinomesState>(
                                 builder: (BuildContext context,
                                     DiscoverBinomesState state) {
-                                  if (!(state is DiscoverBinomesState)) {
+                                  if (!(state is DiscoverBinomesLoadSuccessState)) {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );
@@ -1672,8 +1672,10 @@ class _BinomeInformationState extends State<BinomeInformation> {
         return Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border:
-                Border.all(color: Theme.of(context).primaryColor, width: 2.5),
+            border: Border.all(
+              color: Theme.of(context).primaryColor,
+              width: 2.5,
+            ),
           ),
           height: 60,
           width: 60,

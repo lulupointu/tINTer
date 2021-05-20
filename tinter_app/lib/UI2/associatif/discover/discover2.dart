@@ -1303,7 +1303,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   );
                 } else if (index == 7) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
+                    padding: const EdgeInsets.only(bottom: 80.0),
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
