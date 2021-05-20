@@ -20,6 +20,8 @@ import 'package:tinterapp/UI2/scolaire/discover_binome/recherche_binome2.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
 import 'package:tinterapp/UI2/shared2/user_mode.dart';
 
+import '../mode_scolaire_overlay.dart';
+
 class DiscoverBinomeTab2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -126,7 +128,11 @@ class DiscoverRight extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-            left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
+          left: 8.0,
+          right: 8.0,
+          bottom: 8.0,
+          top: 15.0,
+        ),
         child: Column(
           children: <Widget>[
             Padding(
@@ -837,38 +843,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                     padding: const EdgeInsets.only(top: 15.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        height: 35,
-                        width: 145,
-                        child: Center(
-                          child: Text(
-                            'mode scolaire',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).indicatorColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 4.0,
-                            style: BorderStyle.solid,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(3, 3),
-                            ),
-                          ],
-                        ),
-                      ),
+                      child: ModeScolaireOverlay(),
                     ),
                   ),
                   widget.separator,
