@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/binome_pair_search/binome_pair_search_bloc.dart';
-import 'package:tinterapp/Logic/blocs/scolaire/user_scolaire_search/user_scolaire_search_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_binome_pair.dart';
-import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
-import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
 main() => runApp(MaterialApp(
@@ -73,7 +70,7 @@ class _SearchStudentBinomePairTab2State
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Rechercher une paire de binôme',
+          'Recherche',
           style: TextStyle(color: Colors.white),
         ),
       ),

@@ -69,9 +69,7 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          randomGender == Gender.M
-              ? 'Rechercher un étudiant'
-              : 'Rechercher une étudiante',
+          'Recherche',
           style: TextStyle(color: Colors.white),
         ),
       ),

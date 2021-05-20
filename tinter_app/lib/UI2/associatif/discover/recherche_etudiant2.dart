@@ -70,7 +70,7 @@ class _SearchStudentAssociatifTab2State
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          randomGender == Gender.M ? 'Rechercher un étudiant' : 'Rechercher une étudiante',
+          'Recherche',
           style: TextStyle(color: Colors.white),
         ),
       ),

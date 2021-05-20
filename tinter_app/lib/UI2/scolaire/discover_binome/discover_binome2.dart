@@ -15,10 +15,8 @@ import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
-import 'package:tinterapp/UI2/associatif/discover/recherche_etudiant_factorise.dart';
 import 'package:tinterapp/UI2/scolaire/discover_binome/recherche_binome2.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
-import 'package:tinterapp/UI2/shared2/user_mode.dart';
 
 import '../mode_scolaire_overlay.dart';
 
@@ -1777,7 +1775,10 @@ class NoMoreDiscoveryBinomesWidget extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 50.0,
+            ),
             child: ScolaireWideStudentSearch(),
           ),
           Expanded(

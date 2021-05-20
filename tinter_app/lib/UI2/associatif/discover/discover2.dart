@@ -1511,7 +1511,10 @@ class NoMoreDiscoveryMatchesWidget extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15.0,
+                vertical: 50.0,
+              ),
               child: AssoWideStudentSearch(),
             ),
             Expanded(

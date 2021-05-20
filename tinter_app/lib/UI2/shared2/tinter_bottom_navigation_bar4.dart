@@ -1,30 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tinterapp/UI/shared/shared_element/const.dart';
-
-/// How to use it:
-main() {
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello'),
-        ),
-        extendBody: true,
-        bottomNavigationBar: CustomBottomNavigationBar4(
-          onTap: (int index) =>
-              Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = index,
-          selectedIndex: tinterTabs.selectedTabIndex,
-          items: [
-            CustomBottomNavigationBarItem(icon: Icons.favorite_outline_rounded),
-            CustomBottomNavigationBarItem(icon: Icons.whatshot_rounded, key: discoverIconKey),
-            CustomBottomNavigationBarItem(icon: Icons.person_outline_rounded),
-          ],
-        ),
-      ),
-    ),
-  );
-}
 
 class CustomBottomNavigationBar4 extends StatelessWidget {
   final ValueChanged<int> onTap;

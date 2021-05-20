@@ -3,7 +3,6 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -13,14 +12,10 @@ import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
-import 'package:tinterapp/UI/associatif/discover/recherche_etudiant.dart';
-import 'package:tinterapp/UI/scolaire/discover_binome_pair/recherche_binome_pair.dart';
-import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/UI2/scolaire/discover_quadrinome/recherche_binome_pair2.dart';
-import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
 import '../mode_scolaire_overlay.dart';
 
@@ -1459,23 +1454,24 @@ class _BinomePairMatchInformationState
                               Expanded(
                                 child: SliderTheme(
                                   data: Theme.of(context).sliderTheme.copyWith(
-                                    disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
-                                    disabledThumbColor: Color(0xffCECECE),
-                                    overlayShape: RoundSliderOverlayShape(
-                                        overlayRadius: 0.0),
-                                    trackHeight: 6.0,
-                                    disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                    thumbShape: RoundSliderThumbShape(
-                                        enabledThumbRadius: 8.0),
-                                  ),
-                                  child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                        disabledActiveTrackColor:
+                                            Theme.of(context).primaryColor,
+                                        disabledThumbColor: Color(0xffCECECE),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0),
+                                        trackHeight: 6.0,
+                                        disabledInactiveTrackColor:
+                                            Theme.of(context).indicatorColor,
+                                        thumbShape: RoundSliderThumbShape(
+                                            enabledThumbRadius: 8.0),
+                                      ),
+                                  child: BlocBuilder<
+                                      DiscoverBinomePairMatchesBloc,
                                       DiscoverBinomePairMatchesState>(
                                     builder: (BuildContext context,
                                         DiscoverBinomePairMatchesState state) {
                                       if (!(state
-                                      is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                          is DiscoverBinomePairMatchesLoadSuccessState)) {
                                         return Center(
                                           child: CircularProgressIndicator(),
                                         );
@@ -1484,7 +1480,7 @@ class _BinomePairMatchInformationState
                                         tween: Tween<double>(
                                             begin: 0.5,
                                             end: (state
-                                            as DiscoverBinomePairMatchesLoadSuccessState)
+                                                    as DiscoverBinomePairMatchesLoadSuccessState)
                                                 .binomePairMatches[0]
                                                 .groupeOuSeul),
                                         duration: Duration(milliseconds: 300),
@@ -1545,23 +1541,24 @@ class _BinomePairMatchInformationState
                               Expanded(
                                 child: SliderTheme(
                                   data: Theme.of(context).sliderTheme.copyWith(
-                                    disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
-                                    disabledThumbColor: Color(0xffCECECE),
-                                    overlayShape: RoundSliderOverlayShape(
-                                        overlayRadius: 0.0),
-                                    trackHeight: 6.0,
-                                    disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                    thumbShape: RoundSliderThumbShape(
-                                        enabledThumbRadius: 8.0),
-                                  ),
-                                  child: BlocBuilder<DiscoverBinomePairMatchesBloc,
+                                        disabledActiveTrackColor:
+                                            Theme.of(context).primaryColor,
+                                        disabledThumbColor: Color(0xffCECECE),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0),
+                                        trackHeight: 6.0,
+                                        disabledInactiveTrackColor:
+                                            Theme.of(context).indicatorColor,
+                                        thumbShape: RoundSliderThumbShape(
+                                            enabledThumbRadius: 8.0),
+                                      ),
+                                  child: BlocBuilder<
+                                      DiscoverBinomePairMatchesBloc,
                                       DiscoverBinomePairMatchesState>(
                                     builder: (BuildContext context,
                                         DiscoverBinomePairMatchesState state) {
                                       if (!(state
-                                      is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                          is DiscoverBinomePairMatchesLoadSuccessState)) {
                                         return Center(
                                           child: CircularProgressIndicator(),
                                         );
@@ -1570,7 +1567,7 @@ class _BinomePairMatchInformationState
                                         tween: Tween<double>(
                                             begin: 0.5,
                                             end: (state
-                                            as DiscoverBinomePairMatchesLoadSuccessState)
+                                                    as DiscoverBinomePairMatchesLoadSuccessState)
                                                 .binomePairMatches[0]
                                                 .enligneOuNon),
                                         duration: Duration(milliseconds: 300),
@@ -1608,7 +1605,7 @@ class _BinomePairMatchInformationState
                       child: Card(
                         child: Padding(
                           padding:
-                          const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                              const EdgeInsets.only(top: 10.0, bottom: 15.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -1623,65 +1620,66 @@ class _BinomePairMatchInformationState
                                   DiscoverBinomePairMatchesState>(
                                 builder: (BuildContext context,
                                     DiscoverBinomePairMatchesState state) {
-                                  if (!(state is DiscoverBinomePairMatchesLoadSuccessState)) {
+                                  if (!(state
+                                      is DiscoverBinomePairMatchesLoadSuccessState)) {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );
                                   }
                                   return (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                      .binomePairMatches[0]
-                                      .matieresPreferees
-                                      .length >=
-                                      1
+                                              .binomePairMatches[0]
+                                              .matieresPreferees
+                                              .length >=
+                                          1
                                       ? AnimatedSwitcher(
-                                    duration: Duration(milliseconds: 300),
-                                    child: Wrap(
-                                      alignment: WrapAlignment.center,
-                                      key: GlobalKey(),
-                                      spacing: 8,
-                                      runSpacing: 8,
-                                      children: <Widget>[
-                                        for (String matierePreferee in (state
-                                        as DiscoverBinomePairMatchesLoadSuccessState)
-                                            .binomePairMatches[0]
-                                            .matieresPreferees)
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 15.0,
-                                                vertical: 6.0),
-                                            decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.2),
-                                                  spreadRadius: 0.2,
-                                                  blurRadius: 5,
-                                                  offset: Offset(2, 2),
-                                                )
-                                              ],
-                                              borderRadius:
-                                              BorderRadius.all(
-                                                  Radius.circular(
-                                                      10.0)),
-                                              border: Border.all(
-                                                  color:
-                                                  (Theme.of(context)
-                                                      .primaryColor),
-                                                  width: 3.0,
-                                                  style:
-                                                  BorderStyle.solid),
-                                              color: Colors.white,
-                                            ),
-                                            child: Text(matierePreferee),
+                                          duration: Duration(milliseconds: 300),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            key: GlobalKey(),
+                                            spacing: 8,
+                                            runSpacing: 8,
+                                            children: <Widget>[
+                                              for (String matierePreferee in (state
+                                                      as DiscoverBinomePairMatchesLoadSuccessState)
+                                                  .binomePairMatches[0]
+                                                  .matieresPreferees)
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15.0,
+                                                      vertical: 6.0),
+                                                  decoration: BoxDecoration(
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.2),
+                                                        spreadRadius: 0.2,
+                                                        blurRadius: 5,
+                                                        offset: Offset(2, 2),
+                                                      )
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0)),
+                                                    border: Border.all(
+                                                        color:
+                                                            (Theme.of(context)
+                                                                .primaryColor),
+                                                        width: 3.0,
+                                                        style:
+                                                            BorderStyle.solid),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Text(matierePreferee),
+                                                ),
+                                            ],
                                           ),
-                                      ],
-                                    ),
-                                  )
+                                        )
                                       : Text('Aucune matière sélectionnée',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5,
-                                      textAlign: TextAlign.center);
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                          textAlign: TextAlign.center);
                                 },
                               )
                             ],
@@ -1819,8 +1817,12 @@ class NoMoreDiscoveryBinomePairMatchesWidget extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
       child: Column(
         children: [
-          WideStudentSearch(
-            height: 40,
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 50,
+            ),
+            child: BinomePairWideStudentSearch(),
           ),
           Expanded(
             child: Center(
@@ -1829,8 +1831,8 @@ class NoMoreDiscoveryBinomePairMatchesWidget extends StatelessWidget {
                 children: [
                   Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                     return Icon(
-                      Icons.face,
-                      color: tinterTheme.colors.defaultTextColor,
+                      Icons.sentiment_very_dissatisfied_rounded,
+                      color: Colors.black87,
                       size: 70,
                     );
                   }),
@@ -1838,12 +1840,19 @@ class NoMoreDiscoveryBinomePairMatchesWidget extends StatelessWidget {
                     height: 10,
                   ),
                   Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                    return AutoSizeText(
-                      "Il n'y a plus de paire de binome à découvrir pour l'instant.\nDemande à d'autres étudiants de s'inscrire!",
-                      style:
-                          tinterTheme.textStyle.headline2.copyWith(height: 2),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                      ),
+                      child: AutoSizeText(
+                        "Il n'y a plus de paires de binôme à découvrir pour l'instant. Demande à d'autres étudiant.e.s de s'inscrire !",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(height: 1.5),
+                        textAlign: TextAlign.center,
+                        maxLines: 3,
+                      ),
                     );
                   }),
                 ],
@@ -1856,87 +1865,56 @@ class NoMoreDiscoveryBinomePairMatchesWidget extends StatelessWidget {
   }
 }
 
-class WideStudentSearch extends StatelessWidget {
-  final double height;
-
-  const WideStudentSearch({Key key, @required this.height}) : super(key: key);
+class BinomePairWideStudentSearch extends StatelessWidget {
+  const BinomePairWideStudentSearch({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
-      child: Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-            height: height,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5.0),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SearchStudentBinomePairTab2()),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          border: Border.all(
+              color: Colors.white, width: 4.0, style: BorderStyle.solid),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(3, 3),
+            ),
+          ],
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 3.0),
+                child: Icon(
+                  Icons.search_rounded,
+                  color: Colors.white,
+                ),
               ),
-              color: tinterTheme.colors.primaryAccent,
-            ),
-            child: child,
-          );
-        },
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SearchStudentBinomePairTab()),
-            );
-          },
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 30,
-                  child: Hero(
-                    tag: 'studentSearchBar',
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5.0),
-                            ),
-                            color: tinterTheme.colors.primaryAccent,
-                          ),
-                          child: TextField(
-                            enabled: false,
-                            textInputAction: TextInputAction.search,
-                            decoration: InputDecoration(
-                              focusedBorder: InputBorder.none,
-                              icon: Padding(
-                                padding: const EdgeInsets.only(left: 0),
-                                child: Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                    return AutoSizeText(
-                      'Rechercher une paire de binome',
-                      style: tinterTheme.textStyle.hintLarge,
-                      maxLines: 1,
-                    );
-                  }),
-                ),
-              ],
-            ),
+              Text(
+                'rechercher une paire de binôme',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: Colors.white, height: 1.15),
+                textAlign: TextAlign.left,
+              ),
+            ],
           ),
         ),
       ),
