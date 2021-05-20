@@ -39,73 +39,87 @@ class DiscoverBinomeTab2 extends StatelessWidget {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         bottom: false,
-        child: BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(builder:
-            (BuildContext context, DiscoverBinomesState discoverBinomesState) {
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              if (discoverBinomesState is DiscoverBinomesInitialState ||
-                  discoverBinomesState is DiscoverBinomesLoadInProgressState)
-                return Center(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              if (discoverBinomesState is DiscoverBinomesLoadSuccessState &&
-                  discoverBinomesState.binomes.length == 0)
-                return NoMoreDiscoveryBinomesWidget();
-              return Stack(
-                children: [
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 55,
-                        child: BinomeInformation(),
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(builder:
+                (BuildContext context,
+                    DiscoverBinomesState discoverBinomesState) {
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  if (discoverBinomesState is DiscoverBinomesInitialState ||
+                      discoverBinomesState
+                          is DiscoverBinomesLoadInProgressState)
+                    return Center(
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                      Expanded(
-                        flex: 45,
-                        child: DiscoverRight(constraints.maxHeight),
+                    );
+                  if (discoverBinomesState is DiscoverBinomesLoadSuccessState &&
+                      discoverBinomesState.binomes.length == 0)
+                    return NoMoreDiscoveryBinomesWidget();
+                  return Stack(
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 55,
+                            child: BinomeInformation(),
+                          ),
+                          Expanded(
+                            flex: 45,
+                            child: DiscoverRight(constraints.maxHeight),
+                          ),
+                        ],
+                      ),
+                      Positioned(
+                        left: constraints.maxWidth * 55 / 100,
+                        child: Consumer<TinterTheme>(
+                            builder: (context, tinterTheme, child) {
+                          return SvgPicture.asset(
+                            'assets/discover/DiscoverBackground.svg',
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            height: constraints.maxHeight,
+                          );
+                        }),
+                      ),
+                      Positioned(
+                        left: constraints.maxWidth * 55 / 100,
+                        child: Consumer<TinterTheme>(
+                            builder: (context, tinterTheme, child) {
+                          return SvgPicture.asset(
+                            'assets/discover/DiscoverTop.svg',
+                            color: Theme.of(context).primaryColor,
+                            height: constraints.maxHeight / 2,
+                          );
+                        }),
+                      ),
+                      Positioned(
+                        left: constraints.maxWidth * 55 / 100,
+                        bottom: 0,
+                        child: Consumer<TinterTheme>(
+                            builder: (context, tinterTheme, child) {
+                          return SvgPicture.asset(
+                            'assets/discover/DiscoverBottom.svg',
+                            color: Theme.of(context).primaryColor,
+                            height: constraints.maxHeight / 2,
+                          );
+                        }),
                       ),
                     ],
-                  ),
-                  Positioned(
-                    left: constraints.maxWidth * 55 / 100,
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return SvgPicture.asset(
-                        'assets/discover/DiscoverBackground.svg',
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        height: constraints.maxHeight,
-                      );
-                    }),
-                  ),
-                  Positioned(
-                    left: constraints.maxWidth * 55 / 100,
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return SvgPicture.asset(
-                        'assets/discover/DiscoverTop.svg',
-                        color: Theme.of(context).primaryColor,
-                        height: constraints.maxHeight / 2,
-                      );
-                    }),
-                  ),
-                  Positioned(
-                    left: constraints.maxWidth * 55 / 100,
-                    bottom: 0,
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return SvgPicture.asset(
-                        'assets/discover/DiscoverBottom.svg',
-                        color: Theme.of(context).primaryColor,
-                        height: constraints.maxHeight / 2,
-                      );
-                    }),
-                  ),
-                ],
+                  );
+                },
               );
-            },
-          );
-        }),
+            }),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 15.0,
+                left: 15.0,
+              ),
+              child: ModeScolaireOverlay(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -840,134 +854,133 @@ class _BinomeInformationState extends State<BinomeInformation> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: ModeScolaireOverlay(),
+                    padding: const EdgeInsets.only(
+                      top: 70.0,
                     ),
-                  ),
-                  widget.separator,
-                  Align(
-                    alignment: Alignment.center,
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Container(
-                          height: 125,
-                          width: 125,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5.0),
-                                  child: Text(
-                                    'Score',
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Container(
+                            height: 125,
+                            width: 125,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Text(
+                                      'Score',
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
                                   ),
-                                ),
-                                BlocBuilder<DiscoverBinomesBloc,
-                                    DiscoverBinomesState>(
-                                  builder: (BuildContext context,
-                                      DiscoverBinomesState state) {
-                                    if (!(state
-                                        is DiscoverBinomesLoadSuccessState)) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
+                                  BlocBuilder<DiscoverBinomesBloc,
+                                      DiscoverBinomesState>(
+                                    builder: (BuildContext context,
+                                        DiscoverBinomesState state) {
+                                      if (!(state
+                                          is DiscoverBinomesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return AnimatedSwitcher(
+                                        duration: Duration(milliseconds: 300),
+                                        transitionBuilder: (Widget child,
+                                            Animation<double> animation) {
+                                          return ScaleTransition(
+                                            child: child,
+                                            scale: animation,
+                                          );
+                                        },
+                                        child: Consumer<TinterTheme>(builder:
+                                            (context, tinterTheme, child) {
+                                          return Text(
+                                            (state as DiscoverBinomesLoadSuccessState)
+                                                .binomes[0]
+                                                .score
+                                                .toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline1
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                          );
+                                        }),
                                       );
-                                    }
-                                    return AnimatedSwitcher(
-                                      duration: Duration(milliseconds: 300),
-                                      transitionBuilder: (Widget child,
-                                          Animation<double> animation) {
-                                        return ScaleTransition(
-                                          child: child,
-                                          scale: animation,
-                                        );
-                                      },
-                                      child: Consumer<TinterTheme>(builder:
-                                          (context, tinterTheme, child) {
-                                        return Text(
-                                          (state as DiscoverBinomesLoadSuccessState)
-                                              .binomes[0]
-                                              .score
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline1
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w400),
-                                        );
-                                      }),
-                                    );
-                                  },
-                                ),
-                              ],
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(right: 5.0, bottom: 5.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              showGeneralDialog(
-                                  transitionDuration:
-                                      Duration(milliseconds: 300),
-                                  context: context,
-                                  pageBuilder: (BuildContext context, animation,
-                                          _) =>
-                                      SimpleDialog(
-                                        elevation: 5.0,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10.0),
-                                            child: Text(
-                                              'Aide',
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 5.0, bottom: 5.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                showGeneralDialog(
+                                    transitionDuration:
+                                        Duration(milliseconds: 300),
+                                    context: context,
+                                    pageBuilder: (BuildContext context,
+                                            animation, _) =>
+                                        SimpleDialog(
+                                          elevation: 5.0,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0),
+                                              child: Text(
+                                                'Aide',
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 20.0,
-                                                right: 20.0,
-                                                top: 10.0,
-                                                bottom: 10.0),
-                                            child: Text(
-                                              "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                              " Il est basé sur les critères renseignés dans le profil.",
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5,
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20.0,
+                                                  right: 20.0,
+                                                  top: 10.0,
+                                                  bottom: 10.0),
+                                              child: Text(
+                                                "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                                " Il est basé sur les critères renseignés dans le profil.",
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
+                                              ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 75.0),
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context, false);
-                                              },
-                                              child: Text("Continuer"),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 75.0),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, false);
+                                                },
+                                                child: Text("Continuer"),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ));
-                            },
-                            child: Icon(
-                              Icons.help_outline_outlined,
+                                          ],
+                                        ));
+                              },
+                              child: Icon(
+                                Icons.help_outline_outlined,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   widget.separator,
@@ -1566,7 +1579,8 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                   DiscoverBinomesState>(
                                 builder: (BuildContext context,
                                     DiscoverBinomesState state) {
-                                  if (!(state is DiscoverBinomesLoadSuccessState)) {
+                                  if (!(state
+                                      is DiscoverBinomesLoadSuccessState)) {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );

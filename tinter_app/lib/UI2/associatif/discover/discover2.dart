@@ -15,6 +15,7 @@ import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/UI2/associatif/discover/recherche_etudiant2.dart';
+import 'package:tinterapp/UI2/associatif/mode_associatif_overlay.dart';
 import 'package:tinterapp/UI2/shared2/random_gender.dart';
 
 class DiscoverAssociatifTab2 extends StatelessWidget implements TinterTab {
@@ -34,66 +35,81 @@ class DiscoverAssociatifTab2 extends StatelessWidget implements TinterTab {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         bottom: false,
-        child: BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(builder:
-            (BuildContext context, DiscoverMatchesState discoverMatchesState) {
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              if (discoverMatchesState is DiscoverMatchesInitialState ||
-                  discoverMatchesState is DiscoverMatchesLoadInProgressState)
-                return Center(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              if (discoverMatchesState is DiscoverMatchesLoadSuccessState &&
-                  discoverMatchesState.matches.length == 0)
-                return NoMoreDiscoveryMatchesWidget();
-              return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Stack(
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 55,
-                          child: MatchInformation(),
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(builder:
+                (BuildContext context,
+                    DiscoverMatchesState discoverMatchesState) {
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  if (discoverMatchesState is DiscoverMatchesInitialState ||
+                      discoverMatchesState
+                          is DiscoverMatchesLoadInProgressState)
+                    return Center(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  if (discoverMatchesState is DiscoverMatchesLoadSuccessState &&
+                      discoverMatchesState.matches.length == 0)
+                    return NoMoreDiscoveryMatchesWidget();
+                  return Consumer<TinterTheme>(
+                      builder: (context, tinterTheme, child) {
+                    return Stack(
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 55,
+                              child: MatchInformation(),
+                            ),
+                            Expanded(
+                              flex: 45,
+                              child: DiscoverRight(constraints.maxHeight),
+                            ),
+                          ],
                         ),
-                        Expanded(
-                          flex: 45,
-                          child: DiscoverRight(constraints.maxHeight),
+                        Positioned(
+                          left: constraints.maxWidth * 55 / 100,
+                          child: SvgPicture.asset(
+                            'assets/discover/DiscoverBackground.svg',
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            height: constraints.maxHeight,
+                          ),
+                        ),
+                        Positioned(
+                          left: constraints.maxWidth * 55 / 100,
+                          child: SvgPicture.asset(
+                            'assets/discover/DiscoverTop.svg',
+                            color: Theme.of(context).primaryColor,
+                            height: constraints.maxHeight / 2,
+                          ),
+                        ),
+                        Positioned(
+                          left: constraints.maxWidth * 55 / 100,
+                          bottom: 0,
+                          child: SvgPicture.asset(
+                            'assets/discover/DiscoverBottom.svg',
+                            color: Theme.of(context).primaryColor,
+                            height: constraints.maxHeight / 2,
+                          ),
                         ),
                       ],
-                    ),
-                    Positioned(
-                      left: constraints.maxWidth * 55 / 100,
-                      child: SvgPicture.asset(
-                        'assets/discover/DiscoverBackground.svg',
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        height: constraints.maxHeight,
-                      ),
-                    ),
-                    Positioned(
-                      left: constraints.maxWidth * 55 / 100,
-                      child: SvgPicture.asset(
-                        'assets/discover/DiscoverTop.svg',
-                        color: Theme.of(context).primaryColor,
-                        height: constraints.maxHeight / 2,
-                      ),
-                    ),
-                    Positioned(
-                      left: constraints.maxWidth * 55 / 100,
-                      bottom: 0,
-                      child: SvgPicture.asset(
-                        'assets/discover/DiscoverBottom.svg',
-                        color: Theme.of(context).primaryColor,
-                        height: constraints.maxHeight / 2,
-                      ),
-                    ),
-                  ],
-                );
-              });
-            },
-          );
-        }),
+                    );
+                  });
+                },
+              );
+            }),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 15.0,
+                left: 15.0,
+              ),
+              child: ModeAssociatifOverlay(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -738,7 +754,7 @@ class _MatchInformationState extends State<MatchInformation> {
           child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
             return ListView.separated(
               controller: informationController,
-              itemCount: 8,
+              itemCount: 7,
               separatorBuilder: (BuildContext context, int index) {
                 return Container(
                   height: 20,
@@ -747,164 +763,131 @@ class _MatchInformationState extends State<MatchInformation> {
               itemBuilder: (BuildContext context, int index) {
                 if (index == 0) {
                   return Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
+                    padding: const EdgeInsets.only(
+                      top: 70.0,
+                    ),
                     child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        height: 35,
-                        width: 145,
-                        child: Center(
-                          child: Text(
-                            'mode associatif',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 4.0,
-                            style: BorderStyle.solid,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(3, 3),
+                      alignment: Alignment.center,
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Container(
+                            height: 125,
+                            width: 125,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Text(
+                                      'Score',
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
+                                  ),
+                                  BlocBuilder<DiscoverMatchesBloc,
+                                      DiscoverMatchesState>(
+                                    buildWhen:
+                                        (DiscoverMatchesState previousState,
+                                            DiscoverMatchesState state) {
+                                      if (previousState
+                                          is DiscoverMatchesSavingNewStatusState) {
+                                        return false;
+                                      }
+                                      return true;
+                                    },
+                                    builder: (BuildContext context,
+                                        DiscoverMatchesState state) {
+                                      if (!(state
+                                          is DiscoverMatchesLoadSuccessState)) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return Text(
+                                        (state as DiscoverMatchesLoadSuccessState)
+                                            .matches[0]
+                                            .score
+                                            .toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 5.0, bottom: 5.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                showGeneralDialog(
+                                    transitionDuration:
+                                        Duration(milliseconds: 300),
+                                    context: context,
+                                    pageBuilder: (BuildContext context,
+                                            animation, _) =>
+                                        SimpleDialog(
+                                          elevation: 5.0,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0),
+                                              child: Text(
+                                                'Aide',
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20.0,
+                                                  right: 20.0,
+                                                  top: 10.0,
+                                                  bottom: 10.0),
+                                              child: Text(
+                                                "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                                " Il est basé sur les critères renseignés dans le profil.",
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 75.0),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, false);
+                                                },
+                                                child: Text("Continuer"),
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                              },
+                              child: Icon(
+                                Icons.help_outline_outlined,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 } else if (index == 1) {
-                  return Align(
-                    alignment: Alignment.center,
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Container(
-                          height: 125,
-                          width: 125,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5.0),
-                                  child: Text(
-                                    'Score',
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                  ),
-                                ),
-                                BlocBuilder<DiscoverMatchesBloc,
-                                    DiscoverMatchesState>(
-                                  buildWhen:
-                                      (DiscoverMatchesState previousState,
-                                          DiscoverMatchesState state) {
-                                    if (previousState
-                                        is DiscoverMatchesSavingNewStatusState) {
-                                      return false;
-                                    }
-                                    return true;
-                                  },
-                                  builder: (BuildContext context,
-                                      DiscoverMatchesState state) {
-                                    if (!(state
-                                        is DiscoverMatchesLoadSuccessState)) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    return Text(
-                                      (state as DiscoverMatchesLoadSuccessState)
-                                          .matches[0]
-                                          .score
-                                          .toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline1
-                                          .copyWith(
-                                              fontWeight: FontWeight.w400),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(right: 5.0, bottom: 5.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              showGeneralDialog(
-                                  transitionDuration:
-                                      Duration(milliseconds: 300),
-                                  context: context,
-                                  pageBuilder: (BuildContext context, animation,
-                                          _) =>
-                                      SimpleDialog(
-                                        elevation: 5.0,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10.0),
-                                            child: Text(
-                                              'Aide',
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 20.0,
-                                                right: 20.0,
-                                                top: 10.0,
-                                                bottom: 10.0),
-                                            child: Text(
-                                              "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                              " Il est basé sur les critères renseignés dans le profil.",
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 75.0),
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context, false);
-                                              },
-                                              child: Text("Continuer"),
-                                            ),
-                                          ),
-                                        ],
-                                      ));
-                            },
-                            child: Icon(
-                              Icons.help_outline_outlined,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (index == 2) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -990,7 +973,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 3) {
+                } else if (index == 2) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1063,7 +1046,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 4) {
+                } else if (index == 3) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1145,7 +1128,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 5) {
+                } else if (index == 4) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1229,7 +1212,7 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 6) {
+                } else if (index == 5) {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1301,9 +1284,11 @@ class _MatchInformationState extends State<MatchInformation> {
                       ),
                     ),
                   );
-                } else if (index == 7) {
+                } else if (index == 6) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 80.0),
+                    padding: const EdgeInsets.only(
+                      bottom: 20.0,
+                    ),
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
