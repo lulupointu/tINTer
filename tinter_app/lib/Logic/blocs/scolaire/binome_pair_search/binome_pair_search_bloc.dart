@@ -138,8 +138,9 @@ class BinomePairSearchBloc extends Bloc<BinomePairSearchEvent, BinomePairSearchS
 
     List<SearchedBinomePair> newSearchedBinomePairsScolaire =
         List<SearchedBinomePair>.from(oldSearchedBinomePairsScolaire);
+    var index = newSearchedBinomePairsScolaire.indexOf(event.searchedBinomePairs);
     newSearchedBinomePairsScolaire.remove(event.searchedBinomePairs);
-    newSearchedBinomePairsScolaire.add(newSearchedBinomePair);
+    newSearchedBinomePairsScolaire.insert(index, newSearchedBinomePair);
 
     print('Replacing the liked or ignored user');
 
