@@ -43,6 +43,7 @@ import 'package:tinterapp/notifications_handler.dart';
 
 import 'UI/shared/shared_element/homogenius_rounded_rectslider_trackshape.dart';
 import 'UI2/associatif/discover/discover2.dart';
+import 'UI2/associatif/matches2.dart';
 import 'UI2/scolaire/discover_scolaire_tab2.dart';
 import 'UI2/shared2/login2.dart';
 import 'UI2/shared2/tinter_bottom_navigation_bar4.dart';
@@ -240,8 +241,8 @@ main() {
                           create: (_) => TinterTabs()),
                       ChangeNotifierProvider<SelectedScolaire>(
                           create: (_) => SelectedScolaire()),
-                      ChangeNotifierProvider<SelectedAssociatif>(
-                          create: (_) => SelectedAssociatif()),
+                      ChangeNotifierProvider<SelectedAssociatif2>(
+                          create: (_) => SelectedAssociatif2()),
                     ],
                     child: MaterialApp(
                       debugShowCheckedModeBanner: false,
@@ -404,7 +405,7 @@ class Tinter extends StatelessWidget {
 
 class TinterHome extends StatefulWidget {
   final List<TinterTab> tabsAssociatif = [
-    MatchsTab(),
+    MatchsTab2(),
     DiscoverAssociatifTab2(),
     UserTab3()
   ];
