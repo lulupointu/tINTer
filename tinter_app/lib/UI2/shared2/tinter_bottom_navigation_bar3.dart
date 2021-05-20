@@ -23,6 +23,47 @@ class _CustomBottomNavigationBar3State
   var selection = [0, 0, 1]; // Match, Discover, Profile
   Duration duration = Duration(milliseconds: 300);
 
+  double circleMatchDiameter = 0;
+  double circleDiscoverDiameter = 0;
+  double circleProfileDiameter = 44;
+
+  Color matchColor = Color(0xff79BFC9);
+  Color discoverColor = Color(0xff79BFC9);
+  Color profileColor = Colors.white;
+
+  void onProfileClicked() {
+    setState(() {
+      matchColor = Color(0xff79BFC9);
+      discoverColor = Color(0xff79BFC9);
+      profileColor = Colors.white;
+      circleMatchDiameter = 0;
+      circleDiscoverDiameter = 0;
+      circleProfileDiameter = 44;
+    });
+  }
+
+  void onDiscoverClicked() {
+    setState(() {
+      matchColor = Color(0xff79BFC9);
+      discoverColor = Colors.white;
+      profileColor = Color(0xff79BFC9);
+      circleMatchDiameter = 0;
+      circleDiscoverDiameter = 44;
+      circleProfileDiameter = 0;
+    });
+  }
+
+  void onMatchClicked() {
+    setState(() {
+      matchColor = Colors.white;
+      discoverColor = Color(0xff79BFC9);
+      profileColor = Color(0xff79BFC9);
+      circleMatchDiameter = 44;
+      circleDiscoverDiameter = 0;
+      circleProfileDiameter = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     selection = [0, 0, 0];
@@ -42,22 +83,19 @@ class _CustomBottomNavigationBar3State
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(
-                  height: 44.0,
-                  width: 44.0,
+                AnimatedContainer(
+                  duration: duration,
+                  height: circleMatchDiameter,
+                  width: circleMatchDiameter,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: selection[0] == 0
-                        ? Colors.transparent
-                        : Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 GestureDetector(
                   child: Icon(
                     Icons.favorite_outline_rounded,
-                    color: selection[0] == 0
-                        ? Theme.of(context).primaryColor
-                        : Colors.white,
+                    color: matchColor,
                     size: 28.0,
                   ),
                   onTap: () {
@@ -66,6 +104,7 @@ class _CustomBottomNavigationBar3State
                       selection[0] = 1;
                       selection[1] = 0;
                       selection[2] = 0;
+                      onMatchClicked();
                     });
                   },
                 ),
@@ -75,22 +114,19 @@ class _CustomBottomNavigationBar3State
               key: widget.discoverIconKey,
               alignment: Alignment.center,
               children: [
-                Container(
-                  height: 44.0,
-                  width: 44.0,
+                AnimatedContainer(
+                  duration: duration,
+                  height: circleDiscoverDiameter,
+                  width: circleDiscoverDiameter,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: selection[1] == 0
-                        ? Colors.transparent
-                        : Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 GestureDetector(
                   child: Icon(
                     Icons.whatshot_rounded,
-                    color: selection[1] == 0
-                        ? Theme.of(context).primaryColor
-                        : Colors.white,
+                    color: discoverColor,
                     size: 28.0,
                   ),
                   onTap: () {
@@ -99,6 +135,7 @@ class _CustomBottomNavigationBar3State
                       selection[0] = 0;
                       selection[1] = 1;
                       selection[2] = 0;
+                      onDiscoverClicked();
                     });
                   },
                 ),
@@ -107,22 +144,19 @@ class _CustomBottomNavigationBar3State
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(
-                  height: 44.0,
-                  width: 44.0,
+                AnimatedContainer(
+                  duration: duration,
+                  height: circleProfileDiameter,
+                  width: circleProfileDiameter,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: selection[2] == 0
-                        ? Colors.transparent
-                        : Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 GestureDetector(
                   child: Icon(
                     Icons.person_outline_rounded,
-                    color: selection[2] == 0
-                        ? Theme.of(context).primaryColor
-                        : Colors.white,
+                    color: profileColor,
                     size: 28.0,
                   ),
                   onTap: () {
@@ -131,6 +165,7 @@ class _CustomBottomNavigationBar3State
                       selection[0] = 0;
                       selection[1] = 0;
                       selection[2] = 1;
+                      onProfileClicked();
                     });
                   },
                 ),
