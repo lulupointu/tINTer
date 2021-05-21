@@ -1015,6 +1015,7 @@ class _BinomePairMatchInformationState
                               },
                               child: Icon(
                                 Icons.help_outline_outlined,
+                                color: Colors.black54,
                               ),
                             ),
                           ),

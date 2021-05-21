@@ -880,6 +880,7 @@ class _MatchInformationState extends State<MatchInformation> {
                               },
                               child: Icon(
                                 Icons.help_outline_outlined,
+                                color: Colors.black54,
                               ),
                             ),
                           ),

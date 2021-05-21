@@ -11,7 +11,6 @@ import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
@@ -76,108 +75,106 @@ class MatchsTab2State extends State<MatchsTab2> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         bottom: false,
-        child: Stack(
-          alignment: Alignment.topLeft,
-          children: [
-            BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
-                builder: (BuildContext context, MatchedMatchesState state) {
-              if (!(state is MatchedMatchesLoadSuccessState)) {
-                return Center(child: CircularProgressIndicator());
+        child: BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
+            builder: (BuildContext context, MatchedMatchesState state) {
+          if (!(state is MatchedMatchesLoadSuccessState)) {
+            return Center(child: CircularProgressIndicator());
+          }
+          // Get the 2 list out of all the matched matches
+          final List<BuildMatch> allMatches =
+              (state as MatchedMatchesLoadSuccessState).matches;
+          final List<BuildMatch> _matchesNotParrains = allMatches
+              .where((match) =>
+                  match.statusAssociatif != MatchStatus.parrainAccepted)
+              .toList();
+          final List<BuildMatch> _parrains = allMatches
+              .where((match) =>
+                  match.statusAssociatif == MatchStatus.parrainAccepted)
+              .toList();
+
+          // Sort them
+          _matchesNotParrains.sort((BuildMatch matchA, BuildMatch matchB) =>
+              matchA.name.compareTo(matchB.name));
+          _parrains.sort((BuildMatch matchA, BuildMatch matchB) =>
+              matchA.name.compareTo(matchB.name));
+
+          widget.fractions['matchSelectionMenu'] =
+              ((_matchesNotParrains.length == 0) ? 0.0 : 0.2) +
+                  ((_parrains.length == 0) ? 0.0 : 0.2);
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              // ignore: invalid_use_of_protected_member
+              if (!_controller.hasListeners) {
+                _controller.addListener(() {
+                  setState(() {
+                    topMenuScrolledFraction = max(
+                        0,
+                        min(
+                            1,
+                            _controller.position.pixels /
+                                (widget.fractions['matchSelectionMenu'] *
+                                    constraints.maxHeight)));
+                  });
+                });
               }
-              // Get the 2 list out of all the matched matches
-              final List<BuildMatch> allMatches =
-                  (state as MatchedMatchesLoadSuccessState).matches;
-              final List<BuildMatch> _matchesNotParrains = allMatches
-                  .where((match) =>
-                      match.statusAssociatif != MatchStatus.parrainAccepted)
-                  .toList();
-              final List<BuildMatch> _parrains = allMatches
-                  .where((match) =>
-                      match.statusAssociatif == MatchStatus.parrainAccepted)
-                  .toList();
 
-              // Sort them
-              _matchesNotParrains.sort((BuildMatch matchA, BuildMatch matchB) =>
-                  matchA.name.compareTo(matchB.name));
-              _parrains.sort((BuildMatch matchA, BuildMatch matchB) =>
-                  matchA.name.compareTo(matchB.name));
-
-              widget.fractions['matchSelectionMenu'] =
-                  ((_matchesNotParrains.length == 0) ? 0.0 : 0.2) +
-                      ((_parrains.length == 0) ? 0.0 : 0.2);
-              return LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  // ignore: invalid_use_of_protected_member
-                  if (!_controller.hasListeners) {
-                    _controller.addListener(() {
-                      setState(() {
-                        topMenuScrolledFraction = max(
-                            0,
-                            min(
-                                1,
-                                _controller.position.pixels /
-                                    (widget.fractions['matchSelectionMenu'] *
-                                        constraints.maxHeight)));
-                      });
-                    });
-                  }
-
-                  return NotificationListener<ScrollEndNotification>(
-                    onNotification:
-                        (ScrollEndNotification scrollEndNotification) {
-                      _scrollPhysics = _controller.offset == 0
-                          ? NeverScrollableScrollPhysics()
-                          : SnapScrollSheetPhysics(
-                              topChildrenHeight: [
-                                widget.fractions['matchSelectionMenu'] *
-                                    constraints.maxHeight,
-                              ],
-                            );
-                      setState(() {});
-                      return true;
-                    },
-                    child: ListView(
-                      physics: _scrollPhysics,
-                      controller: _controller,
-                      children: [
-                        MatchSelectionMenu(
-                          height: 115,
-                          matchesNotParrains: _matchesNotParrains,
-                          parrains: _parrains,
-                        ),
-                        (context.watch<SelectedAssociatif2>().matchLogin ==
-                                null)
-                            ? noMatchSelected(constraints.maxHeight)
-                            : CompareView(
-                                match: allMatches.firstWhere(
-                                    (BuildMatch match) =>
-                                        match.login ==
-                                        context
-                                            .watch<SelectedAssociatif2>()
-                                            .matchLogin),
-                                appHeight: constraints.maxHeight,
-                                topMenuScrolledFraction:
-                                    topMenuScrolledFraction,
-                                onCompareTapped: onCompareTapped,
-                              ),
-                      ],
-                    ),
-                  );
+              return NotificationListener<ScrollEndNotification>(
+                onNotification: (ScrollEndNotification scrollEndNotification) {
+                  _scrollPhysics = _controller.offset == 0
+                      ? NeverScrollableScrollPhysics()
+                      : SnapScrollSheetPhysics(
+                          topChildrenHeight: [
+                            widget.fractions['matchSelectionMenu'] *
+                                constraints.maxHeight,
+                          ],
+                        );
+                  setState(() {});
+                  return true;
                 },
+                child: ListView(
+                  physics: _scrollPhysics,
+                  controller: _controller,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        top: 15.0,
+                      ),
+                      child: Row(
+                        children: [
+                          ModeAssociatifOverlay(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    MatchSelectionMenu(
+                      height: 100,
+                      matchesNotParrains: _matchesNotParrains,
+                      parrains: _parrains,
+                    ),
+                    (context.watch<SelectedAssociatif2>().matchLogin == null)
+                        ? noMatchSelected(constraints.maxHeight)
+                        : CompareView(
+                            match: allMatches.firstWhere((BuildMatch match) =>
+                                match.login ==
+                                context
+                                    .watch<SelectedAssociatif2>()
+                                    .matchLogin),
+                            appHeight: constraints.maxHeight,
+                            topMenuScrolledFraction: topMenuScrolledFraction,
+                            onCompareTapped: onCompareTapped,
+                          ),
+                  ],
+                ),
               );
-            }),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 15.0,
-                left: 15.0,
-              ),
-              child: ModeAssociatifOverlay(),
-            ),
-          ],
-        ),
+            },
+          );
+        }),
       ),
     );
   }
@@ -272,7 +269,13 @@ class CompareView extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        facesAroundScore(context),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 30.0,
+            horizontal: 20.0,
+          ),
+          child: facesAroundScore(context),
+        ),
         SizedBox(height: 50),
         statusRectangle(context),
         SizedBox(height: 50),
@@ -286,13 +289,12 @@ class CompareView extends StatelessWidget {
 
   Widget facesAroundScore(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20.0),
-      height: appHeight * 0.25,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(
-            flex: 20,
+          Container(
+            width: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -316,16 +318,19 @@ class CompareView extends StatelessWidget {
                               height: height,
                               width: width));
                 }),
-                userPictureText(title: 'You'),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  'Moi',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
               ],
             ),
           ),
-          Expanded(
-            flex: 20,
-            child: score(context),
-          ),
-          Expanded(
-            flex: 20,
+          InBetweenScore2(context),
+          Container(
+            width: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -336,7 +341,14 @@ class CompareView extends StatelessWidget {
                             localPath: _match.profilePictureLocalPath,
                             height: height,
                             width: width)),
-                userPictureText(title: _match.name + '\n' + _match.surname),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  _match.name + '\n' + _match.surname,
+                  style: Theme.of(context).textTheme.headline5,
+                  textAlign: TextAlign.center,
+                ),
               ],
             ),
           ),
@@ -369,78 +381,103 @@ class CompareView extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
+        border: Border.all(
+            color: Color(0xff79BFC9), width: 4.0, style: BorderStyle.solid),
       ),
-      height: appHeight * 0.09,
-      width: appHeight * 0.09,
+      height: 80,
+      width: 80,
       child: getProfilePicture(
-        height: appHeight * 0.09,
-        width: appHeight * 0.09,
+        height: 80,
+        width: 80,
       ),
     );
   }
 
-  Widget score(BuildContext context) {
-    return informationRectangle(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: <Widget>[
-            Align(
-              alignment: AlignmentDirectional.center,
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      'Score',
-                      style: tinterTheme.textStyle.headline1,
-                    ),
-                    Stack(
-                      children: <Widget>[
-                        Text(
-                          _match.score.toString(),
-                          style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                            color: tinterTheme.textStyle.headline1.color,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              }),
-            ),
-            Align(
-              alignment: AlignmentDirectional.bottomEnd,
-              child: InkWell(
-                onTap: () => showWhatIsScore(context),
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        width: 2,
-                        color: tinterTheme.colors.defaultTextColor,
-                      ),
-                    ),
-                    height: 20,
-                    width: 20,
-                    child: Center(
-                      child: Text(
-                        '?',
-                        style: TextStyle(
-                            color: tinterTheme.colors.defaultTextColor),
-                      ),
-                    ),
-                  );
-                }),
+  Widget InBetweenScore2(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Container(
+            height: 125,
+            width: 125,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
               ),
-            )
-          ],
-        ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Text(
+                      'Score',
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                  ),
+                  Text(
+                    _match.score.toString(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline1
+                        .copyWith(fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 5.0, bottom: 5.0),
+            child: GestureDetector(
+              onTap: () {
+                showGeneralDialog(
+                    transitionDuration: Duration(milliseconds: 300),
+                    context: context,
+                    pageBuilder: (BuildContext context, animation, _) =>
+                        SimpleDialog(
+                          elevation: 5.0,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Text(
+                                'Aide',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0,
+                                  right: 20.0,
+                                  top: 10.0,
+                                  bottom: 10.0),
+                              child: Text(
+                                "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                " Il est basé sur les critères renseignés dans le profil.",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 75.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context, false);
+                                },
+                                child: Text("Continuer"),
+                              ),
+                            ),
+                          ],
+                        ));
+              },
+              child: Icon(
+                Icons.help_outline_outlined,
+                color: Colors.black54,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -999,34 +1036,29 @@ class MatchSelectionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 65.0,
-      ),
-      child: Container(
-        height: height,
-        child: Column(
-          children: [
-            (matchesNotParrains.length != 0)
-                ? Expanded(
-                    child: topMenu(
-                      context: context,
-                      matches: matchesNotParrains,
-                      title: 'Mes matchs',
-                    ),
-                  )
-                : Container(),
-            (parrains.length != 0)
-                ? Expanded(
-                    child: topMenu(
-                      context: context,
-                      matches: parrains,
-                      title: 'Mes Parrains et marraines',
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
+    return Container(
+      height: height,
+      child: Column(
+        children: [
+          (matchesNotParrains.length != 0)
+              ? Expanded(
+                  child: topMenu(
+                    context: context,
+                    matches: matchesNotParrains,
+                    title: 'Mes matchs',
+                  ),
+                )
+              : Container(),
+          (parrains.length != 0)
+              ? Expanded(
+                  child: topMenu(
+                    context: context,
+                    matches: parrains,
+                    title: 'Mes Parrains et marraines',
+                  ),
+                )
+              : Container(),
+        ],
       ),
     );
   }
@@ -1060,7 +1092,7 @@ class MatchSelectionMenu extends StatelessWidget {
                 height: 7.5,
               ),
               Container(
-                height: 65,
+                height: 50,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
@@ -1084,8 +1116,8 @@ class MatchSelectionMenu extends StatelessWidget {
                             child: getProfilePictureFromLocalPathOrLogin(
                               login: match.login,
                               localPath: match.profilePictureLocalPath,
-                              height: 60,
-                              width: 60,
+                              height: 44,
+                              width: 44,
                             ),
                           ),
                         ),

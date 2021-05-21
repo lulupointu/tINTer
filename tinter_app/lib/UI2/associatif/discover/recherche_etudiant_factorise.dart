@@ -539,7 +539,7 @@ class _UserResumeState extends State<UserResume> {
                                 style: Theme.of(context).textTheme.headline6),
                           ),
                           Text(
-                            searchedUser.score.toString(),
+                            searchedUser.InBetweenScore.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .headline4

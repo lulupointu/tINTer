@@ -974,6 +974,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                               },
                               child: Icon(
                                 Icons.help_outline_outlined,
+                                color: Colors.black54,
                               ),
                             ),
                           ),
