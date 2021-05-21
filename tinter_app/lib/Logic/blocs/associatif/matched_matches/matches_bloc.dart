@@ -11,17 +11,20 @@ part 'matches_event.dart';
 
 part 'matches_state.dart';
 
-class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> {
+class MatchedMatchesBloc
+    extends Bloc<MatchedMatchesEvent, MatchedMatchesState> {
   MatchedMatchesRepository matchedMatchesRepository;
   AuthenticationBloc authenticationBloc;
 
   MatchedMatchesBloc(
-      {@required this.matchedMatchesRepository, @required this.authenticationBloc})
+      {@required this.matchedMatchesRepository,
+      @required this.authenticationBloc})
       : assert(matchedMatchesRepository != null),
         super(MatchedMatchesInitialState());
 
   @override
-  Stream<MatchedMatchesState> mapEventToState(MatchedMatchesEvent event) async* {
+  Stream<MatchedMatchesState> mapEventToState(
+      MatchedMatchesEvent event) async* {
     if (event is MatchedMatchesRequestedEvent) {
       yield* _mapMatchedMatchesRequestedEventToState();
       return;
@@ -68,7 +71,8 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
 
   Stream<MatchedMatchesState> _mapMatchedMatchesRefreshEventToState() async* {
     print((state as MatchedMatchesLoadSuccessState).matches);
-    yield MatchedMatchesRefreshingState(matches: (state as MatchedMatchesLoadSuccessState).matches);
+    yield MatchedMatchesRefreshingState(
+        matches: (state as MatchedMatchesLoadSuccessState).matches);
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
       yield MatchedMatchesInitialState();
@@ -93,11 +97,19 @@ class MatchedMatchesBloc extends Bloc<MatchedMatchesEvent, MatchedMatchesState> 
 
   Stream<MatchedMatchesState> _mapChangeMatchStatusEventToState(
       ChangeStatusMatchedMatchesEvent event) async* {
-    BuildMatch newMatch = event.match.rebuild((b) => b..statusAssociatif = event.matchStatus);
+    BuildMatch newMatch =
+        event.match.rebuild((b) => b..statusAssociatif = event.matchStatus);
+    List<BuildMatch> newMatches =
+        (state as MatchedMatchesLoadSuccessState).matches;
+    final indexOfChangedMatch = newMatches.indexOf(event.match);
+    newMatches.removeAt(indexOfChangedMatch);
+    if (!(event.enumRelationStatusAssociatif ==
+        EnumRelationStatusAssociatif.ignored)) {
+      newMatches.insert(indexOfChangedMatch, newMatch);
+    }
 
-    MatchedMatchesLoadSuccessState successState = MatchedMatchesLoadSuccessState(
-        matches:
-            (state as MatchedMatchesLoadSuccessState).withUpdatedMatch(event.match, newMatch));
+    MatchedMatchesLoadSuccessState successState =
+        MatchedMatchesLoadSuccessState(matches: newMatches);
 
     yield MatchedMatchesSavingNewStatusState(
         matches: (state as MatchedMatchesLoadSuccessState).matches);
