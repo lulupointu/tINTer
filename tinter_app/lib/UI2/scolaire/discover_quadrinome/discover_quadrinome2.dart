@@ -114,7 +114,7 @@ class DiscoverBinomePairTab2 extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(
                 top: 15.0,
-                left: 15.0,
+                left: 20.0,
               ),
               child: ModeScolaireOverlay(),
             ),
@@ -1820,7 +1820,7 @@ class NoMoreDiscoveryBinomePairMatchesWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 15.0,
+              horizontal: 10.0,
               vertical: 50,
             ),
             child: BinomePairWideStudentSearch(),

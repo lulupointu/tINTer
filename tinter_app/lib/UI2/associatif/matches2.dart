@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:separated_column/separated_column.dart';
 import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
+import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
@@ -42,6 +43,8 @@ class MatchsTab2 extends StatefulWidget implements TinterTab {
   final Map<String, double> fractions = {
     'matchSelectionMenu': null,
   };
+
+  bool isMatchDeleted = false;
 
   @override
   MatchsTab2State createState() => MatchsTab2State();
@@ -157,7 +160,7 @@ class MatchsTab2State extends State<MatchsTab2> {
                       matchesNotParrains: _matchesNotParrains,
                       parrains: _parrains,
                     ),
-                    (context.watch<SelectedAssociatif2>().matchLogin == null)
+                    (context.watch<SelectedAssociatif2>().matchLogin == null) || widget.isMatchDeleted
                         ? noMatchSelected(constraints.maxHeight)
                         : CompareView(
                             match: allMatches.firstWhere((BuildMatch match) =>
@@ -168,6 +171,7 @@ class MatchsTab2State extends State<MatchsTab2> {
                             appHeight: constraints.maxHeight,
                             topMenuScrolledFraction: topMenuScrolledFraction,
                             onCompareTapped: onCompareTapped,
+                            onDeleteTapped: onDeleteTapped,
                           ),
                   ],
                 ),
@@ -177,6 +181,15 @@ class MatchsTab2State extends State<MatchsTab2> {
         }),
       ),
     );
+  }
+
+  void onDeleteTapped() {
+    setState(() {
+      widget.isMatchDeleted = true;
+      Future.delayed(Duration(milliseconds: 100), () {
+        widget.isMatchDeleted = false;
+      });
+    });
   }
 
   void onCompareTapped(appHeight) {
@@ -256,12 +269,14 @@ class CompareView extends StatelessWidget {
   final double appHeight;
   final double topMenuScrolledFraction;
   final onCompareTapped;
+  final onDeleteTapped;
 
   CompareView({
     @required BuildMatch match,
     @required this.appHeight,
     @required this.topMenuScrolledFraction,
     @required this.onCompareTapped,
+    @required this.onDeleteTapped,
   }) : _match = match;
 
   @override
@@ -276,7 +291,6 @@ class CompareView extends StatelessWidget {
           ),
           child: facesAroundScore(context),
         ),
-        SizedBox(height: 50),
         statusRectangle(context),
         SizedBox(height: 50),
         Opacity(
@@ -487,54 +501,50 @@ class CompareView extends StatelessWidget {
       widthFactor: 0.75,
       child: informationRectangle(
         padding: EdgeInsets.symmetric(vertical: 10.0),
-        height: appHeight * 0.2,
+        height: appHeight * 0.30,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
               flex: 1000,
               child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                    return AutoSizeText(
-                      (_match.statusAssociatif == MatchStatus.liked ||
-                              _match.statusAssociatif ==
-                                  MatchStatus.heIgnoredYou)
-                          ? "Cette personne ne t'a pas encore liker"
-                          : (_match.statusAssociatif == MatchStatus.matched)
-                              ? (_match.primoEntrant)
-                                  ? "Demande lui de te parrainer"
-                                  : "Propose lui d'être ton parrain"
-                              : (_match.statusAssociatif ==
-                                      MatchStatus.youAskedParrain)
-                                  ? "Demande de parrainage envoyée"
-                                  : (_match.statusAssociatif ==
-                                          MatchStatus.heAskedParrain)
-                                      ? (_match.primoEntrant)
-                                          ? "Cette personne veut te parrainer"
-                                          : "Cette personne veut que tu la parraine"
-                                      : (_match.statusAssociatif ==
-                                              MatchStatus.parrainAccepted)
-                                          ? (_match.primoEntrant)
-                                              ? "Cette personne te parraine!"
-                                              : 'Tu parraine cette personne!'
-                                          : (_match.statusAssociatif ==
-                                                  MatchStatus.parrainHeRefused)
-                                              ? 'Cette personne à refusée ta demande'
-                                              : (_match.statusAssociatif ==
-                                                      MatchStatus
-                                                          .parrainYouRefused)
-                                                  ? (_match.primoEntrant)
-                                                      ? "Tu as refusé de parrainer cette personne."
-                                                      : "Tu as refusé que cette personne te parraine."
-                                                  : 'ERROR: the status should not be ${_match.statusAssociatif}',
-                      style: tinterTheme.textStyle.headline2,
-                      maxLines: 1,
-                    );
-                  }),
-                ),
+                child: Consumer<TinterTheme>(
+                    builder: (context, tinterTheme, child) {
+                  return AutoSizeText(
+                    (_match.statusAssociatif == MatchStatus.liked ||
+                            _match.statusAssociatif == MatchStatus.heIgnoredYou)
+                        ? "Cette personne ne t'a pas encore liké.e"
+                        : (_match.statusAssociatif == MatchStatus.matched)
+                            ? (_match.primoEntrant)
+                                ? "Demande lui de te parrainer"
+                                : "Propose lui d'être ton parrain"
+                            : (_match.statusAssociatif ==
+                                    MatchStatus.youAskedParrain)
+                                ? "Demande de parrainage envoyée"
+                                : (_match.statusAssociatif ==
+                                        MatchStatus.heAskedParrain)
+                                    ? (_match.primoEntrant)
+                                        ? "Cette personne souhaite te parrainer"
+                                        : "Cette personne souhaite que tu la parraine"
+                                    : (_match.statusAssociatif ==
+                                            MatchStatus.parrainAccepted)
+                                        ? (_match.primoEntrant)
+                                            ? "Cette personne te parraine !"
+                                            : 'Tu parraine cette personne !'
+                                        : (_match.statusAssociatif ==
+                                                MatchStatus.parrainHeRefused)
+                                            ? 'Cette personne a refusé ta demande'
+                                            : (_match.statusAssociatif ==
+                                                    MatchStatus
+                                                        .parrainYouRefused)
+                                                ? (_match.primoEntrant)
+                                                    ? "Tu as refusé de parrainer cette personne"
+                                                    : "Tu as refusé que cette personne te parraine"
+                                                : 'ERROR: the status should not be ${_match.statusAssociatif}',
+                    style: Theme.of(context).textTheme.headline5,
+                    maxLines: 1,
+                  );
+                }),
               ),
             ),
             if ([MatchStatus.matched, MatchStatus.heAskedParrain]
@@ -637,32 +647,67 @@ class CompareView extends StatelessWidget {
             ],
             if (topMenuScrolledFraction != 1)
               Expanded(
-                flex: (1000 * (1 - topMenuScrolledFraction)).floor(),
-                child: Center(
-                  child: InkWell(
-                    onTap: () {
-                      onCompareTapped(appHeight);
-                    },
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return Container(
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                          color: tinterTheme.colors.background.withOpacity(0.8),
+                flex: (1500 * (1 - topMenuScrolledFraction)).floor(),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 20.0,
+                  ),
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        onCompareTapped(appHeight);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 15.0,
                         ),
-                        child: AutoSizeText(
-                          'Compare vos profils',
-                          style: tinterTheme.textStyle.chipNotLiked,
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          maxFontSize: 15,
+                        child: Text(
+                          'Comparer vos profils',
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                                color: Colors.white,
+                              ),
                         ),
-                      );
-                    }),
+                      ),
+                    ),
                   ),
                 ),
               ),
+            Expanded(
+              flex: (1500 * (1 - 0.33 * topMenuScrolledFraction)).floor(),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 20.0,
+                ),
+                child: Center(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).errorColor),
+                    ),
+                    onPressed: () {
+                      onCompareTapped(0);
+                      Future.delayed(Duration(milliseconds: 500), () {
+                        onDeleteTapped();
+
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 15.0,
+                      ),
+                      child: Text(
+                        'Supprimer ce match',
+                        style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -679,14 +724,11 @@ class CompareView extends StatelessWidget {
       child: Consumer<TinterTheme>(
         builder: (context, tinterTheme, child) {
           return Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              color: tinterTheme.colors.primary,
-            ),
             width: width != null ? width : Size.infinite.width,
             height: height,
-            child: child,
+            child: Card(
+              child: child,
+            ),
           );
         },
         child: child,
