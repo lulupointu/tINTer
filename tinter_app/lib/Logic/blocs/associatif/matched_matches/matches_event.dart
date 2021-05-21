@@ -27,6 +27,15 @@ abstract class ChangeStatusMatchedMatchesEvent extends MatchedMatchesEvent {
   List<Object> get props => [match, enumRelationStatusAssociatif];
 }
 
+class IgnoreMatchEvent extends ChangeStatusMatchedMatchesEvent {
+  const IgnoreMatchEvent({@required BuildMatch match})
+      : super(
+          match: match,
+          enumRelationStatusAssociatif: EnumRelationStatusAssociatif.ignored,
+          matchStatus: MatchStatus.ignored,
+        );
+}
+
 class AskParrainEvent extends ChangeStatusMatchedMatchesEvent {
   const AskParrainEvent({@required BuildMatch match})
       : super(
