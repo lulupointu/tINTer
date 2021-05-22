@@ -85,18 +85,21 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
           child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
             return Padding(
-              padding: EdgeInsets.only(top: 20.0),
+              padding: EdgeInsets.only(
+                top: 20.0,
+              ),
               child:
                   Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                  ),
                   child: SlidingUpPanel(
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10.0),
-                      topRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(5.0),
+                      topRight: Radius.circular(5.0),
                     ),
-                    margin: EdgeInsets.only(top: 0.0),
-                    color: tinterTheme.colors.bottomSheet,
+                    color: Colors.white,
                     backdropEnabled: true,
                     backdropOpacity: 1.0,
                     backdropColor: Theme.of(context).scaffoldBackgroundColor,
@@ -109,7 +112,9 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                                 AssociationsTab2
                                     .fractions['likedAssociations'] +
                                 AssociationsTab2.fractions['titles'] +
-                                AssociationsTab2.fractions['titlesSeparator']))*1.15,
+                                AssociationsTab2
+                                    .fractions['titlesSeparator'])) *
+                        1.15,
                     body: Column(
                       children: [
                         Padding(
@@ -148,18 +153,24 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                         searchString: searchString,
                       );
                     },
-                    header: TitleAndSearchBarAllAssociations(
-                      height: constraints.maxHeight *
-                          AssociationsTab2.fractions['titles'],
-                      width: constraints.maxWidth,
-                      margin: constraints.maxHeight *
-                          AssociationsTab2.fractions['horizontalMargin'],
-                      headerSpacing: constraints.maxHeight *
-                          AssociationsTab2.fractions['headerSpacing'],
-                      isSearching: isSearching,
-                      searchString: searchString,
-                      onSearch: onSearch,
-                      clearSearch: clearSearch,
+                    header: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 15.0,
+                      ),
+                      child: TitleAndSearchBarAllAssociations(
+                        height: constraints.maxHeight *
+                            AssociationsTab2.fractions['titles'],
+                        width: constraints.maxWidth,
+                        margin: constraints.maxHeight *
+                            AssociationsTab2.fractions['horizontalMargin'],
+                        headerSpacing: constraints.maxHeight *
+                            AssociationsTab2.fractions['headerSpacing'],
+                        isSearching: isSearching,
+                        searchString: searchString,
+                        onSearch: onSearch,
+                        clearSearch: clearSearch,
+                      ),
                     ),
                   ),
                 );
@@ -305,9 +316,7 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
           );
         }
         if ((userState as UserLoadSuccessState).user.associations.length == 0)
-          return NoLikedAssociationWidget(
-            margin: widget.margin,
-          );
+          return NoLikedAssociationWidget();
         return AnimatedList(
           physics:
               (_selectedItem == null) ? null : NeverScrollableScrollPhysics(),
@@ -394,32 +403,19 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
 }
 
 class NoLikedAssociationWidget extends StatelessWidget {
-  final double margin;
-
-  const NoLikedAssociationWidget({Key key, this.margin}) : super(key: key);
+  const NoLikedAssociationWidget({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-      return Container(
-        margin: EdgeInsets.symmetric(horizontal: margin),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: tinterTheme.colors.primaryAccent,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Aucune association sélectionnée.',
+          style: Theme.of(context).textTheme.headline5,
         ),
-        child: Stack(
-          children: [
-            Center(
-              child: Text(
-                'Aucune association sélectionnée.',
-                style: tinterTheme.textStyle.headline2
-                    .copyWith(color: Colors.black),
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+      ],
+    );
   }
 }
 
@@ -674,11 +670,8 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return Container(
-        height: height,
-        width: width - 2 * margin,
-        color: tinterTheme.colors.bottomSheet,
-        margin:
-            EdgeInsets.only(left: margin, right: margin, top: headerSpacing),
+        height: !isSearching ? height : height * 1.5,
+        width: MediaQuery.of(context).size.width - 80.0,
         child: Stack(
           alignment: Alignment.centerLeft,
           children: [
@@ -687,39 +680,53 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
               opacity: isSearching ? 0 : 1,
               child: Text(
                 'Toutes les associations',
-                style: tinterTheme.textStyle.headline2
-                    .copyWith(color: tinterTheme.colors.defaultTextColor),
+                style: Theme.of(context).textTheme.headline5,
                 maxLines: 1,
               ),
             ),
             Align(
               alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 30.0,
-                ),
-                child: InkWell(
-                  onTap: () => onSearch(""),
-                  child: AnimatedContainer(
-                    duration: duration,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                      color: tinterTheme.colors.primaryAccent,
+              child: InkWell(
+                onTap: () => onSearch(""),
+                child: AnimatedContainer(
+                  duration: duration,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5.0),
                     ),
-                    width: isSearching ? width : height,
-                    height: height,
-                    child: !isSearching
-                        ? Icon(
-                            Icons.search,
-                            color: Colors.black,
-                          )
-                        : TextField(
+                    color: isSearching
+                        ? Colors.white
+                        : Theme.of(context).primaryColor,
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor,
+                      width: !isSearching ? 0.0 : 2.5,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  width: isSearching ? width : height * 2.5,
+                  height: !isSearching ? height : height * 1.5,
+                  child: !isSearching
+                      ? Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        )
+                      : Container(
+                          height: height * 1.5,
+                          child: TextFormField(
                             textInputAction: TextInputAction.search,
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(
+                                top: 6.0,
+                              ),
                               focusedBorder: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.black,
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 10.0,
+                                ),
+                                child: Icon(
+                                  Icons.search,
+                                  color: Theme.of(context).primaryColor,
+                                ),
                               ),
                               suffixIcon: searchString == ""
                                   ? null
@@ -727,7 +734,7 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
                                       onTap: clearSearch,
                                       child: Icon(
                                         Icons.clear,
-                                        color: Colors.black,
+                                        color: Theme.of(context).primaryColor,
                                         size: 22,
                                       ),
                                     ),
@@ -736,7 +743,7 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
                             maxLines: 1,
                             onChanged: (String text) => onSearch(text),
                           ),
-                  ),
+                        ),
                 ),
               ),
             ),
