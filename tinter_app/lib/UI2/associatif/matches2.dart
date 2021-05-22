@@ -196,14 +196,6 @@ class MatchsTab2State extends State<MatchsTab2> {
           SizedBox(
             height: appHeight * 0.1,
           ),
-          Icon(
-            Icons.face,
-            color: Colors.black87,
-            size: 70,
-          ),
-          SizedBox(
-            height: 10,
-          ),
           BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
             buildWhen:
                 (MatchedMatchesState previousState, MatchedMatchesState state) {
@@ -228,13 +220,37 @@ class MatchsTab2State extends State<MatchsTab2> {
                           .matches
                           .length ==
                       0)
-                  ? Text(
-                      "Aucun match à afficher pour l'instant",
-                      style: Theme.of(context).textTheme.headline4,
+                  ? Column(
+                      children: [
+                        Icon(
+                          Icons.sentiment_very_dissatisfied_rounded,
+                          color: Colors.black87,
+                          size: 70,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Il n'y a aucun match à afficher pour l'instant.",
+                          style: Theme.of(context).textTheme.headline5,
+                        )
+                      ],
                     )
-                  : Text(
-                      'Sélectionne un match !',
-                      style: Theme.of(context).textTheme.headline4,
+                  : Column(
+                      children: [
+                        Icon(
+                          Icons.face,
+                          color: Colors.black87,
+                          size: 70,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Sélectionne un match !",
+                          style: Theme.of(context).textTheme.headline4,
+                        )
+                      ],
                     );
             },
           ),
@@ -485,7 +501,13 @@ class CompareView extends StatelessWidget {
       widthFactor: 0.75,
       child: informationRectangle(
         padding: EdgeInsets.symmetric(vertical: 10.0),
-        height: appHeight * 0.30 * (1 - 0.25*topMenuScrolledFraction),
+        height: appHeight *
+            0.375 *
+            (1 - 0.33 * topMenuScrolledFraction) *
+            (([MatchStatus.matched, MatchStatus.heAskedParrain]
+                    .contains(_match.statusAssociatif))
+                ? 1.0
+                : 0.75),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -531,112 +553,12 @@ class CompareView extends StatelessWidget {
                 }),
               ),
             ),
-            if ([MatchStatus.matched, MatchStatus.heAskedParrain]
-                .contains(_match.statusAssociatif)) ...[
-              Container(
-                constraints: BoxConstraints(
-                  minHeight: 10,
-                ),
-              ),
-              Expanded(
-                flex: 1000,
-                child: (_match.statusAssociatif == MatchStatus.matched)
-                    ? Center(
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          onTap: () {
-                            BlocProvider.of<MatchedMatchesBloc>(context)
-                                .add(AskParrainEvent(match: _match));
-                          },
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                            return Container(
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(3.0)),
-                                color: tinterTheme.colors.secondary,
-                              ),
-                              child: AutoSizeText(
-                                "Envoyer une demande",
-                                style: tinterTheme.textStyle.headline2,
-                              ),
-                            );
-                          }),
-                        ),
-                      )
-                    : (_match.statusAssociatif == MatchStatus.heAskedParrain)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                onTap: () {
-                                  BlocProvider.of<MatchedMatchesBloc>(context)
-                                      .add(AcceptParrainEvent(match: _match));
-                                },
-                                child: Consumer<TinterTheme>(
-                                    builder: (context, tinterTheme, child) {
-                                  return Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(3.0)),
-                                      color: tinterTheme.colors.secondary,
-                                    ),
-                                    child: AutoSizeText(
-                                      "Accepter",
-                                      style: tinterTheme.textStyle.headline2,
-                                    ),
-                                  );
-                                }),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                onTap: () {
-                                  BlocProvider.of<MatchedMatchesBloc>(context)
-                                      .add(RefuseParrainEvent(match: _match));
-                                },
-                                child: Consumer<TinterTheme>(
-                                    builder: (context, tinterTheme, child) {
-                                  return Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(3.0)),
-                                      color: tinterTheme.colors.secondary,
-                                    ),
-                                    child: AutoSizeText(
-                                      "Refuser",
-                                      style: tinterTheme.textStyle.headline2,
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ],
-                          )
-                        : AutoSizeText(
-                            'ERROR: the state should not be ' +
-                                _match.statusAssociatif.toString(),
-                          ),
-              ),
-              Container(
-                constraints: BoxConstraints(
-                  minHeight: 10,
-                ),
-              ),
-            ],
             if (topMenuScrolledFraction != 1)
               Expanded(
                 flex: (1500 * (1 - topMenuScrolledFraction)).floor(),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 15.0,
-                  ),
-                  child: Center(
+                child: Center(
+                  child: Container(
+                    width: 250,
                     child: ElevatedButton(
                       onPressed: () {
                         onCompareTapped(appHeight);
@@ -657,13 +579,124 @@ class CompareView extends StatelessWidget {
                   ),
                 ),
               ),
+            if ([MatchStatus.matched, MatchStatus.heAskedParrain]
+                .contains(_match.statusAssociatif)) ...[
+              Expanded(
+                flex: 1500,
+                child: //(_match.statusAssociatif == MatchStatus.matched)
+                    false
+                        ? Center(
+                            child: Container(
+                              width: 250,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Theme.of(context).indicatorColor),
+                                ),
+                                onPressed: () {
+                                  BlocProvider.of<MatchedMatchesBloc>(context)
+                                      .add(AskParrainEvent(match: _match));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30.0,
+                                    vertical: 15.0,
+                                  ),
+                                  child: Text(
+                                    'Envoyer une demande',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(
+                                          color: Colors.white,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : (_match.statusAssociatif ==
+                                MatchStatus.heAskedParrain)
+                            ? Container(
+                                width: 250,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          BlocProvider.of<MatchedMatchesBloc>(
+                                                  context)
+                                              .add(AcceptParrainEvent(
+                                                  match: _match));
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0,
+                                            vertical: 15.0,
+                                          ),
+                                          child: Text(
+                                            'Accepter',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5
+                                                .copyWith(
+                                                  color: Colors.white,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Theme.of(context)
+                                                      .indicatorColor),
+                                        ),
+                                        onPressed: () {
+                                          BlocProvider.of<MatchedMatchesBloc>(
+                                                  context)
+                                              .add(RefuseParrainEvent(
+                                                  match: _match));
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0,
+                                            vertical: 15.0,
+                                          ),
+                                          child: Text(
+                                            'Refuser',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5
+                                                .copyWith(
+                                                  color: Colors.white,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : AutoSizeText(
+                                'ERROR: the state should not be ' +
+                                    _match.statusAssociatif.toString(),
+                              ),
+              ),
+            ],
             Expanded(
-              flex: (1500 * (1 - 0.33 * topMenuScrolledFraction)).floor(),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 20.0,
-                ),
-                child: Center(
+              flex: 1500,
+              child: Center(
+                child: Container(
+                  width: 250,
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
@@ -691,7 +724,10 @@ class CompareView extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
           ],
         ),
       ),
@@ -1053,12 +1089,12 @@ class ProfileInformation extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 20.0,
-            ),
-            child: SizedBox(
-              width: double.infinity,
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 20.0,
+              ),
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
@@ -1154,7 +1190,9 @@ class MatchSelectionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: ((matchesNotParrains.length != 0) && (parrains.length != 0)) ? 2*height + 15.0 : height,
+      height: ((matchesNotParrains.length != 0) && (parrains.length != 0))
+          ? 2 * height + 15.0
+          : height,
       child: Column(
         children: [
           (matchesNotParrains.length != 0)
