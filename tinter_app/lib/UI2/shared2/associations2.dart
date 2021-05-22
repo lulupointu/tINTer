@@ -961,34 +961,63 @@ class AssociationCard2 extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.only(
-            left: 20.0,
+            left: 15.0,
             top: 15.0,
             bottom: 15.0,
+            right: 20.0,
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 3.0,
-                    color: Colors.black54,
-                  ),
-                ),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: ClipOval(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 3.0,
+                        color: Colors.black54,
                       ),
-                      child: getLogoFromAssociation(
-                          associationName: association.name),
+                    ),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: ClipOval(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: getLogoFromAssociation(
+                              associationName: association.name),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 10.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          association.name,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                        Text(
+                          'Todo',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Icon(
+                Icons.favorite_outline_rounded,
+                color: Theme.of(context).indicatorColor,
               ),
             ],
           ),
