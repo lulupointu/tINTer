@@ -14,6 +14,7 @@ import 'package:tinterapp/UI2/shared2/user_profile/user_associatif_profile2.dart
 import 'package:tinterapp/UI2/shared2/user_profile/user_scolaire_profile2.dart';
 
 import '../associatif_to_scolaire_button2.dart';
+import '../associations2.dart';
 
 class UserTab3 extends StatefulWidget implements TinterTab {
   const UserTab3({Key key}) : super(key: key);
@@ -350,7 +351,7 @@ class AssociationsRectangle2 extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AssociationsTab()),
+          MaterialPageRoute(builder: (context) => AssociationsTab2()),
         );
       },
       child: Stack(
