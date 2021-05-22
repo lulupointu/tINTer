@@ -7,13 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:separated_column/separated_column.dart';
 import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
-import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
-import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
 import 'package:tinterapp/UI/shared/snap_scroll_sheet_physics/snap_scroll_sheet_physics.dart';
 import 'package:tinterapp/UI2/associatif/mode_associatif_overlay.dart';
@@ -487,7 +485,7 @@ class CompareView extends StatelessWidget {
       widthFactor: 0.75,
       child: informationRectangle(
         padding: EdgeInsets.symmetric(vertical: 10.0),
-        height: appHeight * 0.30,
+        height: appHeight * 0.30 * (1 - 0.25*topMenuScrolledFraction),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -636,7 +634,7 @@ class CompareView extends StatelessWidget {
                 flex: (1500 * (1 - topMenuScrolledFraction)).floor(),
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    bottom: 20.0,
+                    bottom: 15.0,
                   ),
                   child: Center(
                     child: ElevatedButton(
