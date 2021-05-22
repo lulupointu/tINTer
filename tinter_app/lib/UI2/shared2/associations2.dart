@@ -776,8 +776,11 @@ class AllAssociationsSheetBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-          left: margin, right: margin, top: headerSpacing + headerHeight),
+      padding: const EdgeInsets.only(
+        right: 65.0,
+        left: 25.0,
+        top: 50.0,
+      ),
       child: NotificationListener<OverscrollIndicatorNotification>(
         onNotification: (overscroll) {
           if (overscroll.leading) {
