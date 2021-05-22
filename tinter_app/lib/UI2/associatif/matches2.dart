@@ -17,6 +17,7 @@ import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
 import 'package:tinterapp/UI/shared/snap_scroll_sheet_physics/snap_scroll_sheet_physics.dart';
 import 'package:tinterapp/UI2/associatif/mode_associatif_overlay.dart';
+import 'package:tinterapp/UI2/shared2/random_gender.dart';
 import 'package:tinterapp/main.dart';
 
 main() => runApp(MaterialApp(
@@ -321,7 +322,7 @@ class CompareView extends StatelessWidget {
                   height: 5.0,
                 ),
                 Text(
-                  'Moi',
+                  'Moi\n',
                   style: Theme.of(context).textTheme.headline5,
                 ),
               ],
@@ -724,8 +725,8 @@ class CompareView extends StatelessWidget {
   Widget verticalSeparator() {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return Container(
-        width: 1.0,
-        color: tinterTheme.colors.secondaryAccent,
+        width: 2.5,
+        color: Theme.of(context).disabledColor.withOpacity(0.6),
       );
     });
   }
@@ -771,190 +772,354 @@ class ProfileInformation extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(
-            height: 50,
+            height: 20,
           );
         },
         includeOuterSeparators: false,
         children: <Widget>[
-          informationRectangle(
-            context: context,
-            width: double.infinity,
+          Card(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              padding:
+                  const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                    return Text(
-                      'Associations',
-                      style: tinterTheme.textStyle.headline2,
-                    );
-                  }),
+                  Text(
+                    'Associations',
+                    style: Theme.of(context).textTheme.headline5.copyWith(
+                          fontSize: 14.0,
+                        ),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
                   Container(
-                    height: 50,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: user.associations.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                              right: 5.0, left: index == 0 ? 5.0 : 0),
-                          child: associationBubble(
-                              context, user.associations[index]),
-                        );
-                      },
+                    width: double.infinity,
+                    child: Stack(
+                      alignment: AlignmentDirectional.centerStart,
+                      children: <Widget>[
+                        user.associations.length >= 1
+                            ? Container(
+                                height: 50,
+                                child: AnimatedSwitcher(
+                                  duration: Duration(milliseconds: 300),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: user.associations.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 5.0,
+                                        ),
+                                        child: associationBubble(
+                                            context, user.associations[index]),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                'Aucune association sélectionnée',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(
+                                      fontSize: 14.0,
+                                    ),
+                              ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          informationRectangle(
-            context: context,
+          Card(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Column(
-                  children: <Widget>[
-                    Text(
-                      'Attirance pour la vie associative',
-                      textAlign: TextAlign.center,
-                      style: tinterTheme.textStyle.headline2,
-                    ),
-                    SliderTheme(
-                      data: tinterTheme.slider.disabled,
-                      child: Slider(
-                        value: user.attiranceVieAsso,
-                        onChanged: null,
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Attirance pour la vie associative',
+                    style: Theme.of(context).textTheme.headline5.copyWith(
+                          fontSize: 14.0,
+                        ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(
+                          Icons.celebration,
+                          color: Theme.of(context).primaryColor,
+                          size: 22.0,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }),
+                      Expanded(
+                        child: SliderTheme(
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                disabledThumbColor: Color(0xffCECECE),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                trackHeight: 6.0,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8.0),
+                              ),
+                          child: Slider(
+                            value: user.attiranceVieAsso,
+                            onChanged: null,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          informationRectangle(
-            context: context,
+          Card(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Column(
-                  children: <Widget>[
-                    Text(
-                      'Cours ou soirée?',
-                      style: tinterTheme.textStyle.headline2,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    discoverSlider(
-                        context,
-                        SliderTheme(
-                          data: tinterTheme.slider.disabled,
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Préférence entre vie associative et scolaire',
+                    style: Theme.of(context).textTheme.headline5.copyWith(
+                          fontSize: 14.0,
+                        ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(
+                          Icons.celebration,
+                          color: Theme.of(context).primaryColor,
+                          size: 22.0,
+                        ),
+                      ),
+                      Expanded(
+                        child: SliderTheme(
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                disabledThumbColor: Color(0xffCECECE),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                trackHeight: 6.0,
+                                disabledInactiveTrackColor:
+                                    Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8.0),
+                              ),
                           child: Slider(
                             value: user.feteOuCours,
                             onChanged: null,
                           ),
                         ),
-                        leftLabel: 'Cours',
-                        rightLabel: 'Soirée'),
-                  ],
-                );
-              }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Icon(
+                          Icons.school_rounded,
+                          color: Theme.of(context).indicatorColor,
+                          size: 22.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          informationRectangle(
-            context: context,
+          Card(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Column(
-                  children: <Widget>[
-                    Text(
-                      'Parrain qui aide ou avec qui sortir?',
-                      style: tinterTheme.textStyle.headline2,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    discoverSlider(
-                        context,
-                        SliderTheme(
-                          data: tinterTheme.slider.disabled,
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    randomGender == Gender.M
+                        ? 'Parrain qui aide ou avec qui sortir ?'
+                        : 'Marraine qui aide ou avec qui sortir ?',
+                    style: Theme.of(context).textTheme.headline5.copyWith(
+                          fontSize: 14.0,
+                        ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(
+                          Icons.sports_bar_rounded,
+                          color: Theme.of(context).primaryColor,
+                          size: 22.0,
+                        ),
+                      ),
+                      Expanded(
+                        child: SliderTheme(
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                disabledThumbColor: Color(0xffCECECE),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                trackHeight: 6.0,
+                                disabledInactiveTrackColor:
+                                    Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8.0),
+                              ),
                           child: Slider(
                             value: user.aideOuSortir,
                             onChanged: null,
                           ),
                         ),
-                        leftLabel: 'Aide',
-                        rightLabel: 'Sortir'),
-                  ],
-                );
-              }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Icon(
+                          Icons.support_rounded,
+                          color: Theme.of(context).indicatorColor,
+                          size: 22.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          informationRectangle(
-            context: context,
+          Card(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Column(
-                  children: <Widget>[
-                    Text(
-                      'Aime organiser les événements?',
-                      style: tinterTheme.textStyle.headline2,
-                      textAlign: TextAlign.center,
-                    ),
-                    SliderTheme(
-                      data: tinterTheme.slider.disabled,
-                      child: Slider(
-                        value: user.organisationEvenements,
-                        onChanged: null,
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "Envie d'organiser des événements ?",
+                    style: Theme.of(context).textTheme.headline5.copyWith(
+                          fontSize: 14.0,
+                        ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(
+                          Icons.event_available_rounded,
+                          color: Theme.of(context).primaryColor,
+                          size: 22.0,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }),
+                      Expanded(
+                        child: SliderTheme(
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                disabledThumbColor: Color(0xffCECECE),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                trackHeight: 6.0,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8.0),
+                              ),
+                          child: Slider(
+                            value: user.organisationEvenements,
+                            onChanged: null,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: informationRectangle(
-              context: context,
+            padding: const EdgeInsets.only(
+              bottom: 20.0,
+            ),
+            child: SizedBox(
               width: double.infinity,
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Column(
-                  children: <Widget>[
-                    Text(
-                      'Goûts musicaux',
-                      style: tinterTheme.textStyle.headline2,
-                    ),
-                    Wrap(
-                      spacing: 15,
-                      children: <Widget>[
-                        for (String musicStyle in user.goutsMusicaux)
-                          Chip(
-                            label: Text(musicStyle),
-                            labelStyle: tinterTheme.textStyle.chipLiked,
-                            backgroundColor: tinterTheme.colors.primaryAccent,
-                          )
-                      ],
-                    )
-                  ],
-                );
-              }),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Goûts musicaux',
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      user.goutsMusicaux.length >= 1
+                          ? AnimatedSwitcher(
+                              duration: Duration(milliseconds: 300),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                key: GlobalKey(),
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: <Widget>[
+                                  for (String musicStyle in user.goutsMusicaux)
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.0, vertical: 6.0),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            spreadRadius: 0.2,
+                                            blurRadius: 5,
+                                            offset: Offset(2, 2),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)),
+                                        border: Border.all(
+                                            color: (Theme.of(context)
+                                                .primaryColor),
+                                            width: 3.0,
+                                            style: BorderStyle.solid),
+                                        color: Colors.white,
+                                      ),
+                                      child: Text(musicStyle),
+                                    ),
+                                ],
+                              ),
+                            )
+                          : Text(
+                              'Aucun goût musical sélectionné',
+                              style: Theme.of(context).textTheme.headline5,
+                              textAlign: TextAlign.center,
+                            )
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -962,91 +1127,18 @@ class ProfileInformation extends StatelessWidget {
     );
   }
 
-  Widget informationRectangle(
-      {@required BuildContext context,
-      @required Widget child,
-      double width,
-      double height}) {
-    return Consumer<TinterTheme>(
-      builder: (context, tinterTheme, child) {
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            color: tinterTheme.colors.primary,
-          ),
-          width: width,
-          height: height,
-          child: child,
-        );
-      },
-      child: child,
-    );
-  }
-
   Widget associationBubble(BuildContext context, Association association) {
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
-        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Theme.of(context).primaryColor, width: 2.5),
+        ),
         child: ClipOval(
           child: getLogoFromAssociation(associationName: association.name),
         ),
       ),
-    );
-  }
-
-//  Widget inactiveSlider(BuildContext context, double value, {String labelRight, String labelLeft}) {
-//    return SliderTheme(
-//      data: Theme.of(context).sliderTheme.copyWith(
-//        trackShape: NoPaddingTrackShape()
-//      ),
-//      child: Slider(
-//        value: value,
-//        onChanged: null,
-//      ),
-//    );
-//  }
-
-  Widget discoverSlider(BuildContext context, Widget slider,
-      {String leftLabel, String rightLabel}) {
-    return Stack(
-      children: <Widget>[
-        Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              SliderLabel(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 3.0, vertical: 2.0),
-                  child: Text(
-                    leftLabel,
-                    style: tinterTheme.textStyle.smallLabel,
-                  ),
-                ),
-                side: Side.Left,
-                triangleSize: 14,
-              ),
-              SliderLabel(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 3.0, vertical: 2.0),
-                  child: Text(
-                    rightLabel,
-                    style: tinterTheme.textStyle.smallLabel,
-                  ),
-                ),
-                side: Side.Right,
-                triangleSize: 14,
-              ),
-            ],
-          );
-        }),
-        Padding(
-          padding: const EdgeInsets.only(top: 13.0, left: 4, right: 4),
-          child: slider,
-        ),
-      ],
     );
   }
 }
