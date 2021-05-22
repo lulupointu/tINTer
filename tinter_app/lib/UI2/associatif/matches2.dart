@@ -104,8 +104,8 @@ class MatchsTab2State extends State<MatchsTab2> {
               matchA.name.compareTo(matchB.name));
 
           widget.fractions['matchSelectionMenu'] =
-              ((_matchesNotParrains.length == 0) ? 0.0 : 0.2) +
-                  ((_parrains.length == 0) ? 0.0 : 0.2);
+              ((_matchesNotParrains.length == 0) ? 0.0 : 0.275) +
+                  ((_parrains.length == 0) ? 0.0 : 0.175);
           return LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               // ignore: invalid_use_of_protected_member
@@ -200,7 +200,7 @@ class MatchsTab2State extends State<MatchsTab2> {
           ),
           Icon(
             Icons.face,
-            color: tinterTheme.colors.defaultTextColor,
+            color: Colors.black87,
             size: 70,
           ),
           SizedBox(
@@ -231,12 +231,12 @@ class MatchsTab2State extends State<MatchsTab2> {
                           .length ==
                       0)
                   ? Text(
-                      "Aucun match pour l'instant",
-                      style: tinterTheme.textStyle.headline2,
+                      "Aucun match à afficher pour l'instant",
+                      style: Theme.of(context).textTheme.headline4,
                     )
                   : Text(
-                      'Selectionnez un match.',
-                      style: tinterTheme.textStyle.headline2,
+                      'Sélectionne un match !',
+                      style: Theme.of(context).textTheme.headline4,
                     );
             },
           ),
@@ -278,7 +278,7 @@ class CompareView extends StatelessWidget {
           child: facesAroundScore(context),
         ),
         statusRectangle(context),
-        SizedBox(height: 50),
+        SizedBox(height: 30),
         Opacity(
           opacity: topMenuScrolledFraction,
           child: informationComparison(),
@@ -519,7 +519,7 @@ class CompareView extends StatelessWidget {
                                             : 'Tu parraine cette personne !'
                                         : (_match.statusAssociatif ==
                                                 MatchStatus.parrainHeRefused)
-                                            ? 'Cette personne a refusé ta demande'
+                                            ? 'Cette personne a refusé ta demande de parrainage'
                                             : (_match.statusAssociatif ==
                                                     MatchStatus
                                                         .parrainYouRefused)
@@ -1156,7 +1156,7 @@ class MatchSelectionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      height: ((matchesNotParrains.length != 0) && (parrains.length != 0)) ? 2*height + 15.0 : height,
       child: Column(
         children: [
           (matchesNotParrains.length != 0)
@@ -1168,12 +1168,17 @@ class MatchSelectionMenu extends StatelessWidget {
                   ),
                 )
               : Container(),
+          ((matchesNotParrains.length != 0) && (parrains.length != 0))
+              ? SizedBox(
+                  height: 15.0,
+                )
+              : Container(),
           (parrains.length != 0)
               ? Expanded(
                   child: topMenu(
                     context: context,
                     matches: parrains,
-                    title: 'Mes Parrains et marraines',
+                    title: 'Mes parrains et marraines',
                   ),
                 )
               : Container(),
