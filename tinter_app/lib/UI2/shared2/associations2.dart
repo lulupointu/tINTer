@@ -842,7 +842,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
                         ? headerSpacing + keyboardMargin + 30
                         : 0,
                   ),
-                  child: AssociationCard(
+                  child: AssociationCard2(
                     association: _associations[index],
                     liked: liked,
                     onLike: () {
@@ -933,5 +933,67 @@ class AssociationCard extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+class AssociationCard2 extends StatelessWidget {
+  final Association association;
+  final bool liked;
+  final VoidCallback onLike;
+
+  const AssociationCard2(
+      {Key key,
+      @required this.association,
+      @required this.liked,
+      @required this.onLike})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: Theme.of(context).primaryColor,
+            width: 2.0,
+            style: BorderStyle.solid),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      ),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 20.0,
+            top: 15.0,
+            bottom: 15.0,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 3.0,
+                    color: Colors.black54,
+                  ),
+                ),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: ClipOval(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: getLogoFromAssociation(
+                          associationName: association.name),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
