@@ -13,6 +13,7 @@ import 'package:tinterapp/UI2/shared2/profile_creation/sub_profile_creation/asso
 import 'package:tinterapp/UI2/shared2/user_profile/user_associatif_profile2.dart';
 import 'package:tinterapp/UI2/shared2/user_profile/user_scolaire_profile2.dart';
 
+import '../../../main.dart';
 import '../associatif_to_scolaire_button2.dart';
 import '../associations2.dart';
 
@@ -30,6 +31,8 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
   OverlayEntry _saveModificationsOverlayEntry;
   bool _showSaveModificationsOverlayEntry = true;
 
+  ScrollController _controller = ScrollController();
+
   @override
   void initState() {
     BlocProvider.of<UserBloc>(context).add(UserRefreshEvent());
@@ -46,6 +49,35 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Overlay.of(context).insert(_saveModificationsOverlayEntry);
+    });
+  }
+
+  @override
+  void dispose() {
+    _saveModificationsOverlayEntry?.remove();
+    _controller.dispose();
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void didPushNext() {
+    setState(() {
+      _showSaveModificationsOverlayEntry = false;
+    });
+    super.didPushNext();
+  }
+
+  @override
+  void didPopNext() {
+    setState(() {
+      _showSaveModificationsOverlayEntry = true;
     });
   }
 

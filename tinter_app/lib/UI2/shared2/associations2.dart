@@ -941,12 +941,12 @@ class AssociationCard2 extends StatelessWidget {
   final bool liked;
   final VoidCallback onLike;
 
-  const AssociationCard2(
-      {Key key,
-      @required this.association,
-      @required this.liked,
-      @required this.onLike})
-      : super(key: key);
+  const AssociationCard2({
+    Key key,
+    @required this.association,
+    @required this.onLike,
+    this.liked = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -961,10 +961,10 @@ class AssociationCard2 extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.only(
-            left: 15.0,
+            left: 10.0,
             top: 15.0,
             bottom: 15.0,
-            right: 20.0,
+            right: 10.0,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1006,18 +1006,25 @@ class AssociationCard2 extends StatelessWidget {
                           association.name,
                           style: Theme.of(context).textTheme.headline5,
                         ),
-                        Text(
-                          'Todo',
-                          style: Theme.of(context).textTheme.headline6,
+                        Container(
+                          color: Colors.green,
+                          width: 175,
+                          child: Text(
+                            association.description,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-              Icon(
-                Icons.favorite_outline_rounded,
-                color: Theme.of(context).indicatorColor,
+              GestureDetector(
+                onTap: onLike,
+                child: Icon(
+                  liked ? Icons.favorite : Icons.favorite_border,
+                  color: Theme.of(context).indicatorColor,
+                ),
               ),
             ],
           ),
