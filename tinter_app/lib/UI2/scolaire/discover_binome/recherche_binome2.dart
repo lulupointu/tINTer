@@ -1,4 +1,5 @@
 import 'package:async/async.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -74,12 +75,17 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: const EdgeInsets.all(
+          20.0,
+        ),
         child: Card(
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                  vertical: 20.0,
+                ),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -162,7 +168,7 @@ class _SearchStudentScolaireTab2State extends State<SearchStudentScolaireTab2> {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
                         child: Center(
-                          child: Text('Aucune recherche effectuée.',
+                          child: Text('Aucune recherche effectuée',
                               style: Theme.of(context).textTheme.headline5),
                         ),
                       ),
@@ -228,7 +234,11 @@ class UserResume extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0, left: 20.0, right: 20.0),
+      padding: const EdgeInsets.only(
+        bottom: 15.0,
+        left: 20.0,
+        right: 20.0,
+      ),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
@@ -239,7 +249,12 @@ class UserResume extends StatelessWidget {
         ),
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            padding: const EdgeInsets.only(
+              left: 10.0,
+              right: 15.0,
+              top: 15.0,
+              bottom: 15.0,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -247,146 +262,140 @@ class UserResume extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, top: 5.0, bottom: 5.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: Colors.black.withOpacity(0.6),
-                                width: 3.0,
-                                style: BorderStyle.solid),
-                          ),
-                          child: getProfilePictureFromLogin(
-                            login: searchedUser.login,
-                            height: 60,
-                            width: 60,
-                          ),
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                              color: Colors.black54,
+                              width: 2.5,
+                              style: BorderStyle.solid),
+                        ),
+                        child: getProfilePictureFromLogin(
+                          login: searchedUser.login,
+                          height: 60,
+                          width: 60,
                         ),
                       ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Container(
-                            height: 55,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.zero,
-                                    child: Text(
-                                      searchedUser.name +
-                                          ' ' +
-                                          searchedUser.surname,
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                        child: Container(
+                          height: 60,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.zero,
+                                  child: AutoSizeText(
+                                    searchedUser.name +
+                                        ' ' +
+                                        searchedUser.surname,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                    maxLines: 1,
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () =>
-                                      BlocProvider.of<UserScolaireSearchBloc>(
-                                              context)
-                                          .add(searchedUser.liked
-                                              ? UserScolaireSearchIgnoreEvent(
-                                                  ignoredSearchedUserScolaire:
-                                                      searchedUser)
-                                              : UserScolaireSearchLikeEvent(
-                                                  likedSearchedUserScolaire:
-                                                      searchedUser)),
-                                  child: Container(
-                                    width: searchedUser.liked ? 115 : 90,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.rectangle,
-                                      color: searchedUser.liked
-                                          ? Colors.white
-                                          : Theme.of(context).indicatorColor,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15.0)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          spreadRadius: 1,
-                                          blurRadius: 2,
-                                          offset: Offset(3, 3),
+                              ),
+                              GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<UserScolaireSearchBloc>(
+                                            context)
+                                        .add(searchedUser.liked
+                                            ? UserScolaireSearchIgnoreEvent(
+                                                ignoredSearchedUserScolaire:
+                                                    searchedUser)
+                                            : UserScolaireSearchLikeEvent(
+                                                likedSearchedUserScolaire:
+                                                    searchedUser)),
+                                child: Container(
+                                  width: searchedUser.liked ? 115 : 90,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: searchedUser.liked
+                                        ? Colors.white
+                                        : Theme.of(context).indicatorColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15.0)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: Offset(3, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 3.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          searchedUser.liked
+                                              ? "Déjà matché"
+                                              : "Matcher",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  color: searchedUser.liked
+                                                      ? Colors.black87
+                                                      : Colors.white),
+                                        ),
+                                        Icon(
+                                          Icons.favorite,
+                                          color: searchedUser.liked
+                                              ? Theme.of(context).indicatorColor
+                                              : Colors.white,
+                                          size: 15,
                                         ),
                                       ],
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 3.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            searchedUser.liked
-                                                ? "Déjà matché"
-                                                : "Matcher",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6
-                                                .copyWith(
-                                                    color: searchedUser.liked
-                                                        ? Colors.black87
-                                                        : Colors.white),
-                                          ),
-                                          Icon(
-                                            Icons.favorite,
-                                            color: searchedUser.liked
-                                                ? Theme.of(context)
-                                                    .indicatorColor
-                                                : Colors.white,
-                                            size: 15,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0, left: 5.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Theme.of(context).indicatorColor,
-                          width: 2.0,
-                          style: BorderStyle.solid),
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    ),
-                    height: 60,
-                    width: 60,
-                    child: Card(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 3.0),
-                            child: Text('Score',
-                                style: Theme.of(context).textTheme.headline6),
-                          ),
-                          Text(
-                            searchedUser.score.toString(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline4
-                                .copyWith(fontSize: 25.0),
-                          ),
-                        ],
-                      ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Theme.of(context).indicatorColor,
+                        width: 2.0,
+                        style: BorderStyle.solid),
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  ),
+                  height: 60,
+                  width: 60,
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3.0),
+                          child: Text('Score',
+                              style: Theme.of(context).textTheme.headline6),
+                        ),
+                        Text(
+                          searchedUser.score.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              .copyWith(fontSize: 25.0),
+                        ),
+                      ],
                     ),
                   ),
                 ),

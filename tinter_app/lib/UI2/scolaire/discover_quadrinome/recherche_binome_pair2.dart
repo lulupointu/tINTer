@@ -75,12 +75,17 @@ class _SearchStudentBinomePairTab2State
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: const EdgeInsets.all(
+          20.0,
+        ),
         child: Card(
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                  vertical: 20.0,
+                ),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -163,7 +168,7 @@ class _SearchStudentBinomePairTab2State
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
                         child: Center(
-                          child: Text('Aucune recherche effectuée.',
+                          child: Text('Aucune recherche effectuée',
                               style: Theme.of(context).textTheme.headline5),
                         ),
                       ),
@@ -230,7 +235,11 @@ class UserResume extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0, left: 20.0, right: 20.0),
+      padding: const EdgeInsets.only(
+        bottom: 15.0,
+        left: 20.0,
+        right: 20.0,
+      ),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
@@ -243,8 +252,11 @@ class UserResume extends StatelessWidget {
         ),
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 7.0,
+            padding: const EdgeInsets.only(
+              left: 10.0,
+              right: 15.0,
+              top: 15.0,
+              bottom: 15.0,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,162 +265,163 @@ class UserResume extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, top: 5.0, bottom: 5.0),
-                        child: Container(
-                          height: 60,
+                      Container(
+                        height: 60,
+                        width: 80,
+                        child: BinomePair.getProfilePictureFromBinomePairLogins(
+                          loginA: searchedBinomePair.login,
+                          loginB: searchedBinomePair.otherLogin,
                           width: 80,
-                          child:
-                              BinomePair.getProfilePictureFromBinomePairLogins(
-                            loginA: searchedBinomePair.login,
-                            loginB: searchedBinomePair.otherLogin,
-                            width: 80,
-                          ),
                         ),
                       ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Container(
-                            height: 65,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.zero,
-                                    child: Text(
-                                      '${searchedBinomePair.name} ${searchedBinomePair.surname}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5
-                                          .copyWith(
-                                            fontSize: 14.0,
-                                          ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                        child: Container(
+                          height: 70,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.zero,
+                                        child: Text(
+                                          '${searchedBinomePair.name} ${searchedBinomePair.surname}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                fontSize: 13.0,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.zero,
-                                    child: Text(
-                                      '${searchedBinomePair.otherName} ${searchedBinomePair.otherSurname}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5
-                                          .copyWith(
-                                            height: 1.1,
-                                            fontSize: 14.0,
-                                          ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.zero,
+                                        child: Text(
+                                          '${searchedBinomePair.otherName} ${searchedBinomePair.otherSurname}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                height: 1.0,
+                                                fontSize: 13.0,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                                GestureDetector(
-                                  onTap: () =>
-                                      BlocProvider.of<BinomePairSearchBloc>(
-                                              context)
-                                          .add(searchedBinomePair.liked
-                                              ? BinomePairSearchIgnoreEvent(
-                                                  ignoredSearchedBinomePair:
-                                                      searchedBinomePair)
-                                              : BinomePairSearchLikeEvent(
-                                                  likedSearchedBinomePair:
-                                                      searchedBinomePair)),
-                                  child: Container(
-                                    width: searchedBinomePair.liked ? 115 : 90,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.rectangle,
-                                      color: searchedBinomePair.liked
-                                          ? Colors.white
-                                          : Theme.of(context).indicatorColor,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15.0)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          spreadRadius: 1,
-                                          blurRadius: 2,
-                                          offset: Offset(3, 3),
+                              ),
+                              GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<BinomePairSearchBloc>(
+                                            context)
+                                        .add(searchedBinomePair.liked
+                                            ? BinomePairSearchIgnoreEvent(
+                                                ignoredSearchedBinomePair:
+                                                    searchedBinomePair)
+                                            : BinomePairSearchLikeEvent(
+                                                likedSearchedBinomePair:
+                                                    searchedBinomePair)),
+                                child: Container(
+                                  width: searchedBinomePair.liked ? 115 : 90,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: searchedBinomePair.liked
+                                        ? Colors.white
+                                        : Theme.of(context).indicatorColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15.0)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: Offset(3, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 3.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          searchedBinomePair.liked
+                                              ? "Déjà matché"
+                                              : "Matcher",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  color:
+                                                      searchedBinomePair.liked
+                                                          ? Colors.black87
+                                                          : Colors.white),
+                                        ),
+                                        Icon(
+                                          Icons.favorite,
+                                          color: searchedBinomePair.liked
+                                              ? Theme.of(context).indicatorColor
+                                              : Colors.white,
+                                          size: 15,
                                         ),
                                       ],
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 3.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            searchedBinomePair.liked
-                                                ? "Déjà matché"
-                                                : "Matcher",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6
-                                                .copyWith(
-                                                    color:
-                                                        searchedBinomePair.liked
-                                                            ? Colors.black87
-                                                            : Colors.white),
-                                          ),
-                                          Icon(
-                                            Icons.favorite,
-                                            color: searchedBinomePair.liked
-                                                ? Theme.of(context)
-                                                    .indicatorColor
-                                                : Colors.white,
-                                            size: 15,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0, left: 5.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Theme.of(context).indicatorColor,
-                          width: 2.0,
-                          style: BorderStyle.solid),
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    ),
-                    height: 60,
-                    width: 60,
-                    child: Card(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 3.0),
-                            child: Text('Score',
-                                style: Theme.of(context).textTheme.headline6),
-                          ),
-                          Text(
-                            '44',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline4
-                                .copyWith(fontSize: 25.0),
-                          ),
-                        ],
-                      ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Theme.of(context).indicatorColor,
+                        width: 2.0,
+                        style: BorderStyle.solid),
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  ),
+                  height: 60,
+                  width: 60,
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3.0),
+                          child: Text('Score',
+                              style: Theme.of(context).textTheme.headline6),
+                        ),
+                        Text(
+                          '44',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              .copyWith(fontSize: 25.0),
+                        ),
+                      ],
                     ),
                   ),
                 ),

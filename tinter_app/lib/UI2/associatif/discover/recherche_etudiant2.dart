@@ -1,4 +1,5 @@
 import 'package:async/async.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -285,14 +286,13 @@ class UserResume extends StatelessWidget {
                               Expanded(
                                 child: Container(
                                   padding: EdgeInsets.zero,
-                                  child: Text(
+                                  child: AutoSizeText(
                                     searchedUser.name +
                                         ' ' +
                                         searchedUser.surname,
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                     maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
