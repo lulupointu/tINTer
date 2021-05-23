@@ -114,7 +114,7 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                                 AssociationsTab2.fractions['titles'] +
                                 AssociationsTab2
                                     .fractions['titlesSeparator'])) *
-                        1.15,
+                        1.175,
                     body: Column(
                       children: [
                         Padding(
@@ -155,7 +155,7 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                     },
                     header: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
+                        horizontal: 15.0,
                         vertical: 15.0,
                       ),
                       child: TitleAndSearchBarAllAssociations(
@@ -232,8 +232,8 @@ class LikedAssociationsWidgetWithTitle extends StatelessWidget {
               height: 10.0,
             ),
             LikedAssociationsWidget(
-              height: likedAssociationsHeight*0.9,
-              width: width*0.9,
+              height: likedAssociationsHeight * 0.9,
+              width: width * 0.9,
               margin: 0,
             ),
           ],
@@ -495,7 +495,7 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                 builder: (context, tinterTheme, child) {
                   return Padding(
                     padding: const EdgeInsets.only(
-                      right: 10.0,
+                      right: 15.0,
                     ),
                     child: Container(
                       width: widget.height +
@@ -670,8 +670,8 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return Container(
-        height: !isSearching ? height : height * 1.5,
-        width: MediaQuery.of(context).size.width - 80.0,
+        height: !isSearching ? height : 50.0,
+        width: MediaQuery.of(context).size.width - 70.0,
         child: Stack(
           alignment: Alignment.centerLeft,
           children: [
@@ -699,7 +699,7 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
                         : Theme.of(context).primaryColor,
                     border: Border.all(
                       color: Theme.of(context).primaryColor,
-                      width: !isSearching ? 0.0 : 2.5,
+                      width: !isSearching ? 0.0 : 2.0,
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -711,7 +711,7 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
                           color: Colors.white,
                         )
                       : Container(
-                          height: height * 1.5,
+                          height: 50.0,
                           child: TextFormField(
                             textInputAction: TextInputAction.search,
                             decoration: InputDecoration(
@@ -777,8 +777,8 @@ class AllAssociationsSheetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        right: 65.0,
-        left: 25.0,
+        right: 60.0,
+        left: 20.0,
         top: 50.0,
       ),
       child: NotificationListener<OverscrollIndicatorNotification>(
@@ -824,7 +824,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
               itemCount: _associations.length,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
-                  height: 20,
+                  height: 15,
                 );
               },
               itemBuilder: (BuildContext context, int index) {
@@ -905,8 +905,8 @@ class AssociationCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(
             left: 10.0,
-            top: 15.0,
-            bottom: 15.0,
+            top: 12.5,
+            bottom: 12.5,
             right: 15.0,
           ),
           child: Row(

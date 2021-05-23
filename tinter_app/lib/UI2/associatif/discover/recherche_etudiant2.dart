@@ -249,8 +249,8 @@ class UserResume extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: 10.0,
               right: 15.0,
-              top: 15.0,
-              bottom: 15.0,
+              top: 12.5,
+              bottom: 12.5,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
