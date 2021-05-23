@@ -232,8 +232,8 @@ class LikedAssociationsWidgetWithTitle extends StatelessWidget {
               height: 10.0,
             ),
             LikedAssociationsWidget(
-              height: likedAssociationsHeight,
-              width: width,
+              height: likedAssociationsHeight*0.9,
+              width: width*0.9,
               margin: 0,
             ),
           ],
@@ -527,7 +527,7 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 7.5,
+                    vertical: 5.0,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -540,12 +540,12 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                         height: 5.0,
                       ),
                       Container(
-                        width: 80,
-                        height: 80,
+                        width: 70,
+                        height: 70,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            width: 3.0,
+                            width: 2.5,
                             color: Colors.black54,
                           ),
                         ),
@@ -842,7 +842,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
                         ? headerSpacing + keyboardMargin + 30
                         : 0,
                   ),
-                  child: AssociationCard2(
+                  child: AssociationCard(
                     association: _associations[index],
                     liked: liked,
                     onLike: () {
@@ -884,64 +884,7 @@ class AssociationCard extends StatelessWidget {
   final bool liked;
   final VoidCallback onLike;
 
-  AssociationCard(
-      {@required this.association, @required this.onLike, this.liked: false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          color: tinterTheme.colors.primary,
-        ),
-        child: ListTile(
-          leading: Container(
-            height: double.maxFinite,
-            child: Container(
-              alignment: Alignment.centerLeft,
-              width: 50,
-              height: 50,
-              child: ClipOval(
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child:
-                      getLogoFromAssociation(associationName: association.name),
-                ),
-              ),
-            ),
-          ),
-          title: Text(
-            association.name,
-            style: tinterTheme.textStyle.headline2,
-          ),
-          subtitle: Text(
-            association.description,
-            style: tinterTheme.textStyle.bigLabel,
-          ),
-          trailing: IconButton(
-            onPressed: onLike,
-            icon: Icon(
-              liked ? Icons.favorite : Icons.favorite_border,
-              color: tinterTheme.colors.secondary,
-            ),
-          ),
-        ),
-      );
-    });
-  }
-}
-
-class AssociationCard2 extends StatelessWidget {
-  final Association association;
-  final bool liked;
-  final VoidCallback onLike;
-
-  const AssociationCard2({
+  const AssociationCard({
     Key key,
     @required this.association,
     @required this.onLike,
@@ -964,60 +907,68 @@ class AssociationCard2 extends StatelessWidget {
             left: 10.0,
             top: 15.0,
             bottom: 15.0,
-            right: 10.0,
+            right: 15.0,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        width: 3.0,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: ClipOval(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: getLogoFromAssociation(
-                              associationName: association.name),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          width: 2.5,
+                          color: Colors.black54,
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          association.name,
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                        Container(
-                          color: Colors.green,
-                          width: 175,
-                          child: Text(
-                            association.description,
-                            style: Theme.of(context).textTheme.headline6,
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: ClipOval(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: getLogoFromAssociation(
+                                associationName: association.name),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              association.name,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            Expanded(
+                              child: Text(
+                                association.description,
+                                style: Theme.of(context).textTheme.headline6,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
               ),
               GestureDetector(
                 onTap: onLike,
