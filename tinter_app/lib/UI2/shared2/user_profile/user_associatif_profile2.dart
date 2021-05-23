@@ -19,7 +19,9 @@ class UserAssociatifProfile2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+      ),
       child: Column(
         children: <Widget>[
           AssociationsRectangle2(),
@@ -296,7 +298,6 @@ class OrganisationEvenementsRectangle2 extends StatelessWidget {
 }
 
 class GoutsMusicauxRectangle2 extends StatelessWidget {
-
   const GoutsMusicauxRectangle2({
     Key key,
   }) : super(key: key);

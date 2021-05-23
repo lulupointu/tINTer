@@ -108,7 +108,6 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
                             builder: (context, tinterTheme, child) {
                           return Icon(
                             Icons.settings,
-                            size: 24,
                             color: Theme.of(context).primaryColor,
                           );
                         }),
@@ -177,41 +176,44 @@ class ExistingProfileHeader extends StatelessWidget {
                 ),
               ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Column(
-                children: [
-                  HoveringUserPicture2(
-                    size: 95.0,
-                    showModifyOption: true,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10.0,
+                ),
+                HoveringUserPicture2(
+                  size: 100.0,
+                  showModifyOption: true,
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (BuildContext context, UserState userState) {
+                    return Text(
+                      ((userState is UserLoadSuccessState))
+                          ? userState.user.name + " " + userState.user.surname
+                          : 'En chargement...',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          .copyWith(color: Colors.white),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: BlocBuilder<UserBloc, UserState>(
-                      builder: (BuildContext context, UserState userState) {
-                        return Text(
-                          ((userState is UserLoadSuccessState))
-                              ? userState.user.name +
-                                  " " +
-                                  userState.user.surname
-                              : 'En chargement...',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline4
-                              .copyWith(color: Colors.white),
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40.0,
-                      vertical: 5.0,
-                    ),
-                    child: AssociatifToScolaireButton2(),
-                  ),
-                ],
-              ),
+                  child: AssociatifToScolaireButton2(),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+              ],
             ),
           ),
         ),

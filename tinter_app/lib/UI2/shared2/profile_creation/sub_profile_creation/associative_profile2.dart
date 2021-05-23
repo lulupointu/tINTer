@@ -218,11 +218,16 @@ class _HoveringUserPicture2State extends State<HoveringUserPicture2> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-              color: Colors.white, width: 3.5, style: BorderStyle.solid),
+            color: Colors.white,
+            width: 3.5,
+            style: BorderStyle.solid,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.6),
-              spreadRadius: 0,
+              color: Colors.black.withOpacity(
+                0.2,
+              ),
+              spreadRadius: 2,
               blurRadius: 5,
               offset: Offset(0.5, 0.5),
             ),
