@@ -879,7 +879,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
   void onLike(int index) {}
 }
 
-class AssociationCard extends StatelessWidget {
+class AssociationCard extends StatefulWidget {
   final Association association;
   final bool liked;
   final VoidCallback onLike;
@@ -890,6 +890,13 @@ class AssociationCard extends StatelessWidget {
     @required this.onLike,
     this.liked = false,
   }) : super(key: key);
+
+  @override
+  _AssociationCardState createState() => _AssociationCardState();
+}
+
+class _AssociationCardState extends State<AssociationCard> {
+  bool isTapped = false;
 
   @override
   Widget build(BuildContext context) {
@@ -934,7 +941,7 @@ class AssociationCard extends StatelessWidget {
                               color: Colors.white,
                             ),
                             child: getLogoFromAssociation(
-                                associationName: association.name),
+                                associationName: widget.association.name),
                           ),
                         ),
                       ),
@@ -943,22 +950,20 @@ class AssociationCard extends StatelessWidget {
                       width: 10.0,
                     ),
                     Expanded(
-                      child: Container(
-                        height: 60,
+                      child: GestureDetector(
+                        onTap: () => setState(() => isTapped = !isTapped),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              association.name,
+                              widget.association.name,
                               style: Theme.of(context).textTheme.headline5,
                             ),
-                            Expanded(
-                              child: Text(
-                                association.description,
-                                style: Theme.of(context).textTheme.headline6,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                              ),
+                            Text(
+                              widget.association.description,
+                              style: Theme.of(context).textTheme.headline6,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: isTapped ? 100 : 2,
                             ),
                           ],
                         ),
@@ -971,9 +976,9 @@ class AssociationCard extends StatelessWidget {
                 width: 10.0,
               ),
               GestureDetector(
-                onTap: onLike,
+                onTap: widget.onLike,
                 child: Icon(
-                  liked ? Icons.favorite : Icons.favorite_border,
+                  widget.liked ? Icons.favorite : Icons.favorite_border,
                   color: Theme.of(context).indicatorColor,
                 ),
               ),
