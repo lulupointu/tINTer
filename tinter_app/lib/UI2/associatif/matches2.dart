@@ -501,18 +501,18 @@ class CompareView extends StatelessWidget {
                       ? "Cette personne ne t'a pas encore liké.e"
                       : (_match.statusAssociatif == MatchStatus.matched)
                           ? (_match.primoEntrant)
-                              ? "Demande lui de te parrainer"
-                              : "Propose lui d'être ton parrain"
+                              ? "Propose lui d'être ton parrain"
+                              : "Demande lui de te parrainer"
                           : (_match.statusAssociatif == MatchStatus.youAskedParrain)
                               ? "Demande de parrainage envoyée"
                               : (_match.statusAssociatif == MatchStatus.heAskedParrain)
                                   ? (_match.primoEntrant)
-                                      ? "Cette personne souhaite te parrainer"
-                                      : "Cette personne souhaite que tu la parraine"
+                                      ? "Cette personne souhaite que tu la parraine"
+                                      : "Cette personne souhaite te parrainer"
                                   : (_match.statusAssociatif == MatchStatus.parrainAccepted)
                                       ? (_match.primoEntrant)
-                                          ? "Cette personne te parraine !"
-                                          : 'Tu parraine cette personne !'
+                                          ? 'Tu parraine cette personne !'
+                                          : "Cette personne te parraine !"
                                       : (_match.statusAssociatif ==
                                               MatchStatus.parrainHeRefused)
                                           ? 'Cette personne a refusé ta demande de parrainage'
