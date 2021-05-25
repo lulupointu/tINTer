@@ -529,6 +529,7 @@ class CompareView extends StatelessWidget {
             ),
             if (topMenuScrolledFraction != 1)
               Container(
+                height: 50.0 * (1.0 - topMenuScrolledFraction),
                 width: 250,
                 child: ElevatedButton(
                   onPressed: () {
@@ -542,8 +543,8 @@ class CompareView extends StatelessWidget {
                     child: Text(
                       'Comparer vos profils',
                       style: Theme.of(context).textTheme.headline5.copyWith(
-                            color: Colors.white,
-                          ),
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -552,30 +553,30 @@ class CompareView extends StatelessWidget {
                 .contains(_match.statusAssociatif)) ...[
               (_match.statusAssociatif == MatchStatus.matched)
                   ? Container(
-                    width: 250,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Theme.of(context).indicatorColor),
-                      ),
-                      onPressed: () {
-                        BlocProvider.of<MatchedMatchesBloc>(context)
-                            .add(AskParrainEvent(match: _match));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 30.0,
-                          vertical: 15.0,
+                      width: 250,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Theme.of(context).indicatorColor),
                         ),
-                        child: Text(
-                          'Envoyer une demande',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                                color: Colors.white,
-                              ),
+                        onPressed: () {
+                          BlocProvider.of<MatchedMatchesBloc>(context)
+                              .add(AskParrainEvent(match: _match));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0,
+                            vertical: 15.0,
+                          ),
+                          child: Text(
+                            'Envoyer une demande',
+                            style: Theme.of(context).textTheme.headline5.copyWith(
+                                  color: Colors.white,
+                                ),
+                          ),
                         ),
                       ),
-                    ),
-                  )
+                    )
                   : (_match.statusAssociatif == MatchStatus.heAskedParrain)
                       ? Container(
                           width: 250,
