@@ -1109,42 +1109,39 @@ class ProfileInformation extends StatelessWidget {
                         height: 10.0,
                       ),
                       user.goutsMusicaux.length >= 1
-                          ? AnimatedSwitcher(
-                              duration: Duration(milliseconds: 300),
-                              child: Wrap(
-                                alignment: WrapAlignment.center,
-                                key: GlobalKey(),
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: <Widget>[
-                                  for (String musicStyle in user.goutsMusicaux)
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 15.0, vertical: 6.0),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            spreadRadius: 0.2,
-                                            blurRadius: 5,
-                                            offset: Offset(2, 2),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0)),
-                                        border: Border.all(
-                                            color: (Theme.of(context)
-                                                .primaryColor),
-                                            width: 3.0,
-                                            style: BorderStyle.solid),
-                                        color: Colors.white,
-                                      ),
-                                      child: Text(musicStyle),
-                                    ),
-                                ],
-                              ),
-                            )
+                          ? Wrap(
+                            alignment: WrapAlignment.center,
+                            key: GlobalKey(),
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: <Widget>[
+                              for (String musicStyle in user.goutsMusicaux)
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15.0, vertical: 6.0),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            Colors.black.withOpacity(0.2),
+                                        spreadRadius: 0.2,
+                                        blurRadius: 5,
+                                        offset: Offset(2, 2),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0)),
+                                    border: Border.all(
+                                        color: (Theme.of(context)
+                                            .primaryColor),
+                                        width: 3.0,
+                                        style: BorderStyle.solid),
+                                    color: Colors.white,
+                                  ),
+                                  child: Text(musicStyle),
+                                ),
+                            ],
+                          )
                           : Text(
                               'Aucun goût musical sélectionné',
                               style: Theme.of(context).textTheme.headline5,
