@@ -30,6 +30,7 @@ class CustomBottomNavigationBar4 extends StatelessWidget {
                 onTap: () => onTap(i),
                 child: CustomBottomNavigationBarItemWidget(
                   icon: items[i].icon,
+                  key: items[i].key,
                   isSelected: i == selectedIndex,
                 ),
               )
