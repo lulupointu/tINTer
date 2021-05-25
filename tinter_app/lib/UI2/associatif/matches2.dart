@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -43,6 +44,8 @@ class MatchsTab2 extends StatefulWidget implements TinterTab {
     'matchSelectionMenu': null,
   };
 
+  final spacing = 15.0;
+
   @override
   MatchsTab2State createState() => MatchsTab2State();
 }
@@ -55,13 +58,10 @@ class MatchsTab2State extends State<MatchsTab2> {
   @override
   void initState() {
     // Update to last information
-    if (BlocProvider.of<MatchedMatchesBloc>(context).state
-        is MatchedMatchesLoadSuccessState) {
-      BlocProvider.of<MatchedMatchesBloc>(context)
-          .add(MatchedMatchesRefreshEvent());
+    if (BlocProvider.of<MatchedMatchesBloc>(context).state is MatchedMatchesLoadSuccessState) {
+      BlocProvider.of<MatchedMatchesBloc>(context).add(MatchedMatchesRefreshEvent());
     } else {
-      BlocProvider.of<MatchedMatchesBloc>(context)
-          .add(MatchedMatchesRequestedEvent());
+      BlocProvider.of<MatchedMatchesBloc>(context).add(MatchedMatchesRequestedEvent());
     }
     super.initState();
   }
@@ -80,101 +80,96 @@ class MatchsTab2State extends State<MatchsTab2> {
         bottom: false,
         child: BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
             builder: (BuildContext context, MatchedMatchesState state) {
-          if (!(state is MatchedMatchesLoadSuccessState)) {
-            return Center(child: CircularProgressIndicator());
-          }
-          // Get the 2 list out of all the matched matches
-          final List<BuildMatch> allMatches =
-              (state as MatchedMatchesLoadSuccessState).matches;
-          final List<BuildMatch> _matchesNotParrains = allMatches
-              .where((match) =>
-                  match.statusAssociatif != MatchStatus.parrainAccepted)
-              .toList();
-          final List<BuildMatch> _parrains = allMatches
-              .where((match) =>
-                  match.statusAssociatif == MatchStatus.parrainAccepted)
-              .toList();
-
-          // Sort them
-          _matchesNotParrains.sort((BuildMatch matchA, BuildMatch matchB) =>
-              matchA.name.compareTo(matchB.name));
-          _parrains.sort((BuildMatch matchA, BuildMatch matchB) =>
-              matchA.name.compareTo(matchB.name));
-
-          widget.fractions['matchSelectionMenu'] =
-              ((_matchesNotParrains.length == 0) ? 0.0 : 0.275) +
-                  ((_parrains.length == 0) ? 0.0 : 0.175);
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              // ignore: invalid_use_of_protected_member
-              if (!_controller.hasListeners) {
-                _controller.addListener(() {
-                  setState(() {
-                    topMenuScrolledFraction = max(
-                        0,
-                        min(
-                            1,
-                            _controller.position.pixels /
-                                (widget.fractions['matchSelectionMenu'] *
-                                    constraints.maxHeight)));
-                  });
-                });
+              if (!(state is MatchedMatchesLoadSuccessState)) {
+                return Center(child: CircularProgressIndicator());
               }
+              // Get the 2 list out of all the matched matches
+              final List<BuildMatch> allMatches =
+                  (state as MatchedMatchesLoadSuccessState).matches;
+              final List<BuildMatch> _matchesNotParrains = allMatches
+                  .where((match) => match.statusAssociatif != MatchStatus.parrainAccepted)
+                  .toList();
+              final List<BuildMatch> _parrains = allMatches
+                  .where((match) => match.statusAssociatif == MatchStatus.parrainAccepted)
+                  .toList();
 
-              return NotificationListener<ScrollEndNotification>(
-                onNotification: (ScrollEndNotification scrollEndNotification) {
-                  _scrollPhysics = _controller.offset == 0
-                      ? AlwaysScrollableScrollPhysics()
-                      : SnapScrollSheetPhysics(
-                          topChildrenHeight: [
-                            widget.fractions['matchSelectionMenu'] *
-                                constraints.maxHeight,
-                          ],
-                        );
-                  setState(() {});
-                  return true;
-                },
-                child: ListView(
-                  physics: _scrollPhysics,
-                  controller: _controller,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20.0,
-                        top: 15.0,
-                      ),
-                      child: Row(
-                        children: [
-                          ModeAssociatifOverlay(),
+              // Sort them
+              _matchesNotParrains.sort(
+                      (BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
+              _parrains.sort(
+                      (BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
+
+              widget.fractions['matchSelectionMenu'] = ((_matchesNotParrains.length == 0)
+                  ? 0.0
+                  : (ModeAssociatifOverlay.height +
+                  2 * widget.spacing +
+                  MatchSelectionMenu.height) /
+                  MediaQuery.of(context).size.height) +
+                  ((_parrains.length == 0) ? 0.0 : 0.175);
+              return Builder(
+                builder: (BuildContext context) {
+                  // ignore: invalid_use_of_protected_member
+                  if (!_controller.hasListeners) {
+                    _controller.addListener(() {
+                      setState(() {
+                        topMenuScrolledFraction = max(
+                            0,
+                            min(
+                                1,
+                                _controller.position.pixels /
+                                    (widget.fractions['matchSelectionMenu'] *
+                                        MediaQuery.of(context).size.height)));
+                      });
+                    });
+                  }
+
+                  return NotificationListener<ScrollEndNotification>(
+                    onNotification: (ScrollEndNotification scrollEndNotification) {
+                      _scrollPhysics = _controller.offset == 0
+                          ? AlwaysScrollableScrollPhysics()
+                          : SnapScrollSheetPhysics(
+                        topChildrenHeight: [
+                          widget.fractions['matchSelectionMenu'] * MediaQuery.of(context).size.height,
                         ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    MatchSelectionMenu(
-                      height: 100,
-                      matchesNotParrains: _matchesNotParrains,
-                      parrains: _parrains,
-                    ),
-                    (context.watch<SelectedAssociatif2>().matchLogin == null)
-                        ? noMatchSelected(constraints.maxHeight)
-                        : CompareView(
-                            match: allMatches.firstWhere((BuildMatch match) =>
-                                match.login ==
-                                context
-                                    .watch<SelectedAssociatif2>()
-                                    .matchLogin),
-                            appHeight: constraints.maxHeight,
-                            topMenuScrolledFraction: topMenuScrolledFraction,
-                            onCompareTapped: onCompareTapped,
+                      );
+                      setState(() {});
+                      return true;
+                    },
+                    child: ListView(
+                      physics: _scrollPhysics,
+                      controller: _controller,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.0,
+                            top: widget.spacing,
                           ),
-                  ],
-                ),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: ModeAssociatifOverlay(),
+                          ),
+                        ),
+                        SizedBox(height: widget.spacing),
+                        MatchSelectionMenu(
+                          matchesNotParrains: _matchesNotParrains,
+                          parrains: _parrains,
+                        ),
+                        (context.watch<SelectedAssociatif2>().matchLogin == null)
+                            ? noMatchSelected(MediaQuery.of(context).size.height)
+                            : CompareView(
+                          match: allMatches.firstWhere((BuildMatch match) =>
+                          match.login ==
+                              context.watch<SelectedAssociatif2>().matchLogin),
+                          appHeight: MediaQuery.of(context).size.height,
+                          topMenuScrolledFraction: topMenuScrolledFraction,
+                          onCompareTapped: onCompareTapped,
+                        ),
+                      ],
+                    ),
+                  );
+                },
               );
-            },
-          );
-        }),
+            }),
       ),
     );
   }
@@ -197,8 +192,7 @@ class MatchsTab2State extends State<MatchsTab2> {
             height: appHeight * 0.1,
           ),
           BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
-            buildWhen:
-                (MatchedMatchesState previousState, MatchedMatchesState state) {
+            buildWhen: (MatchedMatchesState previousState, MatchedMatchesState state) {
               if (previousState.runtimeType != state.runtimeType) {
                 return true;
               }
@@ -216,10 +210,7 @@ class MatchsTab2State extends State<MatchsTab2> {
                   child: CircularProgressIndicator(),
                 );
               }
-              return ((state as MatchedMatchesLoadSuccessState)
-                          .matches
-                          .length ==
-                      0)
+              return ((state as MatchedMatchesLoadSuccessState).matches.length == 0)
                   ? Column(
                       children: [
                         Icon(
@@ -320,12 +311,9 @@ class CompareView extends StatelessWidget {
                     );
                   }
                   return userPicture(
-                      getProfilePicture: (
-                              {@required height, @required width}) =>
+                      getProfilePicture: ({@required height, @required width}) =>
                           getProfilePictureFromLocalPathOrLogin(
-                              login: (userState as UserLoadSuccessState)
-                                  .user
-                                  .login,
+                              login: (userState as UserLoadSuccessState).user.login,
                               localPath: (userState as UserLoadSuccessState)
                                   .user
                                   .profilePictureLocalPath,
@@ -390,13 +378,11 @@ class CompareView extends StatelessWidget {
 
   /// Displays either your face or your match face
   Widget userPicture(
-      {Widget Function({@required double height, @required double width})
-          getProfilePicture}) {
+      {Widget Function({@required double height, @required double width}) getProfilePicture}) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-            color: Color(0xff79BFC9), width: 4.0, style: BorderStyle.solid),
+        border: Border.all(color: Color(0xff79BFC9), width: 4.0, style: BorderStyle.solid),
       ),
       height: 80,
       width: 80,
@@ -447,8 +433,7 @@ class CompareView extends StatelessWidget {
                 showGeneralDialog(
                     transitionDuration: Duration(milliseconds: 300),
                     context: context,
-                    pageBuilder: (BuildContext context, animation, _) =>
-                        SimpleDialog(
+                    pageBuilder: (BuildContext context, animation, _) => SimpleDialog(
                           elevation: 5.0,
                           children: [
                             Padding(
@@ -461,10 +446,7 @@ class CompareView extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  right: 20.0,
-                                  top: 10.0,
-                                  bottom: 10.0),
+                                  left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
                               child: Text(
                                 "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
                                 " Il est basé sur les critères renseignés dans le profil.",
@@ -473,8 +455,7 @@ class CompareView extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 75.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 75.0),
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.pop(context, false);
@@ -514,8 +495,7 @@ class CompareView extends StatelessWidget {
             Expanded(
               flex: 1000,
               child: Center(
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                   return AutoSizeText(
                     (_match.statusAssociatif == MatchStatus.liked ||
                             _match.statusAssociatif == MatchStatus.heIgnoredYou)
@@ -524,16 +504,13 @@ class CompareView extends StatelessWidget {
                             ? (_match.primoEntrant)
                                 ? "Demande lui de te parrainer"
                                 : "Propose lui d'être ton parrain"
-                            : (_match.statusAssociatif ==
-                                    MatchStatus.youAskedParrain)
+                            : (_match.statusAssociatif == MatchStatus.youAskedParrain)
                                 ? "Demande de parrainage envoyée"
-                                : (_match.statusAssociatif ==
-                                        MatchStatus.heAskedParrain)
+                                : (_match.statusAssociatif == MatchStatus.heAskedParrain)
                                     ? (_match.primoEntrant)
                                         ? "Cette personne souhaite te parrainer"
                                         : "Cette personne souhaite que tu la parraine"
-                                    : (_match.statusAssociatif ==
-                                            MatchStatus.parrainAccepted)
+                                    : (_match.statusAssociatif == MatchStatus.parrainAccepted)
                                         ? (_match.primoEntrant)
                                             ? "Cette personne te parraine !"
                                             : 'Tu parraine cette personne !'
@@ -541,8 +518,7 @@ class CompareView extends StatelessWidget {
                                                 MatchStatus.parrainHeRefused)
                                             ? 'Cette personne a refusé ta demande de parrainage'
                                             : (_match.statusAssociatif ==
-                                                    MatchStatus
-                                                        .parrainYouRefused)
+                                                    MatchStatus.parrainYouRefused)
                                                 ? (_match.primoEntrant)
                                                     ? "Tu as refusé de parrainer cette personne"
                                                     : "Tu as refusé que cette personne te parraine"
@@ -604,10 +580,7 @@ class CompareView extends StatelessWidget {
                                   ),
                                   child: Text(
                                     'Envoyer une demande',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(
+                                    style: Theme.of(context).textTheme.headline5.copyWith(
                                           color: Colors.white,
                                         ),
                                   ),
@@ -615,8 +588,7 @@ class CompareView extends StatelessWidget {
                               ),
                             ),
                           )
-                        : (_match.statusAssociatif ==
-                                MatchStatus.heAskedParrain)
+                        : (_match.statusAssociatif == MatchStatus.heAskedParrain)
                             ? Container(
                                 width: 250,
                                 child: Row(
@@ -626,10 +598,8 @@ class CompareView extends StatelessWidget {
                                       flex: 1,
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          BlocProvider.of<MatchedMatchesBloc>(
-                                                  context)
-                                              .add(AcceptParrainEvent(
-                                                  match: _match));
+                                          BlocProvider.of<MatchedMatchesBloc>(context)
+                                              .add(AcceptParrainEvent(match: _match));
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -638,12 +608,10 @@ class CompareView extends StatelessWidget {
                                           ),
                                           child: Text(
                                             'Accepter',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5
-                                                .copyWith(
-                                                  color: Colors.white,
-                                                ),
+                                            style:
+                                                Theme.of(context).textTheme.headline5.copyWith(
+                                                      color: Colors.white,
+                                                    ),
                                           ),
                                         ),
                                       ),
@@ -655,16 +623,12 @@ class CompareView extends StatelessWidget {
                                       flex: 1,
                                       child: ElevatedButton(
                                         style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Theme.of(context)
-                                                      .indicatorColor),
+                                          backgroundColor: MaterialStateProperty.all(
+                                              Theme.of(context).indicatorColor),
                                         ),
                                         onPressed: () {
-                                          BlocProvider.of<MatchedMatchesBloc>(
-                                                  context)
-                                              .add(RefuseParrainEvent(
-                                                  match: _match));
+                                          BlocProvider.of<MatchedMatchesBloc>(context)
+                                              .add(RefuseParrainEvent(match: _match));
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -673,12 +637,10 @@ class CompareView extends StatelessWidget {
                                           ),
                                           child: Text(
                                             'Refuser',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5
-                                                .copyWith(
-                                                  color: Colors.white,
-                                                ),
+                                            style:
+                                                Theme.of(context).textTheme.headline5.copyWith(
+                                                      color: Colors.white,
+                                                    ),
                                           ),
                                         ),
                                       ),
@@ -699,8 +661,7 @@ class CompareView extends StatelessWidget {
                   width: 250,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).errorColor),
+                      backgroundColor: MaterialStateProperty.all(Theme.of(context).errorColor),
                     ),
                     onPressed: () async {
                       await onCompareTapped(0);
@@ -735,10 +696,7 @@ class CompareView extends StatelessWidget {
   }
 
   Widget informationRectangle(
-      {@required Widget child,
-      double width,
-      double height,
-      EdgeInsetsGeometry padding}) {
+      {@required Widget child, double width, double height, EdgeInsetsGeometry padding}) {
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
@@ -813,8 +771,7 @@ class ProfileInformation extends StatelessWidget {
         children: <Widget>[
           Card(
             child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -841,8 +798,7 @@ class ProfileInformation extends StatelessWidget {
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
                                     itemCount: user.associations.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
+                                    itemBuilder: (BuildContext context, int index) {
                                       return Padding(
                                         padding: const EdgeInsets.only(
                                           right: 5.0,
@@ -856,10 +812,7 @@ class ProfileInformation extends StatelessWidget {
                               )
                             : Text(
                                 'Aucune association sélectionnée',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(
+                                style: Theme.of(context).textTheme.headline5.copyWith(
                                       fontSize: 14.0,
                                     ),
                               ),
@@ -872,8 +825,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -899,14 +851,11 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: Slider(
                             value: user.attiranceVieAsso,
@@ -922,8 +871,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -948,16 +896,12 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                disabledInactiveTrackColor: Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: Slider(
                             value: user.feteOuCours,
@@ -981,8 +925,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -1009,16 +952,12 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                disabledInactiveTrackColor: Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: Slider(
                             value: user.aideOuSortir,
@@ -1042,8 +981,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -1068,14 +1006,11 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: Slider(
                             value: user.organisationEvenements,
@@ -1110,38 +1045,35 @@ class ProfileInformation extends StatelessWidget {
                       ),
                       user.goutsMusicaux.length >= 1
                           ? Wrap(
-                            alignment: WrapAlignment.center,
-                            key: GlobalKey(),
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: <Widget>[
-                              for (String musicStyle in user.goutsMusicaux)
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 15.0, vertical: 6.0),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color:
-                                            Colors.black.withOpacity(0.2),
-                                        spreadRadius: 0.2,
-                                        blurRadius: 5,
-                                        offset: Offset(2, 2),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0)),
-                                    border: Border.all(
-                                        color: (Theme.of(context)
-                                            .primaryColor),
-                                        width: 3.0,
-                                        style: BorderStyle.solid),
-                                    color: Colors.white,
+                              alignment: WrapAlignment.center,
+                              key: GlobalKey(),
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: <Widget>[
+                                for (String musicStyle in user.goutsMusicaux)
+                                  Container(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 6.0),
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          spreadRadius: 0.2,
+                                          blurRadius: 5,
+                                          offset: Offset(2, 2),
+                                        )
+                                      ],
+                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                      border: Border.all(
+                                          color: (Theme.of(context).primaryColor),
+                                          width: 3.0,
+                                          style: BorderStyle.solid),
+                                      color: Colors.white,
+                                    ),
+                                    child: Text(musicStyle),
                                   ),
-                                  child: Text(musicStyle),
-                                ),
-                            ],
-                          )
+                              ],
+                            )
                           : Text(
                               'Aucun goût musical sélectionné',
                               style: Theme.of(context).textTheme.headline5,
@@ -1175,14 +1107,11 @@ class ProfileInformation extends StatelessWidget {
 }
 
 class MatchSelectionMenu extends StatelessWidget {
-  final double height;
+  static final double height = 100;
   final List<BuildMatch> matchesNotParrains;
   final List<BuildMatch> parrains;
 
-  MatchSelectionMenu(
-      {@required this.height,
-      @required this.matchesNotParrains,
-      @required this.parrains});
+  MatchSelectionMenu({@required this.matchesNotParrains, @required this.parrains});
 
   @override
   Widget build(BuildContext context) {
@@ -1255,9 +1184,8 @@ class MatchSelectionMenu extends StatelessWidget {
                   children: [
                     for (BuildMatch match in matches)
                       GestureDetector(
-                        onTap: () => context
-                            .read<SelectedAssociatif2>()
-                            .matchLogin = match.login,
+                        onTap: () =>
+                            context.read<SelectedAssociatif2>().matchLogin = match.login,
                         child: Padding(
                           padding: const EdgeInsets.only(
                             right: 7.5,
