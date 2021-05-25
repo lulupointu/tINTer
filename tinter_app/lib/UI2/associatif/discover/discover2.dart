@@ -226,30 +226,33 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
                       ),
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: IconButton(
-                      padding: EdgeInsets.all(0.0),
-                      iconSize: 35,
-                      color: Theme.of(context).indicatorColor,
-                      icon: FlareActor(
-                        'assets/icons/Heart.flr',
+                  height: 45, // Change this to change icon size
+                  width: 45, // Change this to change icon size
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: IconButton(
+                        padding: EdgeInsets.all(0.0),
                         color: Theme.of(context).indicatorColor,
-                        fit: BoxFit.contain,
-                        controller: CustomFlareController(
-                            controller: likeController,
-                            forwardAnimationName: 'Validate'),
+                        icon: FlareActor(
+                          'assets/icons/Heart.flr',
+                          color: Theme.of(context).indicatorColor,
+                          fit: BoxFit.fill,
+                          controller: CustomFlareController(
+                              controller: likeController,
+                              forwardAnimationName: 'Validate'),
+                        ),
+                        onPressed: discoverMatchesState
+                                is DiscoverMatchesSavingNewStatusState
+                            ? null
+                            : () {
+                                likeController.forward().whenComplete(() =>
+                                    likeController.animateTo(0,
+                                        duration: Duration(seconds: 0)));
+                                BlocProvider.of<DiscoverMatchesBloc>(context)
+                                    .add(DiscoverMatchLikeEvent());
+                              },
                       ),
-                      onPressed: discoverMatchesState
-                              is DiscoverMatchesSavingNewStatusState
-                          ? null
-                          : () {
-                              likeController.forward().whenComplete(() =>
-                                  likeController.animateTo(0,
-                                      duration: Duration(seconds: 0)));
-                              BlocProvider.of<DiscoverMatchesBloc>(context)
-                                  .add(DiscoverMatchLikeEvent());
-                            },
                     ),
                   ),
                 ),
