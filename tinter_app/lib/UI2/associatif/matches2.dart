@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -107,7 +106,7 @@ class MatchsTab2State extends State<MatchsTab2> {
                   MediaQuery.of(context).size.height) +
                   ((_parrains.length == 0) ? 0.0 : 0.175);
               return Builder(
-                builder: (BuildContext context) {
+                builder: (BuildContext ntext) {
                   // ignore: invalid_use_of_protected_member
                   if (!_controller.hasListeners) {
                     _controller.addListener(() {
@@ -559,8 +558,7 @@ class CompareView extends StatelessWidget {
                 .contains(_match.statusAssociatif)) ...[
               Expanded(
                 flex: 1500,
-                child: //(_match.statusAssociatif == MatchStatus.matched)
-                    false
+                child: (_match.statusAssociatif == MatchStatus.matched)
                         ? Center(
                             child: Container(
                               width: 250,
