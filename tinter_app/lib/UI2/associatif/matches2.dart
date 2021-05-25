@@ -79,96 +79,97 @@ class MatchsTab2State extends State<MatchsTab2> {
         bottom: false,
         child: BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
             builder: (BuildContext context, MatchedMatchesState state) {
-              if (!(state is MatchedMatchesLoadSuccessState)) {
-                return Center(child: CircularProgressIndicator());
-              }
-              // Get the 2 list out of all the matched matches
-              final List<BuildMatch> allMatches =
-                  (state as MatchedMatchesLoadSuccessState).matches;
-              final List<BuildMatch> _matchesNotParrains = allMatches
-                  .where((match) => match.statusAssociatif != MatchStatus.parrainAccepted)
-                  .toList();
-              final List<BuildMatch> _parrains = allMatches
-                  .where((match) => match.statusAssociatif == MatchStatus.parrainAccepted)
-                  .toList();
+          if (!(state is MatchedMatchesLoadSuccessState)) {
+            return Center(child: CircularProgressIndicator());
+          }
+          // Get the 2 list out of all the matched matches
+          final List<BuildMatch> allMatches =
+              (state as MatchedMatchesLoadSuccessState).matches;
+          final List<BuildMatch> _matchesNotParrains = allMatches
+              .where((match) => match.statusAssociatif != MatchStatus.parrainAccepted)
+              .toList();
+          final List<BuildMatch> _parrains = allMatches
+              .where((match) => match.statusAssociatif == MatchStatus.parrainAccepted)
+              .toList();
 
-              // Sort them
-              _matchesNotParrains.sort(
-                      (BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
-              _parrains.sort(
-                      (BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
+          // Sort them
+          _matchesNotParrains.sort(
+              (BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
+          _parrains.sort(
+              (BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
 
-              widget.fractions['matchSelectionMenu'] = ((_matchesNotParrains.length == 0)
+          widget.fractions['matchSelectionMenu'] = ((_matchesNotParrains.length == 0)
                   ? 0.0
                   : (ModeAssociatifOverlay.height +
-                  2 * widget.spacing +
-                  MatchSelectionMenu.height) /
-                  MediaQuery.of(context).size.height) +
-                  ((_parrains.length == 0) ? 0.0 : 0.175);
-              return Builder(
-                builder: (BuildContext ntext) {
-                  // ignore: invalid_use_of_protected_member
-                  if (!_controller.hasListeners) {
-                    _controller.addListener(() {
-                      setState(() {
-                        topMenuScrolledFraction = max(
-                            0,
-                            min(
-                                1,
-                                _controller.position.pixels /
-                                    (widget.fractions['matchSelectionMenu'] *
-                                        MediaQuery.of(context).size.height)));
-                      });
-                    });
-                  }
+                          2 * widget.spacing +
+                          MatchSelectionMenu.height) /
+                      MediaQuery.of(context).size.height) +
+              ((_parrains.length == 0) ? 0.0 : 0.175);
+          return Builder(
+            builder: (BuildContext ntext) {
+              // ignore: invalid_use_of_protected_member
+              if (!_controller.hasListeners) {
+                _controller.addListener(() {
+                  setState(() {
+                    topMenuScrolledFraction = max(
+                        0,
+                        min(
+                            1,
+                            _controller.position.pixels /
+                                (widget.fractions['matchSelectionMenu'] *
+                                    MediaQuery.of(context).size.height)));
+                  });
+                });
+              }
 
-                  return NotificationListener<ScrollEndNotification>(
-                    onNotification: (ScrollEndNotification scrollEndNotification) {
-                      _scrollPhysics = _controller.offset == 0
-                          ? AlwaysScrollableScrollPhysics()
-                          : SnapScrollSheetPhysics(
-                        topChildrenHeight: [
-                          widget.fractions['matchSelectionMenu'] * MediaQuery.of(context).size.height,
-                        ],
-                      );
-                      setState(() {});
-                      return true;
-                    },
-                    child: ListView(
-                      physics: _scrollPhysics,
-                      controller: _controller,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 20.0,
-                            top: widget.spacing,
-                          ),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: ModeAssociatifOverlay(),
-                          ),
-                        ),
-                        SizedBox(height: widget.spacing),
-                        MatchSelectionMenu(
-                          matchesNotParrains: _matchesNotParrains,
-                          parrains: _parrains,
-                        ),
-                        (context.watch<SelectedAssociatif2>().matchLogin == null)
-                            ? noMatchSelected(MediaQuery.of(context).size.height)
-                            : CompareView(
-                          match: allMatches.firstWhere((BuildMatch match) =>
-                          match.login ==
-                              context.watch<SelectedAssociatif2>().matchLogin),
-                          appHeight: MediaQuery.of(context).size.height,
-                          topMenuScrolledFraction: topMenuScrolledFraction,
-                          onCompareTapped: onCompareTapped,
-                        ),
-                      ],
-                    ),
-                  );
+              return NotificationListener<ScrollEndNotification>(
+                onNotification: (ScrollEndNotification scrollEndNotification) {
+                  _scrollPhysics = _controller.offset == 0
+                      ? AlwaysScrollableScrollPhysics()
+                      : SnapScrollSheetPhysics(
+                          topChildrenHeight: [
+                            widget.fractions['matchSelectionMenu'] *
+                                MediaQuery.of(context).size.height,
+                          ],
+                        );
+                  setState(() {});
+                  return true;
                 },
+                child: ListView(
+                  physics: _scrollPhysics,
+                  controller: _controller,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 20.0,
+                        top: widget.spacing,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: ModeAssociatifOverlay(),
+                      ),
+                    ),
+                    SizedBox(height: widget.spacing),
+                    MatchSelectionMenu(
+                      matchesNotParrains: _matchesNotParrains,
+                      parrains: _parrains,
+                    ),
+                    (context.watch<SelectedAssociatif2>().matchLogin == null)
+                        ? noMatchSelected(MediaQuery.of(context).size.height)
+                        : CompareView(
+                            match: allMatches.firstWhere((BuildMatch match) =>
+                                match.login ==
+                                context.watch<SelectedAssociatif2>().matchLogin),
+                            appHeight: MediaQuery.of(context).size.height,
+                            topMenuScrolledFraction: topMenuScrolledFraction,
+                            onCompareTapped: onCompareTapped,
+                          ),
+                  ],
+                ),
               );
-            }),
+            },
+          );
+        }),
       ),
     );
   }
@@ -481,62 +482,85 @@ class CompareView extends StatelessWidget {
       widthFactor: 0.75,
       child: informationRectangle(
         padding: EdgeInsets.symmetric(vertical: 10.0),
-        height: appHeight *
-            0.375 *
-            (1 - 0.33 * topMenuScrolledFraction) *
-            (([MatchStatus.matched, MatchStatus.heAskedParrain]
-                    .contains(_match.statusAssociatif))
-                ? 1.0
-                : 0.75),
+        // height: appHeight *
+        //     0.375 *
+        //     (1 - 0.33 * topMenuScrolledFraction) *
+        //     (([MatchStatus.matched, MatchStatus.heAskedParrain]
+        //             .contains(_match.statusAssociatif))
+        //         ? 1.0
+        //         : 0.75),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              flex: 1000,
-              child: Center(
-                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                  return AutoSizeText(
-                    (_match.statusAssociatif == MatchStatus.liked ||
-                            _match.statusAssociatif == MatchStatus.heIgnoredYou)
-                        ? "Cette personne ne t'a pas encore liké.e"
-                        : (_match.statusAssociatif == MatchStatus.matched)
-                            ? (_match.primoEntrant)
-                                ? "Demande lui de te parrainer"
-                                : "Propose lui d'être ton parrain"
-                            : (_match.statusAssociatif == MatchStatus.youAskedParrain)
-                                ? "Demande de parrainage envoyée"
-                                : (_match.statusAssociatif == MatchStatus.heAskedParrain)
-                                    ? (_match.primoEntrant)
-                                        ? "Cette personne souhaite te parrainer"
-                                        : "Cette personne souhaite que tu la parraine"
-                                    : (_match.statusAssociatif == MatchStatus.parrainAccepted)
-                                        ? (_match.primoEntrant)
-                                            ? "Cette personne te parraine !"
-                                            : 'Tu parraine cette personne !'
-                                        : (_match.statusAssociatif ==
-                                                MatchStatus.parrainHeRefused)
-                                            ? 'Cette personne a refusé ta demande de parrainage'
-                                            : (_match.statusAssociatif ==
-                                                    MatchStatus.parrainYouRefused)
-                                                ? (_match.primoEntrant)
-                                                    ? "Tu as refusé de parrainer cette personne"
-                                                    : "Tu as refusé que cette personne te parraine"
-                                                : 'ERROR: the status should not be ${_match.statusAssociatif}',
-                    style: Theme.of(context).textTheme.headline5,
-                    maxLines: 1,
-                  );
-                }),
-              ),
+            Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return AutoSizeText(
+                  (_match.statusAssociatif == MatchStatus.liked ||
+                          _match.statusAssociatif == MatchStatus.heIgnoredYou)
+                      ? "Cette personne ne t'a pas encore liké.e"
+                      : (_match.statusAssociatif == MatchStatus.matched)
+                          ? (_match.primoEntrant)
+                              ? "Demande lui de te parrainer"
+                              : "Propose lui d'être ton parrain"
+                          : (_match.statusAssociatif == MatchStatus.youAskedParrain)
+                              ? "Demande de parrainage envoyée"
+                              : (_match.statusAssociatif == MatchStatus.heAskedParrain)
+                                  ? (_match.primoEntrant)
+                                      ? "Cette personne souhaite te parrainer"
+                                      : "Cette personne souhaite que tu la parraine"
+                                  : (_match.statusAssociatif == MatchStatus.parrainAccepted)
+                                      ? (_match.primoEntrant)
+                                          ? "Cette personne te parraine !"
+                                          : 'Tu parraine cette personne !'
+                                      : (_match.statusAssociatif ==
+                                              MatchStatus.parrainHeRefused)
+                                          ? 'Cette personne a refusé ta demande de parrainage'
+                                          : (_match.statusAssociatif ==
+                                                  MatchStatus.parrainYouRefused)
+                                              ? (_match.primoEntrant)
+                                                  ? "Tu as refusé de parrainer cette personne"
+                                                  : "Tu as refusé que cette personne te parraine"
+                                              : 'ERROR: the status should not be ${_match.statusAssociatif}',
+                  style: Theme.of(context).textTheme.headline5,
+                  maxLines: 1,
+                );
+              },
             ),
             if (topMenuScrolledFraction != 1)
-              Expanded(
-                flex: (1500 * (1 - topMenuScrolledFraction)).floor(),
-                child: Center(
-                  child: Container(
+              Container(
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    onCompareTapped(appHeight);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0,
+                      vertical: 15.0,
+                    ),
+                    child: Text(
+                      'Comparer vos profils',
+                      style: Theme.of(context).textTheme.headline5.copyWith(
+                            color: Colors.white,
+                          ),
+                    ),
+                  ),
+                ),
+              ),
+            if ([MatchStatus.matched, MatchStatus.heAskedParrain]
+                .contains(_match.statusAssociatif)) ...[
+              (_match.statusAssociatif == MatchStatus.matched)
+                  ? Container(
                     width: 250,
                     child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Theme.of(context).indicatorColor),
+                      ),
                       onPressed: () {
-                        onCompareTapped(appHeight);
+                        BlocProvider.of<MatchedMatchesBloc>(context)
+                            .add(AskParrainEvent(match: _match));
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -544,142 +568,100 @@ class CompareView extends StatelessWidget {
                           vertical: 15.0,
                         ),
                         child: Text(
-                          'Comparer vos profils',
+                          'Envoyer une demande',
                           style: Theme.of(context).textTheme.headline5.copyWith(
                                 color: Colors.white,
                               ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-            if ([MatchStatus.matched, MatchStatus.heAskedParrain]
-                .contains(_match.statusAssociatif)) ...[
-              Expanded(
-                flex: 1500,
-                child: (_match.statusAssociatif == MatchStatus.matched)
-                        ? Center(
-                            child: Container(
-                              width: 250,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Theme.of(context).indicatorColor),
-                                ),
-                                onPressed: () {
-                                  BlocProvider.of<MatchedMatchesBloc>(context)
-                                      .add(AskParrainEvent(match: _match));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 30.0,
-                                    vertical: 15.0,
-                                  ),
-                                  child: Text(
-                                    'Envoyer une demande',
-                                    style: Theme.of(context).textTheme.headline5.copyWith(
-                                          color: Colors.white,
-                                        ),
+                  )
+                  : (_match.statusAssociatif == MatchStatus.heAskedParrain)
+                      ? Container(
+                          width: 250,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    BlocProvider.of<MatchedMatchesBloc>(context)
+                                        .add(AcceptParrainEvent(match: _match));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0,
+                                      vertical: 15.0,
+                                    ),
+                                    child: Text(
+                                      'Accepter',
+                                      style: Theme.of(context).textTheme.headline5.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )
-                        : (_match.statusAssociatif == MatchStatus.heAskedParrain)
-                            ? Container(
-                                width: 250,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          BlocProvider.of<MatchedMatchesBloc>(context)
-                                              .add(AcceptParrainEvent(match: _match));
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0,
-                                            vertical: 15.0,
-                                          ),
-                                          child: Text(
-                                            'Accepter',
-                                            style:
-                                                Theme.of(context).textTheme.headline5.copyWith(
-                                                      color: Colors.white,
-                                                    ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: ElevatedButton(
-                                        style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(
-                                              Theme.of(context).indicatorColor),
-                                        ),
-                                        onPressed: () {
-                                          BlocProvider.of<MatchedMatchesBloc>(context)
-                                              .add(RefuseParrainEvent(match: _match));
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0,
-                                            vertical: 15.0,
-                                          ),
-                                          child: Text(
-                                            'Refuser',
-                                            style:
-                                                Theme.of(context).textTheme.headline5.copyWith(
-                                                      color: Colors.white,
-                                                    ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : AutoSizeText(
-                                'ERROR: the state should not be ' +
-                                    _match.statusAssociatif.toString(),
+                              SizedBox(
+                                width: 10,
                               ),
-              ),
+                              Expanded(
+                                flex: 1,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Theme.of(context).indicatorColor),
+                                  ),
+                                  onPressed: () {
+                                    BlocProvider.of<MatchedMatchesBloc>(context)
+                                        .add(RefuseParrainEvent(match: _match));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0,
+                                      vertical: 15.0,
+                                    ),
+                                    child: Text(
+                                      'Refuser',
+                                      style: Theme.of(context).textTheme.headline5.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : AutoSizeText(
+                          'ERROR: the state should not be ' +
+                              _match.statusAssociatif.toString(),
+                        ),
             ],
-            Expanded(
-              flex: 1500,
-              child: Center(
-                child: Container(
-                  width: 250,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Theme.of(context).errorColor),
-                    ),
-                    onPressed: () async {
-                      await onCompareTapped(0);
-                      context.read<SelectedAssociatif2>().matchLogin = null;
-                      BlocProvider.of<MatchedMatchesBloc>(context).add(
-                        IgnoreMatchEvent(match: _match),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 15.0,
-                      ),
-                      child: Text(
-                        'Supprimer ce match',
-                        style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Colors.white,
-                            ),
-                      ),
-                    ),
+            Container(
+              width: 250,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Theme.of(context).errorColor),
+                ),
+                onPressed: () async {
+                  await onCompareTapped(0);
+                  context.read<SelectedAssociatif2>().matchLogin = null;
+                  BlocProvider.of<MatchedMatchesBloc>(context).add(
+                    IgnoreMatchEvent(match: _match),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 15.0,
+                  ),
+                  child: Text(
+                    'Supprimer ce match',
+                    style: Theme.of(context).textTheme.headline5.copyWith(
+                          color: Colors.white,
+                        ),
                   ),
                 ),
               ),
