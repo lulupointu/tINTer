@@ -272,94 +272,105 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Container(
-          height: 45,
-          width: 45,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 4,
-                blurRadius: 4,
-                offset: Offset(1, 1),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: IconButton(
-                padding: EdgeInsets.all(0.0),
-                color: Theme.of(context).indicatorColor,
-                icon: FlareActor(
-                  'assets/icons/Heart.flr',
-                  color: Theme.of(context).indicatorColor,
-                  fit: BoxFit.contain,
-                  controller: CustomFlareController(
-                      controller: likeController,
-                      forwardAnimationName: 'Validate'),
+    return BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
+        builder: (context, DiscoverBinomesState discoverBinomesState) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 4,
+                  offset: Offset(1, 1),
                 ),
-                onPressed: () {
-                  likeController.forward().whenComplete(() => likeController
-                      .animateTo(0, duration: Duration(seconds: 0)));
-                  BlocProvider.of<DiscoverBinomesBloc>(context)
-                      .add(DiscoverBinomeLikeEvent());
-                },
-              ),
+              ],
             ),
-          ),
-        ),
-        SizedBox(
-          width: 15.0,
-        ),
-        Container(
-          height: 45,
-          width: 45,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 4,
-                blurRadius: 4,
-                offset: Offset(1, 1),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: IconButton(
-                padding: EdgeInsets.all(0.0),
-                color: Theme.of(context).indicatorColor,
-                icon: FlareActor(
-                  'assets/icons/Clear.flr',
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: IconButton(
+                  padding: EdgeInsets.all(0.0),
                   color: Theme.of(context).indicatorColor,
-                  fit: BoxFit.contain,
-                  controller: CustomFlareController(
-                    controller: ignoreController,
-                    forwardAnimationName: 'Ignore',
+                  icon: FlareActor(
+                    'assets/icons/Heart.flr',
+                    color: Theme.of(context).indicatorColor,
+                    fit: BoxFit.contain,
+                    controller: CustomFlareController(
+                        controller: likeController,
+                        forwardAnimationName: 'Validate'),
                   ),
+                  onPressed: discoverBinomesState
+                          is DiscoverBinomesSavingNewStatusState
+                      ? null
+                      : () {
+                          likeController.forward().whenComplete(() =>
+                              likeController.animateTo(0,
+                                  duration: Duration(seconds: 0)));
+                          BlocProvider.of<DiscoverBinomesBloc>(context)
+                              .add(DiscoverBinomeLikeEvent());
+                        },
                 ),
-                onPressed: () {
-                  ignoreController.forward().whenComplete(() => ignoreController
-                      .animateTo(0, duration: Duration(seconds: 0)));
-                  BlocProvider.of<DiscoverBinomesBloc>(context)
-                      .add(DiscoverBinomeIgnoreEvent());
-                },
               ),
             ),
           ),
-        ),
-      ],
-    );
+          SizedBox(
+            width: 15.0,
+          ),
+          Container(
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 4,
+                  offset: Offset(1, 1),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: IconButton(
+                  padding: EdgeInsets.all(0.0),
+                  color: Theme.of(context).indicatorColor,
+                  icon: FlareActor(
+                    'assets/icons/Clear.flr',
+                    color: Theme.of(context).indicatorColor,
+                    fit: BoxFit.contain,
+                    controller: CustomFlareController(
+                      controller: ignoreController,
+                      forwardAnimationName: 'Ignore',
+                    ),
+                  ),
+                  onPressed: discoverBinomesState
+                          is DiscoverBinomesSavingNewStatusState
+                      ? null
+                      : () {
+                          ignoreController.forward().whenComplete(() =>
+                              ignoreController.animateTo(0,
+                                  duration: Duration(seconds: 0)));
+                          BlocProvider.of<DiscoverBinomesBloc>(context)
+                              .add(DiscoverBinomeIgnoreEvent());
+                        },
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 
