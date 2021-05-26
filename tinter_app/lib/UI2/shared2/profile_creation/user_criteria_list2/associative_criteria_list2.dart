@@ -188,7 +188,10 @@ class PrimoEntrantRectangle extends StatelessWidget {
                               newState: (userState as NewUserState)
                                   .user
                                   .rebuild((b) => b..primoEntrant = true))),
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: Duration(
+                          milliseconds: 200,
+                        ),
                         width: 45,
                         height: 35,
                         decoration: BoxDecoration(
@@ -294,7 +297,10 @@ class YearRectangle extends StatelessWidget {
                             newState: (userState as NewUserState)
                                 .user
                                 .rebuild((b) => b..year = TSPYear.TSP1A))),
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: Duration(
+                        milliseconds: 200,
+                      ),
                       width: 45,
                       height: 35,
                       decoration: BoxDecoration(
@@ -311,15 +317,12 @@ class YearRectangle extends StatelessWidget {
                       child: Center(
                         child: Text(
                           '1A',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(
-                                  color: Colors.black.withOpacity(
-                                      (userState as NewUserState).user.year ==
-                                              TSPYear.TSP1A
-                                          ? 0.87
-                                          : 0.38)),
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: Colors.black.withOpacity(
+                                  (userState as NewUserState).user.year ==
+                                          TSPYear.TSP1A
+                                      ? 0.87
+                                      : 0.38)),
                         ),
                       ),
                     ),
@@ -330,7 +333,10 @@ class YearRectangle extends StatelessWidget {
                             newState: (userState as NewUserState)
                                 .user
                                 .rebuild((b) => b..year = TSPYear.TSP2A))),
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: Duration(
+                        milliseconds: 200,
+                      ),
                       width: 45,
                       height: 35,
                       decoration: BoxDecoration(
@@ -348,9 +354,7 @@ class YearRectangle extends StatelessWidget {
                                 .headline5
                                 .copyWith(
                                     color: Colors.black.withOpacity(
-                                        (userState as NewUserState)
-                                                    .user
-                                                    .year ==
+                                        (userState as NewUserState).user.year ==
                                                 TSPYear.TSP2A
                                             ? 0.87
                                             : 0.38))),
@@ -363,7 +367,10 @@ class YearRectangle extends StatelessWidget {
                             newState: (userState as NewUserState)
                                 .user
                                 .rebuild((b) => b..year = TSPYear.TSP3A))),
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: Duration(
+                        milliseconds: 200,
+                      ),
                       width: 45,
                       height: 35,
                       decoration: BoxDecoration(
@@ -380,15 +387,12 @@ class YearRectangle extends StatelessWidget {
                       child: Center(
                         child: Text(
                           '3A',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(
-                                  color: Colors.black.withOpacity(
-                                      (userState as NewUserState).user.year ==
-                                              TSPYear.TSP3A
-                                          ? 0.87
-                                          : 0.38)),
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: Colors.black.withOpacity(
+                                  (userState as NewUserState).user.year ==
+                                          TSPYear.TSP3A
+                                      ? 0.87
+                                      : 0.38)),
                         ),
                       ),
                     ),

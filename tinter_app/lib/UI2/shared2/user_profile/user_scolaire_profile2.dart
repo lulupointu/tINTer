@@ -80,13 +80,18 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
                                   .user
                                   .rebuild(
                                       (b) => b..lieuDeVie = LieuDeVie.maisel))),
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: Duration(
+                          milliseconds: 200,
+                        ),
                         width: 45,
                         height: 35,
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as UserLoadSuccessState).user.lieuDeVie ==
+                              (userState as UserLoadSuccessState)
+                                          .user
+                                          .lieuDeVie ==
                                       LieuDeVie.maisel
                                   ? 1
                                   : 0.4),
@@ -125,7 +130,9 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           color: Theme.of(context).primaryColor.withOpacity(
-                              (userState as UserLoadSuccessState).user.lieuDeVie ==
+                              (userState as UserLoadSuccessState)
+                                          .user
+                                          .lieuDeVie ==
                                       LieuDeVie.maisel
                                   ? 0.4
                                   : 1),
@@ -182,190 +189,215 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               }
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => BlocProvider.of<UserBloc>(context).add(
-                        UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((b) {
-                      if ((userState as UserLoadSuccessState)
-                          .user
-                          .horairesDeTravail
-                          .contains(HoraireDeTravail.morning)) {
-                        b..horairesDeTravail.remove(HoraireDeTravail.morning);
-                      } else {
-                        b..horairesDeTravail.add(HoraireDeTravail.morning);
-                      }
-                    }))),
-                    child: Container(
-                      width: 60,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as UserLoadSuccessState)
-                                    .user
-                                    .horairesDeTravail
-                                    .contains(HoraireDeTravail.morning)
-                                ? 1
-                                : 0.4),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(5.0),
-                            bottomLeft: Radius.circular(5.0)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Matin',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Colors.black.withOpacity(
-                                  (userState as UserLoadSuccessState)
-                                          .user
-                                          .horairesDeTravail
-                                          .contains(HoraireDeTravail.morning)
-                                      ? 0.87
-                                      : 0.38)),
+              return Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () => BlocProvider.of<UserBloc>(context).add(
+                          UserStateChangedEvent(
+                              newState: (userState as UserLoadSuccessState)
+                                  .user
+                                  .rebuild((b) {
+                        if ((userState as UserLoadSuccessState)
+                            .user
+                            .horairesDeTravail
+                            .contains(HoraireDeTravail.morning)) {
+                          b..horairesDeTravail.remove(HoraireDeTravail.morning);
+                        } else {
+                          b..horairesDeTravail.add(HoraireDeTravail.morning);
+                        }
+                      }))),
+                      child: AnimatedContainer(
+                        duration: Duration(
+                          milliseconds: 200,
                         ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => BlocProvider.of<UserBloc>(context).add(
-                        UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((b) {
-                      if ((userState as UserLoadSuccessState)
-                          .user
-                          .horairesDeTravail
-                          .contains(HoraireDeTravail.afternoon)) {
-                        b..horairesDeTravail.remove(HoraireDeTravail.afternoon);
-                      } else {
-                        b..horairesDeTravail.add(HoraireDeTravail.afternoon);
-                      }
-                    }))),
-                    child: Container(
-                      width: 65,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as UserLoadSuccessState)
-                                    .user
-                                    .horairesDeTravail
-                                    .contains(HoraireDeTravail.afternoon)
-                                ? 1
-                                : 0.4),
-                      ),
-                      child: Center(
-                        child: Text('Aprem',
+                        width: 60,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Theme.of(context).primaryColor.withOpacity(
+                              (userState as UserLoadSuccessState)
+                                      .user
+                                      .horairesDeTravail
+                                      .contains(HoraireDeTravail.morning)
+                                  ? 1
+                                  : 0.4),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Matin',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5
                                 .copyWith(
-                                    color: Colors.black.withOpacity(
-                                        (userState as UserLoadSuccessState)
-                                                .user
-                                                .horairesDeTravail
-                                                .contains(
-                                                    HoraireDeTravail.afternoon)
-                                            ? 0.87
-                                            : 0.38))),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => BlocProvider.of<UserBloc>(context).add(
-                        UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((b) {
-                      if ((userState as UserLoadSuccessState)
-                          .user
-                          .horairesDeTravail
-                          .contains(HoraireDeTravail.evening)) {
-                        b..horairesDeTravail.remove(HoraireDeTravail.evening);
-                      } else {
-                        b..horairesDeTravail.add(HoraireDeTravail.evening);
-                      }
-                    }))),
-                    child: Container(
-                      width: 60,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as UserLoadSuccessState)
-                                    .user
-                                    .horairesDeTravail
-                                    .contains(HoraireDeTravail.evening)
-                                ? 1
-                                : 0.4),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Soir',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Colors.black.withOpacity(
-                                  (userState as UserLoadSuccessState)
-                                          .user
-                                          .horairesDeTravail
-                                          .contains(HoraireDeTravail.evening)
-                                      ? 0.87
-                                      : 0.38)),
+                                    color: Colors.black.withOpacity((userState
+                                                as UserLoadSuccessState)
+                                            .user
+                                            .horairesDeTravail
+                                            .contains(HoraireDeTravail.morning)
+                                        ? 0.87
+                                        : 0.38)),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () => BlocProvider.of<UserBloc>(context).add(
-                        UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((b) {
-                      if ((userState as UserLoadSuccessState)
-                          .user
-                          .horairesDeTravail
-                          .contains(HoraireDeTravail.night)) {
-                        b..horairesDeTravail.remove(HoraireDeTravail.night);
-                      } else {
-                        b..horairesDeTravail.add(HoraireDeTravail.night);
-                      }
-                    }))),
-                    child: Container(
-                      width: 60,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Theme.of(context).primaryColor.withOpacity(
-                            (userState as UserLoadSuccessState)
-                                    .user
-                                    .horairesDeTravail
-                                    .contains(HoraireDeTravail.night)
-                                ? 1
-                                : 0.4),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(5.0),
-                            bottomRight: Radius.circular(5.0)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Nuit',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Colors.black.withOpacity(
-                                  (userState as UserLoadSuccessState)
-                                          .user
-                                          .horairesDeTravail
-                                          .contains(HoraireDeTravail.night)
-                                      ? 0.87
-                                      : 0.38)),
+                    GestureDetector(
+                      onTap: () => BlocProvider.of<UserBloc>(context).add(
+                          UserStateChangedEvent(
+                              newState: (userState as UserLoadSuccessState)
+                                  .user
+                                  .rebuild((b) {
+                        if ((userState as UserLoadSuccessState)
+                            .user
+                            .horairesDeTravail
+                            .contains(HoraireDeTravail.afternoon)) {
+                          b
+                            ..horairesDeTravail
+                                .remove(HoraireDeTravail.afternoon);
+                        } else {
+                          b..horairesDeTravail.add(HoraireDeTravail.afternoon);
+                        }
+                      }))),
+                      child: AnimatedContainer(
+                        duration: Duration(
+                          milliseconds: 200,
+                        ),
+                        width: 65,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Theme.of(context).primaryColor.withOpacity(
+                              (userState as UserLoadSuccessState)
+                                      .user
+                                      .horairesDeTravail
+                                      .contains(HoraireDeTravail.afternoon)
+                                  ? 1
+                                  : 0.4),
+                        ),
+                        child: Center(
+                          child: Text('Aprem',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                      color: Colors.black.withOpacity((userState
+                                                  as UserLoadSuccessState)
+                                              .user
+                                              .horairesDeTravail
+                                              .contains(
+                                                  HoraireDeTravail.afternoon)
+                                          ? 0.87
+                                          : 0.38))),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    GestureDetector(
+                      onTap: () => BlocProvider.of<UserBloc>(context).add(
+                          UserStateChangedEvent(
+                              newState: (userState as UserLoadSuccessState)
+                                  .user
+                                  .rebuild((b) {
+                        if ((userState as UserLoadSuccessState)
+                            .user
+                            .horairesDeTravail
+                            .contains(HoraireDeTravail.evening)) {
+                          b..horairesDeTravail.remove(HoraireDeTravail.evening);
+                        } else {
+                          b..horairesDeTravail.add(HoraireDeTravail.evening);
+                        }
+                      }))),
+                      child: AnimatedContainer(
+                        duration: Duration(
+                          milliseconds: 200,
+                        ),
+                        width: 60,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Theme.of(context).primaryColor.withOpacity(
+                              (userState as UserLoadSuccessState)
+                                      .user
+                                      .horairesDeTravail
+                                      .contains(HoraireDeTravail.evening)
+                                  ? 1
+                                  : 0.4),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Soir',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: Colors.black.withOpacity((userState
+                                                as UserLoadSuccessState)
+                                            .user
+                                            .horairesDeTravail
+                                            .contains(HoraireDeTravail.evening)
+                                        ? 0.87
+                                        : 0.38)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => BlocProvider.of<UserBloc>(context).add(
+                          UserStateChangedEvent(
+                              newState: (userState as UserLoadSuccessState)
+                                  .user
+                                  .rebuild((b) {
+                        if ((userState as UserLoadSuccessState)
+                            .user
+                            .horairesDeTravail
+                            .contains(HoraireDeTravail.night)) {
+                          b..horairesDeTravail.remove(HoraireDeTravail.night);
+                        } else {
+                          b..horairesDeTravail.add(HoraireDeTravail.night);
+                        }
+                      }))),
+                      child: AnimatedContainer(
+                        duration: Duration(
+                          milliseconds: 200,
+                        ),
+                        width: 60,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Theme.of(context).primaryColor.withOpacity(
+                              (userState as UserLoadSuccessState)
+                                      .user
+                                      .horairesDeTravail
+                                      .contains(HoraireDeTravail.night)
+                                  ? 1
+                                  : 0.4),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(5.0),
+                              bottomRight: Radius.circular(5.0)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Nuit',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: Colors.black.withOpacity((userState
+                                                as UserLoadSuccessState)
+                                            .user
+                                            .horairesDeTravail
+                                            .contains(HoraireDeTravail.night)
+                                        ? 0.87
+                                        : 0.38)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             }),
           ],
@@ -548,10 +580,9 @@ class MatieresRectangle2WithListener extends StatelessWidget {
 }
 
 class MatieresRectangle2WithoutListener extends StatelessWidget {
-
-  const MatieresRectangle2WithoutListener(
-      {Key key,})
-      : super(key: key);
+  const MatieresRectangle2WithoutListener({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -583,4 +614,3 @@ class MatieresRectangle2WithoutListener extends StatelessWidget {
     );
   }
 }
-
