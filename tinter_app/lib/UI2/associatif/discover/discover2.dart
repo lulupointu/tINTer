@@ -134,21 +134,24 @@ class DiscoverRight extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-            left: 8.0, right: 8.0, top: 15.0),
+          left: 8.0,
+          right: 8.0,
+          top: 15.0,
+        ),
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            FractionallySizedBox(
+              widthFactor: 0.9,
               child: AssociatifStudentSearch(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Container(
-                height: ((this.appHeight - 15 - 60 - 15) -
-                        this.appHeight * 1 / 2) /
-                    (1 -
-                        (1 / 2 * MatchesFlock.fractions['bigHead'] +
-                            MatchesFlock.fractions['nameAndSurname'])),
+                height:
+                    ((this.appHeight - 15 - 60 - 15) - this.appHeight * 1 / 2) /
+                        (1 -
+                            (1 / 2 * MatchesFlock.fractions['bigHead'] +
+                                MatchesFlock.fractions['nameAndSurname'])),
                 child: MatchesFlock(),
               ),
             ),
@@ -204,107 +207,104 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-      return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
-          builder: (context, DiscoverMatchesState discoverMatchesState) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 4,
-                      blurRadius: 4,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
+    return BlocBuilder<DiscoverMatchesBloc, DiscoverMatchesState>(
+        builder: (context, DiscoverMatchesState discoverMatchesState) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 4,
+                  offset: Offset(1, 1),
                 ),
-                height: 45, // Change this to change icon size
-                width: 45, // Change this to change icon size
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: IconButton(
-                      padding: EdgeInsets.all(0.0),
-                      color: Theme.of(context).indicatorColor,
-                      icon: FlareActor(
-                        'assets/icons/Heart.flr',
-                        color: Theme.of(context).indicatorColor,
-                        fit: BoxFit.fill,
-                        controller: CustomFlareController(
-                            controller: likeController,
-                            forwardAnimationName: 'Validate'),
-                      ),
-                      onPressed: discoverMatchesState
-                              is DiscoverMatchesSavingNewStatusState
-                          ? null
-                          : () {
-                              likeController.forward().whenComplete(() =>
-                                  likeController.animateTo(0,
-                                      duration: Duration(seconds: 0)));
-                              BlocProvider.of<DiscoverMatchesBloc>(context)
-                                  .add(DiscoverMatchLikeEvent());
-                            },
-                    ),
+              ],
+            ),
+            height: 45, // Change this to change icon size
+            width: 45, // Change this to change icon size
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: IconButton(
+                  padding: EdgeInsets.all(0.0),
+                  color: Theme.of(context).indicatorColor,
+                  icon: FlareActor(
+                    'assets/icons/Heart.flr',
+                    color: Theme.of(context).indicatorColor,
+                    fit: BoxFit.fill,
+                    controller: CustomFlareController(
+                        controller: likeController,
+                        forwardAnimationName: 'Validate'),
                   ),
+                  onPressed: discoverMatchesState
+                          is DiscoverMatchesSavingNewStatusState
+                      ? null
+                      : () {
+                          likeController.forward().whenComplete(() =>
+                              likeController.animateTo(0,
+                                  duration: Duration(seconds: 0)));
+                          BlocProvider.of<DiscoverMatchesBloc>(context)
+                              .add(DiscoverMatchLikeEvent());
+                        },
                 ),
               ),
-              SizedBox(width: 15.0,),
-              Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 4,
-                      blurRadius: 4,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: IconButton(
-                      padding: EdgeInsets.all(0.0),
-                      iconSize: 35,
-                      color: Theme.of(context).indicatorColor,
-                      icon: FlareActor(
-                        'assets/icons/Clear.flr',
-                        color: Theme.of(context).indicatorColor,
-                        fit: BoxFit.contain,
-                        controller: CustomFlareController(
-                          controller: ignoreController,
-                          forwardAnimationName: 'Ignore',
-                        ),
-                      ),
-                      onPressed: discoverMatchesState
-                              is DiscoverMatchesSavingNewStatusState
-                          ? null
-                          : () {
-                              ignoreController.forward().whenComplete(() =>
-                                  ignoreController.animateTo(0,
-                                      duration: Duration(seconds: 0)));
-                              BlocProvider.of<DiscoverMatchesBloc>(context)
-                                  .add(DiscoverMatchIgnoreEvent());
-                            },
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        );
-      });
+          SizedBox(
+            width: 15.0,
+          ),
+          Container(
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 4,
+                  offset: Offset(1, 1),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: IconButton(
+                  padding: EdgeInsets.all(0.0),
+                  iconSize: 35,
+                  color: Theme.of(context).indicatorColor,
+                  icon: FlareActor(
+                    'assets/icons/Clear.flr',
+                    color: Theme.of(context).indicatorColor,
+                    fit: BoxFit.contain,
+                    controller: CustomFlareController(
+                      controller: ignoreController,
+                      forwardAnimationName: 'Ignore',
+                    ),
+                  ),
+                  onPressed: discoverMatchesState
+                          is DiscoverMatchesSavingNewStatusState
+                      ? null
+                      : () {
+                          ignoreController.forward().whenComplete(() =>
+                              ignoreController.animateTo(0,
+                                  duration: Duration(seconds: 0)));
+                          BlocProvider.of<DiscoverMatchesBloc>(context)
+                              .add(DiscoverMatchIgnoreEvent());
+                        },
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
     });
   }
 }
@@ -1593,12 +1593,12 @@ class AssociatifStudentSearch extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 5.0),
-              child: Icon(
-                Icons.search_rounded,
-                color: Colors.white,
-              ),
+            Icon(
+              Icons.search_rounded,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5.0,
             ),
             Text(
               randomGender == Gender.M
@@ -1608,7 +1608,7 @@ class AssociatifStudentSearch extends StatelessWidget {
                   .textTheme
                   .headline5
                   .copyWith(color: Colors.white, height: 1.1),
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
             ),
           ],
         ),

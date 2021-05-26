@@ -142,28 +142,27 @@ class DiscoverRight extends StatelessWidget {
         padding: const EdgeInsets.only(
           left: 8.0,
           right: 8.0,
-          bottom: 8.0,
           top: 15.0,
         ),
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            FractionallySizedBox(
+              widthFactor: 0.9,
               child: ScolaireStudentSearch(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Container(
-                height: ((this.appHeight - 8 * 2 - 50 - 15) -
-                        this.appHeight * 1 / 2) /
-                    (1 -
-                        (1 / 2 * BinomesFlock.fractions['bigHead'] +
-                            BinomesFlock.fractions['nameAndSurname'])),
+                height:
+                    ((this.appHeight - 15 - 60 - 15) - this.appHeight * 1 / 2) /
+                        (1 -
+                            (1 / 2 * BinomesFlock.fractions['bigHead'] +
+                                BinomesFlock.fractions['nameAndSurname'])),
                 child: BinomesFlock(),
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             LikeOrIgnore(),
           ],
@@ -188,6 +187,7 @@ class ScolaireStudentSearch extends StatelessWidget {
         );
       },
       child: Container(
+        height: 60,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           border: Border.all(
@@ -204,30 +204,27 @@ class ScolaireStudentSearch extends StatelessWidget {
             Radius.circular(15.0),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 5.0),
-                child: Icon(
-                  Icons.search_rounded,
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                randomGender == Gender.M
-                    ? "rechercher\nun étudiant"
-                    : "rechercher\nune étudiante",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: Colors.white, height: 1.1),
-                textAlign: TextAlign.left,
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_rounded,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5.0,
+            ),
+            Text(
+              randomGender == Gender.M
+                  ? "rechercher\nun étudiant"
+                  : "rechercher\nune étudiante",
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: Colors.white, height: 1.1),
+              textAlign: TextAlign.left,
+            ),
+          ],
         ),
       ),
     );
@@ -275,97 +272,93 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 4,
-                      blurRadius: 4,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          height: 45,
+          width: 45,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 4,
+                blurRadius: 4,
+                offset: Offset(1, 1),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: IconButton(
+                padding: EdgeInsets.all(0.0),
+                color: Theme.of(context).indicatorColor,
+                icon: FlareActor(
+                  'assets/icons/Heart.flr',
+                  color: Theme.of(context).indicatorColor,
+                  fit: BoxFit.contain,
+                  controller: CustomFlareController(
+                      controller: likeController,
+                      forwardAnimationName: 'Validate'),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: IconButton(
-                    padding: EdgeInsets.all(0.0),
-                    iconSize: 35,
-                    color: Theme.of(context).indicatorColor,
-                    icon: FlareActor(
-                      'assets/icons/Heart.flr',
-                      color: Theme.of(context).indicatorColor,
-                      fit: BoxFit.contain,
-                      controller: CustomFlareController(
-                          controller: likeController,
-                          forwardAnimationName: 'Validate'),
-                    ),
-                    onPressed: () {
-                      likeController.forward().whenComplete(() => likeController
-                          .animateTo(0, duration: Duration(seconds: 0)));
-                      BlocProvider.of<DiscoverBinomesBloc>(context)
-                          .add(DiscoverBinomeLikeEvent());
-                    },
+                onPressed: () {
+                  likeController.forward().whenComplete(() => likeController
+                      .animateTo(0, duration: Duration(seconds: 0)));
+                  BlocProvider.of<DiscoverBinomesBloc>(context)
+                      .add(DiscoverBinomeLikeEvent());
+                },
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 15.0,
+        ),
+        Container(
+          height: 45,
+          width: 45,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 4,
+                blurRadius: 4,
+                offset: Offset(1, 1),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: IconButton(
+                padding: EdgeInsets.all(0.0),
+                color: Theme.of(context).indicatorColor,
+                icon: FlareActor(
+                  'assets/icons/Clear.flr',
+                  color: Theme.of(context).indicatorColor,
+                  fit: BoxFit.contain,
+                  controller: CustomFlareController(
+                    controller: ignoreController,
+                    forwardAnimationName: 'Ignore',
                   ),
                 ),
-              );
-            }),
+                onPressed: () {
+                  ignoreController.forward().whenComplete(() => ignoreController
+                      .animateTo(0, duration: Duration(seconds: 0)));
+                  BlocProvider.of<DiscoverBinomesBloc>(context)
+                      .add(DiscoverBinomeIgnoreEvent());
+                },
+              ),
+            ),
           ),
-          Flexible(
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 4,
-                      blurRadius: 4,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: IconButton(
-                    padding: EdgeInsets.all(0.0),
-                    iconSize: 35,
-                    color: Theme.of(context).indicatorColor,
-                    icon: FlareActor(
-                      'assets/icons/Clear.flr',
-                      color: Theme.of(context).indicatorColor,
-                      fit: BoxFit.contain,
-                      controller: CustomFlareController(
-                        controller: ignoreController,
-                        forwardAnimationName: 'Ignore',
-                      ),
-                    ),
-                    onPressed: () {
-                      ignoreController.forward().whenComplete(() =>
-                          ignoreController.animateTo(0,
-                              duration: Duration(seconds: 0)));
-                      BlocProvider.of<DiscoverBinomesBloc>(context)
-                          .add(DiscoverBinomeIgnoreEvent());
-                    },
-                  ),
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -678,23 +671,17 @@ class _BinomesFlockState extends State<BinomesFlock>
                             builder: (context, tinterTheme, child) {
                           return Column(
                             children: <Widget>[
-                              Expanded(
-                                child: AutoSizeText(
-                                  (state as DiscoverBinomesLoadSuccessState)
-                                      .binomes[0]
-                                      .name,
-                                  group: nameAndSurnameAutoSizeGroup,
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
+                              Text(
+                                (state as DiscoverBinomesLoadSuccessState)
+                                    .binomes[0]
+                                    .name,
+                                style: Theme.of(context).textTheme.headline5,
                               ),
-                              Expanded(
-                                child: AutoSizeText(
-                                  (state as DiscoverBinomesLoadSuccessState)
-                                      .binomes[0]
-                                      .surname,
-                                  group: nameAndSurnameAutoSizeGroup,
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
+                              Text(
+                                (state as DiscoverBinomesLoadSuccessState)
+                                    .binomes[0]
+                                    .surname,
+                                style: Theme.of(context).textTheme.headline5,
                               ),
                             ],
                           );
