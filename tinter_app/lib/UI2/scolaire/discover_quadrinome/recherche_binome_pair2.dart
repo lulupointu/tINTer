@@ -335,8 +335,10 @@ class UserResume extends StatelessWidget {
                                             : BinomePairSearchLikeEvent(
                                                 likedSearchedBinomePair:
                                                     searchedBinomePair)),
-                                child: Container(
-                                  width: searchedBinomePair.liked ? 115 : 90,
+                                child: AnimatedContainer(
+                                  duration: Duration(
+                                    milliseconds: 200,
+                                  ),
                                   height: 25,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
@@ -344,7 +346,7 @@ class UserResume extends StatelessWidget {
                                         ? Colors.white
                                         : Theme.of(context).indicatorColor,
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
+                                        BorderRadius.all(Radius.circular(15.0),),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey.withOpacity(0.2),
@@ -358,6 +360,7 @@ class UserResume extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0, vertical: 3.0),
                                     child: Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
@@ -373,6 +376,9 @@ class UserResume extends StatelessWidget {
                                                       searchedBinomePair.liked
                                                           ? Colors.black87
                                                           : Colors.white),
+                                        ),
+                                        SizedBox(
+                                          width: 10.0,
                                         ),
                                         Icon(
                                           Icons.favorite,

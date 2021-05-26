@@ -307,8 +307,10 @@ class UserResume extends StatelessWidget {
                                             : UserAssociatifSearchLikeEvent(
                                                 likedSearchedUserAssociatif:
                                                     searchedUser)),
-                                child: Container(
-                                  width: searchedUser.liked ? 115 : 90,
+                                child: AnimatedContainer(
+                                  duration: Duration(
+                                    milliseconds: 200,
+                                  ),
                                   height: 25,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
@@ -330,6 +332,7 @@ class UserResume extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0, vertical: 3.0),
                                     child: Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
@@ -344,6 +347,9 @@ class UserResume extends StatelessWidget {
                                                   color: searchedUser.liked
                                                       ? Colors.black87
                                                       : Colors.white),
+                                        ),
+                                        SizedBox(
+                                          width: 10.0,
                                         ),
                                         Icon(
                                           Icons.favorite,
