@@ -1194,8 +1194,7 @@ class MatchSelectionMenu extends StatelessWidget {
                       child: topMenu(
                         context: context,
                         matches: parrains,
-                        title: ((userState as UserLoadSuccessState).user.year ==
-                                TSPYear.TSP1A)
+                        title: ((userState as UserLoadSuccessState).user.primoEntrant)
                             ? 'Mes parrains et marraines'
                             : 'Mes filleuls et filleules',
                       ),
