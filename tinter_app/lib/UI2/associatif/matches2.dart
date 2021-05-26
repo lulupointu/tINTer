@@ -109,9 +109,12 @@ class MatchsTab2State extends State<MatchsTab2> {
                       ? 0.0
                       : (ModeAssociatifOverlay.height +
                               2 * widget.spacing +
-                              MatchSelectionMenu.height) /
+                              MatchSelectionMenu.height + 15.0) /
                           MediaQuery.of(context).size.height) +
-                  ((_parrains.length == 0) ? 0.0 : 0.175);
+                  ((_parrains.length == 0)
+                      ? 0.0
+                      : (widget.spacing + MatchSelectionMenu.height) /
+                          MediaQuery.of(context).size.height);
           return Builder(
             builder: (BuildContext ntext) {
               // ignore: invalid_use_of_protected_member
@@ -518,33 +521,33 @@ class CompareView extends StatelessWidget {
                   return AutoSizeText(
                     (_match.statusAssociatif == MatchStatus.liked ||
                             _match.statusAssociatif == MatchStatus.heIgnoredYou)
-                        ? "Cette personne ne t'a pas encore liké.e"
+                        ? "Cette personne ne t'a pas encore liké.e."
                         : (_match.statusAssociatif == MatchStatus.matched)
                             ? (_match.primoEntrant)
-                                ? "Propose lui d'être ton parrain"
-                                : "Demande lui de te parrainer"
+                                ? "Propose lui d'être ton parrain !"
+                                : "Demande lui de te parrainer !"
                             : (_match.statusAssociatif ==
                                     MatchStatus.youAskedParrain)
-                                ? "Demande de parrainage envoyée"
+                                ? "Demande de parrainage envoyée !"
                                 : (_match.statusAssociatif ==
                                         MatchStatus.heAskedParrain)
                                     ? (_match.primoEntrant)
-                                        ? "Cette personne souhaite que tu la parraine"
-                                        : "Cette personne souhaite te parrainer"
+                                        ? "Cette personne souhaite que tu la parraines !"
+                                        : "Cette personne souhaite te parrainer !"
                                     : (_match.statusAssociatif ==
                                             MatchStatus.parrainAccepted)
                                         ? (_match.primoEntrant)
-                                            ? 'Tu parraine cette personne !'
+                                            ? 'Tu parraines cette personne !'
                                             : "Cette personne te parraine !"
                                         : (_match.statusAssociatif ==
                                                 MatchStatus.parrainHeRefused)
-                                            ? 'Cette personne a refusé ta demande de parrainage'
+                                            ? 'Cette personne a refusé ta demande de parrainage.'
                                             : (_match.statusAssociatif ==
                                                     MatchStatus
                                                         .parrainYouRefused)
                                                 ? (_match.primoEntrant)
-                                                    ? "Tu as refusé de parrainer cette personne"
-                                                    : "Tu as refusé que cette personne te parraine"
+                                                    ? "Tu as refusé de parrainer cette personne."
+                                                    : "Tu as refusé que cette personne te parraine."
                                                 : 'ERROR: the status should not be ${_match.statusAssociatif}',
                     style: Theme.of(context).textTheme.headline5,
                     maxLines: 1,
@@ -641,7 +644,7 @@ class CompareView extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 15.0,
                                   ),
                                   Expanded(
                                     flex: 1,
