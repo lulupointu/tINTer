@@ -62,18 +62,21 @@ class _OptionsTab2State extends State<OptionsTab2>
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 100.0, left: 50.0, right: 50.0),
-            child: Center(
+          Center(
+            child: FractionallySizedBox(
+              widthFactor: 0.75,
               child: Card(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 30.0, left: 30.0, right: 30.0),
-                      child: ElevatedButton(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 30.0,
+                    horizontal: 20.0,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -83,15 +86,18 @@ class _OptionsTab2State extends State<OptionsTab2>
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 15.0),
-                          child: Text('Informations légales'),
+                            vertical: 15.0,
+                          ),
+                          child: Text(
+                            'Informations légales',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 20.0, left: 30.0, right: 30.0),
-                      child: ElevatedButton(
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               Theme.of(context).indicatorColor),
@@ -103,15 +109,18 @@ class _OptionsTab2State extends State<OptionsTab2>
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 15.0),
-                          child: Text('Se déconnecter'),
+                            vertical: 15.0,
+                          ),
+                          child: Text(
+                            'Se déconnecter',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 20.0, left: 30.0, right: 30.0, bottom: 30.0),
-                      child: ElevatedButton(
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               Theme.of(context).errorColor),
@@ -121,9 +130,12 @@ class _OptionsTab2State extends State<OptionsTab2>
                             transitionDuration: Duration(milliseconds: 300),
                             barrierDismissible: false,
                             context: context,
-                            pageBuilder: (context, animation, _) => SimpleDialog(
+                            pageBuilder: (context, animation, _) =>
+                                SimpleDialog(
                               elevation: 5.0,
-                              contentPadding: EdgeInsets.all(20.0),
+                              contentPadding: EdgeInsets.all(
+                                20.0,
+                              ),
                               children: [
                                 Text(
                                   'Es-tu sûr de vouloir supprimer ton compte ?',
@@ -176,22 +188,21 @@ class _OptionsTab2State extends State<OptionsTab2>
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 15.0),
+                            vertical: 15.0,
+                          ),
                           child: Text(
                             'Supprimer mon compte',
                             textAlign: TextAlign.center,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-          Expanded(
-            child: ProblemOrQuestion(),
-          )
+          ProblemOrQuestion()
         ],
       ),
     );

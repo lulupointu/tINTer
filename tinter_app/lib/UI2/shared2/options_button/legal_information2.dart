@@ -22,11 +22,11 @@ class LegalInformation extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Container(
-          height: 180,
-          width: 300,
+        child: FractionallySizedBox(
+          widthFactor: 0.75,
           child: Card(
             child: Center(
+              heightFactor: 1.5,
               child: Text(
                 "Hébergeur de l'application :\n\n"
                 "Télécom SudParis\n"
@@ -36,6 +36,7 @@ class LegalInformation extends StatelessWidget {
                 "lucas.delsol@telecom-sudparis.eu\n"
                 "SIRET 180 092 025 00055 - APE 8542Z",
                 textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline5,
               ),
             ),
           ),

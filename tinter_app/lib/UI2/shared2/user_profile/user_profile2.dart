@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
+import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/user_profile/associations.dart';
 import 'package:tinterapp/UI2/shared2/options_button/options2.dart';
@@ -176,45 +177,51 @@ class ExistingProfileHeader extends StatelessWidget {
                 ),
               ],
             ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 10.0,
-                ),
-                HoveringUserPicture2(
-                  size: 100.0,
-                  showModifyOption: true,
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                BlocBuilder<UserBloc, UserState>(
-                  builder: (BuildContext context, UserState userState) {
-                    return Text(
-                      ((userState is UserLoadSuccessState))
-                          ? userState.user.name + " " + userState.user.surname
-                          : 'En chargement...',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4
-                          .copyWith(color: Colors.white),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40.0,
+            child: BlocBuilder<UserBloc, UserState>(
+                builder: (BuildContext context, UserState userState) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: 10.0,
                   ),
-                  child: AssociatifToScolaireButton2(),
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-              ],
-            ),
+                  HoveringUserPicture2(
+                    size: 100.0,
+                    showModifyOption: true,
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    ((userState is UserLoadSuccessState))
+                        ? userState.user.name + " " + userState.user.surname
+                        : 'En chargement...',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4
+                        .copyWith(color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 40.0,
+                      right: 40.0,
+                      bottom: 5.0,
+                    ),
+                    child: ((userState as UserLoadSuccessState).user.school ==
+                                School.TSP &&
+                            (userState as UserLoadSuccessState).user.year ==
+                                TSPYear.TSP1A)
+                        ? AssociatifToScolaireButton2()
+                        : null,
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                ],
+              );
+            }),
           ),
         ),
       ],
