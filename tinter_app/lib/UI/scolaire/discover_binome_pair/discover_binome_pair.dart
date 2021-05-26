@@ -13,7 +13,6 @@ import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
-import 'package:tinterapp/UI/associatif/discover/recherche_etudiant.dart';
 import 'package:tinterapp/UI/scolaire/discover_binome_pair/recherche_binome_pair.dart';
 import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';

@@ -144,21 +144,18 @@ class DiscoverRight extends StatelessWidget {
         padding: const EdgeInsets.only(
           left: 8.0,
           right: 8.0,
-          bottom: 8.0,
           top: 15.0,
         ),
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10.0,
-              ),
+            FractionallySizedBox(
+              widthFactor: 0.9,
               child: BinomePairStudentSearch(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Container(
-                height: ((this.appHeight - 8 * 2 - 50 - 15) -
+                height: ((this.appHeight - 15 - 60 - 15) -
                         this.appHeight * 1 / 2) /
                     (1 -
                         (1 / 2 * BinomePairMatchesFlock.fractions['bigHead'] +
@@ -168,7 +165,7 @@ class DiscoverRight extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             LikeOrIgnore(),
           ],
@@ -193,6 +190,7 @@ class BinomePairStudentSearch extends StatelessWidget {
         );
       },
       child: Container(
+        height: 60.0,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           border: Border.all(
@@ -209,21 +207,18 @@ class BinomePairStudentSearch extends StatelessWidget {
             Radius.circular(15.0),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'rechercher une\npaire de binôme',
-                style: Theme.of(context).textTheme.headline5.copyWith(
-                      color: Colors.white,
-                      height: 1.1,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'rechercher une\npaire de binôme',
+              style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: Colors.white,
+                    height: 1.1,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
@@ -271,98 +266,104 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<DiscoverBinomePairMatchesBloc,
+            DiscoverBinomePairMatchesState>(
+        builder: (context,
+            DiscoverBinomePairMatchesState discoverBinomePairMatchesState) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Flexible(
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 4,
-                      blurRadius: 4,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
+          Container(
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 4,
+                  offset: Offset(1, 1),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: IconButton(
-                    padding: EdgeInsets.all(0.0),
-                    iconSize: 35,
-                    color: Theme.of(context).indicatorColor,
-                    icon: FlareActor(
-                      'assets/icons/Heart.flr',
-                      color: Theme.of(context).indicatorColor,
-                      fit: BoxFit.contain,
-                      controller: CustomFlareController(
-                          controller: likeController,
-                          forwardAnimationName: 'Validate'),
-                    ),
-                    onPressed: () {
-                      likeController.forward().whenComplete(() => likeController
-                          .animateTo(0, duration: Duration(seconds: 0)));
-                      BlocProvider.of<DiscoverBinomePairMatchesBloc>(context)
-                          .add(DiscoverBinomePairMatchesLikeEvent());
-                    },
-                  ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: IconButton(
+                padding: EdgeInsets.all(0.0),
+                iconSize: 35,
+                color: Theme.of(context).indicatorColor,
+                icon: FlareActor(
+                  'assets/icons/Heart.flr',
+                  color: Theme.of(context).indicatorColor,
+                  fit: BoxFit.contain,
+                  controller: CustomFlareController(
+                      controller: likeController,
+                      forwardAnimationName: 'Validate'),
                 ),
-              );
-            }),
+                onPressed: discoverBinomePairMatchesState
+                        is DiscoverBinomePairMatchesSavingNewStatusState
+                    ? null
+                    : () {
+                        likeController.forward().whenComplete(() =>
+                            likeController.animateTo(0,
+                                duration: Duration(seconds: 0)));
+                        BlocProvider.of<DiscoverBinomePairMatchesBloc>(context)
+                            .add(DiscoverBinomePairMatchesLikeEvent());
+                      },
+              ),
+            ),
           ),
-          Flexible(
-            child:
-                Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-              return Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 4,
-                      blurRadius: 4,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
+          SizedBox(
+            width: 15.0,
+          ),
+          Container(
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 4,
+                  offset: Offset(1, 1),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: IconButton(
-                    padding: EdgeInsets.all(0.0),
-                    iconSize: 35,
-                    color: Theme.of(context).indicatorColor,
-                    icon: FlareActor(
-                      'assets/icons/Clear.flr',
-                      color: Theme.of(context).indicatorColor,
-                      fit: BoxFit.contain,
-                      controller: CustomFlareController(
-                        controller: ignoreController,
-                        forwardAnimationName: 'Ignore',
-                      ),
-                    ),
-                    onPressed: () {
-                      ignoreController.forward().whenComplete(() =>
-                          ignoreController.animateTo(0,
-                              duration: Duration(seconds: 0)));
-                      BlocProvider.of<DiscoverBinomePairMatchesBloc>(context)
-                          .add(DiscoverBinomePairMatchesIgnoreEvent());
-                    },
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: IconButton(
+                padding: EdgeInsets.all(0.0),
+                iconSize: 35,
+                color: Theme.of(context).indicatorColor,
+                icon: FlareActor(
+                  'assets/icons/Clear.flr',
+                  color: Theme.of(context).indicatorColor,
+                  fit: BoxFit.contain,
+                  controller: CustomFlareController(
+                    controller: ignoreController,
+                    forwardAnimationName: 'Ignore',
                   ),
                 ),
-              );
-            }),
+                onPressed: discoverBinomePairMatchesState
+                        is DiscoverBinomePairMatchesSavingNewStatusState
+                    ? null
+                    : () {
+                        ignoreController.forward().whenComplete(() =>
+                            ignoreController.animateTo(0,
+                                duration: Duration(seconds: 0)));
+                        BlocProvider.of<DiscoverBinomePairMatchesBloc>(context)
+                            .add(DiscoverBinomePairMatchesIgnoreEvent());
+                      },
+              ),
+            ),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
 }
 
@@ -691,7 +692,7 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock>
                                 constraints.maxHeight *
                                     BinomePairMatchesFlock
                                         .fractions['separator']) +
-                        10,
+                        10.0,
                     child: Opacity(
                       opacity: animationController.value,
                       child: Container(
@@ -700,37 +701,26 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock>
                         child: Consumer<TinterTheme>(
                             builder: (context, tinterTheme, child) {
                           return Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: AutoSizeText(
-                                  (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                          .binomePairMatches[0]
-                                          .name +
-                                      ' ' +
-                                      (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                          .binomePairMatches[0]
-                                          .surname,
-                                  group: nameAndSurnameAutoSizeGroup,
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
+                            children: [
+                              AutoSizeText(
+                                (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                        .binomePairMatches[0]
+                                        .name +
+                                    ' ' +
+                                    (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                        .binomePairMatches[0]
+                                        .surname,
+                                style: Theme.of(context).textTheme.headline5,
                               ),
-                              Expanded(
-                                child: AutoSizeText(
-                                  (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                          .binomePairMatches[0]
-                                          .otherName +
-                                      ' ' +
-                                      (state as DiscoverBinomePairMatchesLoadSuccessState)
-                                          .binomePairMatches[0]
-                                          .otherSurname,
-                                  group: nameAndSurnameAutoSizeGroup,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(
-                                        height: 0.5,
-                                      ),
-                                ),
+                              AutoSizeText(
+                                (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                        .binomePairMatches[0]
+                                        .otherName +
+                                    ' ' +
+                                    (state as DiscoverBinomePairMatchesLoadSuccessState)
+                                        .binomePairMatches[0]
+                                        .otherSurname,
+                                style: Theme.of(context).textTheme.headline5,
                               ),
                             ],
                           );

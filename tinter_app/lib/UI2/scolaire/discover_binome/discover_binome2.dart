@@ -275,7 +275,6 @@ class _LikeOrIgnoreState extends State<LikeOrIgnore>
     return BlocBuilder<DiscoverBinomesBloc, DiscoverBinomesState>(
         builder: (context, DiscoverBinomesState discoverBinomesState) {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Container(
