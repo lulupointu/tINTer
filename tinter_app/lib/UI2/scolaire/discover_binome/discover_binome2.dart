@@ -1671,30 +1671,6 @@ class _BinomeInformationState extends State<BinomeInformation> {
     );
   }
 
-  Widget informationRectangle(
-      {@required BuildContext context,
-      @required Widget child,
-      double width,
-      double height}) {
-    return Align(
-      alignment: AlignmentDirectional.center,
-      child: Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              color: tinterTheme.colors.primary,
-            ),
-            width: width != null ? width : Size.infinite.width,
-            height: height,
-            child: child,
-          );
-        },
-        child: child,
-      ),
-    );
-  }
-
   Widget associationBubble(BuildContext context, Association association) {
     return Consumer<TinterTheme>(
       builder: (context, tinterTheme, child) {

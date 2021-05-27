@@ -921,8 +921,8 @@ class CompareViewBinome extends StatelessWidget {
   Widget verticalSeparator() {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return Container(
-        width: 1.0,
-        color: tinterTheme.colors.primaryAccent,
+        width: 2.5,
+        color: Theme.of(context).disabledColor.withOpacity(0.6),
       );
     });
   }
@@ -1417,8 +1417,8 @@ class CompareViewBinomePairMatch extends StatelessWidget {
   Widget verticalSeparator() {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return Container(
-        width: 1.0,
-        color: tinterTheme.colors.primaryAccent,
+        width: 2.5,
+        color: Theme.of(context).disabledColor.withOpacity(0.6),
       );
     });
   }
@@ -1464,242 +1464,86 @@ class ProfileInformation extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(
-            height: 50,
+            height: 20,
           );
         },
         includeOuterSeparators: false,
         children: [
-          informationRectangle(
-            context: context,
+          Card(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Align(
-                    alignment: AlignmentDirectional.topCenter,
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return Text(
-                        'Lieu de vie',
-                        style: tinterTheme.textStyle.headline2,
-                      );
-                    }),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10.0),
-                    width: double.infinity,
-                    child: Container(
-                      height: 60,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Opacity(
-                              opacity:
-                                  user.lieuDeVie != LieuDeVie.maisel ? 0.5 : 1,
-                              child: Consumer<TinterTheme>(
-                                  builder: (context, tinterTheme, child) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(5.0),
-                                      topLeft: Radius.circular(5.0),
-                                    ),
-                                    color: tinterTheme.colors.primaryAccent,
-                                  ),
-                                  width: 60,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Center(
-                                      child: AutoSizeText(
-                                        'MAISEL',
-                                        maxLines: 1,
-                                        minFontSize: 10,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                            Opacity(
-                              opacity:
-                                  user.lieuDeVie != LieuDeVie.other ? 0.5 : 1,
-                              child: Consumer<TinterTheme>(
-                                  builder: (context, tinterTheme, child) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(5.0),
-                                      bottomRight: Radius.circular(5.0),
-                                    ),
-                                    color: tinterTheme.colors.primaryAccent,
-                                  ),
-                                  width: 60,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Center(
-                                      child: AutoSizeText(
-                                        'Autre',
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          ],
-                        ),
-                      ),
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Lieu de vie',
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          informationRectangle(
-            context: context,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: <Widget>[
-                  Align(
-                    alignment: AlignmentDirectional.topCenter,
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return Text(
-                        'Horaires de travail',
-                        style: tinterTheme.textStyle.headline2,
-                      );
-                    }),
-                  ),
                   SizedBox(
                     height: 10,
                   ),
                   Container(
                     width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 10,
-                        runSpacing: 10,
+                    child: Container(
+                      height: 35,
+                      width: 90,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Opacity(
-                            opacity: user.horairesDeTravail
-                                    .contains(HoraireDeTravail.morning)
-                                ? 1
-                                : 0.5,
-                            child: Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5.0),
-                                  ),
-                                  color: tinterTheme.colors.primaryAccent,
+                            opacity:
+                                user.lieuDeVie != LieuDeVie.maisel ? 0.5 : 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(5.0),
+                                  topLeft: Radius.circular(5.0),
                                 ),
-                                width: 60,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Center(
-                                    child: Text(
-                                      'Matin',
-                                      maxLines: 1,
-                                    ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 70,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Center(
+                                  child: AutoSizeText(
+                                    'MAISEL',
+                                    maxLines: 1,
+                                    minFontSize: 10,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
-                              );
-                            }),
+                              ),
+                            ),
                           ),
                           Opacity(
-                            opacity: user.horairesDeTravail
-                                    .contains(HoraireDeTravail.afternoon)
-                                ? 1
-                                : 0.5,
-                            child: Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5.0),
-                                  ),
-                                  color: tinterTheme.colors.primaryAccent,
+                            opacity:
+                                user.lieuDeVie != LieuDeVie.other ? 0.5 : 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(5.0),
+                                  bottomRight: Radius.circular(5.0),
                                 ),
-                                width: 60,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Center(
-                                    child: Text(
-                                      'Aprem',
-                                      maxLines: 1,
-                                    ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 70,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Center(
+                                  child: AutoSizeText(
+                                    'Autre',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
-                              );
-                            }),
-                          ),
-                          Opacity(
-                            opacity: user.horairesDeTravail
-                                    .contains(HoraireDeTravail.evening)
-                                ? 1
-                                : 0.5,
-                            child: Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5.0),
-                                  ),
-                                  color: tinterTheme.colors.primaryAccent,
-                                ),
-                                width: 60,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Center(
-                                    child: Text(
-                                      'Soir',
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                          Opacity(
-                            opacity: user.horairesDeTravail
-                                    .contains(HoraireDeTravail.night)
-                                ? 1
-                                : 0.5,
-                            child: Consumer<TinterTheme>(
-                                builder: (context, tinterTheme, child) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5.0),
-                                  ),
-                                  color: tinterTheme.colors.primaryAccent,
-                                ),
-                                width: 60,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Center(
-                                    child: Text(
-                                      'Nuit',
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -1709,176 +1553,409 @@ class ProfileInformation extends StatelessWidget {
               ),
             ),
           ),
-          informationRectangle(
-            context: context,
+          // Card(
+          //   child: Column(
+          //     children: <Widget>[
+          //       Align(
+          //         alignment: Alignment.topLeft,
+          //         child: Text(
+          //           'Horaires de travail',
+          //           style: Theme.of(context).textTheme.headline5,
+          //         ),
+          //       ),
+          //       SizedBox(
+          //         height: 10,
+          //       ),
+          //       Container(
+          //         width: double.infinity,
+          //         child: Wrap(
+          //           alignment: WrapAlignment.center,
+          //           spacing: 10,
+          //           runSpacing: 10,
+          //           children: [
+          //             Opacity(
+          //               opacity: user.horairesDeTravail
+          //                       .contains(HoraireDeTravail.morning)
+          //                   ? 1
+          //                   : 0.5,
+          //               child: Consumer<TinterTheme>(
+          //                   builder: (context, tinterTheme, child) {
+          //                 return Container(
+          //                   decoration: BoxDecoration(
+          //                     borderRadius: BorderRadius.all(
+          //                       Radius.circular(5.0),
+          //                     ),
+          //                     color: Theme.of(context).primaryColor,
+          //                   ),
+          //                   width: 60,
+          //                   child: Padding(
+          //                     padding: const EdgeInsets.symmetric(
+          //                         horizontal: 4.0, vertical: 10.0),
+          //                     child: Center(
+          //                       child: AutoSizeText(
+          //                         'Matin',
+          //                         maxLines: 1,
+          //                         minFontSize: 10,
+          //                         style:
+          //                             Theme.of(context).textTheme.headline5,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 );
+          //               }),
+          //             ),
+          //             Opacity(
+          //               opacity: user.horairesDeTravail
+          //                       .contains(HoraireDeTravail.afternoon)
+          //                   ? 1
+          //                   : 0.5,
+          //               child: Consumer<TinterTheme>(
+          //                   builder: (context, tinterTheme, child) {
+          //                 return Container(
+          //                   decoration: BoxDecoration(
+          //                     borderRadius: BorderRadius.all(
+          //                       Radius.circular(5.0),
+          //                     ),
+          //                     color: Theme.of(context).primaryColor,
+          //                   ),
+          //                   width: 60,
+          //                   child: Padding(
+          //                     padding: const EdgeInsets.symmetric(
+          //                         horizontal: 4.0, vertical: 10.0),
+          //                     child: Center(
+          //                       child: AutoSizeText(
+          //                         'Aprem',
+          //                         maxLines: 1,
+          //                         minFontSize: 10,
+          //                         style:
+          //                             Theme.of(context).textTheme.headline5,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 );
+          //               }),
+          //             ),
+          //             Opacity(
+          //               opacity: user.horairesDeTravail
+          //                       .contains(HoraireDeTravail.evening)
+          //                   ? 1
+          //                   : 0.5,
+          //               child: Consumer<TinterTheme>(
+          //                   builder: (context, tinterTheme, child) {
+          //                 return Container(
+          //                   decoration: BoxDecoration(
+          //                     borderRadius: BorderRadius.all(
+          //                       Radius.circular(5.0),
+          //                     ),
+          //                     color: Theme.of(context).primaryColor,
+          //                   ),
+          //                   width: 60,
+          //                   child: Padding(
+          //                     padding: const EdgeInsets.symmetric(
+          //                         horizontal: 4.0, vertical: 10.0),
+          //                     child: Center(
+          //                       child: AutoSizeText(
+          //                         'Soir',
+          //                         maxLines: 1,
+          //                         minFontSize: 10,
+          //                         style:
+          //                             Theme.of(context).textTheme.headline5,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 );
+          //               }),
+          //             ),
+          //             Opacity(
+          //               opacity: user.horairesDeTravail
+          //                       .contains(HoraireDeTravail.night)
+          //                   ? 1
+          //                   : 0.5,
+          //               child: Consumer<TinterTheme>(
+          //                   builder: (context, tinterTheme, child) {
+          //                 return Container(
+          //                   decoration: BoxDecoration(
+          //                     borderRadius: BorderRadius.all(
+          //                       Radius.circular(5.0),
+          //                     ),
+          //                     color: Theme.of(context).primaryColor,
+          //                   ),
+          //                   width: 60,
+          //                   child: Padding(
+          //                     padding: const EdgeInsets.symmetric(
+          //                         horizontal: 4.0, vertical: 10.0),
+          //                     child: Center(
+          //                       child: AutoSizeText(
+          //                         'Nuit',
+          //                         maxLines: 1,
+          //                         style:
+          //                             Theme.of(context).textTheme.headline5,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 );
+          //               }),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          Card(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              padding:
+                  const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                    return Text(
-                      'Associations',
-                      style: tinterTheme.textStyle.headline2,
-                    );
-                  }),
+                  Text(
+                    'Associations',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
                   SizedBox(
                     height: 10,
                   ),
                   Container(
                     width: double.infinity,
-                    height: 60,
-                    child: Center(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            for (int index = 0;
-                                index < user.associations.length;
-                                index++) ...[
-                              if (index == 0)
-                                SizedBox(
-                                  width: 10,
+                    child: Stack(
+                      alignment: AlignmentDirectional.centerStart,
+                      children: <Widget>[
+                        user.associations.length >= 1
+                            ? Container(
+                                width: double.infinity,
+                                height: 60,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      for (int index = 0;
+                                          index < user.associations.length;
+                                          index++) ...[
+                                        associationBubble(
+                                            context, user.associations[index]),
+                                        SizedBox(
+                                          width: 5,
+                                        )
+                                      ]
+                                    ],
+                                  ),
                                 ),
-                              associationBubble(
-                                  context, user.associations[index]),
-                              SizedBox(
-                                width: 5,
                               )
-                            ]
-                          ],
-                        ),
-                      ),
-//                            child: ListView.separated(
-//                              shrinkWrap: true,
-//                              scrollDirection: Axis.horizontal,
-//                              itemCount: user.associations.length,
-//                              separatorBuilder: (BuildContext context, int index) {
-//                                return SizedBox(
-//                                  width: 5,
-//                                );
-//                              },
-//                              itemBuilder: (BuildContext context, int index) {
-//                                return associationBubble(context, user.associations[index]);
-//                              },
-//                            ),
+                            : Text(
+                                'Aucune association sélectionnée',
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          informationRectangle(
-            context: context,
+          Card(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                    return Text(
-                      'Seul.e ou en groupe?',
-                      style: tinterTheme.textStyle.headline2,
-                      textAlign: TextAlign.center,
-                    );
-                  }),
-                  SizedBox(
-                    height: 15,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'A plusieurs ou seul.e ?',
+                      style: Theme.of(context).textTheme.headline5,
+                      maxLines: 2,
+                    ),
                   ),
-                  discoverSlider(context, Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                    return SliderTheme(
-                      data: tinterTheme.slider.disabled,
-                      child: TweenAnimationBuilder(
-                        tween:
-                            Tween<double>(begin: 0.5, end: user.groupeOuSeul),
-                        duration: Duration(milliseconds: 300),
-                        builder: (BuildContext context, value, Widget child) {
-                          return Slider(
-                            value: value,
-                            onChanged: null,
-                          );
-                        },
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(
+                          Icons.group_rounded,
+                          size: 22.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
-                    );
-                  }), leftLabel: 'Seul', rightLabel: 'Groupe'),
+                      Expanded(
+                        child: SliderTheme(
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                disabledThumbColor: Color(0xffCECECE),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                trackHeight: 6.0,
+                                disabledInactiveTrackColor:
+                                    Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8.0),
+                              ),
+                          child: TweenAnimationBuilder(
+                            tween: Tween<double>(
+                                begin: 0.5, end: user.groupeOuSeul),
+                            duration: Duration(milliseconds: 300),
+                            builder:
+                                (BuildContext context, value, Widget child) {
+                              return Slider(
+                                value: value,
+                                onChanged: null,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Icon(
+                          Icons.person_rounded,
+                          size: 22.0,
+                          color: Theme.of(context).indicatorColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
-          informationRectangle(
-            context: context,
+          Card(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                    return Text(
-                      'En ligne ou à l\'école?',
-                      style: tinterTheme.textStyle.headline2,
-                      textAlign: TextAlign.center,
-                    );
-                  }),
-                  SizedBox(
-                    height: 15,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'En ligne ou à l\'école ?',
+                      style: Theme.of(context).textTheme.headline5,
+                      maxLines: 2,
+                    ),
                   ),
-                  discoverSlider(context, Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                    return SliderTheme(
-                      data: tinterTheme.slider.disabled,
-                      child: TweenAnimationBuilder(
-                        tween:
-                            Tween<double>(begin: 0.5, end: user.enligneOuNon),
-                        duration: Duration(milliseconds: 300),
-                        builder: (BuildContext context, value, Widget child) {
-                          return Slider(
-                            value: value,
-                            onChanged: null,
-                          );
-                        },
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(
+                          Icons.school_rounded,
+                          size: 22.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
-                    );
-                  }), leftLabel: 'En ligne', rightLabel: 'A l\'école'),
+                      Expanded(
+                        child: SliderTheme(
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                disabledThumbColor: Color(0xffCECECE),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                trackHeight: 6.0,
+                                disabledInactiveTrackColor:
+                                    Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8.0),
+                              ),
+                          child: TweenAnimationBuilder(
+                            tween: Tween<double>(
+                                begin: 0.5, end: user.enligneOuNon),
+                            duration: Duration(milliseconds: 300),
+                            builder:
+                                (BuildContext context, value, Widget child) {
+                              return Slider(
+                                value: value,
+                                onChanged: null,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Icon(
+                          Icons.wifi,
+                          size: 22.0,
+                          color: Theme.of(context).indicatorColor,
+                        ),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: informationRectangle(
-              context: context,
+            padding: const EdgeInsets.only(
+              bottom: 20.0,
+            ),
+            child: SizedBox(
               width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return Text(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
                         'Matières préférées',
-                        style: tinterTheme.textStyle.headline2,
-                      );
-                    }),
-                    SizedBox(height: 8.0),
-                    Wrap(
-                      key: GlobalKey(),
-                      spacing: 15,
-                      alignment: WrapAlignment.center,
-                      children: <Widget>[
-                        for (String matierePreferee in user.matieresPreferees)
-                          Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                            return Chip(
-                              label: Text(matierePreferee),
-                              labelStyle: tinterTheme.textStyle.chipLiked,
-                              backgroundColor: tinterTheme.colors.primaryAccent,
-                            );
-                          })
-                      ],
-                    ),
-                  ],
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      user.matieresPreferees.length >= 1
+                          ? AnimatedSwitcher(
+                              duration: Duration(milliseconds: 300),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                key: GlobalKey(),
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: <Widget>[
+                                  for (String matierePreferee
+                                      in user.matieresPreferees)
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.0, vertical: 6.0),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            spreadRadius: 0.2,
+                                            blurRadius: 5,
+                                            offset: Offset(2, 2),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)),
+                                        border: Border.all(
+                                            color: (Theme.of(context)
+                                                .primaryColor),
+                                            width: 3.0,
+                                            style: BorderStyle.solid),
+                                        color: Colors.white,
+                                      ),
+                                      child: Text(matierePreferee),
+                                    ),
+                                ],
+                              ),
+                            )
+                          : Text(
+                              'Aucune matière sélectionnée',
+                              style: Theme.of(context).textTheme.headline5,
+                              textAlign: TextAlign.center,
+                            ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1888,50 +1965,33 @@ class ProfileInformation extends StatelessWidget {
     );
   }
 
-  Widget informationRectangle(
-      {@required BuildContext context,
-      @required Widget child,
-      double width,
-      double height}) {
+  Widget associationBubble(BuildContext context, Association association) {
     return Consumer<TinterTheme>(
       builder: (context, tinterTheme, child) {
         return Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            color: tinterTheme.colors.primary,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Theme.of(context).primaryColor,
+              width: 2.5,
+            ),
           ),
-          width: width,
-          height: height,
+          height: 60,
+          width: 60,
           child: child,
         );
       },
-      child: child,
-    );
-  }
-
-  Widget associationBubble(BuildContext context, Association association) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Container(
-        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-        child: ClipOval(
+      child: ClipOval(
+        child: Container(
+          alignment: AlignmentDirectional.centerStart,
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
           child: getLogoFromAssociation(associationName: association.name),
         ),
       ),
     );
   }
-
-//  Widget inactiveSlider(BuildContext context, double value, {String labelRight, String labelLeft}) {
-//    return SliderTheme(
-//      data: Theme.of(context).sliderTheme.copyWith(
-//        trackShape: NoPaddingTrackShape()
-//      ),
-//      child: Slider(
-//        value: value,
-//        onChanged: null,
-//      ),
-//    );
-//  }
 
   Widget discoverSlider(BuildContext context, Widget slider,
       {String leftLabel, String rightLabel}) {
