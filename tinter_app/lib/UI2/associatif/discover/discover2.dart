@@ -767,118 +767,136 @@ class _MatchInformationState extends State<MatchInformation> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Stack(
-                        alignment: Alignment.bottomRight,
+                        alignment: Alignment.center,
                         children: [
                           Container(
                             height: 125,
                             width: 125,
                             child: Card(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
+                                borderRadius: BorderRadius.circular(
+                                  15.0,
+                                ),
                               ),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5.0),
-                                    child: Text(
-                                      'Score',
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
-                                    ),
-                                  ),
-                                  BlocBuilder<DiscoverMatchesBloc,
-                                      DiscoverMatchesState>(
-                                    buildWhen:
-                                        (DiscoverMatchesState previousState,
-                                            DiscoverMatchesState state) {
-                                      if (previousState
-                                          is DiscoverMatchesSavingNewStatusState) {
-                                        return false;
-                                      }
-                                      return true;
-                                    },
-                                    builder: (BuildContext context,
-                                        DiscoverMatchesState state) {
-                                      if (!(state
-                                          is DiscoverMatchesLoadSuccessState)) {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      return Text(
-                                        (state as DiscoverMatchesLoadSuccessState)
-                                            .matches[0]
-                                            .score
-                                            .toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            .copyWith(
-                                                fontWeight: FontWeight.w400),
-                                      );
-                                    },
-                                  ),
-                                ],
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 5.0,
+                              ),
+                              child: Text(
+                                'Score',
+                                style: Theme.of(context).textTheme.headline4,
                               ),
                             ),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(right: 5.0, bottom: 5.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                showGeneralDialog(
-                                    transitionDuration:
-                                        Duration(milliseconds: 300),
-                                    context: context,
-                                    pageBuilder: (BuildContext context,
-                                            animation, _) =>
-                                        SimpleDialog(
-                                          elevation: 5.0,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0),
-                                              child: Text(
-                                                'Aide',
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline4,
+                            padding: const EdgeInsets.only(
+                              top: 5.0,
+                            ),
+                            child: BlocBuilder<DiscoverMatchesBloc,
+                                DiscoverMatchesState>(
+                              buildWhen: (DiscoverMatchesState previousState,
+                                  DiscoverMatchesState state) {
+                                if (previousState
+                                    is DiscoverMatchesSavingNewStatusState) {
+                                  return false;
+                                }
+                                return true;
+                              },
+                              builder: (BuildContext context,
+                                  DiscoverMatchesState state) {
+                                if (!(state
+                                    is DiscoverMatchesLoadSuccessState)) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return Text(
+                                  (state as DiscoverMatchesLoadSuccessState)
+                                      .matches[0]
+                                      .score
+                                      .toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      .copyWith(fontWeight: FontWeight.w400),
+                                );
+                              },
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: 5.0,
+                                bottom: 5.0,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  showGeneralDialog(
+                                      transitionDuration: Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      context: context,
+                                      pageBuilder: (BuildContext context,
+                                              animation, _) =>
+                                          SimpleDialog(
+                                            elevation: 5.0,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 10.0,
+                                                ),
+                                                child: Text(
+                                                  'Aide',
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline4,
+                                                ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
+                                              Padding(
+                                                padding: const EdgeInsets.only(
                                                   left: 20.0,
                                                   right: 20.0,
                                                   top: 10.0,
-                                                  bottom: 10.0),
-                                              child: Text(
-                                                "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                                " Il est basé sur les critères renseignés dans le profil.",
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5,
+                                                  bottom: 10.0,
+                                                ),
+                                                child: Text(
+                                                  "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                                  " Il est basé sur les critères renseignés dans le profil.",
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5,
+                                                ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 75.0),
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context, false);
-                                                },
-                                                child: Text("Continuer"),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 75.0,
+                                                ),
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                        context, false);
+                                                  },
+                                                  child: Text(
+                                                    "Continuer",
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ));
-                              },
-                              child: Icon(
-                                Icons.help_outline_outlined,
-                                color: Colors.black54,
+                                            ],
+                                          ));
+                                },
+                                child: Icon(
+                                  Icons.help_outline_outlined,
+                                  color: Colors.black54,
+                                ),
                               ),
                             ),
                           ),
