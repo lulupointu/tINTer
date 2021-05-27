@@ -109,7 +109,8 @@ class MatchsTab2State extends State<MatchsTab2> {
                       ? 0.0
                       : (ModeAssociatifOverlay.height +
                               2 * widget.spacing +
-                              MatchSelectionMenu.height + 15.0) /
+                              MatchSelectionMenu.height +
+                              15.0) /
                           MediaQuery.of(context).size.height) +
                   ((_parrains.length == 0)
                       ? 0.0
@@ -1162,8 +1163,10 @@ class MatchSelectionMenu extends StatelessWidget {
   final List<BuildMatch> matchesNotParrains;
   final List<BuildMatch> parrains;
 
-  MatchSelectionMenu(
-      {@required this.matchesNotParrains, @required this.parrains});
+  MatchSelectionMenu({
+    @required this.matchesNotParrains,
+    @required this.parrains,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1194,7 +1197,9 @@ class MatchSelectionMenu extends StatelessWidget {
                       child: topMenu(
                         context: context,
                         matches: parrains,
-                        title: ((userState as UserLoadSuccessState).user.primoEntrant)
+                        title: ((userState as UserLoadSuccessState)
+                                .user
+                                .primoEntrant)
                             ? 'Mes parrains et marraines'
                             : 'Mes filleuls et filleules',
                       ),
@@ -1209,10 +1214,11 @@ class MatchSelectionMenu extends StatelessWidget {
   }
 
   /// Either displays the parrain top menu or the match top menu
-  Widget topMenu(
-      {@required BuildContext context,
-      @required List<BuildMatch> matches,
-      @required String title}) {
+  Widget topMenu({
+    @required BuildContext context,
+    @required List<BuildMatch> matches,
+    @required String title,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
