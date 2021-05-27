@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ModeScolaireOverlay extends StatelessWidget {
+  static final double height = 35;
   const ModeScolaireOverlay({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 35,
+      height: height,
       width: 145,
       child: Center(
         child: Text(

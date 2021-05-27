@@ -1205,7 +1205,6 @@ class MatchSelectionMenu extends StatelessWidget {
                             ? 'Mes parrains et marraines'
                             : 'Mes filleuls et filleules',
                       ),
-                      //TODO gérer le cas IMTBS
                     );
                   },
                 )

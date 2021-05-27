@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:separated_column/separated_column.dart';
-import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/binome_pair/binome_pair_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/matched_binome_pair_matches/matched_pair_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/matched_binomes/binomes_bloc.dart';
@@ -121,168 +120,189 @@ class BinomesTab2State extends State<BinomesTab2> {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(builder:
-          (BuildContext context, MatchedBinomesState matchedBinomesState) {
-        if (!(matchedBinomesState is MatchedBinomesLoadSuccessState)) {
-          return Center(child: CircularProgressIndicator());
-        }
+      child: SafeArea(
+        bottom: false,
+        child: Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(builder:
+              (BuildContext context, MatchedBinomesState matchedBinomesState) {
+            if (!(matchedBinomesState is MatchedBinomesLoadSuccessState)) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-        // Get the 2 list out of all the matched binomes
-        final List<BuildBinome> allBinomes =
-            (matchedBinomesState as MatchedBinomesLoadSuccessState).binomes;
-        final List<BuildBinome> _binomesNotBinomes = allBinomes
-            .where((binome) =>
-                binome.statusScolaire != BinomeStatus.binomeAccepted)
-            .toList();
-        final List<BuildBinome> _binomes = allBinomes
-            .where((binome) =>
-                binome.statusScolaire == BinomeStatus.binomeAccepted)
-            .toList();
+            // Get the 2 list out of all the matched binomes
+            final List<BuildBinome> allBinomes =
+                (matchedBinomesState as MatchedBinomesLoadSuccessState).binomes;
+            final List<BuildBinome> _binomesNotBinomes = allBinomes
+                .where((binome) =>
+                    binome.statusScolaire != BinomeStatus.binomeAccepted)
+                .toList();
+            final List<BuildBinome> _binomes = allBinomes
+                .where((binome) =>
+                    binome.statusScolaire == BinomeStatus.binomeAccepted)
+                .toList();
 
-        // Sort them
-        _binomesNotBinomes.sort((BuildBinome binomeA, BuildBinome binomeB) =>
-            binomeA.name.compareTo(binomeB.name));
-        _binomes.sort((BuildBinome binomeA, BuildBinome binomeB) =>
-            binomeA.name.compareTo(binomeB.name));
+            // Sort them
+            _binomesNotBinomes.sort(
+                (BuildBinome binomeA, BuildBinome binomeB) =>
+                    binomeA.name.compareTo(binomeB.name));
+            _binomes.sort((BuildBinome binomeA, BuildBinome binomeB) =>
+                binomeA.name.compareTo(binomeB.name));
 
-        return BlocBuilder<MatchedBinomePairMatchesBloc,
-                MatchedBinomePairMatchesState>(
-            builder: (BuildContext context,
+            return BlocBuilder<MatchedBinomePairMatchesBloc,
+                MatchedBinomePairMatchesState>(builder: (BuildContext
+                    context,
                 MatchedBinomePairMatchesState matchedBinomePairMatchesState) {
-          if (!(matchedBinomePairMatchesState
-              is MatchedBinomePairMatchesLoadSuccessState)) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          // Get the 2 list out of all the matched binome pair matches
-          final List<BuildBinomePairMatch> allBinomePairMatches =
-              (matchedBinomePairMatchesState
-                      as MatchedBinomePairMatchesLoadSuccessState)
-                  .binomePairMatches;
-          final List<BuildBinomePairMatch> _binomePairMatchesNotMatched =
-              allBinomePairMatches
-                  .where((binomePairMatch) =>
-                      binomePairMatch.status !=
-                      BinomePairMatchStatus.binomePairMatchAccepted)
-                  .toList();
-          final List<BuildBinomePairMatch> _binomePairMatches =
-              allBinomePairMatches
-                  .where((binomePairMatch) =>
-                      binomePairMatch.status ==
-                      BinomePairMatchStatus.binomePairMatchAccepted)
-                  .toList();
-
-          // Sort them
-          _binomePairMatchesNotMatched.sort(
-              (BuildBinomePairMatch binomePairMatchA,
-                      BuildBinomePairMatch binomePairMatchB) =>
-                  binomePairMatchA.name.compareTo(binomePairMatchB.name));
-          _binomePairMatches.sort((BuildBinomePairMatch binomePairMatchA,
-                  BuildBinomePairMatch binomePairMatchB) =>
-              binomePairMatchA.name.compareTo(binomePairMatchB.name));
-
-          // If the user doesn't have a binome
-          if (_binomes.length == 0) {
-            widget.fractions['binomeSelectionMenu'] = 0.2;
-          } else {
-            widget.fractions['binomeSelectionMenu'] = 0.2 +
-                ((_binomePairMatches.length != 0 ||
-                        _binomePairMatchesNotMatched.length != 0)
-                    ? 0.2
-                    : 0);
-          }
-
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              // ignore: invalid_use_of_protected_member
-              if (!_controller.hasListeners) {
-                _controller.addListener(() {
-                  setState(() {
-                    topMenuScrolledFraction = max(
-                        0,
-                        min(
-                            1,
-                            _controller.position.pixels /
-                                (widget.fractions['binomeSelectionMenu'] *
-                                    constraints.maxHeight)));
-                  });
-                });
+              if (!(matchedBinomePairMatchesState
+                  is MatchedBinomePairMatchesLoadSuccessState)) {
+                return Center(child: CircularProgressIndicator());
               }
 
-              return NotificationListener<ScrollEndNotification>(
-                onNotification: (ScrollEndNotification scrollEndNotification) {
-                  _scrollPhysics = _controller.offset == 0
-                      ? NeverScrollableScrollPhysics()
-                      : SnapScrollSheetPhysics(
-                          topChildrenHeight: [
-                            widget.fractions['binomeSelectionMenu'] *
-                                constraints.maxHeight,
-                          ],
-                        );
-                  setState(() {});
-                  return true;
+              // Get the 2 list out of all the matched binome pair matches
+              final List<BuildBinomePairMatch> allBinomePairMatches =
+                  (matchedBinomePairMatchesState
+                          as MatchedBinomePairMatchesLoadSuccessState)
+                      .binomePairMatches;
+              final List<BuildBinomePairMatch> _binomePairMatchesNotMatched =
+                  allBinomePairMatches
+                      .where((binomePairMatch) =>
+                          binomePairMatch.status !=
+                          BinomePairMatchStatus.binomePairMatchAccepted)
+                      .toList();
+              final List<BuildBinomePairMatch> _binomePairMatches =
+                  allBinomePairMatches
+                      .where((binomePairMatch) =>
+                          binomePairMatch.status ==
+                          BinomePairMatchStatus.binomePairMatchAccepted)
+                      .toList();
+
+              // Sort them
+              _binomePairMatchesNotMatched.sort(
+                  (BuildBinomePairMatch binomePairMatchA,
+                          BuildBinomePairMatch binomePairMatchB) =>
+                      binomePairMatchA.name.compareTo(binomePairMatchB.name));
+              _binomePairMatches.sort((BuildBinomePairMatch binomePairMatchA,
+                      BuildBinomePairMatch binomePairMatchB) =>
+                  binomePairMatchA.name.compareTo(binomePairMatchB.name));
+
+              // If the user doesn't have a binome
+              if (_binomes.length == 0) {
+                widget.fractions['binomeSelectionMenu'] =
+                    (ModeScolaireOverlay.height +
+                            2 * widget.spacing +
+                            BinomeSelectionMenu.height +
+                            20.0) /
+                        MediaQuery.of(context).size.height;
+              } else {
+                widget.fractions['binomeSelectionMenu'] = 0.2 +
+                    ((_binomePairMatches.length != 0 ||
+                            _binomePairMatchesNotMatched.length != 0)
+                        ? 0.2
+                        : 0);
+              }
+
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  // ignore: invalid_use_of_protected_member
+                  if (!_controller.hasListeners) {
+                    _controller.addListener(() {
+                      setState(() {
+                        topMenuScrolledFraction = max(
+                            0,
+                            min(
+                                1,
+                                _controller.position.pixels /
+                                    (widget.fractions['binomeSelectionMenu'] *
+                                        constraints.maxHeight)));
+                      });
+                    });
+                  }
+
+                  return NotificationListener<ScrollEndNotification>(
+                    onNotification:
+                        (ScrollEndNotification scrollEndNotification) {
+                      _scrollPhysics = _controller.offset == 0
+                          ? NeverScrollableScrollPhysics()
+                          : SnapScrollSheetPhysics(
+                              topChildrenHeight: [
+                                widget.fractions['binomeSelectionMenu'] *
+                                    constraints.maxHeight,
+                              ],
+                            );
+                      setState(() {});
+                      return true;
+                    },
+                    child: ListView(
+                      physics: _scrollPhysics,
+                      controller: _controller,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.0,
+                            top: widget.spacing,
+                          ),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: ModeScolaireOverlay(),
+                          ),
+                        ),
+                        SizedBox(
+                          height: widget.spacing,
+                        ),
+                        BinomeSelectionMenu(
+                          binomesNotBinomes: _binomesNotBinomes,
+                          binomes: _binomes,
+                          binomePairMatchesNotMatched:
+                              _binomePairMatchesNotMatched,
+                          binomePairMatches: _binomePairMatches,
+                        ),
+                        (context.watch<SelectedScolaire2>().binomeLogin ==
+                                    null &&
+                                context
+                                        .watch<SelectedScolaire2>()
+                                        .binomePairId ==
+                                    null)
+                            ? noBinomeSelected(constraints.maxHeight)
+                            : (context
+                                        .watch<SelectedScolaire2>()
+                                        .binomePairId ==
+                                    null)
+                                ? CompareViewBinome(
+                                    binome: allBinomes.firstWhere(
+                                      (BuildBinome binome) =>
+                                          binome.login ==
+                                          context
+                                              .watch<SelectedScolaire2>()
+                                              .binomeLogin,
+                                    ),
+                                    appHeight: constraints.maxHeight,
+                                    topMenuScrolledFraction:
+                                        topMenuScrolledFraction,
+                                    onCompareTapped: onCompareTapped,
+                                  )
+                                : CompareViewBinomePairMatch(
+                                    binomePairMatch:
+                                        allBinomePairMatches.firstWhere(
+                                      (BuildBinomePairMatch binomePairMatch) =>
+                                          binomePairMatch.binomePairId ==
+                                          context
+                                              .watch<SelectedScolaire2>()
+                                              .binomePairId,
+                                    ),
+                                    appHeight: constraints.maxHeight,
+                                    topMenuScrolledFraction:
+                                        topMenuScrolledFraction,
+                                    onCompareTapped: onCompareTapped,
+                                  ),
+                      ],
+                    ),
+                  );
                 },
-                child: ListView(
-                  physics: _scrollPhysics,
-                  controller: _controller,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.0,
-                        top: widget.spacing,
-                      ),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: ModeScolaireOverlay(),
-                      ),
-                    ),
-                    SizedBox(height: widget.spacing),
-                    BinomeSelectionMenu(
-                      binomesNotBinomes: _binomesNotBinomes,
-                      binomes: _binomes,
-                      binomePairMatchesNotMatched: _binomePairMatchesNotMatched,
-                      binomePairMatches: _binomePairMatches,
-                    ),
-                    (context.watch<SelectedScolaire2>().binomeLogin == null &&
-                            context.watch<SelectedScolaire2>().binomePairId ==
-                                null)
-                        ? noBinomeSelected(constraints.maxHeight)
-                        : (context.watch<SelectedScolaire2>().binomePairId ==
-                                null)
-                            ? CompareViewBinome(
-                                binome: allBinomes.firstWhere(
-                                  (BuildBinome binome) =>
-                                      binome.login ==
-                                      context
-                                          .watch<SelectedScolaire2>()
-                                          .binomeLogin,
-                                ),
-                                appHeight: constraints.maxHeight,
-                                topMenuScrolledFraction:
-                                    topMenuScrolledFraction,
-                                onCompareTapped: onCompareTapped,
-                              )
-                            : CompareViewBinomePairMatch(
-                                binomePairMatch:
-                                    allBinomePairMatches.firstWhere(
-                                  (BuildBinomePairMatch binomePairMatch) =>
-                                      binomePairMatch.binomePairId ==
-                                      context
-                                          .watch<SelectedScolaire2>()
-                                          .binomePairId,
-                                ),
-                                appHeight: constraints.maxHeight,
-                                topMenuScrolledFraction:
-                                    topMenuScrolledFraction,
-                                onCompareTapped: onCompareTapped,
-                              ),
-                  ],
-                ),
               );
-            },
-          );
-        });
-      }),
+            });
+          }),
+        ),
+      ),
     );
   }
 
@@ -726,8 +746,8 @@ class CompareViewBinome extends StatelessWidget {
                       child: Text(
                         'Comparer vos profils',
                         style: Theme.of(context).textTheme.headline5.copyWith(
-                          color: Colors.white,
-                        ),
+                              color: Colors.white,
+                            ),
                       ),
                     ),
                   ),
@@ -737,102 +757,102 @@ class CompareViewBinome extends StatelessWidget {
                 .contains(_binome.statusScolaire)) ...[
               (_binome.statusScolaire == BinomeStatus.matched)
                   ? Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15.0,
-                ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Container(
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).indicatorColor),
+                      padding: const EdgeInsets.only(
+                        bottom: 15.0,
                       ),
-                      onPressed: () {
-                        BlocProvider.of<MatchedBinomesBloc>(context)
-                            .add(AskBinomeEvent(binome: _binome));
-                      },
-                      child: Text(
-                        'Envoyer une demande',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-                  : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
-                      ? Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15.0,
-                ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Container(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              BlocProvider.of<MatchedBinomesBloc>(
-                                  context)
-                                  .add(AcceptBinomeEvent(
-                                  binome: _binome));
-                            },
-                            child: Text(
-                              'Accepter',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15.0,
-                        ),
-                        Expanded(
-                          flex: 1,
+                      child: FractionallySizedBox(
+                        widthFactor: 0.8,
+                        child: Container(
+                          height: 50,
                           child: ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all(
-                                  Theme.of(context)
-                                      .indicatorColor),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).indicatorColor),
                             ),
                             onPressed: () {
-                              BlocProvider.of<MatchedBinomesBloc>(
-                                  context)
-                                  .add(RefuseBinomeEvent(
-                                  binome: _binome));
+                              BlocProvider.of<MatchedBinomesBloc>(context)
+                                  .add(AskBinomeEvent(binome: _binome));
                             },
                             child: Text(
-                              'Refuser',
+                              'Envoyer une demande',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline5
                                   .copyWith(
-                                color: Colors.white,
-                              ),
+                                    color: Colors.white,
+                                  ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-                  : AutoSizeText(
+                      ),
+                    )
+                  : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 15.0,
+                          ),
+                          child: FractionallySizedBox(
+                            widthFactor: 0.8,
+                            child: Container(
+                              height: 50,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        BlocProvider.of<MatchedBinomesBloc>(
+                                                context)
+                                            .add(AcceptBinomeEvent(
+                                                binome: _binome));
+                                      },
+                                      child: Text(
+                                        'Accepter',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 15.0,
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .indicatorColor),
+                                      ),
+                                      onPressed: () {
+                                        BlocProvider.of<MatchedBinomesBloc>(
+                                                context)
+                                            .add(RefuseBinomeEvent(
+                                                binome: _binome));
+                                      },
+                                      child: Text(
+                                        'Refuser',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : AutoSizeText(
                           'ERROR: the state should not be ' +
                               _binome.statusScolaire.toString(),
                         ),
@@ -860,8 +880,8 @@ class CompareViewBinome extends StatelessWidget {
                     child: Text(
                       'Supprimer ce binôme',
                       style: Theme.of(context).textTheme.headline5.copyWith(
-                        color: Colors.white,
-                      ),
+                            color: Colors.white,
+                          ),
                     ),
                   ),
                 ),
