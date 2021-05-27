@@ -379,23 +379,6 @@ class CompareView extends StatelessWidget {
     );
   }
 
-  /// Displays either your face text or your match face text
-  Widget userPictureText({String title}) {
-    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-      return Container(
-        height: appHeight * 0.1,
-        child: Center(
-          child: AutoSizeText(
-            title,
-            textAlign: TextAlign.center,
-            style: tinterTheme.textStyle.headline2,
-            maxFontSize: 18,
-          ),
-        ),
-      );
-    });
-  }
-
   /// Displays either your face or your match face
   Widget userPicture(
       {Widget Function({@required double height, @required double width})

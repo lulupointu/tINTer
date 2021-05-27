@@ -472,23 +472,6 @@ class CompareViewBinome extends StatelessWidget {
     );
   }
 
-  /// Displays either your face text or your binome face text
-  Widget userPictureText({String title}) {
-    return Container(
-      height: appHeight * 0.1,
-      child: Center(
-        child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-          return AutoSizeText(
-            title,
-            textAlign: TextAlign.center,
-            style: tinterTheme.textStyle.headline2,
-            maxFontSize: 18,
-          );
-        }),
-      ),
-    );
-  }
-
   /// Displays either your face or your binome face
   Widget userPicture(
       {Widget Function({@required double height, @required double width})
@@ -963,13 +946,12 @@ class CompareViewBinomePairMatch extends StatelessWidget {
 
   Widget facesAroundScore(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20.0),
-      height: appHeight * 0.25,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(
-            flex: 20,
+          Container(
+            width: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -996,16 +978,19 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                             width: width,
                           ));
                 }),
-                userPictureText(title: 'Ton\nbinome'),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  'Ton' + '\n' + 'binôme',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
               ],
             ),
           ),
-          Expanded(
-            flex: 20,
-            child: score(context),
-          ),
-          Expanded(
-            flex: 20,
+          InBetweenScore2(context),
+          Container(
+            width: 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1018,32 +1003,20 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                     width: width,
                   ),
                 ),
-                userPictureText(
-                    title:
-                        '${_binomePairMatch.name} ${_binomePairMatch.surname} '
-                        '\n & \n'
-                        '${_binomePairMatch.otherName} ${_binomePairMatch.otherSurname} '),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  '${_binomePairMatch.name} ${_binomePairMatch.surname} '
+                  '\n & \n'
+                  '${_binomePairMatch.otherName} ${_binomePairMatch.otherSurname} ',
+                  style: Theme.of(context).textTheme.headline5,
+                  textAlign: TextAlign.center,
+                ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Displays either your face text or your binome face text
-  Widget userPictureText({String title}) {
-    return Container(
-      height: appHeight * 0.1,
-      child: Center(
-        child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-          return AutoSizeText(
-            title,
-            textAlign: TextAlign.center,
-            style: tinterTheme.textStyle.headline2,
-            maxFontSize: 18,
-          );
-        }),
       ),
     );
   }
@@ -1065,68 +1038,113 @@ class CompareViewBinomePairMatch extends StatelessWidget {
     );
   }
 
-  Widget score(BuildContext context) {
-    return informationRectangle(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: <Widget>[
-            Align(
-              alignment: AlignmentDirectional.center,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                    return Text(
-                      'Score',
-                      style: tinterTheme.textStyle.headline1,
-                    );
-                  }),
-                  Stack(
-                    children: <Widget>[
-                      Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                        return Text(
-                          _binomePairMatch.score.toString(),
-                          style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                            color: tinterTheme.textStyle.headline1.color,
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ],
+  Widget InBetweenScore2(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            height: 125,
+            width: 125,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
               ),
             ),
-            Align(
-              alignment: AlignmentDirectional.bottomEnd,
-              child: InkWell(
-                onTap: () => showWhatIsScore(context),
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          width: 2, color: tinterTheme.colors.defaultTextColor),
-                    ),
-                    height: 20,
-                    width: 20,
-                    child: Center(
-                      child: Text(
-                        '?',
-                        style: TextStyle(
-                            color: tinterTheme.colors.defaultTextColor),
-                      ),
-                    ),
-                  );
-                }),
+          ),
+          Positioned(
+            top: 0,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 5.0,
               ),
-            )
-          ],
-        ),
+              child: Text(
+                'Score',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 5.0,
+            ),
+            child: Text(
+              _binomePairMatch.score.toString(),
+              style: Theme.of(context).textTheme.headline1.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                right: 5.0,
+                bottom: 5.0,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  showGeneralDialog(
+                      transitionDuration: Duration(
+                        milliseconds: 300,
+                      ),
+                      context: context,
+                      pageBuilder: (BuildContext context, animation, _) =>
+                          SimpleDialog(
+                            elevation: 5.0,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 10.0,
+                                ),
+                                child: Text(
+                                  'Aide',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 20.0,
+                                  right: 20.0,
+                                  top: 10.0,
+                                  bottom: 10.0,
+                                ),
+                                child: Text(
+                                  "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                  " Il est basé sur les critères renseignés dans le profil.",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 75.0,
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                  child: Text(
+                                    "Continuer",
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ));
+                },
+                child: Icon(
+                  Icons.help_outline_outlined,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
