@@ -300,7 +300,9 @@ class CompareView extends StatelessWidget {
           child: facesAroundScore(context),
         ),
         statusRectangle(context),
-        SizedBox(height: 30),
+        SizedBox(
+          height: 30,
+        ),
         Opacity(
           opacity: topMenuScrolledFraction,
           child: informationComparison(),
@@ -434,8 +436,8 @@ class CompareView extends StatelessWidget {
             child: Text(
               _match.score.toString(),
               style: Theme.of(context).textTheme.headline1.copyWith(
-                fontWeight: FontWeight.w400,
-              ),
+                    fontWeight: FontWeight.w400,
+                  ),
             ),
           ),
           Positioned(
@@ -476,7 +478,7 @@ class CompareView extends StatelessWidget {
                                 ),
                                 child: Text(
                                   "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                      " Il est basé sur les critères renseignés dans le profil.",
+                                  " Il est basé sur les critères renseignés dans le profil.",
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
@@ -522,43 +524,38 @@ class CompareView extends StatelessWidget {
                 vertical: 15.0,
                 horizontal: 5.0,
               ),
-              child: Consumer<TinterTheme>(
-                builder: (context, tinterTheme, child) {
-                  return AutoSizeText(
-                    (_match.statusAssociatif == MatchStatus.liked ||
-                            _match.statusAssociatif == MatchStatus.heIgnoredYou)
-                        ? "Cette personne ne t'a pas encore liké.e."
-                        : (_match.statusAssociatif == MatchStatus.matched)
-                            ? (_match.primoEntrant)
-                                ? "Propose lui d'être ton parrain !"
-                                : "Demande lui de te parrainer !"
+              child: AutoSizeText(
+                (_match.statusAssociatif == MatchStatus.liked ||
+                        _match.statusAssociatif == MatchStatus.heIgnoredYou)
+                    ? "Cette personne ne t'a pas encore liké.e."
+                    : (_match.statusAssociatif == MatchStatus.matched)
+                        ? (_match.primoEntrant)
+                            ? "Propose lui d'être ton parrain !"
+                            : "Demande lui de te parrainer !"
+                        : (_match.statusAssociatif ==
+                                MatchStatus.youAskedParrain)
+                            ? "Demande de parrainage envoyée !"
                             : (_match.statusAssociatif ==
-                                    MatchStatus.youAskedParrain)
-                                ? "Demande de parrainage envoyée !"
+                                    MatchStatus.heAskedParrain)
+                                ? (_match.primoEntrant)
+                                    ? "Cette personne souhaite que tu la parraines !"
+                                    : "Cette personne souhaite te parrainer !"
                                 : (_match.statusAssociatif ==
-                                        MatchStatus.heAskedParrain)
+                                        MatchStatus.parrainAccepted)
                                     ? (_match.primoEntrant)
-                                        ? "Cette personne souhaite que tu la parraines !"
-                                        : "Cette personne souhaite te parrainer !"
+                                        ? 'Tu parraines cette personne !'
+                                        : "Cette personne te parraine !"
                                     : (_match.statusAssociatif ==
-                                            MatchStatus.parrainAccepted)
-                                        ? (_match.primoEntrant)
-                                            ? 'Tu parraines cette personne !'
-                                            : "Cette personne te parraine !"
+                                            MatchStatus.parrainHeRefused)
+                                        ? 'Cette personne a refusé ta demande de parrainage.'
                                         : (_match.statusAssociatif ==
-                                                MatchStatus.parrainHeRefused)
-                                            ? 'Cette personne a refusé ta demande de parrainage.'
-                                            : (_match.statusAssociatif ==
-                                                    MatchStatus
-                                                        .parrainYouRefused)
-                                                ? (_match.primoEntrant)
-                                                    ? "Tu as refusé de parrainer cette personne."
-                                                    : "Tu as refusé que cette personne te parraine."
-                                                : 'ERROR: the status should not be ${_match.statusAssociatif}',
-                    style: Theme.of(context).textTheme.headline5,
-                    maxLines: 1,
-                  );
-                },
+                                                MatchStatus.parrainYouRefused)
+                                            ? (_match.primoEntrant)
+                                                ? "Tu as refusé de parrainer cette personne."
+                                                : "Tu as refusé que cette personne te parraine."
+                                            : 'ERROR: the status should not be ${_match.statusAssociatif}',
+                style: Theme.of(context).textTheme.headline5,
+                maxLines: 1,
               ),
             ),
             if (topMenuScrolledFraction != 1)

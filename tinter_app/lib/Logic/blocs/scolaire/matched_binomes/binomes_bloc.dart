@@ -126,10 +126,15 @@ class MatchedBinomesBloc extends Bloc<MatchedBinomesEvent, MatchedBinomesState> 
       ChangeStatusMatchedBinomesEvent event) async* {
     BuildBinome newBinome =
         event.binome.rebuild((b) => b..statusScolaire = event.binomeStatus);
+    List<BuildBinome> newBinomes = (state as MatchedBinomesLoadSuccessState).binomes;
+    final indexOfChangedBinome = newBinomes.indexOf(event.binome);
+    newBinomes.removeAt(indexOfChangedBinome);
+    if (!(event.enumRelationStatusScolaire == EnumRelationStatusScolaire.ignored)) {
+      newBinomes.insert(indexOfChangedBinome, newBinome);
+    }
 
     MatchedBinomesLoadSuccessState successState = MatchedBinomesLoadSuccessState(
-        binomes: (state as MatchedBinomesLoadSuccessState)
-            .withUpdatedBinome(event.binome, newBinome));
+        binomes: newBinomes);
 
     yield MatchedBinomesSavingNewStatusState(
         binomes: (state as MatchedBinomesLoadSuccessState).binomes);

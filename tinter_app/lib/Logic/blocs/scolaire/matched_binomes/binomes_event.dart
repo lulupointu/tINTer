@@ -37,6 +37,15 @@ abstract class ChangeStatusMatchedBinomesEvent extends MatchedBinomesEvent {
   List<Object> get props => [binome, enumRelationStatusScolaire];
 }
 
+class IgnoreBinomeEvent extends ChangeStatusMatchedBinomesEvent {
+  const IgnoreBinomeEvent({@required BuildBinome binome})
+  : super(
+    binome: binome,
+    enumRelationStatusScolaire: EnumRelationStatusScolaire.ignored,
+    binomeStatus: BinomeStatus.ignored
+  );
+}
+
 class AskBinomeEvent extends ChangeStatusMatchedBinomesEvent {
   const AskBinomeEvent({@required BuildBinome binome})
       : super(

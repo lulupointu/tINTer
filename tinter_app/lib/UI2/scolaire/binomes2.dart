@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:separated_column/separated_column.dart';
+import 'package:tinterapp/Logic/blocs/associatif/matched_matches/matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/binome_pair/binome_pair_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/matched_binome_pair_matches/matched_pair_matches_bloc.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/matched_binomes/binomes_bloc.dart';
@@ -285,14 +286,13 @@ class BinomesTab2State extends State<BinomesTab2> {
     );
   }
 
-  void onCompareTapped(appHeight) {
-    setState(() {
-      _controller.animateTo(
-        widget.fractions['binomeSelectionMenu'] * appHeight,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-    });
+  Future<void> onCompareTapped(appHeight) async {
+    await _controller.animateTo(
+      widget.fractions['binomeSelectionMenu'] * appHeight,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+    setState(() {});
   }
 
   Widget noBinomeSelected(appHeight) {
@@ -371,7 +371,7 @@ class CompareViewBinome extends StatelessWidget {
   final BuildBinome _binome;
   final double appHeight;
   final double topMenuScrolledFraction;
-  final onCompareTapped;
+  final Future<void> Function(double) onCompareTapped;
 
   CompareViewBinome({
     BuildBinome binome,
@@ -393,6 +393,9 @@ class CompareViewBinome extends StatelessWidget {
           child: facesAroundScore(context),
         ),
         statusRectangle(context),
+        SizedBox(
+          height: 30,
+        ),
         Opacity(
           opacity: topMenuScrolledFraction,
           child: informationComparison(),
@@ -671,177 +674,199 @@ class CompareViewBinome extends StatelessWidget {
   Widget statusRectangle(BuildContext context) {
     return FractionallySizedBox(
       widthFactor: 0.75,
-      child: informationRectangle(
-        padding: EdgeInsets.symmetric(vertical: 10.0),
-        height: appHeight * 0.2,
+      child: Card(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              flex: 1000,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                    return AutoSizeText(
-                      (_binome.statusScolaire == BinomeStatus.liked ||
-                              _binome.statusScolaire ==
-                                  BinomeStatus.heIgnoredYou)
-                          ? "Cette personne ne t'a pas encore liker"
-                          : (_binome.statusScolaire == BinomeStatus.matched)
-                              ? "Propose lui d'être son binome"
-                              : (_binome.statusScolaire ==
-                                      BinomeStatus.youAskedBinome)
-                                  ? "Demande envoyée"
-                                  : (_binome.statusScolaire ==
-                                          BinomeStatus.heAskedBinome)
-                                      ? "Cette personne veut être ton/ta binome"
-                                      : (_binome.statusScolaire ==
-                                              BinomeStatus.binomeAccepted)
-                                          ? "Tu es en binome avec cette personne!"
-                                          : (_binome.statusScolaire ==
-                                                  BinomeStatus.binomeHeRefused)
-                                              ? 'Cette personne à refusée ta demande'
-                                              : (_binome.statusScolaire ==
-                                                      BinomeStatus
-                                                          .binomeYouRefused)
-                                                  ? "Tu as refusé d'être le/la binome de cette personne."
-                                                  : 'ERROR: the status should not be ${_binome.statusScolaire}',
-                      style: tinterTheme.textStyle.headline2,
-                      maxLines: 1,
-                    );
-                  }),
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 5.0,
+                vertical: 15.0,
+              ),
+              child: AutoSizeText(
+                (_binome.statusScolaire == BinomeStatus.liked ||
+                        _binome.statusScolaire == BinomeStatus.heIgnoredYou)
+                    ? "Cette personne ne t'a pas encore liké.e."
+                    : (_binome.statusScolaire == BinomeStatus.matched)
+                        ? "Propose lui d'être son binôme !"
+                        : (_binome.statusScolaire ==
+                                BinomeStatus.youAskedBinome)
+                            ? "Demande de binôme envoyée !"
+                            : (_binome.statusScolaire ==
+                                    BinomeStatus.heAskedBinome)
+                                ? "Cette personne veut être ton ou ta binôme !"
+                                : (_binome.statusScolaire ==
+                                        BinomeStatus.binomeAccepted)
+                                    ? "Tu es en binôme avec cette personne !"
+                                    : (_binome.statusScolaire ==
+                                            BinomeStatus.binomeHeRefused)
+                                        ? 'Cette personne a refusé ta demande de binôme.'
+                                        : (_binome.statusScolaire ==
+                                                BinomeStatus.binomeYouRefused)
+                                            ? "Tu as refusé d'être le ou la binôme de cette personne."
+                                            : 'ERROR: the status should not be ${_binome.statusScolaire}',
+                style: Theme.of(context).textTheme.headline5,
+                maxLines: 1,
               ),
             ),
-            if ([BinomeStatus.matched, BinomeStatus.heAskedBinome]
-                .contains(_binome.statusScolaire)) ...[
-              Container(
-                constraints: BoxConstraints(
-                  minHeight: 10,
-                ),
-              ),
-              Expanded(
-                flex: 1000,
-                child: (_binome.statusScolaire == BinomeStatus.matched)
-                    ? Center(
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          onTap: () {
-                            BlocProvider.of<MatchedBinomesBloc>(context)
-                                .add(AskBinomeEvent(binome: _binome));
-                          },
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                            return Container(
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(3.0)),
-                                color: tinterTheme.colors.secondary,
-                              ),
-                              child: AutoSizeText(
-                                "Envoyer une demande",
-                                style: tinterTheme.textStyle.headline2,
-                              ),
-                            );
-                          }),
-                        ),
-                      )
-                    : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                onTap: () {
-                                  BlocProvider.of<MatchedBinomesBloc>(context)
-                                      .add(AcceptBinomeEvent(binome: _binome));
-                                },
-                                child: Consumer<TinterTheme>(
-                                    builder: (context, tinterTheme, child) {
-                                  return Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(3.0)),
-                                      color: tinterTheme.colors.secondary,
-                                    ),
-                                    child: AutoSizeText(
-                                      "Accepter",
-                                      style: tinterTheme.textStyle.headline2,
-                                    ),
-                                  );
-                                }),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                onTap: () {
-                                  BlocProvider.of<MatchedBinomesBloc>(context)
-                                      .add(RefuseBinomeEvent(binome: _binome));
-                                },
-                                child: Consumer<TinterTheme>(
-                                    builder: (context, tinterTheme, child) {
-                                  return Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(3.0)),
-                                      color: tinterTheme.colors.secondary,
-                                    ),
-                                    child: AutoSizeText(
-                                      "Refuser",
-                                      style: tinterTheme.textStyle.headline2,
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ],
-                          )
-                        : AutoSizeText(
-                            'ERROR: the state should not be ' +
-                                _binome.statusScolaire.toString(),
-                          ),
-              ),
-              Container(
-                constraints: BoxConstraints(
-                  minHeight: 10,
-                ),
-              ),
-            ],
             if (topMenuScrolledFraction != 1)
-              Expanded(
-                flex: (1000 * (1 - topMenuScrolledFraction)).floor(),
-                child: Center(
-                  child: InkWell(
-                    onTap: () {
-                      onCompareTapped(appHeight);
-                    },
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return Container(
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                          color: tinterTheme.colors.button,
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 15.0,
+                ),
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: Container(
+                    height: 50.0 * (1.0 - topMenuScrolledFraction),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        onCompareTapped(appHeight);
+                      },
+                      child: Text(
+                        'Comparer vos profils',
+                        style: Theme.of(context).textTheme.headline5.copyWith(
+                          color: Colors.white,
                         ),
-                        child: AutoSizeText(
-                          'Compare vos profils',
-                          style: tinterTheme.textStyle.chipNotLiked
-                              .copyWith(color: Colors.black),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          maxFontSize: 15,
-                        ),
-                      );
-                    }),
+                      ),
+                    ),
                   ),
                 ),
               ),
+            if ([BinomeStatus.matched, BinomeStatus.heAskedBinome]
+                .contains(_binome.statusScolaire)) ...[
+              (_binome.statusScolaire == BinomeStatus.matched)
+                  ? Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 15.0,
+                ),
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: Container(
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).indicatorColor),
+                      ),
+                      onPressed: () {
+                        BlocProvider.of<MatchedBinomesBloc>(context)
+                            .add(AskBinomeEvent(binome: _binome));
+                      },
+                      child: Text(
+                        'Envoyer une demande',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+                  : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
+                      ? Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 15.0,
+                ),
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: Container(
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              BlocProvider.of<MatchedBinomesBloc>(
+                                  context)
+                                  .add(AcceptBinomeEvent(
+                                  binome: _binome));
+                            },
+                            child: Text(
+                              'Accepter',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(
+                                  Theme.of(context)
+                                      .indicatorColor),
+                            ),
+                            onPressed: () {
+                              BlocProvider.of<MatchedBinomesBloc>(
+                                  context)
+                                  .add(RefuseBinomeEvent(
+                                  binome: _binome));
+                            },
+                            child: Text(
+                              'Refuser',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+                  : AutoSizeText(
+                          'ERROR: the state should not be ' +
+                              _binome.statusScolaire.toString(),
+                        ),
+            ],
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 15.0,
+              ),
+              child: FractionallySizedBox(
+                widthFactor: 0.8,
+                child: Container(
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).errorColor),
+                    ),
+                    onPressed: () async {
+                      await onCompareTapped(0);
+                      context.read<SelectedScolaire2>().binomeLogin = null;
+                      BlocProvider.of<MatchedBinomesBloc>(context).add(
+                        IgnoreBinomeEvent(binome: _binome),
+                      );
+                    },
+                    child: Text(
+                      'Supprimer ce binôme',
+                      style: Theme.of(context).textTheme.headline5.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -914,7 +939,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
   final BuildBinomePairMatch _binomePairMatch;
   final double appHeight;
   final double topMenuScrolledFraction;
-  final onCompareTapped;
+  final Future<void> Function(double) onCompareTapped;
 
   CompareViewBinomePairMatch({
     BuildBinomePairMatch binomePairMatch,
