@@ -42,6 +42,8 @@ class _$SearchedBinomePairSerializer
           specifiedType: const FullType(String)),
       'liked',
       serializers.serialize(object.liked, specifiedType: const FullType(bool)),
+      'score',
+      serializers.serialize(object.score, specifiedType: const FullType(int)),
     ];
 
     return result;
@@ -91,6 +93,10 @@ class _$SearchedBinomePairSerializer
           result.liked = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'score':
+          result.score = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
       }
     }
 
@@ -115,6 +121,8 @@ class _$SearchedBinomePair extends SearchedBinomePair {
   final String otherSurname;
   @override
   final bool liked;
+  @override
+  final int score;
 
   factory _$SearchedBinomePair(
           [void Function(SearchedBinomePairBuilder) updates]) =>
@@ -128,7 +136,8 @@ class _$SearchedBinomePair extends SearchedBinomePair {
       this.otherLogin,
       this.otherName,
       this.otherSurname,
-      this.liked})
+      this.liked,
+      this.score})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         binomePairId, 'SearchedBinomePair', 'binomePairId');
@@ -143,6 +152,7 @@ class _$SearchedBinomePair extends SearchedBinomePair {
     BuiltValueNullFieldError.checkNotNull(
         otherSurname, 'SearchedBinomePair', 'otherSurname');
     BuiltValueNullFieldError.checkNotNull(liked, 'SearchedBinomePair', 'liked');
+    BuiltValueNullFieldError.checkNotNull(score, 'SearchedBinomePair', 'score');
   }
 
   @override
@@ -165,7 +175,8 @@ class _$SearchedBinomePair extends SearchedBinomePair {
         otherLogin == other.otherLogin &&
         otherName == other.otherName &&
         otherSurname == other.otherSurname &&
-        liked == other.liked;
+        liked == other.liked &&
+        score == other.score;
   }
 
   @override
@@ -175,13 +186,17 @@ class _$SearchedBinomePair extends SearchedBinomePair {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, binomePairId.hashCode), login.hashCode),
-                            name.hashCode),
-                        surname.hashCode),
-                    otherLogin.hashCode),
-                otherName.hashCode),
-            otherSurname.hashCode),
-        liked.hashCode));
+                        $jc(
+                            $jc(
+                                $jc($jc(0, binomePairId.hashCode),
+                                    login.hashCode),
+                                name.hashCode),
+                            surname.hashCode),
+                        otherLogin.hashCode),
+                    otherName.hashCode),
+                otherSurname.hashCode),
+            liked.hashCode),
+        score.hashCode));
   }
 
   @override
@@ -194,7 +209,8 @@ class _$SearchedBinomePair extends SearchedBinomePair {
           ..add('otherLogin', otherLogin)
           ..add('otherName', otherName)
           ..add('otherSurname', otherSurname)
-          ..add('liked', liked))
+          ..add('liked', liked)
+          ..add('score', score))
         .toString();
   }
 }
@@ -235,6 +251,10 @@ class SearchedBinomePairBuilder
   bool get liked => _$this._liked;
   set liked(bool liked) => _$this._liked = liked;
 
+  int _score;
+  int get score => _$this._score;
+  set score(int score) => _$this._score = score;
+
   SearchedBinomePairBuilder();
 
   SearchedBinomePairBuilder get _$this {
@@ -248,6 +268,7 @@ class SearchedBinomePairBuilder
       _otherName = $v.otherName;
       _otherSurname = $v.otherSurname;
       _liked = $v.liked;
+      _score = $v.score;
       _$v = null;
     }
     return this;
@@ -283,7 +304,9 @@ class SearchedBinomePairBuilder
             otherSurname: BuiltValueNullFieldError.checkNotNull(
                 otherSurname, 'SearchedBinomePair', 'otherSurname'),
             liked: BuiltValueNullFieldError.checkNotNull(
-                liked, 'SearchedBinomePair', 'liked'));
+                liked, 'SearchedBinomePair', 'liked'),
+            score:
+                BuiltValueNullFieldError.checkNotNull(score, 'SearchedBinomePair', 'score'));
     replace(_$result);
     return _$result;
   }

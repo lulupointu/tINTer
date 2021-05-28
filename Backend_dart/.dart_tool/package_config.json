@@ -3,163 +3,163 @@
   "packages": [
     {
       "name": "_discoveryapis_commons",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/_discoveryapis_commons-1.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/_discoveryapis_commons-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/_fe_analyzer_shared-21.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/_fe_analyzer_shared-21.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "analyzer",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/analyzer-1.5.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/analyzer-1.5.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "archive",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/archive-3.1.2",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/archive-3.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "args",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/args-1.6.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/args-1.6.0",
       "packageUri": "lib/",
       "languageVersion": "2.3"
     },
     {
       "name": "asn1lib",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/asn1lib-1.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/asn1lib-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "async",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/async-2.6.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/async-2.6.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "buffer",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/buffer-1.1.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/buffer-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "build",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/build-2.0.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/build-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "build_config",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/build_config-0.4.7",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/build_config-0.4.7",
       "packageUri": "lib/",
       "languageVersion": "2.11"
     },
     {
       "name": "build_daemon",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/build_daemon-2.1.10",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/build_daemon-2.1.10",
       "packageUri": "lib/",
       "languageVersion": "2.11"
     },
     {
       "name": "build_resolvers",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/build_resolvers-2.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/build_resolvers-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "build_runner",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/build_runner-1.12.2",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/build_runner-1.12.2",
       "packageUri": "lib/",
       "languageVersion": "2.11"
     },
     {
       "name": "build_runner_core",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/build_runner_core-6.1.12",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/build_runner_core-6.1.12",
       "packageUri": "lib/",
       "languageVersion": "2.11"
     },
     {
       "name": "built_collection",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/built_collection-5.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/built_collection-5.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "built_value",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/built_value-8.0.5",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/built_value-8.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "built_value_generator",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/built_value_generator-8.0.5",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/built_value_generator-8.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "charcode",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/charcode-1.2.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/charcode-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "checked_yaml",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/checked_yaml-2.0.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/checked_yaml-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "cli_util",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/cli_util-0.3.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/cli_util-0.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "code_builder",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/code_builder-3.7.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/code_builder-3.7.0",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     },
     {
       "name": "collection",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/collection-1.15.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "convert",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/convert-3.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/convert-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "crypto",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/crypto-3.0.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "dart_style",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dart_style-2.0.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/dart_style-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "dartdap",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dartdap-0.6.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/dartdap-0.6.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "equatable",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/equatable-2.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/equatable-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -171,253 +171,253 @@
     },
     {
       "name": "file",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/file-6.1.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/file-6.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "fixnum",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/fixnum-1.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "glob",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/glob-2.0.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/glob-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "googleapis",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/googleapis-2.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/googleapis-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "googleapis_auth",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/googleapis_auth-1.1.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/googleapis_auth-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "graphs",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/graphs-1.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/graphs-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "http",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http-0.13.3",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/http-0.13.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "http_multi_server",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http_multi_server-2.2.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/http_multi_server-2.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
     {
       "name": "http_parser",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http_parser-4.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "image",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/image-3.0.2",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/image-3.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "io",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/io-0.3.4",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/io-0.3.4",
       "packageUri": "lib/",
       "languageVersion": "2.0"
     },
     {
       "name": "js",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/js-0.6.3",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/js-0.6.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "json_annotation",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/json_annotation-4.0.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "json_serializable",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/json_serializable-4.1.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/json_serializable-4.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "logging",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/logging-1.0.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/logging-1.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "matcher",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/matcher-0.12.9",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.9",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     },
     {
       "name": "meta",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/meta-1.3.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "mime",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/mime-0.9.7",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/mime-0.9.7",
       "packageUri": "lib/",
       "languageVersion": "2.0"
     },
     {
       "name": "package_config",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/package_config-2.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/package_config-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "path",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path-1.8.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/path-1.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "pedantic",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/pedantic-1.11.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "petitparser",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/petitparser-4.1.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/petitparser-4.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "pool",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/pool-1.5.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/pool-1.5.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "postgres",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/postgres-2.3.2",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/postgres-2.3.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "pub_semver",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/pub_semver-2.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/pub_semver-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "pubspec_parse",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/pubspec_parse-1.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/pubspec_parse-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "quiver",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/quiver-2.1.3",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/quiver-2.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.0"
     },
     {
       "name": "shelf",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/shelf-1.1.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/shelf-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "shelf_web_socket",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/shelf_web_socket-0.2.4+1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/shelf_web_socket-0.2.4+1",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
     {
       "name": "source_gen",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/source_gen-1.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/source_gen-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "source_span",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/source_span-1.8.1",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/stack_trace-1.10.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/stream_channel-2.1.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "stream_transform",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/stream_transform-2.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/stream_transform-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "string_scanner",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/string_scanner-1.1.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "term_glyph",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/term_glyph-1.2.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "timing",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/timing-1.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/timing-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/typed_data-1.3.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "watcher",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/watcher-1.0.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/watcher-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "web_socket_channel",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/web_socket_channel-1.2.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/web_socket_channel-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "xml",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/xml-5.1.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/xml-5.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "yaml",
-      "rootUri": "file:///C:/Users/guill/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/yaml-3.1.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/yaml-3.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -428,7 +428,7 @@
       "languageVersion": "2.10"
     }
   ],
-  "generated": "2021-05-15T13:21:35.412094Z",
+  "generated": "2021-05-28T07:55:00.710094Z",
   "generator": "pub",
-  "generatorVersion": "2.12.3"
+  "generatorVersion": "2.13.0"
 }
