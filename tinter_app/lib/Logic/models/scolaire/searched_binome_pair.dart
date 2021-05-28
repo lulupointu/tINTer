@@ -22,6 +22,8 @@ abstract class SearchedBinomePair implements Built<SearchedBinomePair, SearchedB
 
   bool get liked;
 
+  int get score;
+
   SearchedBinomePair._();
   factory SearchedBinomePair([void Function(SearchedBinomePairBuilder) updates]) = _$SearchedBinomePair;
 

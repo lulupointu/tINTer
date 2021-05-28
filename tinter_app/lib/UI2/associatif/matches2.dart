@@ -116,18 +116,20 @@ class MatchsTab2State extends State<MatchsTab2> {
                       : (widget.spacing + MatchSelectionMenu.height) /
                           MediaQuery.of(context).size.height);
           return Builder(
-            builder: (BuildContext ntext) {
+            builder: (BuildContext context) {
               // ignore: invalid_use_of_protected_member
               if (!_controller.hasListeners) {
                 _controller.addListener(() {
-                  setState(() {
-                    topMenuScrolledFraction = max(
-                        0,
-                        min(
-                            1,
-                            _controller.position.pixels /
-                                (widget.fractions['matchSelectionMenu'] *
-                                    MediaQuery.of(context).size.height)));
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    setState(() {
+                      topMenuScrolledFraction = max(
+                          0,
+                          min(
+                              1,
+                              _controller.position.pixels /
+                                  (widget.fractions['matchSelectionMenu'] *
+                                      MediaQuery.of(context).size.height)));
+                    });
                   });
                 });
               }

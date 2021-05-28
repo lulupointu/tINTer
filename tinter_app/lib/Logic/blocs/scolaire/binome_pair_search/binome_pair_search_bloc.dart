@@ -83,7 +83,8 @@ class BinomePairSearchBloc extends Bloc<BinomePairSearchEvent, BinomePairSearchS
 
   Stream<BinomePairSearchState> _mapAssociationRefreshEventToState() async* {
     yield BinomePairSearchRefreshingState(
-        searchedBinomePairs: (state as BinomePairSearchLoadSuccessfulState).searchedBinomePairs);
+        searchedBinomePairs:
+            (state as BinomePairSearchLoadSuccessfulState).searchedBinomePairs);
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
@@ -97,21 +98,20 @@ class BinomePairSearchBloc extends Bloc<BinomePairSearchEvent, BinomePairSearchS
     } catch (error) {
       print(error);
       yield BinomePairSearchRefreshingFailedState(
-          searchedBinomePairs: (state as BinomePairSearchLoadSuccessfulState).searchedBinomePairs);
+          searchedBinomePairs:
+              (state as BinomePairSearchLoadSuccessfulState).searchedBinomePairs);
     }
     yield BinomePairSearchLoadSuccessfulState(searchedBinomePairs: searchedBinomePairss);
   }
 
-  void _mapBinomePairSearchLikeEventToState(
-      BinomePairSearchLikeEvent userSearchLikeEvent) {
+  void _mapBinomePairSearchLikeEventToState(BinomePairSearchLikeEvent userSearchLikeEvent) {
     add(BinomePairSearchChangeStatusEvent(
         searchedBinomePairs: userSearchLikeEvent.likedSearchedBinomePair,
         newStatus: MatchStatus.liked,
         enumRelationStatusBinomePair: EnumRelationStatusBinomePair.liked));
   }
 
-  void _mapDiscoverMatchIgnoreEventToState(
-      BinomePairSearchIgnoreEvent userSearchIgnoreEvent) {
+  void _mapDiscoverMatchIgnoreEventToState(BinomePairSearchIgnoreEvent userSearchIgnoreEvent) {
     add(BinomePairSearchChangeStatusEvent(
         searchedBinomePairs: userSearchIgnoreEvent.ignoredSearchedBinomePair,
         newStatus: MatchStatus.ignored,
@@ -131,8 +131,9 @@ class BinomePairSearchBloc extends Bloc<BinomePairSearchEvent, BinomePairSearchS
 
     print('Getting the new match status');
 
-    SearchedBinomePair newSearchedBinomePair = event.searchedBinomePairs
-        .rebuild((s) => s..liked = event.newStatus == MatchStatus.ignored ? false : true);
+    SearchedBinomePair newSearchedBinomePair = event.searchedBinomePairs.rebuild(
+      (s) => s..liked = event.newStatus == MatchStatus.ignored ? false : true,
+    );
 
     print('GotIT');
 
@@ -144,15 +145,17 @@ class BinomePairSearchBloc extends Bloc<BinomePairSearchEvent, BinomePairSearchS
 
     print('Replacing the liked or ignored user');
 
-    yield BinomePairSearchSavingNewStatusState(searchedBinomePairs: newSearchedBinomePairsScolaire);
+    yield BinomePairSearchSavingNewStatusState(
+        searchedBinomePairs: newSearchedBinomePairsScolaire);
 
     print('Changing state to saving');
 
     try {
       matchedBinomePairMatchesRepository.updateBinomePairMatchStatus(
-        relationStatus: RelationStatusBinomePair((r) => r
-          ..otherBinomePairId = event.searchedBinomePairs.binomePairId
-          ..status = event.enumRelationStatusBinomePair,
+        relationStatus: RelationStatusBinomePair(
+          (r) => r
+            ..otherBinomePairId = event.searchedBinomePairs.binomePairId
+            ..status = event.enumRelationStatusBinomePair,
         ),
       );
       print('UPDATING');
@@ -163,7 +166,8 @@ class BinomePairSearchBloc extends Bloc<BinomePairSearchEvent, BinomePairSearchS
     }
 
     print('YAHE');
-    yield BinomePairSearchLoadSuccessfulState(searchedBinomePairs: newSearchedBinomePairsScolaire);
+    yield BinomePairSearchLoadSuccessfulState(
+        searchedBinomePairs: newSearchedBinomePairsScolaire);
   }
 
   void _addError(String error) {
