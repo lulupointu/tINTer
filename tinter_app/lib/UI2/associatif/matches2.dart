@@ -523,7 +523,7 @@ class CompareView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 15.0,
-                horizontal: 5.0,
+                horizontal: 10.0,
               ),
               child: AutoSizeText(
                 (_match.statusAssociatif == MatchStatus.liked ||
@@ -556,7 +556,7 @@ class CompareView extends StatelessWidget {
                                                 : "Tu as refusé que cette personne te parraine."
                                             : 'ERROR: the status should not be ${_match.statusAssociatif}',
                 style: Theme.of(context).textTheme.headline5,
-                maxLines: 1,
+                maxLines: 2,
               ),
             ),
             if (topMenuScrolledFraction != 1)

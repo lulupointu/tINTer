@@ -701,7 +701,7 @@ class CompareViewBinome extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 5.0,
+                horizontal: 10.0,
                 vertical: 15.0,
               ),
               child: AutoSizeText(
@@ -727,7 +727,7 @@ class CompareViewBinome extends StatelessWidget {
                                             ? "Tu as refusé d'être le ou la binôme de cette personne."
                                             : 'ERROR: the status should not be ${_binome.statusScolaire}',
                 style: Theme.of(context).textTheme.headline5,
-                maxLines: 1,
+                maxLines: 2,
               ),
             ),
             if (topMenuScrolledFraction != 1)
