@@ -201,7 +201,7 @@ class RelationsScoreBinomePairsMatchesTable {
     });
   }
 
-  Future<RelationScoreBinomePair> getFromBinomePairIds({@required String binomePairId, @required otherBinomePairId}) async {
+  Future<RelationScoreBinomePair> getFromBinomePairIds({@required int binomePairId, @required int otherBinomePairId}) async {
     _logger.info('Executing function getFromBinomePairIds with args: binomePairId=${binomePairId}, otherBinomePairId=${otherBinomePairId}');
 
     final String query = "SELECT * FROM $name WHERE binomePairIdA=@binomePairIdA AND binomePairIdB=@binomePairIdB;";
