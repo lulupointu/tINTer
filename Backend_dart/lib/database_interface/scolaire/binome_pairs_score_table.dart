@@ -111,21 +111,24 @@ class RelationsScoreBinomePairsMatchesTable {
     final String query = "INSERT INTO $name VALUES (@binomePairIdA, @binomePairIdB, @score);";
 
     return database.query(query,
-        substitutionValues: (relationScore.binomePairId.compareTo(relationScore.otherBinomePairId) < 0)
-            ? {
-          'binomePairIdA': relationScore.binomePairId,
-          'binomePairIdB': relationScore.otherBinomePairId,
-          'score': relationScore.score,
-        }
-            : {
-          'binomePairIdA': relationScore.otherBinomePairId,
-          'binomePairIdB': relationScore.binomePairId,
-          'score': relationScore.score,
-        });
+        substitutionValues:
+            (relationScore.binomePairId.compareTo(relationScore.otherBinomePairId) < 0)
+                ? {
+                    'binomePairIdA': relationScore.binomePairId,
+                    'binomePairIdB': relationScore.otherBinomePairId,
+                    'score': relationScore.score,
+                  }
+                : {
+                    'binomePairIdA': relationScore.otherBinomePairId,
+                    'binomePairIdB': relationScore.binomePairId,
+                    'score': relationScore.score,
+                  });
   }
 
-  Future<void> addMultiple({@required List<RelationScoreBinomePair> listRelationScoreBinomePair}) async {
-    _logger.info('Executing function addMultiple with args: listRelationScoreBinomePair=${listRelationScoreBinomePair}');
+  Future<void> addMultiple(
+      {@required List<RelationScoreBinomePair> listRelationScoreBinomePair}) async {
+    _logger.info(
+        'Executing function addMultiple with args: listRelationScoreBinomePair=${listRelationScoreBinomePair}');
 
     if (listRelationScoreBinomePair.length == 0) return;
     final String query = "INSERT INTO $name VALUES" +
@@ -137,17 +140,20 @@ class RelationsScoreBinomePairsMatchesTable {
 
     return database.query(query, substitutionValues: {
       for (int index = 0; index < listRelationScoreBinomePair.length; index++)
-        ...(listRelationScoreBinomePair[index].binomePairId.compareTo(listRelationScoreBinomePair[index].otherBinomePairId) < 0)
+        ...(listRelationScoreBinomePair[index]
+                    .binomePairId
+                    .compareTo(listRelationScoreBinomePair[index].otherBinomePairId) <
+                0)
             ? {
-          'binomePairIdA$index': listRelationScoreBinomePair[index].binomePairId,
-          'binomePairIdB$index': listRelationScoreBinomePair[index].otherBinomePairId,
-          'score$index': listRelationScoreBinomePair[index].score,
-        }
+                'binomePairIdA$index': listRelationScoreBinomePair[index].binomePairId,
+                'binomePairIdB$index': listRelationScoreBinomePair[index].otherBinomePairId,
+                'score$index': listRelationScoreBinomePair[index].score,
+              }
             : {
-          'binomePairIdA$index': listRelationScoreBinomePair[index].otherBinomePairId,
-          'binomePairIdB$index': listRelationScoreBinomePair[index].binomePairId,
-          'score$index': listRelationScoreBinomePair[index].score,
-        }
+                'binomePairIdA$index': listRelationScoreBinomePair[index].otherBinomePairId,
+                'binomePairIdB$index': listRelationScoreBinomePair[index].binomePairId,
+                'score$index': listRelationScoreBinomePair[index].score,
+              }
     });
   }
 
@@ -158,26 +164,29 @@ class RelationsScoreBinomePairsMatchesTable {
         "UPDATE $name SET score=@score WHERE binomePairIdA=@binomePairIdA AND binomePairIdB=@binomePairIdB;";
 
     return database.query(query,
-        substitutionValues: (relationScore.binomePairId.compareTo(relationScore.otherBinomePairId) < 0)
-            ? {
-          'binomePairIdA': relationScore.binomePairId,
-          'binomePairIdB': relationScore.otherBinomePairId,
-          'score': relationScore.score,
-        }
-            : {
-          'binomePairIdA': relationScore.otherBinomePairId,
-          'binomePairIdB': relationScore.binomePairId,
-          'score': relationScore.score,
-        });
+        substitutionValues:
+            (relationScore.binomePairId.compareTo(relationScore.otherBinomePairId) < 0)
+                ? {
+                    'binomePairIdA': relationScore.binomePairId,
+                    'binomePairIdB': relationScore.otherBinomePairId,
+                    'score': relationScore.score,
+                  }
+                : {
+                    'binomePairIdA': relationScore.otherBinomePairId,
+                    'binomePairIdB': relationScore.binomePairId,
+                    'score': relationScore.score,
+                  });
   }
 
-  Future<void> updateMultiple({@required List<RelationScoreBinomePair> listRelationScoreBinomePair}) async {
-    _logger.info('Executing function updateMultiple with args: listRelationScoreBinomePair=${listRelationScoreBinomePair}');
+  Future<void> updateMultiple(
+      {@required List<RelationScoreBinomePair> listRelationScoreBinomePair}) async {
+    _logger.info(
+        'Executing function updateMultiple with args: listRelationScoreBinomePair=${listRelationScoreBinomePair}');
 
     if (listRelationScoreBinomePair.length == 0) return;
 
     final String query = "UPDATE $name AS old SET score=new.score "
-        "FROM (VALUES " +
+            "FROM (VALUES " +
         [
           for (int index = 0; index < listRelationScoreBinomePair.length; index++)
             "(@binomePairIdA$index::integer, @binomePairIdB$index::integer, @score$index::integer)"
@@ -187,36 +196,42 @@ class RelationsScoreBinomePairsMatchesTable {
 
     return database.query(query, substitutionValues: {
       for (int index = 0; index < listRelationScoreBinomePair.length; index++)
-        ...(listRelationScoreBinomePair[index].binomePairId.compareTo(listRelationScoreBinomePair[index].otherBinomePairId) < 0)
+        ...(listRelationScoreBinomePair[index]
+                    .binomePairId
+                    .compareTo(listRelationScoreBinomePair[index].otherBinomePairId) <
+                0)
             ? {
-          'binomePairIdA$index': listRelationScoreBinomePair[index].binomePairId,
-          'binomePairIdB$index': listRelationScoreBinomePair[index].otherBinomePairId,
-          'score$index': listRelationScoreBinomePair[index].score,
-        }
+                'binomePairIdA$index': listRelationScoreBinomePair[index].binomePairId,
+                'binomePairIdB$index': listRelationScoreBinomePair[index].otherBinomePairId,
+                'score$index': listRelationScoreBinomePair[index].score,
+              }
             : {
-          'binomePairIdA$index': listRelationScoreBinomePair[index].otherBinomePairId,
-          'binomePairIdB$index': listRelationScoreBinomePair[index].binomePairId,
-          'score$index': listRelationScoreBinomePair[index].score,
-        }
+                'binomePairIdA$index': listRelationScoreBinomePair[index].otherBinomePairId,
+                'binomePairIdB$index': listRelationScoreBinomePair[index].binomePairId,
+                'score$index': listRelationScoreBinomePair[index].score,
+              }
     });
   }
 
-  Future<RelationScoreBinomePair> getFromBinomePairIds({@required int binomePairId, @required int otherBinomePairId}) async {
-    _logger.info('Executing function getFromBinomePairIds with args: binomePairId=${binomePairId}, otherBinomePairId=${otherBinomePairId}');
+  Future<RelationScoreBinomePair> getFromBinomePairIds(
+      {@required int binomePairId, @required int otherBinomePairId}) async {
+    _logger.info(
+        'Executing function getFromBinomePairIds with args: binomePairId=${binomePairId}, otherBinomePairId=${otherBinomePairId}');
 
-    final String query = "SELECT * FROM $name WHERE binomePairIdA=@binomePairIdA AND binomePairIdB=@binomePairIdB;";
+    final String query =
+        "SELECT * FROM $name WHERE binomePairIdA=@binomePairIdA AND binomePairIdB=@binomePairIdB;";
 
     return database
         .mappedResultsQuery(query,
-        substitutionValues: (binomePairId.compareTo(otherBinomePairId) < 0)
-            ? {
-          'binomePairIdA': binomePairId,
-          'binomePairIdB': otherBinomePairId,
-        }
-            : {
-          'binomePairIdA': otherBinomePairId,
-          'binomePairIdB': binomePairId,
-        })
+            substitutionValues: (binomePairId.compareTo(otherBinomePairId) < 0)
+                ? {
+                    'binomePairIdA': binomePairId,
+                    'binomePairIdB': otherBinomePairId,
+                  }
+                : {
+                    'binomePairIdA': otherBinomePairId,
+                    'binomePairIdB': binomePairId,
+                  })
         .then((sqlResults) {
       if (sqlResults.length > 1) {
         throw InvalidResponseToDatabaseQuery(
@@ -226,17 +241,24 @@ class RelationsScoreBinomePairsMatchesTable {
             error: 'One pair of binomePairId expected but got ${sqlResults.length}');
       }
 
-      return RelationScoreBinomePair.fromJson(sqlResults[0][name]);
+      return RelationScoreBinomePair.fromJson({
+        'binomePairId': binomePairId,
+        'otherBinomePairId': otherBinomePairId,
+        'score': sqlResults[0][name]['score'],
+      });
     });
   }
 
-  Future<List<RelationScoreBinomePair>> getAllFromBinomePairId({@required String binomePairId}) async {
-    _logger.info('Executing function getAllFromBinomePairId with args: binomePairId=${binomePairId}');
+  Future<List<RelationScoreBinomePair>> getAllFromBinomePairId(
+      {@required String binomePairId}) async {
+    _logger.info(
+        'Executing function getAllFromBinomePairId with args: binomePairId=${binomePairId}');
 
-    final String query = "SELECT * FROM $name WHERE binomePairIdA=@binomePairId OR binomePairIdB=@binomePairId";
+    final String query =
+        "SELECT * FROM $name WHERE binomePairIdA=@binomePairId OR binomePairIdB=@binomePairId";
 
-    return database
-        .mappedResultsQuery(query, substitutionValues: {'binomePairId': binomePairId}).then((sqlResults) {
+    return database.mappedResultsQuery(query,
+        substitutionValues: {'binomePairId': binomePairId}).then((sqlResults) {
       return [
         for (Map<String, Map<String, dynamic>> result in sqlResults)
           RelationScoreBinomePair.fromJson(result[name])
@@ -256,27 +278,32 @@ class RelationsScoreBinomePairsMatchesTable {
     });
   }
 
-  Future<void> removeFromBinomePairIds({@required String binomePairId, @required otherBinomePairId}) async {
-    _logger.info('Executing function removeFromBinomePairIds with args: binomePairId=${binomePairId}, otherBinomePairId=${otherBinomePairId}');
+  Future<void> removeFromBinomePairIds(
+      {@required String binomePairId, @required otherBinomePairId}) async {
+    _logger.info(
+        'Executing function removeFromBinomePairIds with args: binomePairId=${binomePairId}, otherBinomePairId=${otherBinomePairId}');
 
-    final String query = "DELETE FROM $name WHERE binomePairIdA=@binomePairIdA AND binomePairIdB=@binomePairIdB;";
+    final String query =
+        "DELETE FROM $name WHERE binomePairIdA=@binomePairIdA AND binomePairIdB=@binomePairIdB;";
 
     return database.query(query,
         substitutionValues: (binomePairId.compareTo(otherBinomePairId) < 0)
             ? {
-          'binomePairIdA': binomePairId,
-          'binomePairIdB': otherBinomePairId,
-        }
+                'binomePairIdA': binomePairId,
+                'binomePairIdB': otherBinomePairId,
+              }
             : {
-          'binomePairIdA': otherBinomePairId,
-          'binomePairIdB': binomePairId,
-        });
+                'binomePairIdA': otherBinomePairId,
+                'binomePairIdB': binomePairId,
+              });
   }
 
   Future<void> removeAllFromBinomePairId({@required String binomePairId}) async {
-    _logger.info('Executing function removeAllFromBinomePairId with args: binomePairId=${binomePairId}');
+    _logger.info(
+        'Executing function removeAllFromBinomePairId with args: binomePairId=${binomePairId}');
 
-    final String query = "DELETE FROM $name WHERE binomePairIdA=@binomePairId OR binomePairIdB=@binomePairId;";
+    final String query =
+        "DELETE FROM $name WHERE binomePairIdA=@binomePairId OR binomePairIdB=@binomePairId;";
 
     return database.query(query, substitutionValues: {'binomePairId': binomePairId});
   }
@@ -289,4 +316,3 @@ class RelationsScoreBinomePairsMatchesTable {
     return database.query(query);
   }
 }
-
