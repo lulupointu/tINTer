@@ -17,7 +17,6 @@ import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/UI/shared/score_popup_helper/score_popup_helper.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/shared_element/slider_label.dart';
 import 'package:tinterapp/UI/shared/snap_scroll_sheet_physics/snap_scroll_sheet_physics.dart';
@@ -565,53 +564,67 @@ class CompareViewBinome extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   showGeneralDialog(
-                      transitionDuration: Duration(
-                        milliseconds: 300,
-                      ),
-                      context: context,
-                      pageBuilder: (BuildContext context, animation, _) =>
-                          SimpleDialog(
-                            elevation: 5.0,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 10.0,
-                                ),
-                                child: Text(
-                                  'Aide',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  right: 20.0,
-                                  top: 10.0,
-                                  bottom: 10.0,
-                                ),
-                                child: Text(
-                                  "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                  " Il est basé sur les critères renseignés dans le profil.",
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 75.0,
-                                ),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, false);
-                                  },
-                                  child: Text(
-                                    "Continuer",
+                    transitionDuration: Duration(milliseconds: 300),
+                    context: context,
+                    pageBuilder: (BuildContext context, animation, _) => Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: SimpleDialog(
+                          elevation: 5.0,
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              splashColor: Colors.transparent,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Aide",
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context).textTheme.headline4,
+                                    ),
                                   ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0,
+                                      vertical: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                          " Il est basé sur les critères renseignés dans le profil.",
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context).textTheme.headline5,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0,
+                                    ),
+                                    child: Container(
+                                      width: 200,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        child: Text(
+                                          "Continuer",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ));
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
                 },
                 child: Icon(
                   Icons.help_outline_outlined,
@@ -621,72 +634,6 @@ class CompareViewBinome extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget score(BuildContext context) {
-    return informationRectangle(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: <Widget>[
-            Align(
-              alignment: AlignmentDirectional.center,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                    return Text(
-                      'Score',
-                      style: tinterTheme.textStyle.headline1,
-                    );
-                  }),
-                  Stack(
-                    children: <Widget>[
-                      Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                        return Text(
-                          _binome.score.toString(),
-                          style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                            color: tinterTheme.textStyle.headline1.color,
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Align(
-              alignment: AlignmentDirectional.bottomEnd,
-              child: InkWell(
-                onTap: () => showWhatIsScore(context),
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          width: 2, color: tinterTheme.colors.defaultTextColor),
-                    ),
-                    height: 20,
-                    width: 20,
-                    child: Center(
-                      child: Text(
-                        '?',
-                        style: TextStyle(
-                            color: tinterTheme.colors.defaultTextColor),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            )
-          ],
-        ),
       ),
     );
   }
@@ -1134,53 +1081,67 @@ class CompareViewBinomePairMatch extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   showGeneralDialog(
-                      transitionDuration: Duration(
-                        milliseconds: 300,
-                      ),
-                      context: context,
-                      pageBuilder: (BuildContext context, animation, _) =>
-                          SimpleDialog(
-                            elevation: 5.0,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 10.0,
-                                ),
-                                child: Text(
-                                  'Aide',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  right: 20.0,
-                                  top: 10.0,
-                                  bottom: 10.0,
-                                ),
-                                child: Text(
-                                  "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                  " Il est basé sur les critères renseignés dans le profil.",
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 75.0,
-                                ),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, false);
-                                  },
-                                  child: Text(
-                                    "Continuer",
+                    transitionDuration: Duration(milliseconds: 300),
+                    context: context,
+                    pageBuilder: (BuildContext context, animation, _) => Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: SimpleDialog(
+                          elevation: 5.0,
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              splashColor: Colors.transparent,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Aide",
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context).textTheme.headline4,
+                                    ),
                                   ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0,
+                                      vertical: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                          " Il est basé sur les critères renseignés dans le profil.",
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context).textTheme.headline5,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0,
+                                    ),
+                                    child: Container(
+                                      width: 200,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        child: Text(
+                                          "Continuer",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ));
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
                 },
                 child: Icon(
                   Icons.help_outline_outlined,

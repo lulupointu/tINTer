@@ -838,60 +838,67 @@ class _MatchInformationState extends State<MatchInformation> {
                               child: GestureDetector(
                                 onTap: () {
                                   showGeneralDialog(
-                                      transitionDuration: Duration(
-                                        milliseconds: 300,
-                                      ),
-                                      context: context,
-                                      pageBuilder: (BuildContext context,
-                                              animation, _) =>
-                                          SimpleDialog(
-                                            elevation: 5.0,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  top: 10.0,
-                                                ),
-                                                child: Text(
-                                                  'Aide',
-                                                  textAlign: TextAlign.center,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline4,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 20.0,
-                                                  right: 20.0,
-                                                  top: 10.0,
-                                                  bottom: 10.0,
-                                                ),
-                                                child: Text(
-                                                  "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                                  " Il est basé sur les critères renseignés dans le profil.",
-                                                  textAlign: TextAlign.center,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline5,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 75.0,
-                                                ),
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(
-                                                        context, false);
-                                                  },
-                                                  child: Text(
-                                                    "Continuer",
+                                    transitionDuration: Duration(milliseconds: 300),
+                                    context: context,
+                                    pageBuilder: (BuildContext context, animation, _) => Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () => Navigator.of(context).pop(),
+                                        child: SimpleDialog(
+                                          elevation: 5.0,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {},
+                                              splashColor: Colors.transparent,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(
+                                                      top: 10.0,
+                                                    ),
+                                                    child: Text(
+                                                      "Aide",
+                                                      textAlign: TextAlign.center,
+                                                      style: Theme.of(context).textTheme.headline4,
+                                                    ),
                                                   ),
-                                                ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 10.0,
+                                                    ),
+                                                    child: Text(
+                                                      "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                                          " Il est basé sur les critères renseignés dans le profil.",
+                                                      textAlign: TextAlign.center,
+                                                      style: Theme.of(context).textTheme.headline5,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                      vertical: 5.0,
+                                                    ),
+                                                    child: Container(
+                                                      width: 200,
+                                                      child: ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context, false);
+                                                        },
+                                                        child: Text(
+                                                          "Continuer",
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ));
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
                                 },
                                 child: Icon(
                                   Icons.help_outline_outlined,

@@ -576,67 +576,66 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                               ),
                               onTap: () {
                                 showGeneralDialog(
-                                    transitionDuration:
-                                        Duration(milliseconds: 300),
-                                    context: context,
-                                    pageBuilder: (BuildContext context,
-                                            animation, _) =>
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () => Navigator.of(context).pop(),
-                                            child: SimpleDialog(
-                                              elevation: 5.0,
+                                  transitionDuration: Duration(milliseconds: 300),
+                                  context: context,
+                                  pageBuilder: (BuildContext context, animation, _) => Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () => Navigator.of(context).pop(),
+                                      child: SimpleDialog(
+                                        elevation: 5.0,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {},
+                                            splashColor: Colors.transparent,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                InkWell(
-                                                  onTap: () {},
-                                                  splashColor: Colors.transparent,
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(
-                                                            top: 10.0),
-                                                        child: Text(
-                                                          "Description",
-                                                          textAlign: TextAlign.center,
-                                                          style: Theme.of(context)
-                                                              .textTheme
-                                                              .headline4,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(
-                                                            left: 20.0,
-                                                            right: 20.0,
-                                                            top: 10.0,
-                                                            bottom: 10.0),
-                                                        child: Text(
-                                                          widget.association.description,
-                                                          textAlign: TextAlign.center,
-                                                          style: Theme.of(context)
-                                                              .textTheme
-                                                              .headline5,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsets.symmetric(
-                                                            horizontal: 75.0),
-                                                        child: ElevatedButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(context, false);
-                                                          },
-                                                          child: Text("Continuer"),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                    top: 10.0,
                                                   ),
-                                                )
+                                                  child: Text(
+                                                    "Description",
+                                                    textAlign: TextAlign.center,
+                                                    style: Theme.of(context).textTheme.headline4,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    horizontal: 20.0,
+                                                    vertical: 10.0,
+                                                  ),
+                                                  child: Text(
+                                                    widget.association.description,
+                                                    textAlign: TextAlign.center,
+                                                    style: Theme.of(context).textTheme.headline5,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    vertical: 5.0,
+                                                  ),
+                                                  child: Container(
+                                                    width: 200,
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context, false);
+                                                      },
+                                                      child: Text(
+                                                        "Continuer",
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
                                               ],
                                             ),
-                                          ),
-                                        ));
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                             GestureDetector(
