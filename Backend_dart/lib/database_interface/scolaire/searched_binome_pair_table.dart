@@ -26,9 +26,9 @@ class SearchedBinomePairsTable {
     _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}');
 
     final Future query = database.mappedResultsQuery(
-        "SELECT \"binomePairId\", login, name, surname, \"otherLogin\", \"otherName\", \"otherSurname\", \"status\" "
+        "SELECT \"binomePairId\", \"otherBinomePairId\", login, name, surname, \"otherLogin\", \"otherName\", \"otherSurname\", \"status\" "
         " FROM "
-        "( SELECT \"otherBinomePairId\" AS \"binomePairId\", status FROM "
+        "( SELECT \"otherBinomePairId\", status FROM "
         " ${RelationsStatusBinomePairsMatchesTable.name} "
         "JOIN "
         "( SELECT \"binomePairId\" FROM ${BinomePairsProfilesTable.name} "
@@ -36,8 +36,11 @@ class SearchedBinomePairsTable {
         ") AS ${BinomePairsProfilesTable.name} "
         "USING (\"binomePairId\") "
         ") AS ${RelationsStatusBinomePairsMatchesTable.name} "
-        "JOIN ${BinomePairsProfilesTable.name} "
-        "USING (\"binomePairId\") ;",
+        "JOIN "
+        "( SELECT \"binomePairId\" AS \"otherBinomePairId\", login, name, surname, \"otherLogin\", \"otherName\", \"otherSurname\" FROM "
+        "${BinomePairsProfilesTable.name} "
+        ") AS ${BinomePairsProfilesTable.name}"
+        "USING (\"otherBinomePairId\") ;",
         substitutionValues: {
           'login': login,
         });
@@ -60,7 +63,7 @@ class SearchedBinomePairsTable {
               SearchedBinomePair.fromJson({
             ...queryResults[i][BinomePairsProfilesTable.name],
             'binomePairId': queryResults[i][RelationsStatusBinomePairsMatchesTable.name]
-                ['binomePairId'],
+                ['otherBinomePairId'],
             'liked': _getLikeOrNotFromRelationStatusBinomePair(
                 EnumRelationStatusBinomePair.valueOf(
                     queryResults[i][RelationsStatusBinomePairsMatchesTable.name]['status'])),
