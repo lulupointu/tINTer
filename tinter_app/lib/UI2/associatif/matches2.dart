@@ -573,6 +573,7 @@ class CompareView extends StatelessWidget {
                                                 : "Tu as refusé que cette personne te parraine."
                                             : 'ERROR: the status should not be ${_match.statusAssociatif}',
                 style: Theme.of(context).textTheme.headline5,
+                textAlign: TextAlign.center,
                 maxLines: 2,
               ),
             ),
