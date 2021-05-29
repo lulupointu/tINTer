@@ -1948,11 +1948,16 @@ class ProfileInformation extends StatelessWidget {
                                   ),
                               ],
                             )
-                          : Text(
-                              'Aucune matière sélectionnée',
-                              style: Theme.of(context).textTheme.headline5,
-                              textAlign: TextAlign.center,
+                          : Container(
+                        height: 50,
+                            child: Center(
+                              child: Text(
+                                  'Aucune matière sélectionnée',
+                                  style: Theme.of(context).textTheme.headline5,
+                                  textAlign: TextAlign.center,
+                                ),
                             ),
+                          ),
                     ],
                   ),
                 ),

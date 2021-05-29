@@ -859,15 +859,20 @@ class ProfileInformation extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            : Text(
-                                'Aucune association sélectionnée',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(
-                                      fontSize: 14.0,
-                                    ),
+                            : Container(
+                          height: 50,
+                              child: Center(
+                                child: Text(
+                                    'Aucune association sélectionnée',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(
+                                          fontSize: 14.0,
+                                        ),
+                                  ),
                               ),
+                            ),
                       ],
                     ),
                   ),
