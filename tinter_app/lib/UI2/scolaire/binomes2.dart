@@ -1447,6 +1447,7 @@ class ProfileInformation extends StatelessWidget {
                     child: Text(
                       'Lieu de vie',
                       style: Theme.of(context).textTheme.headline5,
+                      maxLines: 2,
                     ),
                   ),
                   SizedBox(
@@ -1535,6 +1536,7 @@ class ProfileInformation extends StatelessWidget {
                     child: Text(
                       'Horaires de travail',
                       style: Theme.of(context).textTheme.headline5,
+                      maxLines: 2,
                     ),
                   ),
                   SizedBox(
@@ -1900,6 +1902,7 @@ class ProfileInformation extends StatelessWidget {
                       Text(
                         'Matières préférées',
                         style: Theme.of(context).textTheme.headline5,
+                        maxLines: 2,
                       ),
                       SizedBox(
                         height: 10.0,
@@ -1955,6 +1958,7 @@ class ProfileInformation extends StatelessWidget {
                                   'Aucune matière sélectionnée',
                                   style: Theme.of(context).textTheme.headline5,
                                   textAlign: TextAlign.center,
+                                maxLines: 3,
                                 ),
                             ),
                           ),

@@ -1031,6 +1031,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                             child: Text(
                               'Lieu de vie',
                               style: Theme.of(context).textTheme.headline5,
+                              maxLines: 2,
                             ),
                           ),
                           SizedBox(
@@ -1439,7 +1440,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                             child: Text(
                               'A plusieurs ou seul.e ?',
                               style: Theme.of(context).textTheme.headline5,
-                              maxLines: 1,
+                              maxLines: 2,
                             ),
                           ),
                           SizedBox(
@@ -1525,7 +1526,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                             child: Text(
                               'En ligne ou à l\'école ?',
                               style: Theme.of(context).textTheme.headline5,
-                              maxLines: 1,
+                              maxLines: 2,
                             ),
                           ),
                           SizedBox(
@@ -1614,6 +1615,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                               Text(
                                 'Matières préférées',
                                 style: Theme.of(context).textTheme.headline5,
+                                maxLines: 2,
                               ),
                               SizedBox(
                                 height: 10.0,
@@ -1690,6 +1692,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                               .textTheme
                                               .headline5,
                                           textAlign: TextAlign.center,
+                                    maxLines: 3,
                                         );
                                 },
                               )

@@ -1022,6 +1022,7 @@ class _MatchInformationState extends State<MatchInformation> {
                           Text(
                             'Attirance pour la vie associative',
                             style: Theme.of(context).textTheme.headline5,
+                            maxLines: 2,
                           ),
                           SizedBox(
                             height: 10,
@@ -1094,6 +1095,7 @@ class _MatchInformationState extends State<MatchInformation> {
                           Text(
                             'Préférence entre vie associative et scolaire',
                             style: Theme.of(context).textTheme.headline5,
+                            maxLines: 3,
                           ),
                           SizedBox(
                             height: 10,
@@ -1178,6 +1180,7 @@ class _MatchInformationState extends State<MatchInformation> {
                                 ? 'Parrain qui aide ou avec qui sortir ?'
                                 : 'Marraine qui aide ou avec qui sortir ?',
                             style: Theme.of(context).textTheme.headline5,
+                            maxLines: 3,
                           ),
                           SizedBox(
                             height: 10,
@@ -1260,6 +1263,7 @@ class _MatchInformationState extends State<MatchInformation> {
                           Text(
                             "Envie d'organiser des événements ?",
                             style: Theme.of(context).textTheme.headline5,
+                            maxLines: 2,
                           ),
                           SizedBox(
                             height: 10,
@@ -1343,6 +1347,7 @@ class _MatchInformationState extends State<MatchInformation> {
                               Text(
                                 'Goûts musicaux',
                                 style: Theme.of(context).textTheme.headline5,
+                                maxLines: 2,
                               ),
                               SizedBox(
                                 height: 10.0,

@@ -860,9 +860,9 @@ class ProfileInformation extends StatelessWidget {
                                 ),
                               )
                             : Container(
-                          height: 50,
-                              child: Center(
-                                child: Text(
+                                height: 50,
+                                child: Center(
+                                  child: Text(
                                     'Aucune association sélectionnée',
                                     style: Theme.of(context)
                                         .textTheme
@@ -871,8 +871,8 @@ class ProfileInformation extends StatelessWidget {
                                           fontSize: 14.0,
                                         ),
                                   ),
+                                ),
                               ),
-                            ),
                       ],
                     ),
                   ),
@@ -892,6 +892,7 @@ class ProfileInformation extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline5.copyWith(
                           fontSize: 14.0,
                         ),
+                    maxLines: 3,
                   ),
                   SizedBox(
                     height: 10,
@@ -941,6 +942,7 @@ class ProfileInformation extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline5.copyWith(
                           fontSize: 14.0,
                         ),
+                    maxLines: 3,
                   ),
                   SizedBox(
                     height: 10,
@@ -1002,6 +1004,7 @@ class ProfileInformation extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline5.copyWith(
                           fontSize: 14.0,
                         ),
+                    maxLines: 3,
                   ),
                   SizedBox(
                     height: 10,
@@ -1061,6 +1064,7 @@ class ProfileInformation extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline5.copyWith(
                           fontSize: 14.0,
                         ),
+                    maxLines: 3,
                   ),
                   SizedBox(
                     height: 10,
@@ -1119,6 +1123,7 @@ class ProfileInformation extends StatelessWidget {
                       Text(
                         'Goûts musicaux',
                         style: Theme.of(context).textTheme.headline5,
+                        maxLines: 2,
                       ),
                       SizedBox(
                         height: 10.0,
@@ -1167,7 +1172,8 @@ class ProfileInformation extends StatelessWidget {
                               'Aucun goût musical sélectionné',
                               style: Theme.of(context).textTheme.headline5,
                               textAlign: TextAlign.center,
-                            )
+                              maxLines: 3,
+                            ),
                     ],
                   ),
                 ),
