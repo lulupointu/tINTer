@@ -932,12 +932,16 @@ class _BinomeInformationState extends State<BinomeInformation> {
                               child: GestureDetector(
                                 onTap: () {
                                   showGeneralDialog(
-                                    transitionDuration: Duration(milliseconds: 300),
+                                    transitionDuration:
+                                        Duration(milliseconds: 300),
                                     context: context,
-                                    pageBuilder: (BuildContext context, animation, _) => Material(
+                                    pageBuilder:
+                                        (BuildContext context, animation, _) =>
+                                            Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                        onTap: () => Navigator.of(context).pop(),
+                                        onTap: () =>
+                                            Navigator.of(context).pop(),
                                         child: SimpleDialog(
                                           elevation: 5.0,
                                           children: [
@@ -948,36 +952,46 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Padding(
-                                                    padding: const EdgeInsets.only(
+                                                    padding:
+                                                        const EdgeInsets.only(
                                                       top: 10.0,
                                                     ),
                                                     child: Text(
                                                       "Aide",
-                                                      textAlign: TextAlign.center,
-                                                      style: Theme.of(context).textTheme.headline4,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline4,
                                                     ),
                                                   ),
                                                   Padding(
-                                                    padding: const EdgeInsets.symmetric(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                       horizontal: 20.0,
                                                       vertical: 10.0,
                                                     ),
                                                     child: Text(
                                                       "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                                          " Il est basé sur les critères renseignés dans le profil.",
-                                                      textAlign: TextAlign.center,
-                                                      style: Theme.of(context).textTheme.headline5,
+                                                      " Il est basé sur les critères renseignés dans le profil.",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5,
                                                     ),
                                                   ),
                                                   Padding(
-                                                    padding: const EdgeInsets.symmetric(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                       vertical: 5.0,
                                                     ),
                                                     child: Container(
                                                       width: 200,
                                                       child: ElevatedButton(
                                                         onPressed: () {
-                                                          Navigator.pop(context, false);
+                                                          Navigator.pop(
+                                                              context, false);
                                                         },
                                                         child: Text(
                                                           "Continuer",
@@ -1130,7 +1144,11 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+                        left: 15.0,
+                        right: 15.0,
+                        top: 10.0,
+                        bottom: 15.0,
+                      ),
                       child: Column(
                         children: <Widget>[
                           Align(
@@ -1174,7 +1192,9 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                         return Container(
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.all(
-                                              Radius.circular(5.0),
+                                              Radius.circular(
+                                                5.0,
+                                              ),
                                             ),
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -1182,8 +1202,9 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                           width: 60,
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 4.0,
-                                                vertical: 10.0),
+                                              horizontal: 4.0,
+                                              vertical: 10.0,
+                                            ),
                                             child: Center(
                                               child: AutoSizeText(
                                                 'Matin',

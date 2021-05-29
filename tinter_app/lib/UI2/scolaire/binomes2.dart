@@ -566,7 +566,8 @@ class CompareViewBinome extends StatelessWidget {
                   showGeneralDialog(
                     transitionDuration: Duration(milliseconds: 300),
                     context: context,
-                    pageBuilder: (BuildContext context, animation, _) => Material(
+                    pageBuilder: (BuildContext context, animation, _) =>
+                        Material(
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () => Navigator.of(context).pop(),
@@ -586,7 +587,8 @@ class CompareViewBinome extends StatelessWidget {
                                     child: Text(
                                       "Aide",
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context).textTheme.headline4,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   Padding(
@@ -596,9 +598,10 @@ class CompareViewBinome extends StatelessWidget {
                                     ),
                                     child: Text(
                                       "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                          " Il est basé sur les critères renseignés dans le profil.",
+                                      " Il est basé sur les critères renseignés dans le profil.",
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context).textTheme.headline5,
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
                                     ),
                                   ),
                                   Padding(
@@ -1083,7 +1086,8 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                   showGeneralDialog(
                     transitionDuration: Duration(milliseconds: 300),
                     context: context,
-                    pageBuilder: (BuildContext context, animation, _) => Material(
+                    pageBuilder: (BuildContext context, animation, _) =>
+                        Material(
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () => Navigator.of(context).pop(),
@@ -1103,7 +1107,8 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                                     child: Text(
                                       "Aide",
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context).textTheme.headline4,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   Padding(
@@ -1113,9 +1118,10 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                                     ),
                                     child: Text(
                                       "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                          " Il est basé sur les critères renseignés dans le profil.",
+                                      " Il est basé sur les critères renseignés dans le profil.",
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context).textTheme.headline5,
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
                                     ),
                                   ),
                                   Padding(
@@ -1515,141 +1521,173 @@ class ProfileInformation extends StatelessWidget {
             ),
           ),
           Card(
-            child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Horaires de travail',
-                    style: Theme.of(context).textTheme.headline5,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 15.0,
+                right: 15.0,
+                top: 10.0,
+                bottom: 15.0,
+              ),
+              child: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Horaires de travail',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: double.infinity,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      Opacity(
-                        opacity: user.horairesDeTravail
-                                .contains(HoraireDeTravail.morning)
-                            ? 1
-                            : 0.5,
-                        child: Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            width: 60,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 4.0, vertical: 10.0),
-                              child: Text(
-                                'Matin',
-                                maxLines: 1,
-                                style:
-                                    Theme.of(context).textTheme.headline5,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                      Opacity(
-                        opacity: user.horairesDeTravail
-                                .contains(HoraireDeTravail.afternoon)
-                            ? 1
-                            : 0.5,
-                        child: Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            width: 60,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 4.0, vertical: 10.0),
-                              child: Text(
-                                'Aprem',
-                                maxLines: 1,
-                                style:
-                                    Theme.of(context).textTheme.headline5,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                      Opacity(
-                        opacity: user.horairesDeTravail
-                                .contains(HoraireDeTravail.evening)
-                            ? 1
-                            : 0.5,
-                        child: Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            width: 60,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 4.0, vertical: 10.0),
-                              child: Text(
-                                'Soir',
-                                maxLines: 1,
-                                style:
-                                    Theme.of(context).textTheme.headline5,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                      Opacity(
-                        opacity: user.horairesDeTravail
-                                .contains(HoraireDeTravail.night)
-                            ? 1
-                            : 0.5,
-                        child: Consumer<TinterTheme>(
-                            builder: (context, tinterTheme, child) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            width: 60,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 4.0, vertical: 10.0),
-                              child: Text(
-                                'Nuit',
-                                maxLines: 1,
-                                style:
-                                    Theme.of(context).textTheme.headline5,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-              ],
+                  Container(
+                    width: double.infinity,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: [
+                        Opacity(
+                          opacity: user.horairesDeTravail
+                                  .contains(HoraireDeTravail.morning)
+                              ? 1
+                              : 0.5,
+                          child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0,
+                                  ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Matin',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                        Opacity(
+                          opacity: user.horairesDeTravail
+                                  .contains(HoraireDeTravail.afternoon)
+                              ? 1
+                              : 0.5,
+                          child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0,
+                                  ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Aprem',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                        Opacity(
+                          opacity: user.horairesDeTravail
+                                  .contains(HoraireDeTravail.evening)
+                              ? 1
+                              : 0.5,
+                          child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0,
+                                  ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Soir',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                        Opacity(
+                          opacity: user.horairesDeTravail
+                                  .contains(HoraireDeTravail.night)
+                              ? 1
+                              : 0.5,
+                          child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0,
+                                  ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Nuit',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Card(
@@ -1863,39 +1901,38 @@ class ProfileInformation extends StatelessWidget {
                       ),
                       user.matieresPreferees.length >= 1
                           ? Wrap(
-                            alignment: WrapAlignment.center,
-                            key: GlobalKey(),
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: <Widget>[
-                              for (String matierePreferee
-                                  in user.matieresPreferees)
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 15.0, vertical: 6.0),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color:
-                                            Colors.black.withOpacity(0.2),
-                                        spreadRadius: 0.2,
-                                        blurRadius: 5,
-                                        offset: Offset(2, 2),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0)),
-                                    border: Border.all(
-                                        color: (Theme.of(context)
-                                            .primaryColor),
-                                        width: 3.0,
-                                        style: BorderStyle.solid),
-                                    color: Colors.white,
+                              alignment: WrapAlignment.center,
+                              key: GlobalKey(),
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: <Widget>[
+                                for (String matierePreferee
+                                    in user.matieresPreferees)
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 15.0, vertical: 6.0),
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          spreadRadius: 0.2,
+                                          blurRadius: 5,
+                                          offset: Offset(2, 2),
+                                        )
+                                      ],
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)),
+                                      border: Border.all(
+                                          color:
+                                              (Theme.of(context).primaryColor),
+                                          width: 3.0,
+                                          style: BorderStyle.solid),
+                                      color: Colors.white,
+                                    ),
+                                    child: Text(matierePreferee),
                                   ),
-                                  child: Text(matierePreferee),
-                                ),
-                            ],
-                          )
+                              ],
+                            )
                           : Text(
                               'Aucune matière sélectionnée',
                               style: Theme.of(context).textTheme.headline5,
