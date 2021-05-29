@@ -576,9 +576,12 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                               ),
                               onTap: () {
                                 showGeneralDialog(
-                                  transitionDuration: Duration(milliseconds: 300),
+                                  transitionDuration:
+                                      Duration(milliseconds: 300),
                                   context: context,
-                                  pageBuilder: (BuildContext context, animation, _) => Material(
+                                  pageBuilder:
+                                      (BuildContext context, animation, _) =>
+                                          Material(
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: () => Navigator.of(context).pop(),
@@ -592,35 +595,44 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
+                                                  padding:
+                                                      const EdgeInsets.only(
                                                     top: 10.0,
                                                   ),
                                                   child: Text(
                                                     "Description",
                                                     textAlign: TextAlign.center,
-                                                    style: Theme.of(context).textTheme.headline4,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline4,
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
                                                     horizontal: 20.0,
                                                     vertical: 10.0,
                                                   ),
                                                   child: Text(
-                                                    widget.association.description,
+                                                    widget.association
+                                                        .description,
                                                     textAlign: TextAlign.center,
-                                                    style: Theme.of(context).textTheme.headline5,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5,
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
                                                     vertical: 5.0,
                                                   ),
                                                   child: Container(
                                                     width: 200,
                                                     child: ElevatedButton(
                                                       onPressed: () {
-                                                        Navigator.pop(context, false);
+                                                        Navigator.pop(
+                                                            context, false);
                                                       },
                                                       child: Text(
                                                         "Continuer",
@@ -928,7 +940,7 @@ class _AssociationCardState extends State<AssociationCard> {
             left: 10.0,
             top: 12.5,
             bottom: 12.5,
-            right: 15.0,
+            right: 10.0,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -991,11 +1003,19 @@ class _AssociationCardState extends State<AssociationCard> {
               ),
               GestureDetector(
                 onTap: widget.onLike,
-                child: Icon(
-                  widget.liked ? Icons.favorite : Icons.favorite_border,
-                  color: Theme.of(context).indicatorColor,
+                child: Container(
+                  color: Colors.transparent,
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                        10.0,
+                      ),
+                      child: Icon(
+                        widget.liked ? Icons.favorite : Icons.favorite_border,
+                        color: Theme.of(context).indicatorColor,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
             ],
           ),
         ),

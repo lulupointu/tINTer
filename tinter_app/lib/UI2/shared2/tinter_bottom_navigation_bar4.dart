@@ -28,10 +28,18 @@ class CustomBottomNavigationBar4 extends StatelessWidget {
             for (var i = 0; i < items.length; i++)
               GestureDetector(
                 onTap: () => onTap(i),
-                child: CustomBottomNavigationBarItemWidget(
-                  icon: items[i].icon,
-                  key: items[i].key,
-                  isSelected: i == selectedIndex,
+                child: Container(
+                  color: Colors.transparent,
+                  child: Padding(
+                    padding: const EdgeInsets.all(
+                      5.0,
+                    ),
+                    child: CustomBottomNavigationBarItemWidget(
+                      icon: items[i].icon,
+                      key: items[i].key,
+                      isSelected: i == selectedIndex,
+                    ),
+                  ),
                 ),
               )
           ],
@@ -84,8 +92,12 @@ class CustomBottomNavigationBarItemWidget extends StatelessWidget {
             child: TweenAnimationBuilder<Color>(
               duration: animationDuration,
               tween: ColorTween(
-                begin: isSelected ? selectedIconColor : Theme.of(context).primaryColor,
-                end: isSelected ? selectedIconColor : Theme.of(context).primaryColor,
+                begin: isSelected
+                    ? selectedIconColor
+                    : Theme.of(context).primaryColor,
+                end: isSelected
+                    ? selectedIconColor
+                    : Theme.of(context).primaryColor,
               ),
               builder: (_, animation, __) {
                 return Icon(
