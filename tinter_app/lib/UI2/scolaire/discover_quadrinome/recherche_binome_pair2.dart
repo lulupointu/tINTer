@@ -421,7 +421,7 @@ class UserResume extends StatelessWidget {
                               style: Theme.of(context).textTheme.headline6),
                         ),
                         Text(
-                          '44',
+                          searchedBinomePair.score.toString(),
                           style: Theme.of(context)
                               .textTheme
                               .headline4
