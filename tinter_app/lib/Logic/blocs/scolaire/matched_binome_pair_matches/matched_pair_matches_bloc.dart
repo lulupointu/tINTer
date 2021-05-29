@@ -97,11 +97,16 @@ class MatchedBinomePairMatchesBloc
       ChangeStatusMatchedBinomePairMatchesEvent event) async* {
     BuildBinomePairMatch newBinomePairMatch =
         event.binomePairMatch.rebuild((b) => b..status = event.binomePairMatchStatus);
+    List<BuildBinomePairMatch> newBinomePairMatchs = (state as MatchedBinomePairMatchesLoadSuccessState).binomePairMatches;
+    final indexOfChangedBinomePair = newBinomePairMatchs.indexOf(event.binomePairMatch);
+    newBinomePairMatchs.removeAt(indexOfChangedBinomePair);
+    if (!(event.enumRelationStatusBinomePair == EnumRelationStatusBinomePair.ignored)) {
+      newBinomePairMatchs.insert(indexOfChangedBinomePair, newBinomePairMatch);
+    }
 
     MatchedBinomePairMatchesLoadSuccessState successState =
         MatchedBinomePairMatchesLoadSuccessState(
-            binomePairMatches: (state as MatchedBinomePairMatchesLoadSuccessState)
-                .withUpdatedBinomePairMatch(event.binomePairMatch, newBinomePairMatch));
+            binomePairMatches: newBinomePairMatchs);
 
     yield MatchedBinomePairMatchesSavingNewStatusState(
         binomePairMatches:

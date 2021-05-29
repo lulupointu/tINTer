@@ -195,14 +195,14 @@ class BinomesTab2State extends State<BinomesTab2> {
               } else {
                 widget.fractions['binomeSelectionMenu'] =
                     ((ModeScolaireOverlay.height +
-                            2 * widget.spacing +
-                            BinomeSelectionMenu.height +
-                            15.0) +
-                        ((_binomePairMatches.length != 0 ||
+                                2 * widget.spacing +
+                                BinomeSelectionMenu.height +
+                                15.0) +
+                            ((_binomePairMatches.length != 0 ||
                                     _binomePairMatchesNotMatched.length != 0)
                                 ? (widget.spacing + BinomeSelectionMenu.height)
                                 : 0)) /
-                            MediaQuery.of(context).size.height;
+                        MediaQuery.of(context).size.height;
               }
 
               return Builder(
@@ -941,6 +941,9 @@ class CompareViewBinomePairMatch extends StatelessWidget {
           child: facesAroundScore(context),
         ),
         statusRectangle(context),
+        SizedBox(
+          height: 30,
+        ),
         Opacity(
           opacity: topMenuScrolledFraction,
           child: informationComparison(),
@@ -987,8 +990,10 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                   height: 5.0,
                 ),
                 Text(
-                  'Ton' + '\n' + 'binôme',
+                  'Ton binôme',
                   style: Theme.of(context).textTheme.headline5,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
                 ),
               ],
             ),
@@ -1013,7 +1018,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                 ),
                 Text(
                   '${_binomePairMatch.name} ${_binomePairMatch.surname} '
-                  '\n & \n'
+                  '\n'
                   '${_binomePairMatch.otherName} ${_binomePairMatch.otherSurname} ',
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
@@ -1174,219 +1179,219 @@ class CompareViewBinomePairMatch extends StatelessWidget {
   Widget statusRectangle(BuildContext context) {
     return FractionallySizedBox(
       widthFactor: 0.75,
-      child: informationRectangle(
-        padding: EdgeInsets.symmetric(vertical: 10.0),
-        height: appHeight * 0.2,
+      child: Card(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              flex: 1000,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Consumer<TinterTheme>(
-                      builder: (context, tinterTheme, child) {
-                    return AutoSizeText(
-                      (_binomePairMatch.status == BinomePairMatchStatus.liked ||
-                              _binomePairMatch.status ==
-                                  BinomePairMatchStatus.heIgnoredYou)
-                          ? "Ce binome ne vous a pas encore liker"
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10.0,
+                vertical: 15.0,
+              ),
+              child:
+                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                return AutoSizeText(
+                  (_binomePairMatch.status == BinomePairMatchStatus.liked ||
+                          _binomePairMatch.status ==
+                              BinomePairMatchStatus.heIgnoredYou)
+                      ? "Ce binôme ne vous a pas encore likés."
+                      : (_binomePairMatch.status ==
+                              BinomePairMatchStatus.matched)
+                          ? "Propose leur de former un quadrinôme !"
                           : (_binomePairMatch.status ==
-                                  BinomePairMatchStatus.matched)
-                              ? "Propose lui d'être votre binome de binome"
+                                  BinomePairMatchStatus.youAskedBinomePairMatch)
+                              ? "Demande de quadrinôme envoyée !"
                               : (_binomePairMatch.status ==
                                       BinomePairMatchStatus
-                                          .youAskedBinomePairMatch)
-                                  ? "Demande envoyée"
+                                          .heAskedBinomePairMatch)
+                                  ? "Ce binôme souhaite former un quadrinôme avec toi !"
                                   : (_binomePairMatch.status ==
                                           BinomePairMatchStatus
-                                              .heAskedBinomePairMatch)
-                                      ? "Cette personne veut être ton binome de binome"
+                                              .binomePairMatchAccepted)
+                                      ? "Tu formes un quadrinôme avec eux !"
                                       : (_binomePairMatch.status ==
                                               BinomePairMatchStatus
-                                                  .binomePairMatchAccepted)
-                                          ? "Tu es en binome de binome avec eux!"
+                                                  .binomePairMatchHeRefused)
+                                          ? 'Ce binôme a refusé votre demande de quadrinôme.'
                                           : (_binomePairMatch.status ==
                                                   BinomePairMatchStatus
-                                                      .binomePairMatchHeRefused)
-                                              ? 'Ce binome à refusé votre demande'
-                                              : (_binomePairMatch.status ==
-                                                      BinomePairMatchStatus
-                                                          .binomePairMatchYouRefused)
-                                                  ? "Vous avez refusé d'être leurs binome de binome."
-                                                  : 'ERROR: the status should not be ${_binomePairMatch.status}',
-                      style: tinterTheme.textStyle.headline2,
-                      maxLines: 1,
-                    );
-                  }),
+                                                      .binomePairMatchYouRefused)
+                                              ? "Vous avez refusé leur demande de quadrinôme."
+                                              : 'ERROR: the status should not be ${_binomePairMatch.status}',
+                  style: Theme.of(context).textTheme.headline5,
+                  maxLines: 2,
+                );
+              }),
+            ),
+            if (topMenuScrolledFraction != 1)
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 15.0,
+                ),
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: Container(
+                    height: 50.0 * (1.0 - topMenuScrolledFraction),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        onCompareTapped(appHeight);
+                      },
+                      child: Text(
+                        'Comparer vos profils',
+                        style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
             if ([
               BinomePairMatchStatus.matched,
               BinomePairMatchStatus.heAskedBinomePairMatch
             ].contains(_binomePairMatch.status)) ...[
-              Container(
-                constraints: BoxConstraints(
-                  minHeight: 10,
-                ),
-              ),
-              Expanded(
-                flex: 1000,
-                child: (_binomePairMatch.status ==
-                        BinomePairMatchStatus.matched)
-                    ? Center(
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          onTap: () {
-                            BlocProvider.of<MatchedBinomePairMatchesBloc>(
-                                    context)
-                                .add(AskBinomePairMatchEvent(
-                                    binomePairMatch: _binomePairMatch));
-                          },
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
-                            return Container(
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(3.0)),
-                                color: tinterTheme.colors.secondary,
-                              ),
-                              child: AutoSizeText(
-                                "Envoyer une demande",
-                                style: tinterTheme.textStyle.headline2,
-                              ),
-                            );
-                          }),
-                        ),
-                      )
-                    : (_binomePairMatch.status ==
-                            BinomePairMatchStatus.heAskedBinomePairMatch)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                onTap: () {
-                                  BlocProvider.of<MatchedBinomePairMatchesBloc>(
-                                          context)
-                                      .add(AcceptBinomePairMatchEvent(
-                                          binomePairMatch: _binomePairMatch));
-                                },
-                                child: Consumer<TinterTheme>(
-                                    builder: (context, tinterTheme, child) {
-                                  return Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(3.0)),
-                                      color: tinterTheme.colors.secondary,
-                                    ),
-                                    child: AutoSizeText(
-                                      "Accepter",
-                                      style: tinterTheme.textStyle.headline2,
-                                    ),
-                                  );
-                                }),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                onTap: () {
-                                  BlocProvider.of<MatchedBinomePairMatchesBloc>(
-                                          context)
-                                      .add(RefuseBinomePairMatchEvent(
-                                          binomePairMatch: _binomePairMatch));
-                                },
-                                child: Consumer<TinterTheme>(
-                                    builder: (context, tinterTheme, child) {
-                                  return Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(3.0)),
-                                      color: tinterTheme.colors.secondary,
-                                    ),
-                                    child: AutoSizeText(
-                                      "Refuser",
-                                      style: tinterTheme.textStyle.headline2,
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ],
-                          )
-                        : AutoSizeText(
-                            'ERROR: the state should not be ' +
-                                _binomePairMatch.status.toString(),
+              (_binomePairMatch.status == BinomePairMatchStatus.matched)
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 15.0,
+                      ),
+                      child: FractionallySizedBox(
+                        widthFactor: 0.8,
+                        child: Container(
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).indicatorColor),
+                            ),
+                            onPressed: () {
+                              BlocProvider.of<MatchedBinomePairMatchesBloc>(
+                                      context)
+                                  .add(AskBinomePairMatchEvent(
+                                      binomePairMatch: _binomePairMatch));
+                            },
+                            child: Text(
+                              'Envoyer une demande',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                    color: Colors.white,
+                                  ),
+                            ),
                           ),
-              ),
-              Container(
-                constraints: BoxConstraints(
-                  minHeight: 10,
-                ),
-              ),
+                        ),
+                      ),
+                    )
+                  : (_binomePairMatch.status ==
+                          BinomePairMatchStatus.heAskedBinomePairMatch)
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 15.0,
+                          ),
+                          child: FractionallySizedBox(
+                            widthFactor: 0.8,
+                            child: Container(
+                              height: 50,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        BlocProvider.of<
+                                                    MatchedBinomePairMatchesBloc>(
+                                                context)
+                                            .add(AcceptBinomePairMatchEvent(
+                                                binomePairMatch:
+                                                    _binomePairMatch));
+                                      },
+                                      child: Text(
+                                        'Accepter',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 15.0,
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .indicatorColor),
+                                      ),
+                                      onPressed: () {
+                                        BlocProvider.of<
+                                                    MatchedBinomePairMatchesBloc>(
+                                                context)
+                                            .add(RefuseBinomePairMatchEvent(
+                                                binomePairMatch:
+                                                    _binomePairMatch));
+                                      },
+                                      child: Text(
+                                        'Refuser',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : AutoSizeText(
+                          'ERROR: the state should not be ' +
+                              _binomePairMatch.status.toString(),
+                        ),
             ],
-            if (topMenuScrolledFraction != 1)
-              Expanded(
-                flex: (1000 * (1 - topMenuScrolledFraction)).floor(),
-                child: Center(
-                  child: InkWell(
-                    onTap: () {
-                      onCompareTapped(appHeight);
-                    },
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                      return Container(
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                          color: tinterTheme.colors.button,
-                        ),
-                        child: AutoSizeText(
-                          'Compare vos profils',
-                          style: tinterTheme.textStyle.chipNotLiked
-                              .copyWith(color: Colors.black),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          maxFontSize: 15,
-                        ),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 15.0,
+              ),
+              child: FractionallySizedBox(
+                widthFactor: 0.8,
+                child: Container(
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).errorColor),
+                    ),
+                    onPressed: () async {
+                      await onCompareTapped(0);
+                      context.read<SelectedScolaire2>()._binomePairId = null;
+                      BlocProvider.of<MatchedBinomePairMatchesBloc>(context).add(
+                        IgnoreBinomePairMatchEvent(binomePairMatch : _binomePairMatch),
                       );
-                    }),
+                    },
+                    child: Text(
+                      'Supprimer ce binôme',
+                      style: Theme.of(context).textTheme.headline5.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
+            )
           ],
         ),
-      ),
-    );
-  }
-
-  Widget informationRectangle(
-      {@required Widget child,
-      double width,
-      double height,
-      EdgeInsetsGeometry padding}) {
-    return Align(
-      alignment: AlignmentDirectional.center,
-      child: Consumer<TinterTheme>(
-        builder: (context, tinterTheme, child) {
-          return Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              color: tinterTheme.colors.primary,
-            ),
-            width: width != null ? width : Size.infinite.width,
-            height: height,
-            child: child,
-          );
-        },
-        child: child,
       ),
     );
   }
@@ -2114,7 +2119,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                   child: topMenuBinomePair(
                     context: context,
                     binomePairMatches: binomePairMatchesNotMatched,
-                    title: 'Mes binômes de binôme potentiels',
+                    title: 'Mes quadrinômes potentiels',
                   ),
                 )
               : Container(),
@@ -2127,7 +2132,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                     child: topMenuBinomePair(
                       context: context,
                       binomePairMatches: binomePairMatches,
-                      title: 'Mon binôme de binôme',
+                      title: 'Mon quadrinôme',
                     ),
                   ),
                 )
