@@ -28,7 +28,7 @@ class SearchedBinomePairsTable {
     final Future query = database.mappedResultsQuery(
         "SELECT \"binomePairId\", \"otherBinomePairId\", login, name, surname, \"otherLogin\", \"otherName\", \"otherSurname\", \"status\" "
         " FROM "
-        "( SELECT \"otherBinomePairId\", status FROM "
+        "( SELECT \"binomePairId\", \"otherBinomePairId\", status FROM "
         " ${RelationsStatusBinomePairsMatchesTable.name} "
         "JOIN "
         "( SELECT \"binomePairId\" FROM ${BinomePairsProfilesTable.name} "
@@ -63,7 +63,7 @@ class SearchedBinomePairsTable {
               SearchedBinomePair.fromJson({
             ...queryResults[i][BinomePairsProfilesTable.name],
             'binomePairId': queryResults[i][RelationsStatusBinomePairsMatchesTable.name]
-                ['otherBinomePairId'],
+                ['binomePairId'],
             'liked': _getLikeOrNotFromRelationStatusBinomePair(
                 EnumRelationStatusBinomePair.valueOf(
                     queryResults[i][RelationsStatusBinomePairsMatchesTable.name]['status'])),
