@@ -1286,36 +1286,38 @@ class MatchSelectionMenu extends StatelessWidget {
               ),
               Container(
                 height: 50,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (BuildMatch match in matches)
-                      GestureDetector(
-                        onTap: () => context
-                            .read<SelectedAssociatif2>()
-                            .matchLogin = match.login,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            right: 7.5,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: Theme.of(context).primaryColor,
-                                  width: 3.0,
-                                  style: BorderStyle.solid),
+                child: Container(
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (BuildMatch match in matches)
+                        GestureDetector(
+                          onTap: () => context
+                              .read<SelectedAssociatif2>()
+                              .matchLogin = match.login,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              right: 7.5,
                             ),
-                            child: getProfilePictureFromLocalPathOrLogin(
-                              login: match.login,
-                              localPath: match.profilePictureLocalPath,
-                              height: 44,
-                              width: 44,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 3.0,
+                                    style: BorderStyle.solid),
+                              ),
+                              child: getProfilePictureFromLocalPathOrLogin(
+                                login: match.login,
+                                localPath: match.profilePictureLocalPath,
+                                height: 44,
+                                width: 44,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

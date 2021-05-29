@@ -24,8 +24,7 @@ import 'package:tinterapp/main.dart';
 
 import 'mode_scolaire_overlay.dart';
 
-main() =>
-    runApp(MaterialApp(
+main() => runApp(MaterialApp(
       home: Material(
         child: BinomesTab2(),
       ),
@@ -80,10 +79,8 @@ class BinomesTab2State extends State<BinomesTab2> {
   @override
   void initState() {
     // Update to last information
-    if (BlocProvider
-        .of<MatchedBinomesBloc>(context)
-        .state
-    is MatchedBinomesLoadSuccessState) {
+    if (BlocProvider.of<MatchedBinomesBloc>(context).state
+        is MatchedBinomesLoadSuccessState) {
       BlocProvider.of<MatchedBinomesBloc>(context)
           .add(MatchedBinomesRefreshingEvent());
     } else {
@@ -92,10 +89,8 @@ class BinomesTab2State extends State<BinomesTab2> {
     }
 
     // Update to last information
-    if (BlocProvider
-        .of<MatchedBinomePairMatchesBloc>(context)
-        .state
-    is MatchedBinomePairMatchesLoadSuccessState) {
+    if (BlocProvider.of<MatchedBinomePairMatchesBloc>(context).state
+        is MatchedBinomePairMatchesLoadSuccessState) {
       BlocProvider.of<MatchedBinomePairMatchesBloc>(context)
           .add(MatchedBinomePairRefreshingEvent());
     } else {
@@ -104,10 +99,8 @@ class BinomesTab2State extends State<BinomesTab2> {
     }
 
     // Update to last information
-    if (BlocProvider
-        .of<BinomePairBloc>(context)
-        .state
-    is BinomePairLoadSuccessfulState) {
+    if (BlocProvider.of<BinomePairBloc>(context).state
+        is BinomePairLoadSuccessfulState) {
       BlocProvider.of<BinomePairBloc>(context).add(BinomePairRefreshEvent());
     } else {
       BlocProvider.of<BinomePairBloc>(context).add(BinomePairLoadEvent());
@@ -125,15 +118,11 @@ class BinomesTab2State extends State<BinomesTab2> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         bottom: false,
         child: Container(
-          color: Theme
-              .of(context)
-              .scaffoldBackgroundColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(builder:
               (BuildContext context, MatchedBinomesState matchedBinomesState) {
             if (!(matchedBinomesState is MatchedBinomesLoadSuccessState)) {
@@ -145,71 +134,68 @@ class BinomesTab2State extends State<BinomesTab2> {
                 (matchedBinomesState as MatchedBinomesLoadSuccessState).binomes;
             final List<BuildBinome> _binomesNotBinomes = allBinomes
                 .where((binome) =>
-            binome.statusScolaire != BinomeStatus.binomeAccepted)
+                    binome.statusScolaire != BinomeStatus.binomeAccepted)
                 .toList();
             final List<BuildBinome> _binomes = allBinomes
                 .where((binome) =>
-            binome.statusScolaire == BinomeStatus.binomeAccepted)
+                    binome.statusScolaire == BinomeStatus.binomeAccepted)
                 .toList();
 
             // Sort them
             _binomesNotBinomes.sort(
-                    (BuildBinome binomeA, BuildBinome binomeB) =>
+                (BuildBinome binomeA, BuildBinome binomeB) =>
                     binomeA.name.compareTo(binomeB.name));
             _binomes.sort((BuildBinome binomeA, BuildBinome binomeB) =>
                 binomeA.name.compareTo(binomeB.name));
 
             return BlocBuilder<MatchedBinomePairMatchesBloc,
                 MatchedBinomePairMatchesState>(builder: (BuildContext
-            context,
+                    context,
                 MatchedBinomePairMatchesState matchedBinomePairMatchesState) {
               if (!(matchedBinomePairMatchesState
-              is MatchedBinomePairMatchesLoadSuccessState)) {
+                  is MatchedBinomePairMatchesLoadSuccessState)) {
                 return Center(child: CircularProgressIndicator());
               }
 
               // Get the 2 list out of all the matched binome pair matches
               final List<BuildBinomePairMatch> allBinomePairMatches =
                   (matchedBinomePairMatchesState
-                  as MatchedBinomePairMatchesLoadSuccessState)
+                          as MatchedBinomePairMatchesLoadSuccessState)
                       .binomePairMatches;
               final List<BuildBinomePairMatch> _binomePairMatchesNotMatched =
-              allBinomePairMatches
-                  .where((binomePairMatch) =>
-              binomePairMatch.status !=
-                  BinomePairMatchStatus.binomePairMatchAccepted)
-                  .toList();
+                  allBinomePairMatches
+                      .where((binomePairMatch) =>
+                          binomePairMatch.status !=
+                          BinomePairMatchStatus.binomePairMatchAccepted)
+                      .toList();
               final List<BuildBinomePairMatch> _binomePairMatches =
-              allBinomePairMatches
-                  .where((binomePairMatch) =>
-              binomePairMatch.status ==
-                  BinomePairMatchStatus.binomePairMatchAccepted)
-                  .toList();
+                  allBinomePairMatches
+                      .where((binomePairMatch) =>
+                          binomePairMatch.status ==
+                          BinomePairMatchStatus.binomePairMatchAccepted)
+                      .toList();
 
               // Sort them
               _binomePairMatchesNotMatched.sort(
-                      (BuildBinomePairMatch binomePairMatchA,
-                      BuildBinomePairMatch binomePairMatchB) =>
+                  (BuildBinomePairMatch binomePairMatchA,
+                          BuildBinomePairMatch binomePairMatchB) =>
                       binomePairMatchA.name.compareTo(binomePairMatchB.name));
               _binomePairMatches.sort((BuildBinomePairMatch binomePairMatchA,
-                  BuildBinomePairMatch binomePairMatchB) =>
+                      BuildBinomePairMatch binomePairMatchB) =>
                   binomePairMatchA.name.compareTo(binomePairMatchB.name));
 
               // If the user doesn't have a binome
               if (_binomes.length == 0) {
                 widget.fractions['binomeSelectionMenu'] =
                     (ModeScolaireOverlay.height +
-                        2 * widget.spacing +
-                        BinomeSelectionMenu.height +
-                        20.0) /
-                        MediaQuery
-                            .of(context)
-                            .size
-                            .height;
+                            2 * widget.spacing +
+                            BinomeSelectionMenu.height +
+                            20.0) /
+                        MediaQuery.of(context).size.height;
               } else {
                 widget.fractions['binomeSelectionMenu'] = 0.2 +
                     ((_binomePairMatches.length != 0 ||
-                        _binomePairMatchesNotMatched.length != 0)
+                            _binomePairMatchesNotMatched.length != 0)
                         ? 0.2
                         : 0);
               }
@@ -227,10 +213,7 @@ class BinomesTab2State extends State<BinomesTab2> {
                                   1,
                                   _controller.position.pixels /
                                       (widget.fractions['binomeSelectionMenu'] *
-                                          MediaQuery
-                                              .of(context)
-                                              .size
-                                              .height)));
+                                          MediaQuery.of(context).size.height)));
                         });
                       });
                     });
@@ -242,11 +225,11 @@ class BinomesTab2State extends State<BinomesTab2> {
                       _scrollPhysics = _controller.offset == 0
                           ? AlwaysScrollableScrollPhysics()
                           : SnapScrollSheetPhysics(
-                        topChildrenHeight: [
-                          widget.fractions['binomeSelectionMenu'] *
-                              MediaQuery.of(context).size.height,
-                        ],
-                      );
+                              topChildrenHeight: [
+                                widget.fractions['binomeSelectionMenu'] *
+                                    MediaQuery.of(context).size.height,
+                              ],
+                            );
                       setState(() {});
                       return true;
                     },
@@ -271,49 +254,50 @@ class BinomesTab2State extends State<BinomesTab2> {
                           binomesNotBinomes: _binomesNotBinomes,
                           binomes: _binomes,
                           binomePairMatchesNotMatched:
-                          _binomePairMatchesNotMatched,
+                              _binomePairMatchesNotMatched,
                           binomePairMatches: _binomePairMatches,
                         ),
-                        (context
-                            .watch<SelectedScolaire2>()
-                            .binomeLogin ==
-                            null &&
-                            context
-                                .watch<SelectedScolaire2>()
-                                .binomePairId ==
-                                null)
-                            ? noBinomeSelected(MediaQuery.of(context).size.height)
+                        (context.watch<SelectedScolaire2>().binomeLogin ==
+                                    null &&
+                                context
+                                        .watch<SelectedScolaire2>()
+                                        .binomePairId ==
+                                    null)
+                            ? noBinomeSelected(
+                                MediaQuery.of(context).size.height)
                             : (context
-                            .watch<SelectedScolaire2>()
-                            .binomePairId ==
-                            null)
-                            ? CompareViewBinome(
-                          binome: allBinomes.firstWhere(
-                                (BuildBinome binome) =>
-                            binome.login ==
-                                context
-                                    .watch<SelectedScolaire2>()
-                                    .binomeLogin,
-                          ),
-                          appHeight: MediaQuery.of(context).size.height,
-                          topMenuScrolledFraction:
-                          topMenuScrolledFraction,
-                          onCompareTapped: onCompareTapped,
-                        )
-                            : CompareViewBinomePairMatch(
-                          binomePairMatch:
-                          allBinomePairMatches.firstWhere(
-                                (BuildBinomePairMatch binomePairMatch) =>
-                            binomePairMatch.binomePairId ==
-                                context
-                                    .watch<SelectedScolaire2>()
-                                    .binomePairId,
-                          ),
-                          appHeight: MediaQuery.of(context).size.height,
-                          topMenuScrolledFraction:
-                          topMenuScrolledFraction,
-                          onCompareTapped: onCompareTapped,
-                        ),
+                                        .watch<SelectedScolaire2>()
+                                        .binomePairId ==
+                                    null)
+                                ? CompareViewBinome(
+                                    binome: allBinomes.firstWhere(
+                                      (BuildBinome binome) =>
+                                          binome.login ==
+                                          context
+                                              .watch<SelectedScolaire2>()
+                                              .binomeLogin,
+                                    ),
+                                    appHeight:
+                                        MediaQuery.of(context).size.height,
+                                    topMenuScrolledFraction:
+                                        topMenuScrolledFraction,
+                                    onCompareTapped: onCompareTapped,
+                                  )
+                                : CompareViewBinomePairMatch(
+                                    binomePairMatch:
+                                        allBinomePairMatches.firstWhere(
+                                      (BuildBinomePairMatch binomePairMatch) =>
+                                          binomePairMatch.binomePairId ==
+                                          context
+                                              .watch<SelectedScolaire2>()
+                                              .binomePairId,
+                                    ),
+                                    appHeight:
+                                        MediaQuery.of(context).size.height,
+                                    topMenuScrolledFraction:
+                                        topMenuScrolledFraction,
+                                    onCompareTapped: onCompareTapped,
+                                  ),
                       ],
                     ),
                   );
@@ -363,49 +347,43 @@ class BinomesTab2State extends State<BinomesTab2> {
             }
             return Consumer<TinterTheme>(
                 builder: (context, tinterTheme, child) {
-                  return ((state as MatchedBinomesLoadSuccessState)
-                      .binomes
-                      .length ==
+              return ((state as MatchedBinomesLoadSuccessState)
+                          .binomes
+                          .length ==
                       0)
-                      ? Column(
-                    children: [
-                      Icon(
-                        Icons.sentiment_very_dissatisfied_rounded,
-                        color: Colors.black87,
-                        size: 70,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Il n'y a aucun binôme à afficher pour l'instant.",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5,
-                      )
-                    ],
-                  )
-                      : Column(
-                    children: [
-                      Icon(
-                        Icons.face,
-                        color: Colors.black87,
-                        size: 70,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Sélectionne un binôme !",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline4,
-                      )
-                    ],
-                  );
-                });
+                  ? Column(
+                      children: [
+                        Icon(
+                          Icons.sentiment_very_dissatisfied_rounded,
+                          color: Colors.black87,
+                          size: 70,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Il n'y a aucun binôme à afficher pour l'instant.",
+                          style: Theme.of(context).textTheme.headline5,
+                        )
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Icon(
+                          Icons.face,
+                          color: Colors.black87,
+                          size: 70,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Sélectionne un binôme !",
+                          style: Theme.of(context).textTheme.headline4,
+                        )
+                      ],
+                    );
+            });
           },
         );
       })
@@ -463,33 +441,30 @@ class CompareViewBinome extends StatelessWidget {
               children: [
                 BlocBuilder<UserBloc, UserState>(
                     builder: (BuildContext context, UserState userState) {
-                      if (!(userState is UserLoadSuccessState)) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      return userPicture(
-                          getProfilePicture: (
+                  if (!(userState is UserLoadSuccessState)) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return userPicture(
+                      getProfilePicture: (
                               {@required height, @required width}) =>
-                              getProfilePictureFromLocalPathOrLogin(
-                                  login: (userState as UserLoadSuccessState)
-                                      .user
-                                      .login,
-                                  localPath: (userState as UserLoadSuccessState)
-                                      .user
-                                      .profilePictureLocalPath,
-                                  height: height,
-                                  width: width));
-                    }),
+                          getProfilePictureFromLocalPathOrLogin(
+                              login: (userState as UserLoadSuccessState)
+                                  .user
+                                  .login,
+                              localPath: (userState as UserLoadSuccessState)
+                                  .user
+                                  .profilePictureLocalPath,
+                              height: height,
+                              width: width));
+                }),
                 SizedBox(
                   height: 5.0,
                 ),
                 Text(
                   'Moi\n',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline5,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
               ],
             ),
@@ -503,20 +478,17 @@ class CompareViewBinome extends StatelessWidget {
                 userPicture(
                   getProfilePicture: ({@required height, @required width}) =>
                       getProfilePictureFromLogin(
-                        login: _binome.login,
-                        height: height,
-                        width: width,
-                      ),
+                    login: _binome.login,
+                    height: height,
+                    width: width,
+                  ),
                 ),
                 SizedBox(
                   height: 5.0,
                 ),
                 Text(
                   _binome.name + '\n' + _binome.surname,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline5,
+                  style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 )
               ],
@@ -530,7 +502,7 @@ class CompareViewBinome extends StatelessWidget {
   /// Displays either your face or your binome face
   Widget userPicture(
       {Widget Function({@required double height, @required double width})
-      getProfilePicture}) {
+          getProfilePicture}) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -571,10 +543,7 @@ class CompareViewBinome extends StatelessWidget {
               ),
               child: Text(
                 'Score',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline4,
+                style: Theme.of(context).textTheme.headline4,
               ),
             ),
           ),
@@ -584,13 +553,9 @@ class CompareViewBinome extends StatelessWidget {
             ),
             child: Text(
               _binome.score.toString(),
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline1
-                  .copyWith(
-                fontWeight: FontWeight.w400,
-              ),
+              style: Theme.of(context).textTheme.headline1.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
             ),
           ),
           Positioned(
@@ -608,71 +573,65 @@ class CompareViewBinome extends StatelessWidget {
                     context: context,
                     pageBuilder: (BuildContext context, animation, _) =>
                         Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: SimpleDialog(
-                              elevation: 5.0,
-                              children: [
-                                InkWell(
-                                  onTap: () {},
-                                  splashColor: Colors.transparent,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          top: 10.0,
-                                        ),
-                                        child: Text(
-                                          "Aide",
-                                          textAlign: TextAlign.center,
-                                          style:
-                                          Theme
-                                              .of(context)
-                                              .textTheme
-                                              .headline4,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0,
-                                          vertical: 10.0,
-                                        ),
-                                        child: Text(
-                                          "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                              " Il est basé sur les critères renseignés dans le profil.",
-                                          textAlign: TextAlign.center,
-                                          style:
-                                          Theme
-                                              .of(context)
-                                              .textTheme
-                                              .headline5,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 5.0,
-                                        ),
-                                        child: Container(
-                                          width: 200,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.pop(context, false);
-                                            },
-                                            child: Text(
-                                              "Continuer",
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: SimpleDialog(
+                          elevation: 5.0,
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              splashColor: Colors.transparent,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Aide",
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
                                   ),
-                                )
-                              ],
-                            ),
-                          ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0,
+                                      vertical: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                      " Il est basé sur les critères renseignés dans le profil.",
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0,
+                                    ),
+                                    child: Container(
+                                      width: 200,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        child: Text(
+                                          "Continuer",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
                         ),
+                      ),
+                    ),
                   );
                 },
                 child: Icon(
@@ -702,31 +661,27 @@ class CompareViewBinome extends StatelessWidget {
               ),
               child: AutoSizeText(
                 (_binome.statusScolaire == BinomeStatus.liked ||
-                    _binome.statusScolaire == BinomeStatus.heIgnoredYou)
+                        _binome.statusScolaire == BinomeStatus.heIgnoredYou)
                     ? "Cette personne ne t'a pas encore liké.e."
                     : (_binome.statusScolaire == BinomeStatus.matched)
-                    ? "Propose lui d'être son binôme !"
-                    : (_binome.statusScolaire ==
-                    BinomeStatus.youAskedBinome)
-                    ? "Demande de binôme envoyée !"
-                    : (_binome.statusScolaire ==
-                    BinomeStatus.heAskedBinome)
-                    ? "Cette personne veut être ton ou ta binôme !"
-                    : (_binome.statusScolaire ==
-                    BinomeStatus.binomeAccepted)
-                    ? "Tu es en binôme avec cette personne !"
-                    : (_binome.statusScolaire ==
-                    BinomeStatus.binomeHeRefused)
-                    ? 'Cette personne a refusé ta demande de binôme.'
-                    : (_binome.statusScolaire ==
-                    BinomeStatus.binomeYouRefused)
-                    ? "Tu as refusé d'être le ou la binôme de cette personne."
-                    : 'ERROR: the status should not be ${_binome
-                    .statusScolaire}',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline5,
+                        ? "Propose lui d'être son binôme !"
+                        : (_binome.statusScolaire ==
+                                BinomeStatus.youAskedBinome)
+                            ? "Demande de binôme envoyée !"
+                            : (_binome.statusScolaire ==
+                                    BinomeStatus.heAskedBinome)
+                                ? "Cette personne veut être ton ou ta binôme !"
+                                : (_binome.statusScolaire ==
+                                        BinomeStatus.binomeAccepted)
+                                    ? "Tu es en binôme avec cette personne !"
+                                    : (_binome.statusScolaire ==
+                                            BinomeStatus.binomeHeRefused)
+                                        ? 'Cette personne a refusé ta demande de binôme.'
+                                        : (_binome.statusScolaire ==
+                                                BinomeStatus.binomeYouRefused)
+                                            ? "Tu as refusé d'être le ou la binôme de cette personne."
+                                            : 'ERROR: the status should not be ${_binome.statusScolaire}',
+                style: Theme.of(context).textTheme.headline5,
                 maxLines: 2,
               ),
             ),
@@ -745,13 +700,9 @@ class CompareViewBinome extends StatelessWidget {
                       },
                       child: Text(
                         'Comparer vos profils',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(
-                          color: Colors.white,
-                        ),
+                        style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
                     ),
                   ),
@@ -761,111 +712,105 @@ class CompareViewBinome extends StatelessWidget {
                 .contains(_binome.statusScolaire)) ...[
               (_binome.statusScolaire == BinomeStatus.matched)
                   ? Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15.0,
-                ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Container(
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Theme
-                                .of(context)
-                                .indicatorColor),
+                      padding: const EdgeInsets.only(
+                        bottom: 15.0,
                       ),
-                      onPressed: () {
-                        BlocProvider.of<MatchedBinomesBloc>(context)
-                            .add(AskBinomeEvent(binome: _binome));
-                      },
-                      child: Text(
-                        'Envoyer une demande',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-                  : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
-                  ? Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15.0,
-                ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Container(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              BlocProvider.of<MatchedBinomesBloc>(
-                                  context)
-                                  .add(AcceptBinomeEvent(
-                                  binome: _binome));
-                            },
-                            child: Text(
-                              'Accepter',
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15.0,
-                        ),
-                        Expanded(
-                          flex: 1,
+                      child: FractionallySizedBox(
+                        widthFactor: 0.8,
+                        child: Container(
+                          height: 50,
                           child: ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor:
-                              MaterialStateProperty.all(
-                                  Theme
-                                      .of(context)
-                                      .indicatorColor),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).indicatorColor),
                             ),
                             onPressed: () {
-                              BlocProvider.of<MatchedBinomesBloc>(
-                                  context)
-                                  .add(RefuseBinomeEvent(
-                                  binome: _binome));
+                              BlocProvider.of<MatchedBinomesBloc>(context)
+                                  .add(AskBinomeEvent(binome: _binome));
                             },
                             child: Text(
-                              'Refuser',
-                              style: Theme
-                                  .of(context)
+                              'Envoyer une demande',
+                              style: Theme.of(context)
                                   .textTheme
                                   .headline5
                                   .copyWith(
-                                color: Colors.white,
-                              ),
+                                    color: Colors.white,
+                                  ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-                  : AutoSizeText(
-                'ERROR: the state should not be ' +
-                    _binome.statusScolaire.toString(),
-              ),
+                      ),
+                    )
+                  : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 15.0,
+                          ),
+                          child: FractionallySizedBox(
+                            widthFactor: 0.8,
+                            child: Container(
+                              height: 50,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        BlocProvider.of<MatchedBinomesBloc>(
+                                                context)
+                                            .add(AcceptBinomeEvent(
+                                                binome: _binome));
+                                      },
+                                      child: Text(
+                                        'Accepter',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 15.0,
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .indicatorColor),
+                                      ),
+                                      onPressed: () {
+                                        BlocProvider.of<MatchedBinomesBloc>(
+                                                context)
+                                            .add(RefuseBinomeEvent(
+                                                binome: _binome));
+                                      },
+                                      child: Text(
+                                        'Refuser',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : AutoSizeText(
+                          'ERROR: the state should not be ' +
+                              _binome.statusScolaire.toString(),
+                        ),
             ],
             Padding(
               padding: const EdgeInsets.only(
@@ -878,28 +823,20 @@ class CompareViewBinome extends StatelessWidget {
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          Theme
-                              .of(context)
-                              .errorColor),
+                          Theme.of(context).errorColor),
                     ),
                     onPressed: () async {
                       await onCompareTapped(0);
-                      context
-                          .read<SelectedScolaire2>()
-                          .binomeLogin = null;
+                      context.read<SelectedScolaire2>().binomeLogin = null;
                       BlocProvider.of<MatchedBinomesBloc>(context).add(
                         IgnoreBinomeEvent(binome: _binome),
                       );
                     },
                     child: Text(
                       'Supprimer ce binôme',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(
-                        color: Colors.white,
-                      ),
+                      style: Theme.of(context).textTheme.headline5.copyWith(
+                            color: Colors.white,
+                          ),
                     ),
                   ),
                 ),
@@ -911,10 +848,11 @@ class CompareViewBinome extends StatelessWidget {
     );
   }
 
-  Widget informationRectangle({@required Widget child,
-    double width,
-    double height,
-    EdgeInsetsGeometry padding}) {
+  Widget informationRectangle(
+      {@required Widget child,
+      double width,
+      double height,
+      EdgeInsetsGeometry padding}) {
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
@@ -939,10 +877,7 @@ class CompareViewBinome extends StatelessWidget {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return Container(
         width: 2.5,
-        color: Theme
-            .of(context)
-            .disabledColor
-            .withOpacity(0.6),
+        color: Theme.of(context).disabledColor.withOpacity(0.6),
       );
     });
   }
@@ -956,15 +891,14 @@ class CompareViewBinome extends StatelessWidget {
           Expanded(
             child: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState state) {
-                  if (!(state is KnownUserState)) {
-                    BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return ProfileInformation(
-                      user: (state as KnownUserState).user);
-                }),
+              if (!(state is KnownUserState)) {
+                BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ProfileInformation(user: (state as KnownUserState).user);
+            }),
           ),
           verticalSeparator(),
           Expanded(
@@ -1030,14 +964,14 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                   }
                   return userPicture(
                       getProfilePicture: (
-                          {@required height, @required width}) =>
+                              {@required height, @required width}) =>
                           BinomePair.getProfilePictureFromBinomePairLogins(
                             loginA: (binomePairState
-                            as BinomePairLoadSuccessfulState)
+                                    as BinomePairLoadSuccessfulState)
                                 .binomePair
                                 .login,
                             loginB: (binomePairState
-                            as BinomePairLoadSuccessfulState)
+                                    as BinomePairLoadSuccessfulState)
                                 .binomePair
                                 .otherLogin,
                             height: height,
@@ -1049,10 +983,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                 ),
                 Text(
                   'Ton' + '\n' + 'binôme',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline5,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
               ],
             ),
@@ -1066,24 +997,20 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                 userPicture(
                   getProfilePicture: ({@required height, @required width}) =>
                       BinomePair.getProfilePictureFromBinomePairLogins(
-                        loginA: _binomePairMatch.login,
-                        loginB: _binomePairMatch.otherLogin,
-                        height: height - 30,
-                        width: width,
-                      ),
+                    loginA: _binomePairMatch.login,
+                    loginB: _binomePairMatch.otherLogin,
+                    height: height - 30,
+                    width: width,
+                  ),
                 ),
                 SizedBox(
                   height: 5.0,
                 ),
                 Text(
                   '${_binomePairMatch.name} ${_binomePairMatch.surname} '
-                      '\n & \n'
-                      '${_binomePairMatch.otherName} ${_binomePairMatch
-                      .otherSurname} ',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline5,
+                  '\n & \n'
+                  '${_binomePairMatch.otherName} ${_binomePairMatch.otherSurname} ',
+                  style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -1097,7 +1024,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
   /// Displays either your face or your binome face
   Widget userPicture(
       {Widget Function({@required double height, @required double width})
-      getProfilePicture}) {
+          getProfilePicture}) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -1136,10 +1063,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
               ),
               child: Text(
                 'Score',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline4,
+                style: Theme.of(context).textTheme.headline4,
               ),
             ),
           ),
@@ -1149,13 +1073,9 @@ class CompareViewBinomePairMatch extends StatelessWidget {
             ),
             child: Text(
               _binomePairMatch.score.toString(),
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline1
-                  .copyWith(
-                fontWeight: FontWeight.w400,
-              ),
+              style: Theme.of(context).textTheme.headline1.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
             ),
           ),
           Positioned(
@@ -1173,71 +1093,65 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                     context: context,
                     pageBuilder: (BuildContext context, animation, _) =>
                         Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: SimpleDialog(
-                              elevation: 5.0,
-                              children: [
-                                InkWell(
-                                  onTap: () {},
-                                  splashColor: Colors.transparent,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          top: 10.0,
-                                        ),
-                                        child: Text(
-                                          "Aide",
-                                          textAlign: TextAlign.center,
-                                          style:
-                                          Theme
-                                              .of(context)
-                                              .textTheme
-                                              .headline4,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0,
-                                          vertical: 10.0,
-                                        ),
-                                        child: Text(
-                                          "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                              " Il est basé sur les critères renseignés dans le profil.",
-                                          textAlign: TextAlign.center,
-                                          style:
-                                          Theme
-                                              .of(context)
-                                              .textTheme
-                                              .headline5,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 5.0,
-                                        ),
-                                        child: Container(
-                                          width: 200,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.pop(context, false);
-                                            },
-                                            child: Text(
-                                              "Continuer",
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: SimpleDialog(
+                          elevation: 5.0,
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              splashColor: Colors.transparent,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Aide",
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
                                   ),
-                                )
-                              ],
-                            ),
-                          ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0,
+                                      vertical: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
+                                      " Il est basé sur les critères renseignés dans le profil.",
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5.0,
+                                    ),
+                                    child: Container(
+                                      width: 200,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        child: Text(
+                                          "Continuer",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
                         ),
+                      ),
+                    ),
                   );
                 },
                 child: Icon(
@@ -1268,41 +1182,39 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Consumer<TinterTheme>(
                       builder: (context, tinterTheme, child) {
-                        return AutoSizeText(
-                          (_binomePairMatch.status == BinomePairMatchStatus
-                              .liked ||
+                    return AutoSizeText(
+                      (_binomePairMatch.status == BinomePairMatchStatus.liked ||
                               _binomePairMatch.status ==
                                   BinomePairMatchStatus.heIgnoredYou)
-                              ? "Ce binome ne vous a pas encore liker"
-                              : (_binomePairMatch.status ==
-                              BinomePairMatchStatus.matched)
+                          ? "Ce binome ne vous a pas encore liker"
+                          : (_binomePairMatch.status ==
+                                  BinomePairMatchStatus.matched)
                               ? "Propose lui d'être votre binome de binome"
                               : (_binomePairMatch.status ==
-                              BinomePairMatchStatus
-                                  .youAskedBinomePairMatch)
-                              ? "Demande envoyée"
-                              : (_binomePairMatch.status ==
-                              BinomePairMatchStatus
-                                  .heAskedBinomePairMatch)
-                              ? "Cette personne veut être ton binome de binome"
-                              : (_binomePairMatch.status ==
-                              BinomePairMatchStatus
-                                  .binomePairMatchAccepted)
-                              ? "Tu es en binome de binome avec eux!"
-                              : (_binomePairMatch.status ==
-                              BinomePairMatchStatus
-                                  .binomePairMatchHeRefused)
-                              ? 'Ce binome à refusé votre demande'
-                              : (_binomePairMatch.status ==
-                              BinomePairMatchStatus
-                                  .binomePairMatchYouRefused)
-                              ? "Vous avez refusé d'être leurs binome de binome."
-                              : 'ERROR: the status should not be ${_binomePairMatch
-                              .status}',
-                          style: tinterTheme.textStyle.headline2,
-                          maxLines: 1,
-                        );
-                      }),
+                                      BinomePairMatchStatus
+                                          .youAskedBinomePairMatch)
+                                  ? "Demande envoyée"
+                                  : (_binomePairMatch.status ==
+                                          BinomePairMatchStatus
+                                              .heAskedBinomePairMatch)
+                                      ? "Cette personne veut être ton binome de binome"
+                                      : (_binomePairMatch.status ==
+                                              BinomePairMatchStatus
+                                                  .binomePairMatchAccepted)
+                                          ? "Tu es en binome de binome avec eux!"
+                                          : (_binomePairMatch.status ==
+                                                  BinomePairMatchStatus
+                                                      .binomePairMatchHeRefused)
+                                              ? 'Ce binome à refusé votre demande'
+                                              : (_binomePairMatch.status ==
+                                                      BinomePairMatchStatus
+                                                          .binomePairMatchYouRefused)
+                                                  ? "Vous avez refusé d'être leurs binome de binome."
+                                                  : 'ERROR: the status should not be ${_binomePairMatch.status}',
+                      style: tinterTheme.textStyle.headline2,
+                      maxLines: 1,
+                    );
+                  }),
                 ),
               ),
             ),
@@ -1318,95 +1230,95 @@ class CompareViewBinomePairMatch extends StatelessWidget {
               Expanded(
                 flex: 1000,
                 child: (_binomePairMatch.status ==
-                    BinomePairMatchStatus.matched)
+                        BinomePairMatchStatus.matched)
                     ? Center(
-                  child: InkWell(
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      BlocProvider.of<MatchedBinomePairMatchesBloc>(
-                          context)
-                          .add(AskBinomePairMatchEvent(
-                          binomePairMatch: _binomePairMatch));
-                    },
-                    child: Consumer<TinterTheme>(
-                        builder: (context, tinterTheme, child) {
-                          return Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(3.0)),
-                              color: tinterTheme.colors.secondary,
-                            ),
-                            child: AutoSizeText(
-                              "Envoyer une demande",
-                              style: tinterTheme.textStyle.headline2,
-                            ),
-                          );
-                        }),
-                  ),
-                )
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: () {
+                            BlocProvider.of<MatchedBinomePairMatchesBloc>(
+                                    context)
+                                .add(AskBinomePairMatchEvent(
+                                    binomePairMatch: _binomePairMatch));
+                          },
+                          child: Consumer<TinterTheme>(
+                              builder: (context, tinterTheme, child) {
+                            return Container(
+                              padding: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(3.0)),
+                                color: tinterTheme.colors.secondary,
+                              ),
+                              child: AutoSizeText(
+                                "Envoyer une demande",
+                                style: tinterTheme.textStyle.headline2,
+                              ),
+                            );
+                          }),
+                        ),
+                      )
                     : (_binomePairMatch.status ==
-                    BinomePairMatchStatus.heAskedBinomePairMatch)
-                    ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        BlocProvider.of<MatchedBinomePairMatchesBloc>(
-                            context)
-                            .add(AcceptBinomePairMatchEvent(
-                            binomePairMatch: _binomePairMatch));
-                      },
-                      child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                            return Container(
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(3.0)),
-                                color: tinterTheme.colors.secondary,
+                            BinomePairMatchStatus.heAskedBinomePairMatch)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                splashColor: Colors.transparent,
+                                onTap: () {
+                                  BlocProvider.of<MatchedBinomePairMatchesBloc>(
+                                          context)
+                                      .add(AcceptBinomePairMatchEvent(
+                                          binomePairMatch: _binomePairMatch));
+                                },
+                                child: Consumer<TinterTheme>(
+                                    builder: (context, tinterTheme, child) {
+                                  return Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(3.0)),
+                                      color: tinterTheme.colors.secondary,
+                                    ),
+                                    child: AutoSizeText(
+                                      "Accepter",
+                                      style: tinterTheme.textStyle.headline2,
+                                    ),
+                                  );
+                                }),
                               ),
-                              child: AutoSizeText(
-                                "Accepter",
-                                style: tinterTheme.textStyle.headline2,
+                              SizedBox(
+                                width: 30,
                               ),
-                            );
-                          }),
-                    ),
-                    SizedBox(
-                      width: 30,
-                    ),
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        BlocProvider.of<MatchedBinomePairMatchesBloc>(
-                            context)
-                            .add(RefuseBinomePairMatchEvent(
-                            binomePairMatch: _binomePairMatch));
-                      },
-                      child: Consumer<TinterTheme>(
-                          builder: (context, tinterTheme, child) {
-                            return Container(
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(3.0)),
-                                color: tinterTheme.colors.secondary,
+                              InkWell(
+                                splashColor: Colors.transparent,
+                                onTap: () {
+                                  BlocProvider.of<MatchedBinomePairMatchesBloc>(
+                                          context)
+                                      .add(RefuseBinomePairMatchEvent(
+                                          binomePairMatch: _binomePairMatch));
+                                },
+                                child: Consumer<TinterTheme>(
+                                    builder: (context, tinterTheme, child) {
+                                  return Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(3.0)),
+                                      color: tinterTheme.colors.secondary,
+                                    ),
+                                    child: AutoSizeText(
+                                      "Refuser",
+                                      style: tinterTheme.textStyle.headline2,
+                                    ),
+                                  );
+                                }),
                               ),
-                              child: AutoSizeText(
-                                "Refuser",
-                                style: tinterTheme.textStyle.headline2,
-                              ),
-                            );
-                          }),
-                    ),
-                  ],
-                )
-                    : AutoSizeText(
-                  'ERROR: the state should not be ' +
-                      _binomePairMatch.status.toString(),
-                ),
+                            ],
+                          )
+                        : AutoSizeText(
+                            'ERROR: the state should not be ' +
+                                _binomePairMatch.status.toString(),
+                          ),
               ),
               Container(
                 constraints: BoxConstraints(
@@ -1424,23 +1336,22 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                     },
                     child: Consumer<TinterTheme>(
                         builder: (context, tinterTheme, child) {
-                          return Container(
-                            padding: EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(3.0)),
-                              color: tinterTheme.colors.button,
-                            ),
-                            child: AutoSizeText(
-                              'Compare vos profils',
-                              style: tinterTheme.textStyle.chipNotLiked
-                                  .copyWith(color: Colors.black),
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              maxFontSize: 15,
-                            ),
-                          );
-                        }),
+                      return Container(
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                          color: tinterTheme.colors.button,
+                        ),
+                        child: AutoSizeText(
+                          'Compare vos profils',
+                          style: tinterTheme.textStyle.chipNotLiked
+                              .copyWith(color: Colors.black),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          maxFontSize: 15,
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ),
@@ -1450,10 +1361,11 @@ class CompareViewBinomePairMatch extends StatelessWidget {
     );
   }
 
-  Widget informationRectangle({@required Widget child,
-    double width,
-    double height,
-    EdgeInsetsGeometry padding}) {
+  Widget informationRectangle(
+      {@required Widget child,
+      double width,
+      double height,
+      EdgeInsetsGeometry padding}) {
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
@@ -1478,10 +1390,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
     return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
       return Container(
         width: 2.5,
-        color: Theme
-            .of(context)
-            .disabledColor
-            .withOpacity(0.6),
+        color: Theme.of(context).disabledColor.withOpacity(0.6),
       );
     });
   }
@@ -1495,15 +1404,14 @@ class CompareViewBinomePairMatch extends StatelessWidget {
           Expanded(
             child: BlocBuilder<UserBloc, UserState>(
                 builder: (BuildContext context, UserState state) {
-                  if (!(state is KnownUserState)) {
-                    BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return ProfileInformation(
-                      user: (state as KnownUserState).user);
-                }),
+              if (!(state is KnownUserState)) {
+                BlocProvider.of<UserBloc>(context).add(UserRequestEvent());
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ProfileInformation(user: (state as KnownUserState).user);
+            }),
           ),
           verticalSeparator(),
           Expanded(
@@ -1543,10 +1451,7 @@ class ProfileInformation extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Text(
                       'Lieu de vie',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5,
+                      style: Theme.of(context).textTheme.headline5,
                       maxLines: 2,
                     ),
                   ),
@@ -1564,16 +1469,14 @@ class ProfileInformation extends StatelessWidget {
                         children: [
                           Opacity(
                             opacity:
-                            user.lieuDeVie != LieuDeVie.maisel ? 0.5 : 1,
+                                user.lieuDeVie != LieuDeVie.maisel ? 0.5 : 1,
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(5.0),
                                   topLeft: Radius.circular(5.0),
                                 ),
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
+                                color: Theme.of(context).primaryColor,
                               ),
                               width: 70,
                               child: Padding(
@@ -1584,10 +1487,7 @@ class ProfileInformation extends StatelessWidget {
                                     maxLines: 1,
                                     minFontSize: 10,
                                     style:
-                                    Theme
-                                        .of(context)
-                                        .textTheme
-                                        .headline5,
+                                        Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                               ),
@@ -1595,16 +1495,14 @@ class ProfileInformation extends StatelessWidget {
                           ),
                           Opacity(
                             opacity:
-                            user.lieuDeVie != LieuDeVie.other ? 0.5 : 1,
+                                user.lieuDeVie != LieuDeVie.other ? 0.5 : 1,
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                   topRight: Radius.circular(5.0),
                                   bottomRight: Radius.circular(5.0),
                                 ),
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
+                                color: Theme.of(context).primaryColor,
                               ),
                               width: 70,
                               child: Padding(
@@ -1614,10 +1512,7 @@ class ProfileInformation extends StatelessWidget {
                                     'Autre',
                                     maxLines: 1,
                                     style:
-                                    Theme
-                                        .of(context)
-                                        .textTheme
-                                        .headline5,
+                                        Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                               ),
@@ -1645,10 +1540,7 @@ class ProfileInformation extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Text(
                       'Horaires de travail',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5,
+                      style: Theme.of(context).textTheme.headline5,
                       maxLines: 2,
                     ),
                   ),
@@ -1664,159 +1556,139 @@ class ProfileInformation extends StatelessWidget {
                       children: [
                         Opacity(
                           opacity: user.horairesDeTravail
-                              .contains(HoraireDeTravail.morning)
+                                  .contains(HoraireDeTravail.morning)
                               ? 1
                               : 0.5,
                           child: Consumer<TinterTheme>(
                               builder: (context, tinterTheme, child) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        5.0,
-                                      ),
-                                    ),
-                                    color: Theme
-                                        .of(context)
-                                        .primaryColor,
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0,
                                   ),
-                                  width: 60,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0,
-                                      vertical: 10.0,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Matin',
-                                        maxLines: 1,
-                                        style:
-                                        Theme
-                                            .of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ),
-                                    ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Matin',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
                                   ),
-                                );
-                              }),
+                                ),
+                              ),
+                            );
+                          }),
                         ),
                         Opacity(
                           opacity: user.horairesDeTravail
-                              .contains(HoraireDeTravail.afternoon)
+                                  .contains(HoraireDeTravail.afternoon)
                               ? 1
                               : 0.5,
                           child: Consumer<TinterTheme>(
                               builder: (context, tinterTheme, child) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        5.0,
-                                      ),
-                                    ),
-                                    color: Theme
-                                        .of(context)
-                                        .primaryColor,
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0,
                                   ),
-                                  width: 60,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0,
-                                      vertical: 10.0,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Aprem',
-                                        maxLines: 1,
-                                        style:
-                                        Theme
-                                            .of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ),
-                                    ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Aprem',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
                                   ),
-                                );
-                              }),
+                                ),
+                              ),
+                            );
+                          }),
                         ),
                         Opacity(
                           opacity: user.horairesDeTravail
-                              .contains(HoraireDeTravail.evening)
+                                  .contains(HoraireDeTravail.evening)
                               ? 1
                               : 0.5,
                           child: Consumer<TinterTheme>(
                               builder: (context, tinterTheme, child) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        5.0,
-                                      ),
-                                    ),
-                                    color: Theme
-                                        .of(context)
-                                        .primaryColor,
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0,
                                   ),
-                                  width: 60,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0,
-                                      vertical: 10.0,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Soir',
-                                        maxLines: 1,
-                                        style:
-                                        Theme
-                                            .of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ),
-                                    ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Soir',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
                                   ),
-                                );
-                              }),
+                                ),
+                              ),
+                            );
+                          }),
                         ),
                         Opacity(
                           opacity: user.horairesDeTravail
-                              .contains(HoraireDeTravail.night)
+                                  .contains(HoraireDeTravail.night)
                               ? 1
                               : 0.5,
                           child: Consumer<TinterTheme>(
                               builder: (context, tinterTheme, child) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        5.0,
-                                      ),
-                                    ),
-                                    color: Theme
-                                        .of(context)
-                                        .primaryColor,
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0,
                                   ),
-                                  width: 60,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0,
-                                      vertical: 10.0,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Nuit',
-                                        maxLines: 1,
-                                        style:
-                                        Theme
-                                            .of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ),
-                                    ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              width: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Nuit',
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
                                   ),
-                                );
-                              }),
+                                ),
+                              ),
+                            );
+                          }),
                         ),
                       ],
                     ),
@@ -1828,16 +1700,13 @@ class ProfileInformation extends StatelessWidget {
           Card(
             child: Padding(
               padding:
-              const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
+                  const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     'Associations',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline5,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                   SizedBox(
                     height: 10,
@@ -1849,33 +1718,30 @@ class ProfileInformation extends StatelessWidget {
                       children: <Widget>[
                         user.associations.length >= 1
                             ? Container(
-                          width: double.infinity,
-                          height: 60,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                for (int index = 0;
-                                index < user.associations.length;
-                                index++) ...[
-                                  associationBubble(
-                                      context, user.associations[index]),
-                                  SizedBox(
-                                    width: 5,
-                                  )
-                                ]
-                              ],
-                            ),
-                          ),
-                        )
+                                width: double.infinity,
+                                height: 60,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      for (int index = 0;
+                                          index < user.associations.length;
+                                          index++) ...[
+                                        associationBubble(
+                                            context, user.associations[index]),
+                                        SizedBox(
+                                          width: 5,
+                                        )
+                                      ]
+                                    ],
+                                  ),
+                                ),
+                              )
                             : Text(
-                          'Aucune association sélectionnée',
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .headline5,
-                        ),
+                                'Aucune association sélectionnée',
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
                       ],
                     ),
                   ),
@@ -1893,10 +1759,7 @@ class ProfileInformation extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Text(
                       'A plusieurs ou seul.e ?',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5,
+                      style: Theme.of(context).textTheme.headline5,
                       maxLines: 2,
                     ),
                   ),
@@ -1910,32 +1773,23 @@ class ProfileInformation extends StatelessWidget {
                         child: Icon(
                           Icons.group_rounded,
                           size: 22.0,
-                          color: Theme
-                              .of(context)
-                              .primaryColor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                       Expanded(
                         child: SliderTheme(
-                          data: Theme
-                              .of(context)
-                              .sliderTheme
-                              .copyWith(
-                            disabledActiveTrackColor:
-                            Theme
-                                .of(context)
-                                .primaryColor,
-                            disabledThumbColor: Color(0xffCECECE),
-                            overlayShape:
-                            RoundSliderOverlayShape(overlayRadius: 0.0),
-                            trackHeight: 6.0,
-                            disabledInactiveTrackColor:
-                            Theme
-                                .of(context)
-                                .indicatorColor,
-                            thumbShape: RoundSliderThumbShape(
-                                enabledThumbRadius: 8.0),
-                          ),
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                disabledThumbColor: Color(0xffCECECE),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                trackHeight: 6.0,
+                                disabledInactiveTrackColor:
+                                    Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8.0),
+                              ),
                           child: TweenAnimationBuilder(
                             tween: Tween<double>(
                                 begin: 0.5, end: user.groupeOuSeul),
@@ -1955,9 +1809,7 @@ class ProfileInformation extends StatelessWidget {
                         child: Icon(
                           Icons.person_rounded,
                           size: 22.0,
-                          color: Theme
-                              .of(context)
-                              .indicatorColor,
+                          color: Theme.of(context).indicatorColor,
                         ),
                       ),
                     ],
@@ -1976,10 +1828,7 @@ class ProfileInformation extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Text(
                       'En ligne ou à l\'école ?',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5,
+                      style: Theme.of(context).textTheme.headline5,
                       maxLines: 2,
                     ),
                   ),
@@ -1993,32 +1842,23 @@ class ProfileInformation extends StatelessWidget {
                         child: Icon(
                           Icons.school_rounded,
                           size: 22.0,
-                          color: Theme
-                              .of(context)
-                              .primaryColor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                       Expanded(
                         child: SliderTheme(
-                          data: Theme
-                              .of(context)
-                              .sliderTheme
-                              .copyWith(
-                            disabledActiveTrackColor:
-                            Theme
-                                .of(context)
-                                .primaryColor,
-                            disabledThumbColor: Color(0xffCECECE),
-                            overlayShape:
-                            RoundSliderOverlayShape(overlayRadius: 0.0),
-                            trackHeight: 6.0,
-                            disabledInactiveTrackColor:
-                            Theme
-                                .of(context)
-                                .indicatorColor,
-                            thumbShape: RoundSliderThumbShape(
-                                enabledThumbRadius: 8.0),
-                          ),
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                disabledActiveTrackColor:
+                                    Theme.of(context).primaryColor,
+                                disabledThumbColor: Color(0xffCECECE),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                trackHeight: 6.0,
+                                disabledInactiveTrackColor:
+                                    Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8.0),
+                              ),
                           child: TweenAnimationBuilder(
                             tween: Tween<double>(
                                 begin: 0.5, end: user.enligneOuNon),
@@ -2038,9 +1878,7 @@ class ProfileInformation extends StatelessWidget {
                         child: Icon(
                           Icons.wifi,
                           size: 22.0,
-                          color: Theme
-                              .of(context)
-                              .indicatorColor,
+                          color: Theme.of(context).indicatorColor,
                         ),
                       )
                     ],
@@ -2068,10 +1906,7 @@ class ProfileInformation extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         'Matières préférées',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline5,
+                        style: Theme.of(context).textTheme.headline5,
                         maxLines: 2,
                       ),
                       SizedBox(
@@ -2079,64 +1914,59 @@ class ProfileInformation extends StatelessWidget {
                       ),
                       user.matieresPreferees.length >= 1
                           ? Wrap(
-                        alignment: WrapAlignment.center,
-                        key: GlobalKey(),
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: <Widget>[
-                          for (String matierePreferee
-                          in user.matieresPreferees)
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15.0,
-                                vertical: 6.0,
-                              ),
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(
-                                      0.2,
+                              alignment: WrapAlignment.center,
+                              key: GlobalKey(),
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: <Widget>[
+                                for (String matierePreferee
+                                    in user.matieresPreferees)
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 15.0,
+                                      vertical: 6.0,
                                     ),
-                                    spreadRadius: 0.2,
-                                    blurRadius: 3,
-                                    offset: Offset(
-                                      1,
-                                      1,
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(
+                                            0.2,
+                                          ),
+                                          spreadRadius: 0.2,
+                                          blurRadius: 3,
+                                          offset: Offset(
+                                            1,
+                                            1,
+                                          ),
+                                        )
+                                      ],
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                          10.0,
+                                        ),
+                                      ),
+                                      border: Border.all(
+                                        color: (Theme.of(context).primaryColor),
+                                        width: 3.0,
+                                        style: BorderStyle.solid,
+                                      ),
+                                      color: Colors.white,
                                     ),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    10.0,
+                                    child: Text(matierePreferee),
                                   ),
-                                ),
-                                border: Border.all(
-                                  color: (Theme
-                                      .of(context)
-                                      .primaryColor),
-                                  width: 3.0,
-                                  style: BorderStyle.solid,
-                                ),
-                                color: Colors.white,
-                              ),
-                              child: Text(matierePreferee),
-                            ),
-                        ],
-                      )
+                              ],
+                            )
                           : Container(
-                        height: 50,
-                        child: Center(
-                          child: Text(
-                            'Aucune matière sélectionnée',
-                            style: Theme
-                                .of(context)
-                                .textTheme
-                                .headline5,
-                            textAlign: TextAlign.center,
-                            maxLines: 3,
-                          ),
-                        ),
-                      ),
+                              height: 50,
+                              child: Center(
+                                child: Text(
+                                  'Aucune matière sélectionnée',
+                                  style: Theme.of(context).textTheme.headline5,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 3,
+                                ),
+                              ),
+                            ),
                     ],
                   ),
                 ),
@@ -2155,9 +1985,7 @@ class ProfileInformation extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
               width: 2.5,
             ),
           ),
@@ -2188,14 +2016,14 @@ class ProfileInformation extends StatelessWidget {
             SliderLabel(
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                    const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
                 child: Consumer<TinterTheme>(
                     builder: (context, tinterTheme, child) {
-                      return Text(
-                        leftLabel,
-                        style: tinterTheme.textStyle.smallLabel,
-                      );
-                    }),
+                  return Text(
+                    leftLabel,
+                    style: tinterTheme.textStyle.smallLabel,
+                  );
+                }),
               ),
               side: Side.Left,
               triangleSize: 14,
@@ -2203,14 +2031,14 @@ class ProfileInformation extends StatelessWidget {
             SliderLabel(
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                    const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
                 child: Consumer<TinterTheme>(
                     builder: (context, tinterTheme, child) {
-                      return Text(
-                        rightLabel,
-                        style: tinterTheme.textStyle.smallLabel,
-                      );
-                    }),
+                  return Text(
+                    rightLabel,
+                    style: tinterTheme.textStyle.smallLabel,
+                  );
+                }),
               ),
               side: Side.Right,
               triangleSize: 14,
@@ -2244,48 +2072,60 @@ class BinomeSelectionMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: ((binomesNotBinomes.length != 0) && (binomes.length == 0)) ||
-          ((binomes.length != 0) &&
-              (binomePairMatchesNotMatched.length == 0))
+              ((binomes.length != 0) &&
+                  (binomePairMatchesNotMatched.length == 0))
           ? height
           : 2 * height + 15.0,
       child: Column(
         children: [
           (binomesNotBinomes.length != 0 && binomes.length == 0)
               ? Expanded(
-            child: topMenuBinome(
-              context: context,
-              binomes: binomesNotBinomes,
-              title: 'Mes binômes potentiels',
-            ),
-          )
+                  child: topMenuBinome(
+                    context: context,
+                    binomes: binomesNotBinomes,
+                    title: 'Mes binômes potentiels',
+                  ),
+                )
               : Container(),
           (binomes.length != 0)
               ? Expanded(
-            child: topMenuBinome(
-              context: context,
-              binomes: binomes,
-              title: 'Mon ou ma binôme',
-            ),
-          )
+                  child: topMenuBinome(
+                    context: context,
+                    binomes: binomes,
+                    title: 'Mon ou ma binôme',
+                  ),
+                )
+              : Container(),
+          ((binomePairMatchesNotMatched.length != 0 &&
+                      binomePairMatches.length == 0) ||
+                  (binomePairMatches.length != 0))
+              ? SizedBox(
+                  height: 15.0,
+                )
               : Container(),
           (binomePairMatchesNotMatched.length != 0 &&
-              binomePairMatches.length == 0)
+                  binomePairMatches.length == 0)
               ? Expanded(
-            child: topMenuBinomePair(
-              context: context,
-              binomePairMatches: binomePairMatchesNotMatched,
-              title: 'Mes binômes de binôme potentiels',
-            ),
-          )
+                child: topMenuBinomePair(
+                  context: context,
+                  binomePairMatches: binomePairMatchesNotMatched,
+                  title: 'Mes binômes de binôme potentiels',
+                ),
+              )
               : Container(),
           (binomePairMatches.length != 0)
-              ? Expanded(
-            child: topMenuBinomePair(
-              context: context,
-              binomePairMatches: binomePairMatches,
-              title: 'Mon binôme de binôme',
-            ),
-          )
+              ? Padding(
+                  padding: const EdgeInsets.only(
+                    top: 15.0,
+                  ),
+                  child: Expanded(
+                    child: topMenuBinomePair(
+                      context: context,
+                      binomePairMatches: binomePairMatches,
+                      title: 'Mon binôme de binôme',
+                    ),
+                  ),
+                )
               : Container(),
         ],
       ),
@@ -2315,10 +2155,7 @@ class BinomeSelectionMenu extends StatelessWidget {
               Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                 return Text(
                   title,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline5,
+                  style: Theme.of(context).textTheme.headline5,
                 );
               }),
               SizedBox(
@@ -2331,8 +2168,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                   children: [
                     for (BuildBinome binome in binomes)
                       GestureDetector(
-                        onTap: () =>
-                        context
+                        onTap: () => context
                             .read<SelectedScolaire2>()
                             .binomeLogin = binome.login,
                         child: Padding(
@@ -2343,9 +2179,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: Theme
-                                      .of(context)
-                                      .primaryColor,
+                                  color: Theme.of(context).primaryColor,
                                   width: 3.0,
                                   style: BorderStyle.solid),
                             ),
@@ -2369,59 +2203,67 @@ class BinomeSelectionMenu extends StatelessWidget {
   }
 
   /// Either displays the binome pair matched top menu or the binome pair not matched top menu
-  Widget topMenuBinomePair({@required BuildContext context,
-    @required List<BuildBinomePairMatch> binomePairMatches,
-    @required String title}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-            return Text(
-              title,
-              style: tinterTheme.textStyle.headline2,
-            );
-          }),
-        ),
-        Flexible(
-          child: ListView(
-            scrollDirection: Axis.horizontal,
+  Widget topMenuBinomePair(
+      {@required BuildContext context,
+      @required List<BuildBinomePairMatch> binomePairMatches,
+      @required String title}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 15.0,
+            top: 10.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (BuildBinomePairMatch binomePairMatch in binomePairMatches)
-                InkWell(
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  onTap: () =>
-                  context
-                      .read<SelectedScolaire2>()
-                      .binomePairId =
-                      binomePairMatch.binomePairId,
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      right: 20.0,
-                      left:
-                      binomePairMatch == binomePairMatches[0] ? 20.0 : 0.0,
-                    ),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-//                    height: 50,
-                    width: 70,
-                    child: BinomePair.getProfilePictureFromBinomePairLogins(
-                      loginA: binomePairMatch.login,
-                      loginB: binomePairMatch.otherLogin,
-//                      height: 50,
-                      width: 70,
-                    ),
-                  ),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              SizedBox(
+                height: 7.5,
+              ),
+              Container(
+                height: 50,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    for (BuildBinomePairMatch binomePairMatch
+                        in binomePairMatches)
+                      GestureDetector(
+                        onTap: () => context
+                            .read<SelectedScolaire2>()
+                            .binomePairId = binomePairMatch.binomePairId,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            right: 7.5,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                            ),
+                            child: BinomePair
+                                .getProfilePictureFromBinomePairLogins(
+                              loginA: binomePairMatch.login,
+                              loginB: binomePairMatch.otherLogin,
+                              width: 64,
+                              height: 44,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
+              )
             ],
           ),
         ),
-        separator(),
-      ],
+      ),
     );
   }
 
