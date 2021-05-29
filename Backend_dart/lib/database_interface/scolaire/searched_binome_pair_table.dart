@@ -39,7 +39,7 @@ class SearchedBinomePairsTable {
         "JOIN "
         "( SELECT \"binomePairId\" AS \"otherBinomePairId\", login, name, surname, \"otherLogin\", \"otherName\", \"otherSurname\" FROM "
         "${BinomePairsProfilesTable.name} "
-        ") AS ${BinomePairsProfilesTable.name}"
+        ") AS ${BinomePairsProfilesTable.name} "
         "USING (\"otherBinomePairId\") ;",
         substitutionValues: {
           'login': login,
