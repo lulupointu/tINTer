@@ -190,14 +190,19 @@ class BinomesTab2State extends State<BinomesTab2> {
                     (ModeScolaireOverlay.height +
                             2 * widget.spacing +
                             BinomeSelectionMenu.height +
-                            20.0) /
+                            15.0) /
                         MediaQuery.of(context).size.height;
               } else {
-                widget.fractions['binomeSelectionMenu'] = 0.2 +
-                    ((_binomePairMatches.length != 0 ||
-                            _binomePairMatchesNotMatched.length != 0)
-                        ? 0.2
-                        : 0);
+                widget.fractions['binomeSelectionMenu'] =
+                    ((ModeScolaireOverlay.height +
+                            2 * widget.spacing +
+                            BinomeSelectionMenu.height +
+                            15.0) +
+                        ((_binomePairMatches.length != 0 ||
+                                    _binomePairMatchesNotMatched.length != 0)
+                                ? (widget.spacing + BinomeSelectionMenu.height)
+                                : 0)) /
+                            MediaQuery.of(context).size.height;
               }
 
               return Builder(
@@ -2106,12 +2111,12 @@ class BinomeSelectionMenu extends StatelessWidget {
           (binomePairMatchesNotMatched.length != 0 &&
                   binomePairMatches.length == 0)
               ? Expanded(
-                child: topMenuBinomePair(
-                  context: context,
-                  binomePairMatches: binomePairMatchesNotMatched,
-                  title: 'Mes binômes de binôme potentiels',
-                ),
-              )
+                  child: topMenuBinomePair(
+                    context: context,
+                    binomePairMatches: binomePairMatchesNotMatched,
+                    title: 'Mes binômes de binôme potentiels',
+                  ),
+                )
               : Container(),
           (binomePairMatches.length != 0)
               ? Padding(
@@ -2241,7 +2246,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                             .binomePairId = binomePairMatch.binomePairId,
                         child: Padding(
                           padding: EdgeInsets.only(
-                            right: 7.5,
+                            right: 10.0,
                           ),
                           child: Container(
                             decoration: BoxDecoration(
@@ -2251,7 +2256,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                                 .getProfilePictureFromBinomePairLogins(
                               loginA: binomePairMatch.login,
                               loginB: binomePairMatch.otherLogin,
-                              width: 64,
+                              width: 74,
                               height: 44,
                             ),
                           ),
@@ -2265,15 +2270,5 @@ class BinomeSelectionMenu extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget separator() {
-    return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-      return Container(
-        margin: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-        height: 0.5,
-        color: Colors.black,
-      );
-    });
   }
 }
