@@ -59,11 +59,11 @@ class SearchedBinomePairsTable {
 
       return {
         for (var i = 0; i < queryResults.length; i++)
-          queryResults[i][RelationsStatusBinomePairsMatchesTable.name]['binomePairId']:
+          queryResults[i][RelationsStatusBinomePairsMatchesTable.name]['otherBinomePairId']:
               SearchedBinomePair.fromJson({
             ...queryResults[i][BinomePairsProfilesTable.name],
             'binomePairId': queryResults[i][RelationsStatusBinomePairsMatchesTable.name]
-                ['binomePairId'],
+                ['otherBinomePairId'],
             'liked': _getLikeOrNotFromRelationStatusBinomePair(
                 EnumRelationStatusBinomePair.valueOf(
                     queryResults[i][RelationsStatusBinomePairsMatchesTable.name]['status'])),
