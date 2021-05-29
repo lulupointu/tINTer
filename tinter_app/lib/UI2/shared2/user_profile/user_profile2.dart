@@ -188,20 +188,19 @@ class ExistingProfileHeader extends StatelessWidget {
                     size: 100.0,
                     showModifyOption: true,
                   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text(
-                    ((userState is UserLoadSuccessState))
-                        ? userState.user.name + " " + userState.user.surname
-                        : 'En chargement...',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline4
-                        .copyWith(color: Colors.white),
-                  ),
-                  SizedBox(
-                    height: 5.0,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 5.0,
+                    ),
+                    child: Text(
+                      ((userState is UserLoadSuccessState))
+                          ? userState.user.name + " " + userState.user.surname
+                          : 'En chargement...',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          .copyWith(color: Colors.white),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -213,11 +212,13 @@ class ExistingProfileHeader extends StatelessWidget {
                                 School.TSP &&
                             (userState as UserLoadSuccessState).user.year ==
                                 TSPYear.TSP1A)
-                        ? AssociatifToScolaireButton2()
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 10.0,
+                            ),
+                            child: AssociatifToScolaireButton2(),
+                          )
                         : null,
-                  ),
-                  SizedBox(
-                    height: 10.0,
                   ),
                 ],
               );
