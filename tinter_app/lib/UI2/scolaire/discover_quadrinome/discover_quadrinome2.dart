@@ -967,12 +967,16 @@ class _BinomePairMatchInformationState
                               child: GestureDetector(
                                 onTap: () {
                                   showGeneralDialog(
-                                    transitionDuration: Duration(milliseconds: 300),
+                                    transitionDuration:
+                                        Duration(milliseconds: 300),
                                     context: context,
-                                    pageBuilder: (BuildContext context, animation, _) => Material(
+                                    pageBuilder:
+                                        (BuildContext context, animation, _) =>
+                                            Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                        onTap: () => Navigator.of(context).pop(),
+                                        onTap: () =>
+                                            Navigator.of(context).pop(),
                                         child: SimpleDialog(
                                           elevation: 5.0,
                                           children: [
@@ -983,36 +987,46 @@ class _BinomePairMatchInformationState
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Padding(
-                                                    padding: const EdgeInsets.only(
+                                                    padding:
+                                                        const EdgeInsets.only(
                                                       top: 10.0,
                                                     ),
                                                     child: Text(
                                                       "Aide",
-                                                      textAlign: TextAlign.center,
-                                                      style: Theme.of(context).textTheme.headline4,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline4,
                                                     ),
                                                   ),
                                                   Padding(
-                                                    padding: const EdgeInsets.symmetric(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                       horizontal: 20.0,
                                                       vertical: 10.0,
                                                     ),
                                                     child: Text(
                                                       "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                                          " Il est basé sur les critères renseignés dans le profil.",
-                                                      textAlign: TextAlign.center,
-                                                      style: Theme.of(context).textTheme.headline5,
+                                                      " Il est basé sur les critères renseignés dans le profil.",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5,
                                                     ),
                                                   ),
                                                   Padding(
-                                                    padding: const EdgeInsets.symmetric(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                       vertical: 5.0,
                                                     ),
                                                     child: Container(
                                                       width: 200,
                                                       child: ElevatedButton(
                                                         onPressed: () {
-                                                          Navigator.pop(context, false);
+                                                          Navigator.pop(
+                                                              context, false);
                                                         },
                                                         child: Text(
                                                           "Continuer",
@@ -1617,13 +1631,19 @@ class _BinomePairMatchInformationState
                   ),
                   widget.separator,
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 80.0),
+                    padding: const EdgeInsets.only(
+                      bottom: 80.0,
+                    ),
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
                         child: Padding(
-                          padding:
-                              const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                          padding: const EdgeInsets.only(
+                            top: 10.0,
+                            bottom: 15.0,
+                            left: 5.0,
+                            right: 5.0,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -1650,7 +1670,9 @@ class _BinomePairMatchInformationState
                                               .length >=
                                           1
                                       ? AnimatedSwitcher(
-                                          duration: Duration(milliseconds: 300),
+                                          duration: Duration(
+                                            milliseconds: 300,
+                                          ),
                                           child: Wrap(
                                             alignment: WrapAlignment.center,
                                             key: GlobalKey(),
@@ -1663,22 +1685,28 @@ class _BinomePairMatchInformationState
                                                   .matieresPreferees)
                                                 Container(
                                                   padding: EdgeInsets.symmetric(
-                                                      horizontal: 15.0,
-                                                      vertical: 6.0),
+                                                    horizontal: 15.0,
+                                                    vertical: 6.0,
+                                                  ),
                                                   decoration: BoxDecoration(
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: Colors.black
-                                                            .withOpacity(0.2),
+                                                            .withOpacity(
+                                                          0.2,
+                                                        ),
                                                         spreadRadius: 0.2,
-                                                        blurRadius: 5,
-                                                        offset: Offset(2, 2),
+                                                        blurRadius: 3,
+                                                        offset: Offset(
+                                                          1,
+                                                          1,
+                                                        ),
                                                       )
                                                     ],
                                                     borderRadius:
                                                         BorderRadius.all(
-                                                            Radius.circular(
-                                                                10.0)),
+                                                      Radius.circular(10.0),
+                                                    ),
                                                     border: Border.all(
                                                         color:
                                                             (Theme.of(context)
@@ -1693,11 +1721,13 @@ class _BinomePairMatchInformationState
                                             ],
                                           ),
                                         )
-                                      : Text('Aucune matière sélectionnée',
+                                      : Text(
+                                          'Aucune matière sélectionnée',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5,
-                                          textAlign: TextAlign.center);
+                                          textAlign: TextAlign.center,
+                                        );
                                 },
                               )
                             ],

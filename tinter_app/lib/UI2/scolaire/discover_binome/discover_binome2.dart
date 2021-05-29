@@ -1601,13 +1601,13 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   ),
                   widget.separator,
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 80.0),
+                    padding: const EdgeInsets.only(bottom: 80.0,),
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
                         child: Padding(
                           padding:
-                              const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                              const EdgeInsets.only(top: 10.0, bottom: 15.0, left: 5.0, right: 5.0,),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -1634,7 +1634,9 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                               .length >=
                                           1
                                       ? AnimatedSwitcher(
-                                          duration: Duration(milliseconds: 300),
+                                          duration: Duration(
+                                            milliseconds: 300,
+                                          ),
                                           child: Wrap(
                                             alignment: WrapAlignment.center,
                                             key: GlobalKey(),
@@ -1647,29 +1649,34 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                                   .matieresPreferees)
                                                 Container(
                                                   padding: EdgeInsets.symmetric(
-                                                      horizontal: 15.0,
-                                                      vertical: 6.0),
+                                                    horizontal: 15.0,
+                                                    vertical: 6.0,
+                                                  ),
                                                   decoration: BoxDecoration(
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: Colors.black
-                                                            .withOpacity(0.2),
+                                                            .withOpacity(
+                                                          0.2,
+                                                        ),
                                                         spreadRadius: 0.2,
-                                                        blurRadius: 5,
-                                                        offset: Offset(2, 2),
+                                                        blurRadius: 3,
+                                                        offset: Offset(
+                                                          1,
+                                                          1,
+                                                        ),
                                                       )
                                                     ],
                                                     borderRadius:
                                                         BorderRadius.all(
-                                                            Radius.circular(
-                                                                10.0)),
+                                                      Radius.circular(10.0),
+                                                    ),
                                                     border: Border.all(
-                                                        color:
-                                                            (Theme.of(context)
-                                                                .primaryColor),
-                                                        width: 3.0,
-                                                        style:
-                                                            BorderStyle.solid),
+                                                      color: (Theme.of(context)
+                                                          .primaryColor),
+                                                      width: 3.0,
+                                                      style: BorderStyle.solid,
+                                                    ),
                                                     color: Colors.white,
                                                   ),
                                                   child: Text(matierePreferee),
@@ -1677,11 +1684,13 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                             ],
                                           ),
                                         )
-                                      : Text('Aucune matière sélectionnée',
+                                      : Text(
+                                          'Aucune matière sélectionnée',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5,
-                                          textAlign: TextAlign.center);
+                                          textAlign: TextAlign.center,
+                                        );
                                 },
                               )
                             ],

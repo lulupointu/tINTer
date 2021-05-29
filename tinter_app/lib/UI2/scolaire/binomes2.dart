@@ -1888,7 +1888,12 @@ class ProfileInformation extends StatelessWidget {
               width: double.infinity,
               child: Card(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 15.0,
+                    left: 5.0,
+                    right: 5.0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
@@ -1910,23 +1915,33 @@ class ProfileInformation extends StatelessWidget {
                                     in user.matieresPreferees)
                                   Container(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 15.0, vertical: 6.0),
+                                      horizontal: 15.0,
+                                      vertical: 6.0,
+                                    ),
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
+                                          color: Colors.black.withOpacity(
+                                            0.2,
+                                          ),
                                           spreadRadius: 0.2,
-                                          blurRadius: 5,
-                                          offset: Offset(2, 2),
+                                          blurRadius: 3,
+                                          offset: Offset(
+                                            1,
+                                            1,
+                                          ),
                                         )
                                       ],
                                       borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)),
+                                        Radius.circular(
+                                          10.0,
+                                        ),
+                                      ),
                                       border: Border.all(
-                                          color:
-                                              (Theme.of(context).primaryColor),
-                                          width: 3.0,
-                                          style: BorderStyle.solid),
+                                        color: (Theme.of(context).primaryColor),
+                                        width: 3.0,
+                                        style: BorderStyle.solid,
+                                      ),
                                       color: Colors.white,
                                     ),
                                     child: Text(matierePreferee),

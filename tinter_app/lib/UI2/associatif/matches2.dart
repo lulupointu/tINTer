@@ -454,7 +454,8 @@ class CompareView extends StatelessWidget {
                   showGeneralDialog(
                     transitionDuration: Duration(milliseconds: 300),
                     context: context,
-                    pageBuilder: (BuildContext context, animation, _) => Material(
+                    pageBuilder: (BuildContext context, animation, _) =>
+                        Material(
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () => Navigator.of(context).pop(),
@@ -474,7 +475,8 @@ class CompareView extends StatelessWidget {
                                     child: Text(
                                       "Aide",
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context).textTheme.headline4,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   Padding(
@@ -484,9 +486,10 @@ class CompareView extends StatelessWidget {
                                     ),
                                     child: Text(
                                       "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
-                                          " Il est basé sur les critères renseignés dans le profil.",
+                                      " Il est basé sur les critères renseignés dans le profil.",
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context).textTheme.headline5,
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
                                     ),
                                   ),
                                   Padding(
@@ -1099,7 +1102,12 @@ class ProfileInformation extends StatelessWidget {
               ),
               child: Card(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 15.0,
+                    left: 5.0,
+                    right: 5.0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
@@ -1120,14 +1128,21 @@ class ProfileInformation extends StatelessWidget {
                                 for (String musicStyle in user.goutsMusicaux)
                                   Container(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 15.0, vertical: 6.0),
+                                      horizontal: 15.0,
+                                      vertical: 6.0,
+                                    ),
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
+                                          color: Colors.black.withOpacity(
+                                            0.2,
+                                          ),
                                           spreadRadius: 0.2,
-                                          blurRadius: 5,
-                                          offset: Offset(2, 2),
+                                          blurRadius: 3,
+                                          offset: Offset(
+                                            1,
+                                            1,
+                                          ),
                                         )
                                       ],
                                       borderRadius: BorderRadius.all(
