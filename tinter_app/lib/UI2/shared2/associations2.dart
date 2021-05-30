@@ -738,21 +738,18 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
                         )
                       : Container(
                           height: 50.0,
-                          child: TextFormField(
+                          alignment: Alignment.center,
+                          child: TextField(
                             textInputAction: TextInputAction.search,
+                            style: TextStyle(textBaseline: TextBaseline.alphabetic),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.only(
-                                top: 6.0,
+                                top: 5.0,
                               ),
-                              focusedBorder: InputBorder.none,
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 10.0,
-                                ),
-                                child: Icon(
-                                  Icons.search,
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                              border: InputBorder.none,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Theme.of(context).primaryColor,
                               ),
                               suffixIcon: searchString == ""
                                   ? null
@@ -845,56 +842,63 @@ class AllAssociationsSheetBody extends StatelessWidget {
                         searchStringRegex.hasMatch(
                             association.name + ' ' + association.description))
                     .toList();
-            return ListView.separated(
-              controller: scrollController,
-              itemCount: _associations.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(
-                  height: 15,
-                );
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onPanDown: (_) {
+                WidgetsBinding.instance.focusManager.primaryFocus
+                    ?.unfocus();
               },
-              itemBuilder: (BuildContext context, int index) {
-                if (!(userState is UserLoadSuccessState)) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                final bool liked = (userState as UserLoadSuccessState)
-                    .user
-                    .associations
-                    .contains(_associations[index]);
-                return Padding(
-                  padding: EdgeInsets.only(
-                    top: index == 0 ? headerSpacing : 0,
-                    bottom: index == _associations.length - 1
-                        ? headerSpacing + keyboardMargin + 30
-                        : 0,
-                  ),
-                  child: AssociationCard(
-                    association: _associations[index],
-                    liked: liked,
-                    onLike: () {
-                      if (liked) {
-                        BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((u) => u.associations
-                                    .remove(_associations[index])),
-                          ),
-                        );
-                      } else {
-                        BlocProvider.of<UserBloc>(context).add(
-                          UserStateChangedEvent(
-                            newState: (userState as UserLoadSuccessState)
-                                .user
-                                .rebuild((u) =>
-                                    u.associations.add(_associations[index])),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                );
-              },
+              child: ListView.separated(
+                controller: scrollController,
+                itemCount: _associations.length,
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    height: 15,
+                  );
+                },
+                itemBuilder: (BuildContext context, int index) {
+                  if (!(userState is UserLoadSuccessState)) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  final bool liked = (userState as UserLoadSuccessState)
+                      .user
+                      .associations
+                      .contains(_associations[index]);
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      top: index == 0 ? headerSpacing : 0,
+                      bottom: index == _associations.length - 1
+                          ? headerSpacing + keyboardMargin + 30
+                          : 0,
+                    ),
+                    child: AssociationCard(
+                      association: _associations[index],
+                      liked: liked,
+                      onLike: () {
+                        if (liked) {
+                          BlocProvider.of<UserBloc>(context).add(
+                            UserStateChangedEvent(
+                              newState: (userState as UserLoadSuccessState)
+                                  .user
+                                  .rebuild((u) => u.associations
+                                      .remove(_associations[index])),
+                            ),
+                          );
+                        } else {
+                          BlocProvider.of<UserBloc>(context).add(
+                            UserStateChangedEvent(
+                              newState: (userState as UserLoadSuccessState)
+                                  .user
+                                  .rebuild((u) =>
+                                      u.associations.add(_associations[index])),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
             );
           });
         }),
