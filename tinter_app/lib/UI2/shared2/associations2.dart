@@ -86,91 +86,86 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
               builder: (BuildContext context, BoxConstraints constraints) {
             return Padding(
               padding: EdgeInsets.only(
-                top: 20.0,
+                top: 0.0,
               ),
               child:
                   Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
+                return SlidingUpPanel(
+                  margin: EdgeInsets.only(
+                    left: 20.0, right: 20.0, top: 20.0,
                   ),
-                  child: SlidingUpPanel(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(5.0),
-                      topRight: Radius.circular(5.0),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5.0),
+                    topRight: Radius.circular(5.0),
+                  ),
+                  color: Colors.white,
+                  backdropEnabled: true,
+                  backdropOpacity: 1.0,
+                  backdropColor: Theme.of(context).scaffoldBackgroundColor,
+                  controller: _panelController,
+                  maxHeight: constraints.maxHeight,
+                  minHeight: constraints.maxHeight *
+                      (1 -
+                          (AssociationsTab2.fractions['topSeparator'] +
+                              AssociationsTab2.fractions['sheetSeparator'] +
+                              AssociationsTab2.fractions['likedAssociations'] +
+                              AssociationsTab2.fractions['titles'] +
+                              AssociationsTab2.fractions['titlesSeparator'])) *
+                      1.175,
+                  body: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20.0, right: 20.0, top: 20.0,
+                        ),
+                        child: LikedAssociationsWidgetWithTitle(
+                          titleHeight: constraints.maxHeight *
+                              AssociationsTab2.fractions['titles'],
+                          titleSeparatorHeight: constraints.maxHeight *
+                              AssociationsTab2.fractions['titlesSeparator'],
+                          likedAssociationsHeight: constraints.maxHeight *
+                              AssociationsTab2.fractions['likedAssociations'],
+                          width: constraints.maxWidth,
+                          margin: constraints.maxHeight *
+                              AssociationsTab2.fractions['horizontalMargin'],
+                        ),
+                      )
+                    ],
+                  ),
+                  panelBuilder: (ScrollController scrollController) {
+                    return AllAssociationsSheetBody(
+                      scrollController: scrollController,
+                      keyboardMargin:
+                          KeyboardVisibilityProvider.isKeyboardVisible(context)
+                              ? MediaQuery.of(context).viewInsets.bottom
+                              : 0,
+                      width: constraints.maxWidth,
+                      margin: constraints.maxHeight *
+                          AssociationsTab2.fractions['horizontalMargin'],
+                      headerHeight: constraints.maxHeight *
+                          AssociationsTab2.fractions['titles'],
+                      headerSpacing: constraints.maxHeight *
+                          AssociationsTab2.fractions['headerSpacing'],
+                      searchString: searchString,
+                    );
+                  },
+                  header: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                      vertical: 15.0,
                     ),
-                    color: Colors.white,
-                    backdropEnabled: true,
-                    backdropOpacity: 1.0,
-                    backdropColor: Theme.of(context).scaffoldBackgroundColor,
-                    controller: _panelController,
-                    maxHeight: constraints.maxHeight,
-                    minHeight: constraints.maxHeight *
-                        (1 -
-                            (AssociationsTab2.fractions['topSeparator'] +
-                                AssociationsTab2.fractions['sheetSeparator'] +
-                                AssociationsTab2
-                                    .fractions['likedAssociations'] +
-                                AssociationsTab2.fractions['titles'] +
-                                AssociationsTab2
-                                    .fractions['titlesSeparator'])) *
-                        1.175,
-                    body: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                          ),
-                          child: LikedAssociationsWidgetWithTitle(
-                            titleHeight: constraints.maxHeight *
-                                AssociationsTab2.fractions['titles'],
-                            titleSeparatorHeight: constraints.maxHeight *
-                                AssociationsTab2.fractions['titlesSeparator'],
-                            likedAssociationsHeight: constraints.maxHeight *
-                                AssociationsTab2.fractions['likedAssociations'],
-                            width: constraints.maxWidth,
-                            margin: constraints.maxHeight *
-                                AssociationsTab2.fractions['horizontalMargin'],
-                          ),
-                        )
-                      ],
-                    ),
-                    panelBuilder: (ScrollController scrollController) {
-                      return AllAssociationsSheetBody(
-                        scrollController: scrollController,
-                        keyboardMargin:
-                            KeyboardVisibilityProvider.isKeyboardVisible(
-                                    context)
-                                ? MediaQuery.of(context).viewInsets.bottom
-                                : 0,
-                        width: constraints.maxWidth,
-                        margin: constraints.maxHeight *
-                            AssociationsTab2.fractions['horizontalMargin'],
-                        headerHeight: constraints.maxHeight *
-                            AssociationsTab2.fractions['titles'],
-                        headerSpacing: constraints.maxHeight *
-                            AssociationsTab2.fractions['headerSpacing'],
-                        searchString: searchString,
-                      );
-                    },
-                    header: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0,
-                        vertical: 15.0,
-                      ),
-                      child: TitleAndSearchBarAllAssociations(
-                        height: constraints.maxHeight *
-                            AssociationsTab2.fractions['titles'],
-                        width: constraints.maxWidth,
-                        margin: constraints.maxHeight *
-                            AssociationsTab2.fractions['horizontalMargin'],
-                        headerSpacing: constraints.maxHeight *
-                            AssociationsTab2.fractions['headerSpacing'],
-                        isSearching: isSearching,
-                        searchString: searchString,
-                        onSearch: onSearch,
-                        clearSearch: clearSearch,
-                      ),
+                    child: TitleAndSearchBarAllAssociations(
+                      height: constraints.maxHeight *
+                          AssociationsTab2.fractions['titles'],
+                      width: constraints.maxWidth,
+                      margin: constraints.maxHeight *
+                          AssociationsTab2.fractions['horizontalMargin'],
+                      headerSpacing: constraints.maxHeight *
+                          AssociationsTab2.fractions['headerSpacing'],
+                      isSearching: isSearching,
+                      searchString: searchString,
+                      onSearch: onSearch,
+                      clearSearch: clearSearch,
                     ),
                   ),
                 );
@@ -741,7 +736,8 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
                           alignment: Alignment.center,
                           child: TextField(
                             textInputAction: TextInputAction.search,
-                            style: TextStyle(textBaseline: TextBaseline.alphabetic),
+                            style: TextStyle(
+                                textBaseline: TextBaseline.alphabetic),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.only(
                                 top: 5.0,
@@ -800,7 +796,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        right: 60.0,
+        right: 20.0,
         left: 20.0,
         top: 50.0,
       ),
@@ -845,8 +841,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
               onPanDown: (_) {
-                WidgetsBinding.instance.focusManager.primaryFocus
-                    ?.unfocus();
+                WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
               },
               child: ListView.separated(
                 controller: scrollController,
@@ -936,7 +931,9 @@ class _AssociationCardState extends State<AssociationCard> {
             color: Theme.of(context).primaryColor,
             width: 2.0,
             style: BorderStyle.solid),
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(5.0),
+        ),
       ),
       child: Card(
         child: Padding(
@@ -1009,17 +1006,17 @@ class _AssociationCardState extends State<AssociationCard> {
                 onTap: widget.onLike,
                 child: Container(
                   color: Colors.transparent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(
-                        10.0,
-                      ),
-                      child: Icon(
-                        widget.liked ? Icons.favorite : Icons.favorite_border,
-                        color: Theme.of(context).indicatorColor,
-                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(
+                      10.0,
+                    ),
+                    child: Icon(
+                      widget.liked ? Icons.favorite : Icons.favorite_border,
+                      color: Theme.of(context).indicatorColor,
                     ),
                   ),
                 ),
+              ),
             ],
           ),
         ),
