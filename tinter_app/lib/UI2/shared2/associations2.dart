@@ -406,7 +406,7 @@ class NoLikedAssociationWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          'Aucune association sélectionnée.',
+          'Aucune association sélectionnée',
           style: Theme.of(context).textTheme.headline5,
         ),
       ],

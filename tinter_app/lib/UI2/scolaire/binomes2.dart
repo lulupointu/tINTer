@@ -255,12 +255,14 @@ class BinomesTab2State extends State<BinomesTab2> {
                         SizedBox(
                           height: widget.spacing,
                         ),
-                        BinomeSelectionMenu(
-                          binomesNotBinomes: _binomesNotBinomes,
-                          binomes: _binomes,
-                          binomePairMatchesNotMatched:
-                              _binomePairMatchesNotMatched,
-                          binomePairMatches: _binomePairMatches,
+                        Container(
+                          child: BinomeSelectionMenu(
+                            binomesNotBinomes: _binomesNotBinomes,
+                            binomes: _binomes,
+                            binomePairMatchesNotMatched:
+                                _binomePairMatchesNotMatched,
+                            binomePairMatches: _binomePairMatches,
+                          ),
                         ),
                         (context.watch<SelectedScolaire2>().binomeLogin ==
                                     null &&
@@ -375,7 +377,7 @@ class BinomesTab2State extends State<BinomesTab2> {
                   : Column(
                       children: [
                         Icon(
-                          Icons.face,
+                          Icons.sentiment_very_satisfied,
                           color: Colors.black87,
                           size: 70,
                         ),
@@ -2082,11 +2084,9 @@ class BinomeSelectionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: ((binomesNotBinomes.length != 0) && (binomes.length == 0)) ||
-              ((binomes.length != 0) &&
-                  (binomePairMatchesNotMatched.length == 0))
-          ? height
-          : 2 * height + 15.0,
+      height: binomes.length != 0 && ((binomePairMatchesNotMatched.length != 0) || (binomePairMatches.length != 0))
+          ? 2 * height + 15.0
+          : height,
       child: Column(
         children: [
           (binomesNotBinomes.length != 0 && binomes.length == 0)

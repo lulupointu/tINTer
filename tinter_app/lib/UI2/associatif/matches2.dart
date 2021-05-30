@@ -248,7 +248,7 @@ class MatchsTab2State extends State<MatchsTab2> {
                   : Column(
                       children: [
                         Icon(
-                          Icons.face,
+                          Icons.sentiment_very_satisfied,
                           color: Colors.black87,
                           size: 70,
                         ),

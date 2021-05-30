@@ -608,7 +608,7 @@ class IntroduceBinomeOfBinomeOverlay extends StatelessWidget {
                               height: 10,
                             ),
                             Text(
-                              "Maintenant que tu as trouvé.e ton ou ta binôme, la page Discover te propose des binômes de binômes afin de former un quadrinôme !",
+                              "Maintenant que tu as trouvé ton ou ta binôme, la page Discover te propose des binômes afin de former un quadrinôme !",
                               style: Theme.of(context).textTheme.headline5,
                               maxLines: 6,
                               textAlign: TextAlign.center,
