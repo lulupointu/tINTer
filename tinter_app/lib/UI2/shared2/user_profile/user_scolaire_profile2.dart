@@ -54,16 +54,6 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
               style: Theme.of(context).textTheme.headline5,
             ),
             Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(1, 1),
-                  ),
-                ],
-              ),
               child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
                 if (!(userState is UserLoadSuccessState)) {

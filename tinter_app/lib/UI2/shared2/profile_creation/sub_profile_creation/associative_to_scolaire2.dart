@@ -10,7 +10,9 @@ import '../../associatif_to_scolaire_button2.dart';
 import '../../options_button/legal_information2.dart';
 
 main() => runApp(MaterialApp(
-      home: AssociativeToScolaire2(),
+      home: AssociativeToScolaire2(
+        onAccountCreationModeChanged: null,
+      ),
     ));
 
 class AssociativeToScolaire2 extends StatefulWidget {
@@ -28,63 +30,70 @@ class AssociativeToScolaire2 extends StatefulWidget {
 class _AssociativeToScolaire2State extends State<AssociativeToScolaire2> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(30.0),
-                    child: Card(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Center(
-                              child: Text(
-                                'Tu y es presque !',
-                                style: Theme.of(context).textTheme.headline3,
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Card(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: Center(
+                                  child: Text(
+                                    'Tu y es presque !',
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                  ),
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 20.0),
+                                child: Text(
+                                  "Comme tu es en première année, nous allons te présenter une fonctionnalité importante de l'application. Sur la page 'Profil', "
+                                  "tu verras que tu as la possibilité de switch entre deux modes : 'Scolaire' et 'Associatif'.",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                              ),
+                              AssociativeToScolaireProfileHeader(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 20.0),
+                                child: Text(
+                                  "Tu peux switch entre ces deux modes autant de fois que tu le souhaites. Le mode 'Scolaire' te "
+                                  "permettra de trouver un binôme pour ta scolarité à TSP et le mode 'Associatif' des parains et marraines.",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 20.0),
-                            child: Text(
-                              "Comme tu es en première année, nous allons te présenter une fonctionnalité importante de l'application. Sur la page 'Profil', "
-                              "tu verras que tu as la possibilité de switch entre deux modes : 'Scolaire' et 'Associatif'.",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                          ),
-                          AssociativeToScolaireProfileHeader(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 20.0),
-                            child: Text(
-                              "Tu peux switch entre ces deux modes autant de fois que tu le souhaites. Le mode 'Scolaire' te "
-                              "permettra de trouver un binôme pour ta scolarité à TSP et le mode 'Associatif' des parains et marraines.",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: AssociativeToScolaireButton(
+                  onAccountCreationModeChanged:
+                      widget.onAccountCreationModeChanged,
+                ),
+              ),
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: AssociativeToScolaireButton(
-              onAccountCreationModeChanged: widget.onAccountCreationModeChanged,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -95,63 +104,58 @@ class AssociativeToScolaireProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-      child: Container(
-        width: 280,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10.0),
-              bottomRight: Radius.circular(10.0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: Offset(1, 1),
+    return Container(
+      width: 280,
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10.0),
+            bottomRight: Radius.circular(10.0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(1, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 10.0,
+          ),
+          HoveringUserPicture2(
+            size: 100.0,
+            showModifyOption: false,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 5.0,
             ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 10.0,
-            bottom: 10.0,
+            child: BlocBuilder<UserBloc, UserState>(
+              builder: (BuildContext context, UserState userState) {
+                return Text(
+                  ((userState is NewUserState))
+                      ? userState.user.name + " " + userState.user.surname
+                      : 'En chargement...',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline4
+                      .copyWith(color: Colors.white),
+                );
+              },
+            ),
           ),
-          child: Column(
-            children: [
-              HoveringUserPicture2(
-                size: 95.0,
-                showModifyOption: false,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 5.0,
-                ),
-                child: BlocBuilder<UserBloc, UserState>(
-                  builder: (BuildContext context, UserState userState) {
-                    return Text(
-                      ((userState is NewUserState))
-                          ? userState.user.name + " " + userState.user.surname
-                          : 'En chargement...',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4
-                          .copyWith(color: Colors.white),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 5.0,
-                ),
-                child: AssociatifToScolaireButton2(),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 40.0,
+              right: 40.0,
+              bottom: 15.0,
+            ),
+            child: AssociatifToScolaireButton2(),
           ),
-        ),
+        ],
       ),
     );
   }

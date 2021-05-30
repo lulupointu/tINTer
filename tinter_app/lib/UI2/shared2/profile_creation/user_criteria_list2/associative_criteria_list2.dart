@@ -6,6 +6,7 @@ import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/UI/shared/user_profile/associations.dart';
 import 'package:tinterapp/UI2/shared2/user_profile/user_associatif_profile2.dart';
 
+import '../../associations2.dart';
 import '../../user_criteria_panel2/gouts_musicaux2.dart';
 
 class AssociativeCriteriaList2 extends StatelessWidget {
@@ -124,7 +125,7 @@ class DefineAssociations extends StatelessWidget {
         onAssociationPressed();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AssociationsTab()),
+          MaterialPageRoute(builder: (context) => AssociationsTab2()),
         );
       },
       child: Card(
@@ -163,16 +164,6 @@ class PrimoEntrantRectangle extends StatelessWidget {
               style: Theme.of(context).textTheme.headline5,
             ),
             Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(1, 1),
-                  ),
-                ],
-              ),
               child: BlocBuilder<UserBloc, UserState>(
                   builder: (BuildContext context, UserState userState) {
                 if (!(userState is NewUserState)) {

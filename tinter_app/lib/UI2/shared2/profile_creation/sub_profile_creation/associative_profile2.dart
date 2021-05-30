@@ -51,30 +51,35 @@ class _AssociativeProfile2State extends State<AssociativeProfile2> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProfileHeader(),
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: AssociativeCriteriaList2(
-                isAssociationPressed: isAssociationPressed,
-                isMusicTastePressed: isMusicTastePressed,
-                onAssociationPressed: onAssociationPressed,
-                onMusicTastePressed: onMusicTastePressed,
-                separator: SizedBox(
-                  height: 20.0,
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                ProfileHeader(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 40.0),
+                  child: AssociativeCriteriaList2(
+                    isAssociationPressed: isAssociationPressed,
+                    isMusicTastePressed: isMusicTastePressed,
+                    onAssociationPressed: onAssociationPressed,
+                    onMusicTastePressed: onMusicTastePressed,
+                    separator: SizedBox(
+                      height: 20.0,
+                    ),
+                  ),
                 ),
-              ),
+                separator,
+                AssociativeNextButton(
+                    isAssociationPressed: isAssociationPressed,
+                    isMusicTastePressed: isMusicTastePressed,
+                    onAccountCreationModeChanged:
+                        widget.onAccountCreationModeChanged),
+              ],
             ),
-            separator,
-            AssociativeNextButton(
-                isAssociationPressed: isAssociationPressed,
-                isMusicTastePressed: isMusicTastePressed,
-                onAccountCreationModeChanged:
-                    widget.onAccountCreationModeChanged),
-          ],
+          ),
         ),
       ),
     );
@@ -91,60 +96,63 @@ class ProfileHeader extends StatelessWidget {
     return Column(
       children: [
         Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60.0),
-            child: Container(
-              width: 280,
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10.0),
-                    bottomRight: Radius.circular(10.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(1, 1),
-                  ),
-                ],
+          child: Container(
+            width: 280,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10.0),
+                bottomRight: Radius.circular(10.0),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Column(
-                  children: [
-                    HoveringUserPicture2(
-                      size: 95.0,
-                      showModifyOption: true,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: BlocBuilder<UserBloc, UserState>(
-                        builder: (BuildContext context, UserState userState) {
-                          return Text(
-                            ((userState is NewUserState))
-                                ? userState.user.name +
-                                    " " +
-                                    userState.user.surname
-                                : 'En chargement...',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline4
-                                .copyWith(color: Colors.white),
-                          );
-                        },
-                      ),
-                    ),
-                    Text(
-                      'Nouveau compte',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: Colors.white),
-                    ),
-                  ],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 2,
+                  offset: Offset(1, 1),
                 ),
-              ),
+              ],
+            ),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10.0,
+                ),
+                HoveringUserPicture2(
+                  size: 100.0,
+                  showModifyOption: true,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 5.0,
+                  ),
+                  child: BlocBuilder<UserBloc, UserState>(
+                    builder: (BuildContext context, UserState userState) {
+                      return Text(
+                        ((userState is NewUserState))
+                            ? userState.user.name + " " + userState.user.surname
+                            : 'En chargement...',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4
+                            .copyWith(color: Colors.white),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 10.0,
+                  ),
+                  child: Text(
+                    'Nouveau compte',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
