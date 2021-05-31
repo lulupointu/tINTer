@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 
 main() {
@@ -125,32 +125,21 @@ class ProblemOrQuestion extends StatelessWidget {
               'Un problème ou une question ?',
               style: Theme.of(context).textTheme.headline5,
             ),
-            ButtonTheme(
-              minWidth: 0,
-              height: 0,
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0), //adds padding inside the button
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, //limits the touch area to the button area
-              child: FlatButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => SimpleDialog(
-                      children: [
-                        Text(
-                          'ToDo',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ],
+            GestureDetector(
+              onTap: _launchDiscordURL,
+              child: Container(
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 20.0,
+                  ),
+                  child: Text(
+                    'Rejoignez-nous !',
+                    style: Theme.of(context).textTheme.headline5.copyWith(
+                      color: Color(0xff738ADB),
                     ),
-                  );
-                },
-                child: Text(
-                  'Rejoignez-nous !',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(color: Color(0xff738ADB)),
+                  ),
                 ),
               ),
             ),
@@ -158,6 +147,15 @@ class ProblemOrQuestion extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _launchDiscordURL() async {
+    const url = 'https://discord.gg/sUCzJS4Q4m';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
 
