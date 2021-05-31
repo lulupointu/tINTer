@@ -1198,7 +1198,10 @@ class ProfileInformation extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Theme.of(context).primaryColor, width: 2.5),
+          border: Border.all(
+            color: Theme.of(context).primaryColor,
+            width: 2.0,
+          ),
         ),
         child: ClipOval(
           child: getLogoFromAssociation(associationName: association.name),

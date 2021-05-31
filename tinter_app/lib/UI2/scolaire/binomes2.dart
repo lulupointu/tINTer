@@ -1743,7 +1743,7 @@ class ProfileInformation extends StatelessWidget {
                         user.associations.length >= 1
                             ? Container(
                                 width: double.infinity,
-                                height: 60,
+                                height: 50,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
@@ -1762,10 +1762,15 @@ class ProfileInformation extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            : Text(
-                                'Aucune association sélectionnée',
-                                style: Theme.of(context).textTheme.headline5,
+                            : Container(
+                              child: Center(
+                                child: Text(
+                                    'Aucune association sélectionnée',
+                                    style: Theme.of(context).textTheme.headline5,
+                                  ),
                               ),
+                          height: 50,
+                            ),
                       ],
                     ),
                   ),
@@ -2010,11 +2015,11 @@ class ProfileInformation extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(
               color: Theme.of(context).primaryColor,
-              width: 2.5,
+              width: 2.0,
             ),
           ),
-          height: 60,
-          width: 60,
+          height: 50,
+          width: 50,
           child: child,
         );
       },
