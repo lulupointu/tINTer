@@ -877,7 +877,7 @@ class _BinomePairMatchInformationState
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 15.0,
+          horizontal: 0.0,
         ),
         child: BlocListener<DiscoverBinomePairMatchesBloc,
             DiscoverBinomePairMatchesState>(
@@ -1068,6 +1068,9 @@ class _BinomePairMatchInformationState
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1190,6 +1193,9 @@ class _BinomePairMatchInformationState
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1385,6 +1391,9 @@ class _BinomePairMatchInformationState
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, top: 10.0, bottom: 15.0),
@@ -1471,6 +1480,9 @@ class _BinomePairMatchInformationState
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1558,6 +1570,9 @@ class _BinomePairMatchInformationState
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1651,6 +1666,9 @@ class _BinomePairMatchInformationState
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.only(
                             top: 10.0,

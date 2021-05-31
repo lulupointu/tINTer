@@ -223,9 +223,9 @@ class ScolaireStudentSearch extends StatelessWidget {
                   ? "rechercher\nun étudiant"
                   : "rechercher\nune étudiante",
               style: Theme.of(context).textTheme.headline5.copyWith(
-                color: Colors.white,
-                height: 1.1,
-              ),
+                    color: Colors.white,
+                    height: 1.1,
+                  ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -836,7 +836,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 15.0,
+          horizontal: 0.0,
         ),
         child: BlocListener<DiscoverBinomesBloc, DiscoverBinomesState>(
           listener: (BuildContext context, state) {
@@ -1025,6 +1025,9 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1147,6 +1150,9 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                         left: 15.0,
@@ -1348,6 +1354,9 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, top: 10.0, bottom: 15.0),
@@ -1434,6 +1443,9 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1520,6 +1532,9 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   ),
                   widget.separator,
                   Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1606,13 +1621,22 @@ class _BinomeInformationState extends State<BinomeInformation> {
                   ),
                   widget.separator,
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 80.0,),
+                    padding: const EdgeInsets.only(
+                      bottom: 80.0,
+                    ),
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                        ),
                         child: Padding(
-                          padding:
-                              const EdgeInsets.only(top: 10.0, bottom: 15.0, left: 5.0, right: 5.0,),
+                          padding: const EdgeInsets.only(
+                            top: 10.0,
+                            bottom: 15.0,
+                            left: 5.0,
+                            right: 5.0,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -1696,7 +1720,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
                                               .textTheme
                                               .headline5,
                                           textAlign: TextAlign.center,
-                                    maxLines: 3,
+                                          maxLines: 3,
                                         );
                                 },
                               )

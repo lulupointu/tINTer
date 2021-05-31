@@ -742,7 +742,7 @@ class _MatchInformationState extends State<MatchInformation> {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 15.0,
+          horizontal: 0.0,
         ),
         child: BlocListener<DiscoverMatchesBloc, DiscoverMatchesState>(
           listener: (BuildContext context, state) {
@@ -927,6 +927,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   );
                 } else if (index == 1) {
                   return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 15.0,),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, top: 10.0, bottom: 15.0),
@@ -1013,6 +1014,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   );
                 } else if (index == 2) {
                   return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 15.0,),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
@@ -1087,6 +1089,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   );
                 } else if (index == 3) {
                   return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 15.0,),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1170,6 +1173,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   );
                 } else if (index == 4) {
                   return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 15.0,),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
@@ -1255,6 +1259,7 @@ class _MatchInformationState extends State<MatchInformation> {
                   );
                 } else if (index == 5) {
                   return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 15.0,),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
@@ -1334,6 +1339,9 @@ class _MatchInformationState extends State<MatchInformation> {
                     child: SizedBox(
                       width: double.infinity,
                       child: Card(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.only(
                             top: 10.0,
