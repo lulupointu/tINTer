@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
     return Consumer<TinterTheme>(
       builder: (context, tinterTheme, child) {
         return Scaffold(
-          backgroundColor: tinterTheme.colors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: child,
         );
       },

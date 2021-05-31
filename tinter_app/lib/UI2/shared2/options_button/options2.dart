@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -82,7 +83,8 @@ class _OptionsTab2State extends State<OptionsTab2>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LegalInformation()),
+                              builder: (context) => LegalInformation(),
+                            ),
                           );
                         },
                         child: Padding(
@@ -203,7 +205,7 @@ class _OptionsTab2State extends State<OptionsTab2>
               ),
             ),
           ),
-          ProblemOrQuestion()
+          ProblemOrQuestion(),
         ],
       ),
     );
@@ -229,23 +231,23 @@ class ProblemOrQuestion extends StatelessWidget {
               style: Theme.of(context).textTheme.headline5,
             ),
             GestureDetector(
-                onTap: _launchDiscordURL,
-                child: Container(
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5.0,
-                      horizontal: 20.0,
-                    ),
-                    child: Text(
-                      'Rejoignez-nous !',
-                      style: Theme.of(context).textTheme.headline5.copyWith(
-                            color: Color(0xff738ADB),
-                          ),
-                    ),
+              onTap: _launchDiscordURL,
+              child: Container(
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 20.0,
+                  ),
+                  child: Text(
+                    'Rejoignez-nous !',
+                    style: Theme.of(context).textTheme.headline5.copyWith(
+                          color: Color(0xff738ADB),
+                        ),
                   ),
                 ),
               ),
+            ),
           ],
         ),
       ),
