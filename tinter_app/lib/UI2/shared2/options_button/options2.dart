@@ -153,6 +153,11 @@ class _OptionsTab2State extends State<OptionsTab2>
                                   children: [
                                     SizedBox(
                                       child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          elevation: MaterialStateProperty.all(
+                                            2.0,
+                                          ),
+                                        ),
                                         onPressed: () {
                                           Navigator.pop(context, false);
                                           Navigator.pop(context);
@@ -178,6 +183,9 @@ class _OptionsTab2State extends State<OptionsTab2>
                                               MaterialStateProperty.all(
                                                   Theme.of(context)
                                                       .indicatorColor),
+                                          elevation: MaterialStateProperty.all(
+                                            2.0,
+                                          ),
                                         ),
                                       ),
                                       width: 100.0,

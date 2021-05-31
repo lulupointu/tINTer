@@ -299,6 +299,11 @@ class SaveModificationsOverlay extends StatelessWidget {
                           children: [
                             SizedBox(
                               child: ElevatedButton(
+                                style: ButtonStyle(
+                                  elevation: MaterialStateProperty.all(
+                                    2.0,
+                                  ),
+                                ),
                                 onPressed: () {
                                   BlocProvider.of<UserBloc>(context)
                                       .add(UserSaveEvent());
@@ -320,7 +325,10 @@ class SaveModificationsOverlay extends StatelessWidget {
                                 child: Text('Annuler'),
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
-                                    Theme.of(context).errorColor,
+                                    Theme.of(context).indicatorColor,
+                                  ),
+                                  elevation: MaterialStateProperty.all(
+                                    2.0,
                                   ),
                                 ),
                               ),
