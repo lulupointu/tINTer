@@ -589,7 +589,7 @@ class _BinomesFlockState extends State<BinomesFlock>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              width: 2 + 2 * animationController.value,
+                              width: 1.5 + 2 * animationController.value,
                               color: Theme.of(context).indicatorColor,
                             ),
                           ),
@@ -1719,7 +1719,7 @@ class _BinomeInformationState extends State<BinomeInformation> {
             shape: BoxShape.circle,
             border: Border.all(
               color: Theme.of(context).primaryColor,
-              width: 2.5,
+              width: 2.0,
             ),
           ),
           height: 60,

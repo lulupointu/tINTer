@@ -514,7 +514,10 @@ class CompareViewBinome extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-            color: Color(0xff79BFC9), width: 4.0, style: BorderStyle.solid),
+          color: Color(0xff79BFC9),
+          width: 3.5,
+          style: BorderStyle.solid,
+        ),
       ),
       height: 80,
       width: 80,
@@ -1379,15 +1382,17 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                     onPressed: () async {
                       await onCompareTapped(0);
                       context.read<SelectedScolaire2>()._binomePairId = null;
-                      BlocProvider.of<MatchedBinomePairMatchesBloc>(context).add(
-                        IgnoreBinomePairMatchEvent(binomePairMatch : _binomePairMatch),
+                      BlocProvider.of<MatchedBinomePairMatchesBloc>(context)
+                          .add(
+                        IgnoreBinomePairMatchEvent(
+                            binomePairMatch: _binomePairMatch),
                       );
                     },
                     child: Text(
                       'Supprimer ce binôme',
                       style: Theme.of(context).textTheme.headline5.copyWith(
-                        color: Colors.white,
-                      ),
+                            color: Colors.white,
+                          ),
                     ),
                   ),
                 ),
@@ -2084,7 +2089,9 @@ class BinomeSelectionMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: binomes.length != 0 && ((binomePairMatchesNotMatched.length != 0) || (binomePairMatches.length != 0))
+      height: binomes.length != 0 &&
+              ((binomePairMatchesNotMatched.length != 0) ||
+                  (binomePairMatches.length != 0))
           ? 2 * height + 15.0
           : height,
       child: Column(

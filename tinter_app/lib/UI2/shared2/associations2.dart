@@ -92,7 +92,9 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                   Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                 return SlidingUpPanel(
                   margin: EdgeInsets.only(
-                    left: 20.0, right: 20.0, top: 20.0,
+                    left: 20.0,
+                    right: 20.0,
+                    top: 20.0,
                   ),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5.0),
@@ -116,7 +118,9 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                          left: 20.0, right: 20.0, top: 20.0,
+                          left: 20.0,
+                          right: 20.0,
+                          top: 20.0,
                         ),
                         child: LikedAssociationsWidgetWithTitle(
                           titleHeight: constraints.maxHeight *
@@ -928,9 +932,10 @@ class _AssociationCardState extends State<AssociationCard> {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-            color: Theme.of(context).primaryColor,
-            width: 2.0,
-            style: BorderStyle.solid),
+          color: Theme.of(context).primaryColor,
+          width: 2.0,
+          style: BorderStyle.solid,
+        ),
         borderRadius: BorderRadius.all(
           Radius.circular(5.0),
         ),
@@ -956,7 +961,7 @@ class _AssociationCardState extends State<AssociationCard> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          width: 2.5,
+                          width: 2.0,
                           color: Colors.black54,
                         ),
                       ),

@@ -453,7 +453,9 @@ class AssociationsRectangle2 extends StatelessWidget {
                           : Container(
                               height: 60.0,
                               child: Padding(
-                                padding: const EdgeInsets.only(right: 65.0),
+                                padding: const EdgeInsets.only(
+                                  right: 65.0,
+                                ),
                                 child: ListView.builder(
                                   shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
@@ -511,7 +513,7 @@ class AssociationsRectangle2 extends StatelessWidget {
           color: Colors.white,
           border: Border.all(
               color: Theme.of(context).primaryColor,
-              width: 2.5,
+              width: 2.0,
               style: BorderStyle.solid),
         ),
         child: ClipOval(

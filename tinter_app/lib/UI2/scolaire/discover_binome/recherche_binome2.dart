@@ -267,7 +267,7 @@ class UserResume extends StatelessWidget {
                           shape: BoxShape.circle,
                           border: Border.all(
                               color: Colors.black54,
-                              width: 2.5,
+                              width: 2.0,
                               style: BorderStyle.solid),
                         ),
                         child: getProfilePictureFromLogin(

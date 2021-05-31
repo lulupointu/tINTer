@@ -390,7 +390,10 @@ class CompareView extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-            color: Color(0xff79BFC9), width: 4.0, style: BorderStyle.solid),
+          color: Color(0xff79BFC9),
+          width: 3.5,
+          style: BorderStyle.solid,
+        ),
       ),
       height: 80,
       width: 80,

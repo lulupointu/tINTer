@@ -519,7 +519,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            width: 2 + 2 * animationController.value,
+                            width: 1.5 + 2 * animationController.value,
                             color: Theme.of(context).indicatorColor,
                           ),
                         ),
@@ -639,7 +639,7 @@ class _MatchesFlockState extends State<MatchesFlock>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              width: 4,
+                              width: 3.0,
                               color: tinterTheme.colors.secondary,
                             ),
                           ),
@@ -1476,8 +1476,10 @@ class _MatchInformationState extends State<MatchInformation> {
         return Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border:
-                Border.all(color: Theme.of(context).primaryColor, width: 2.5),
+            border: Border.all(
+              color: Theme.of(context).primaryColor,
+              width: 2.0,
+            ),
           ),
           height: 60,
           width: 60,

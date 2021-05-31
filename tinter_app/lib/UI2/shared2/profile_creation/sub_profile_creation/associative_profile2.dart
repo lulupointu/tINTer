@@ -227,7 +227,7 @@ class _HoveringUserPicture2State extends State<HoveringUserPicture2> {
           shape: BoxShape.circle,
           border: Border.all(
             color: Colors.white,
-            width: 3.5,
+            width: 3.0,
             style: BorderStyle.solid,
           ),
           boxShadow: [
