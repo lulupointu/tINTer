@@ -150,7 +150,7 @@ class ProblemOrQuestion extends StatelessWidget {
   }
 
   _launchDiscordURL() async {
-    const url = 'https://discord.gg/sUCzJS4Q4m';
+    const url = 'https://discord.gg/2UmjZjDuxT';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
