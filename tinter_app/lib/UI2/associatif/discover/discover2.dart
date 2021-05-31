@@ -1636,37 +1636,41 @@ class AssociatifStudentSearch extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           border: Border.all(
-              color: Colors.white, width: 4.0, style: BorderStyle.solid),
+            color: Colors.white,
+            width: 4.0,
+            style: BorderStyle.solid,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withOpacity(
+                0.2,
+              ),
               spreadRadius: 1,
               blurRadius: 2,
               offset: Offset(3, 3),
             ),
           ],
           borderRadius: BorderRadius.all(
-            Radius.circular(15.0),
+            Radius.circular(
+              15.0,
+            ),
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(
               Icons.search_rounded,
               color: Colors.white,
             ),
-            SizedBox(
-              width: 5.0,
-            ),
             Text(
               randomGender == Gender.M
                   ? "rechercher\nun étudiant"
                   : "rechercher\nune étudiante",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: Colors.white, height: 1.1),
+              style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: Colors.white,
+                    height: 1.1,
+                  ),
               textAlign: TextAlign.center,
             ),
           ],

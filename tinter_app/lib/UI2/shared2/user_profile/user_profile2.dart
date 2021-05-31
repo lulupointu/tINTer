@@ -8,12 +8,10 @@ import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
-import 'package:tinterapp/UI/shared/user_profile/associations.dart';
 import 'package:tinterapp/UI2/shared2/options_button/options2.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/sub_profile_creation/associative_profile2.dart';
 import 'package:tinterapp/UI2/shared2/user_profile/user_associatif_profile2.dart';
 import 'package:tinterapp/UI2/shared2/user_profile/user_scolaire_profile2.dart';
-
 import '../../../main.dart';
 import '../associatif_to_scolaire_button2.dart';
 import '../associations2.dart';
