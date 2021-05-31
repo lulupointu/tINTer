@@ -267,111 +267,71 @@ class SaveModificationsOverlay extends StatelessWidget {
                     builder: (context, tinterTheme, child) {
                   return AnimatedContainer(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(
+                            0.35,
+                          ),
+                          spreadRadius: 5,
+                          blurRadius: 5,
+                          offset: Offset(3, 3),
+                        ),
+                      ],
+                      color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(15.0),
                         topRight: Radius.circular(15.0),
                       ),
                     ),
                     duration: Duration(milliseconds: 300),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: Center(
-                              child: AutoSizeText(
-                                (userState is KnownUserSavingFailedState)
-                                    ? 'Echec de la sauvegarde, réessayer ?'
-                                    : 'Sauvegarder mes modifications',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(
-                                      color: Colors.white,
-                                    ),
-                                maxLines: 1,
-                              ),
-                            ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Center(
+                          child: AutoSizeText(
+                            (userState is KnownUserSavingFailedState)
+                                ? 'Echec de la sauvegarde, réessayer ?'
+                                : 'Sauvegarder mes modifications',
+                            style: Theme.of(context).textTheme.headline5,
+                            maxLines: 1,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              child: ElevatedButton(
+                                onPressed: () {
                                   BlocProvider.of<UserBloc>(context)
                                       .add(UserSaveEvent());
                                 },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(7.5),
-                                    ),
-                                    border: Border.all(
-                                        color: Colors.white,
-                                        width: 2.0,
-                                        style: BorderStyle.solid),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0,
-                                      vertical: 3.0,
-                                    ),
-                                    child: Text(
-                                      'OUI',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5
-                                          .copyWith(
-                                            color: Colors.white,
-                                          ),
-                                    ),
-                                  ),
-                                ),
+                                child: Text('Oui'),
                               ),
-                              SizedBox(
-                                width: 25.0,
-                              ),
-                              GestureDetector(
-                                onTap: () {
+                              width: 85.0,
+                              height: 30.0,
+                            ),
+                            SizedBox(
+                              width: 15.0,
+                            ),
+                            SizedBox(
+                              child: ElevatedButton(
+                                onPressed: () {
                                   BlocProvider.of<UserBloc>(context)
                                       .add(UserUndoUnsavedChangesEvent());
                                 },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).errorColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(7.5),
-                                    ),
-                                    border: Border.all(
-                                        color: Colors.white,
-                                        width: 2.0,
-                                        style: BorderStyle.solid),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0,
-                                      vertical: 3.0,
-                                    ),
-                                    child: Text(
-                                      'NON',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5
-                                          .copyWith(
-                                            color: Colors.white,
-                                          ),
-                                    ),
+                                child: Text('Annuler'),
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).errorColor,
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                              ),
+                              width: 85.0,
+                              height: 30.0,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   );
                 });
