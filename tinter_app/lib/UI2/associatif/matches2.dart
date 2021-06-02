@@ -57,13 +57,10 @@ class MatchsTab2State extends State<MatchsTab2> {
   @override
   void initState() {
     // Update to last information
-    if (BlocProvider.of<MatchedMatchesBloc>(context).state
-        is MatchedMatchesLoadSuccessState) {
-      BlocProvider.of<MatchedMatchesBloc>(context)
-          .add(MatchedMatchesRefreshEvent());
+    if (BlocProvider.of<MatchedMatchesBloc>(context).state is MatchedMatchesLoadSuccessState) {
+      BlocProvider.of<MatchedMatchesBloc>(context).add(MatchedMatchesRefreshEvent());
     } else {
-      BlocProvider.of<MatchedMatchesBloc>(context)
-          .add(MatchedMatchesRequestedEvent());
+      BlocProvider.of<MatchedMatchesBloc>(context).add(MatchedMatchesRequestedEvent());
     }
     super.initState();
   }
@@ -89,32 +86,29 @@ class MatchsTab2State extends State<MatchsTab2> {
           final List<BuildMatch> allMatches =
               (state as MatchedMatchesLoadSuccessState).matches;
           final List<BuildMatch> _matchesNotParrains = allMatches
-              .where((match) =>
-                  match.statusAssociatif != MatchStatus.parrainAccepted)
+              .where((match) => match.statusAssociatif != MatchStatus.parrainAccepted)
               .toList();
           final List<BuildMatch> _parrains = allMatches
-              .where((match) =>
-                  match.statusAssociatif == MatchStatus.parrainAccepted)
+              .where((match) => match.statusAssociatif == MatchStatus.parrainAccepted)
               .toList();
 
           // Sort them
-          _matchesNotParrains.sort((BuildMatch matchA, BuildMatch matchB) =>
-              matchA.name.compareTo(matchB.name));
-          _parrains.sort((BuildMatch matchA, BuildMatch matchB) =>
-              matchA.name.compareTo(matchB.name));
+          _matchesNotParrains.sort(
+              (BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
+          _parrains.sort(
+              (BuildMatch matchA, BuildMatch matchB) => matchA.name.compareTo(matchB.name));
 
-          widget.fractions['matchSelectionMenu'] =
-              ((_matchesNotParrains.length == 0)
-                      ? 0.0
-                      : (ModeAssociatifOverlay.height +
-                              2 * widget.spacing +
-                              MatchSelectionMenu.height +
-                              15.0) /
-                          MediaQuery.of(context).size.height) +
-                  ((_parrains.length == 0)
-                      ? 0.0
-                      : (widget.spacing + MatchSelectionMenu.height) /
-                          MediaQuery.of(context).size.height);
+          widget.fractions['matchSelectionMenu'] = ((_matchesNotParrains.length == 0)
+                  ? 0.0
+                  : (ModeAssociatifOverlay.height +
+                          2 * widget.spacing +
+                          MatchSelectionMenu.height +
+                          15.0) /
+                      MediaQuery.of(context).size.height) +
+              ((_parrains.length == 0)
+                  ? 0.0
+                  : (widget.spacing + MatchSelectionMenu.height) /
+                      MediaQuery.of(context).size.height);
           return Builder(
             builder: (BuildContext context) {
               // ignore: invalid_use_of_protected_member
@@ -168,15 +162,28 @@ class MatchsTab2State extends State<MatchsTab2> {
                     ),
                     (context.watch<SelectedAssociatif2>().matchLogin == null)
                         ? noMatchSelected(MediaQuery.of(context).size.height)
-                        : CompareView(
-                            match: allMatches.firstWhere((BuildMatch match) =>
-                                match.login ==
-                                context
-                                    .watch<SelectedAssociatif2>()
-                                    .matchLogin),
-                            appHeight: MediaQuery.of(context).size.height,
-                            topMenuScrolledFraction: topMenuScrolledFraction,
-                            onCompareTapped: onCompareTapped,
+                        : Builder(
+                            builder: (context) {
+                              BuildMatch selectedMatch;
+                              try {
+                                selectedMatch = allMatches.firstWhere((BuildMatch match) =>
+                                    match.login ==
+                                    context.watch<SelectedAssociatif2>().matchLogin);
+                              } on StateError {
+                                // This is achieve when the selected has been
+                                // removed from the list but binomeLogin has not been cleared
+                                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                                  context.watch<SelectedAssociatif2>().matchLogin = null;
+                                });
+                                return Container();
+                              }
+                              return CompareView(
+                                match: selectedMatch,
+                                appHeight: MediaQuery.of(context).size.height,
+                                topMenuScrolledFraction: topMenuScrolledFraction,
+                                onCompareTapped: onCompareTapped,
+                              );
+                            },
                           ),
                   ],
                 ),
@@ -206,8 +213,7 @@ class MatchsTab2State extends State<MatchsTab2> {
             height: appHeight * 0.1,
           ),
           BlocBuilder<MatchedMatchesBloc, MatchedMatchesState>(
-            buildWhen:
-                (MatchedMatchesState previousState, MatchedMatchesState state) {
+            buildWhen: (MatchedMatchesState previousState, MatchedMatchesState state) {
               if (previousState.runtimeType != state.runtimeType) {
                 return true;
               }
@@ -225,10 +231,7 @@ class MatchsTab2State extends State<MatchsTab2> {
                   child: CircularProgressIndicator(),
                 );
               }
-              return ((state as MatchedMatchesLoadSuccessState)
-                          .matches
-                          .length ==
-                      0)
+              return ((state as MatchedMatchesLoadSuccessState).matches.length == 0)
                   ? Column(
                       children: [
                         Icon(
@@ -331,12 +334,9 @@ class CompareView extends StatelessWidget {
                     );
                   }
                   return userPicture(
-                      getProfilePicture: (
-                              {@required height, @required width}) =>
+                      getProfilePicture: ({@required height, @required width}) =>
                           getProfilePictureFromLocalPathOrLogin(
-                              login: (userState as UserLoadSuccessState)
-                                  .user
-                                  .login,
+                              login: (userState as UserLoadSuccessState).user.login,
                               localPath: (userState as UserLoadSuccessState)
                                   .user
                                   .profilePictureLocalPath,
@@ -384,8 +384,7 @@ class CompareView extends StatelessWidget {
 
   /// Displays either your face or your match face
   Widget userPicture(
-      {Widget Function({@required double height, @required double width})
-          getProfilePicture}) {
+      {Widget Function({@required double height, @required double width}) getProfilePicture}) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -457,8 +456,7 @@ class CompareView extends StatelessWidget {
                   showGeneralDialog(
                     transitionDuration: Duration(milliseconds: 300),
                     context: context,
-                    pageBuilder: (BuildContext context, animation, _) =>
-                        Material(
+                    pageBuilder: (BuildContext context, animation, _) => Material(
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () => Navigator.of(context).pop(),
@@ -478,8 +476,7 @@ class CompareView extends StatelessWidget {
                                     child: Text(
                                       "Aide",
                                       textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
+                                      style: Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   Padding(
@@ -491,8 +488,7 @@ class CompareView extends StatelessWidget {
                                       "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
                                       " Il est basé sur les critères renseignés dans le profil.",
                                       textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
+                                      style: Theme.of(context).textTheme.headline5,
                                     ),
                                   ),
                                   Padding(
@@ -553,21 +549,17 @@ class CompareView extends StatelessWidget {
                         ? (_match.primoEntrant)
                             ? "Propose lui d'être ton parrain !"
                             : "Demande lui de te parrainer !"
-                        : (_match.statusAssociatif ==
-                                MatchStatus.youAskedParrain)
+                        : (_match.statusAssociatif == MatchStatus.youAskedParrain)
                             ? "Demande de parrainage envoyée !"
-                            : (_match.statusAssociatif ==
-                                    MatchStatus.heAskedParrain)
+                            : (_match.statusAssociatif == MatchStatus.heAskedParrain)
                                 ? (_match.primoEntrant)
                                     ? "Cette personne souhaite que tu la parraines !"
                                     : "Cette personne souhaite te parrainer !"
-                                : (_match.statusAssociatif ==
-                                        MatchStatus.parrainAccepted)
+                                : (_match.statusAssociatif == MatchStatus.parrainAccepted)
                                     ? (_match.primoEntrant)
                                         ? 'Tu parraines cette personne !'
                                         : "Cette personne te parraine !"
-                                    : (_match.statusAssociatif ==
-                                            MatchStatus.parrainHeRefused)
+                                    : (_match.statusAssociatif == MatchStatus.parrainHeRefused)
                                         ? 'Cette personne a refusé ta demande de parrainage.'
                                         : (_match.statusAssociatif ==
                                                 MatchStatus.parrainYouRefused)
@@ -619,8 +611,8 @@ class CompareView extends StatelessWidget {
                           height: 50,
                           child: ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).indicatorColor),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Theme.of(context).indicatorColor),
                             ),
                             onPressed: () {
                               BlocProvider.of<MatchedMatchesBloc>(context)
@@ -628,10 +620,7 @@ class CompareView extends StatelessWidget {
                             },
                             child: Text(
                               'Envoyer une demande',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.headline5.copyWith(
                                     color: Colors.white,
                                   ),
                             ),
@@ -655,17 +644,12 @@ class CompareView extends StatelessWidget {
                                     flex: 1,
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        BlocProvider.of<MatchedMatchesBloc>(
-                                                context)
-                                            .add(AcceptParrainEvent(
-                                                match: _match));
+                                        BlocProvider.of<MatchedMatchesBloc>(context)
+                                            .add(AcceptParrainEvent(match: _match));
                                       },
                                       child: Text(
                                         'Accepter',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(
+                                        style: Theme.of(context).textTheme.headline5.copyWith(
                                               color: Colors.white,
                                             ),
                                       ),
@@ -678,23 +662,16 @@ class CompareView extends StatelessWidget {
                                     flex: 1,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Theme.of(context)
-                                                    .indicatorColor),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Theme.of(context).indicatorColor),
                                       ),
                                       onPressed: () {
-                                        BlocProvider.of<MatchedMatchesBloc>(
-                                                context)
-                                            .add(RefuseParrainEvent(
-                                                match: _match));
+                                        BlocProvider.of<MatchedMatchesBloc>(context)
+                                            .add(RefuseParrainEvent(match: _match));
                                       },
                                       child: Text(
                                         'Refuser',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(
+                                        style: Theme.of(context).textTheme.headline5.copyWith(
                                               color: Colors.white,
                                             ),
                                       ),
@@ -720,8 +697,7 @@ class CompareView extends StatelessWidget {
                   height: 50,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).errorColor),
+                      backgroundColor: MaterialStateProperty.all(Theme.of(context).errorColor),
                     ),
                     onPressed: () async {
                       await onCompareTapped(0);
@@ -747,10 +723,7 @@ class CompareView extends StatelessWidget {
   }
 
   Widget informationRectangle(
-      {@required Widget child,
-      double width,
-      double height,
-      EdgeInsetsGeometry padding}) {
+      {@required Widget child, double width, double height, EdgeInsetsGeometry padding}) {
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
@@ -825,8 +798,7 @@ class ProfileInformation extends StatelessWidget {
         children: <Widget>[
           Card(
             child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -853,8 +825,7 @@ class ProfileInformation extends StatelessWidget {
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
                                     itemCount: user.associations.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
+                                    itemBuilder: (BuildContext context, int index) {
                                       return Padding(
                                         padding: const EdgeInsets.only(
                                           right: 5.0,
@@ -871,10 +842,7 @@ class ProfileInformation extends StatelessWidget {
                                 child: Center(
                                   child: Text(
                                     'Aucune association sélectionnée',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(
+                                    style: Theme.of(context).textTheme.headline5.copyWith(
                                           fontSize: 14.0,
                                         ),
                                   ),
@@ -889,8 +857,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -917,14 +884,11 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: Slider(
                             value: user.attiranceVieAsso,
@@ -940,8 +904,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -967,16 +930,12 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                disabledInactiveTrackColor: Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: Slider(
                             value: user.feteOuCours,
@@ -1000,8 +959,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -1029,16 +987,12 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                disabledInactiveTrackColor: Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: Slider(
                             value: user.aideOuSortir,
@@ -1062,8 +1016,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 25.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -1089,14 +1042,11 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: Slider(
                             value: user.organisationEvenements,
@@ -1162,11 +1112,9 @@ class ProfileInformation extends StatelessWidget {
                                           ),
                                         )
                                       ],
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)),
+                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
                                       border: Border.all(
-                                          color:
-                                              (Theme.of(context).primaryColor),
+                                          color: (Theme.of(context).primaryColor),
                                           width: 3.0,
                                           style: BorderStyle.solid),
                                       color: Colors.white,
@@ -1250,9 +1198,7 @@ class MatchSelectionMenu extends StatelessWidget {
                       child: topMenu(
                         context: context,
                         matches: parrains,
-                        title: ((userState as UserLoadSuccessState)
-                                .user
-                                .primoEntrant)
+                        title: ((userState as UserLoadSuccessState).user.primoEntrant)
                             ? 'Mes parrains et marraines'
                             : 'Mes filleuls et filleules',
                       ),
@@ -1302,9 +1248,8 @@ class MatchSelectionMenu extends StatelessWidget {
                     children: [
                       for (BuildMatch match in matches)
                         GestureDetector(
-                          onTap: () => context
-                              .read<SelectedAssociatif2>()
-                              .matchLogin = match.login,
+                          onTap: () =>
+                              context.read<SelectedAssociatif2>().matchLogin = match.login,
                           child: Padding(
                             padding: const EdgeInsets.only(
                               right: 7.5,
