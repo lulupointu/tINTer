@@ -20,7 +20,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   UserBloc({@required this.userRepository, @required this.authenticationBloc})
       : super(UserInitialState()) {
-    authenticationSubscription = authenticationBloc.listen((AuthenticationState authenticationState) {
+    authenticationSubscription = authenticationBloc.stream.listen((AuthenticationState authenticationState) {
       if (!(authenticationState is AuthenticationSuccessfulState)) {
         this.add(UserResetEvent());
       }

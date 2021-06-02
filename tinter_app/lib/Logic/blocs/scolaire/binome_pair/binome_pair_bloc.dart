@@ -49,7 +49,8 @@ class BinomePairBloc extends Bloc<BinomePairEvent, BinomePairState> {
   }
 
   Stream<BinomePairState> _mapMatiereRefreshEventToState() async* {
-    yield BinomePairRefreshingState((state as BinomePairLoadSuccessfulState).binomePair);
+    final currentState = state as BinomePairLoadSuccessfulState;
+    yield BinomePairRefreshingState(currentState.binomePair);
 
     if (!(authenticationBloc.state is AuthenticationSuccessfulState)) {
       authenticationBloc.add(AuthenticationLogWithTokenRequestSentEvent());
@@ -62,7 +63,7 @@ class BinomePairBloc extends Bloc<BinomePairEvent, BinomePairState> {
       binomePair = await binomePairRepository.getBinomePair();
     } catch (error) {
       print(error);
-      yield BinomePairRefreshingFailedState((state as BinomePairLoadSuccessfulState).binomePair);
+      yield BinomePairRefreshingFailedState(currentState.binomePair);
     }
     yield BinomePairLoadSuccessfulState(binomePair: binomePair);
   }

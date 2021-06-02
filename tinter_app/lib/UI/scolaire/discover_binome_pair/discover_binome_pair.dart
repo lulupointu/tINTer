@@ -385,8 +385,7 @@ class _BinomePairMatchesFlockState extends State<BinomePairMatchesFlock>
           return Container(
             height: constraints.maxHeight,
             child: Stack(
-              overflow: Overflow.visible,
-              alignment: AlignmentDirectional.topCenter,
+              clipBehavior: Clip.none, alignment: AlignmentDirectional.topCenter,
               children: <Widget>[
                 if ((state as DiscoverBinomePairMatchesLoadSuccessState)
                         .binomePairMatches

@@ -1,5 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,140 +42,146 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
   void initState() {
     super.initState();
     _panelController = PanelController();
-    KeyboardVisibilityController().onChange.listen(
-      (bool visible) {
-        if (!visible) {
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyboardVisibilityBuilder(
+      builder: (BuildContext , bool isKeyboardVisible) {
+        if (!isKeyboardVisible) {
           FocusScope.of(context).unfocus();
           if (searchString == "") {
             clearSearch();
           }
         }
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).primaryColor,
-      child: SafeArea(
-        child: Consumer<TinterTheme>(
-          builder: (context, tinterTheme, child) {
-            return Scaffold(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                leading: new IconButton(
-                  icon: new Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                title: Text(
-                  'Associations',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              body: child,
-            );
-          },
-          child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-            return Padding(
-              padding: EdgeInsets.only(
-                top: 0.0,
-              ),
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                return SlidingUpPanel(
-                  margin: EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                    top: 20.0,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5.0),
-                    topRight: Radius.circular(5.0),
-                  ),
-                  color: Colors.white,
-                  backdropEnabled: true,
-                  backdropOpacity: 1.0,
-                  backdropColor: Theme.of(context).scaffoldBackgroundColor,
-                  controller: _panelController,
-                  maxHeight: constraints.maxHeight,
-                  minHeight: constraints.maxHeight *
-                      (1 -
-                          (AssociationsTab2.fractions['topSeparator'] +
-                              AssociationsTab2.fractions['sheetSeparator'] +
-                              AssociationsTab2.fractions['likedAssociations'] +
-                              AssociationsTab2.fractions['titles'] +
-                              AssociationsTab2.fractions['titlesSeparator'])) *
-                      1.175,
-                  body: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          right: 20.0,
-                          top: 20.0,
-                        ),
-                        child: LikedAssociationsWidgetWithTitle(
-                          titleHeight: constraints.maxHeight *
-                              AssociationsTab2.fractions['titles'],
-                          titleSeparatorHeight: constraints.maxHeight *
-                              AssociationsTab2.fractions['titlesSeparator'],
-                          likedAssociationsHeight: constraints.maxHeight *
-                              AssociationsTab2.fractions['likedAssociations'],
-                          width: constraints.maxWidth,
-                          margin: constraints.maxHeight *
-                              AssociationsTab2.fractions['horizontalMargin'],
-                        ),
-                      )
-                    ],
-                  ),
-                  panelBuilder: (ScrollController scrollController) {
-                    return AllAssociationsSheetBody(
-                      scrollController: scrollController,
-                      keyboardMargin:
-                          KeyboardVisibilityProvider.isKeyboardVisible(context)
-                              ? MediaQuery.of(context).viewInsets.bottom
-                              : 0,
-                      width: constraints.maxWidth,
-                      margin: constraints.maxHeight *
-                          AssociationsTab2.fractions['horizontalMargin'],
-                      headerHeight: constraints.maxHeight *
-                          AssociationsTab2.fractions['titles'],
-                      headerSpacing: constraints.maxHeight *
-                          AssociationsTab2.fractions['headerSpacing'],
-                      searchString: searchString,
-                    );
-                  },
-                  header: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0,
-                      vertical: 15.0,
+        return Container(
+          color: Theme.of(context).primaryColor,
+          child: SafeArea(
+            child: Consumer<TinterTheme>(
+              builder: (context, tinterTheme, child) {
+                return Scaffold(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  resizeToAvoidBottomInset: false,
+                  appBar: AppBar(
+                    leading: new IconButton(
+                      icon: new Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
                     ),
-                    child: TitleAndSearchBarAllAssociations(
-                      height: constraints.maxHeight *
-                          AssociationsTab2.fractions['titles'],
-                      width: constraints.maxWidth,
-                      margin: constraints.maxHeight *
-                          AssociationsTab2.fractions['horizontalMargin'],
-                      headerSpacing: constraints.maxHeight *
-                          AssociationsTab2.fractions['headerSpacing'],
-                      isSearching: isSearching,
-                      searchString: searchString,
-                      onSearch: onSearch,
-                      clearSearch: clearSearch,
+                    title: Text(
+                      'Associations',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
+                  body: child,
                 );
-              }),
-            );
-          }),
-        ),
-      ),
+              },
+              child: LayoutBuilder(
+                  builder: (context, BoxConstraints constraints) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        top: 0.0,
+                      ),
+                      child:
+                      Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                        return SlidingUpPanel(
+                          margin: EdgeInsets.only(
+                            left: 20.0,
+                            right: 20.0,
+                            top: 20.0,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5.0),
+                            topRight: Radius.circular(5.0),
+                          ),
+                          color: Colors.white,
+                          backdropEnabled: true,
+                          backdropOpacity: 1.0,
+                          backdropColor: Theme.of(context).scaffoldBackgroundColor,
+                          controller: _panelController,
+                          maxHeight: constraints.maxHeight,
+                          minHeight: constraints.maxHeight *
+                              (1 -
+                                  (AssociationsTab2.fractions['topSeparator'] +
+                                      AssociationsTab2.fractions['sheetSeparator'] +
+                                      AssociationsTab2.fractions['likedAssociations'] +
+                                      AssociationsTab2.fractions['titles'] +
+                                      AssociationsTab2.fractions['titlesSeparator'])) *
+                              1.175,
+                          body: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 20.0,
+                                  right: 20.0,
+                                  top: 20.0,
+                                ),
+                                child: LikedAssociationsWidgetWithTitle(
+                                  titleHeight: constraints.maxHeight *
+                                      AssociationsTab2.fractions['titles'],
+                                  titleSeparatorHeight: constraints.maxHeight *
+                                      AssociationsTab2.fractions['titlesSeparator'],
+                                  likedAssociationsHeight: constraints.maxHeight *
+                                      AssociationsTab2.fractions['likedAssociations'],
+                                  width: constraints.maxWidth,
+                                  margin: constraints.maxHeight *
+                                      AssociationsTab2.fractions['horizontalMargin'],
+                                ),
+                              )
+                            ],
+                          ),
+                          panelBuilder: (ScrollController scrollController) {
+                            return AllAssociationsSheetBody(
+                              scrollController: scrollController,
+                              keyboardMargin:
+                              KeyboardVisibilityProvider.isKeyboardVisible(context)
+                                  ? MediaQuery.of(context).viewInsets.bottom
+                                  : 0,
+                              width: constraints.maxWidth,
+                              margin: constraints.maxHeight *
+                                  AssociationsTab2.fractions['horizontalMargin'],
+                              headerHeight: constraints.maxHeight *
+                                  AssociationsTab2.fractions['titles'],
+                              headerSpacing: constraints.maxHeight *
+                                  AssociationsTab2.fractions['headerSpacing'],
+                              searchString: searchString,
+                            );
+                          },
+                          header: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15.0,
+                              vertical: 15.0,
+                            ),
+                            child: TitleAndSearchBarAllAssociations(
+                              height: constraints.maxHeight *
+                                  AssociationsTab2.fractions['titles'],
+                              width: constraints.maxWidth,
+                              margin: constraints.maxHeight *
+                                  AssociationsTab2.fractions['horizontalMargin'],
+                              headerSpacing: constraints.maxHeight *
+                                  AssociationsTab2.fractions['headerSpacing'],
+                              isSearching: isSearching,
+                              searchString: searchString,
+                              onSearch: onSearch,
+                              clearSearch: clearSearch,
+                            ),
+                          ),
+                        );
+                      }),
+                    );
+                  }),
+            ),
+          ),
+        );
+      },
     );
   }
 

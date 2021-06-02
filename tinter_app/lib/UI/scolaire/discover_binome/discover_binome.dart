@@ -390,8 +390,7 @@ class _BinomesFlockState extends State<BinomesFlock> with SingleTickerProviderSt
           return Container(
             height: constraints.maxHeight,
             child: Stack(
-              overflow: Overflow.visible,
-              alignment: AlignmentDirectional.topCenter,
+              clipBehavior: Clip.none, alignment: AlignmentDirectional.topCenter,
               children: <Widget>[
                 if ((state as DiscoverBinomesLoadSuccessState).binomes.length >= 3) ...[
                   // First head

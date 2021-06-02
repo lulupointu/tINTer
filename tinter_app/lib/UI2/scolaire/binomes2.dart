@@ -78,14 +78,12 @@ class BinomesTab2State extends State<BinomesTab2> {
 
   @override
   void initState() {
+    print('UPDATE TO LAST INFO');
     // Update to last information
-    if (BlocProvider.of<MatchedBinomesBloc>(context).state
-        is MatchedBinomesLoadSuccessState) {
-      BlocProvider.of<MatchedBinomesBloc>(context)
-          .add(MatchedBinomesRefreshingEvent());
+    if (BlocProvider.of<MatchedBinomesBloc>(context).state is MatchedBinomesLoadSuccessState) {
+      BlocProvider.of<MatchedBinomesBloc>(context).add(MatchedBinomesRefreshingEvent());
     } else {
-      BlocProvider.of<MatchedBinomesBloc>(context)
-          .add(MatchedBinomesRequestedEvent());
+      BlocProvider.of<MatchedBinomesBloc>(context).add(MatchedBinomesRequestedEvent());
     }
 
     // Update to last information
@@ -99,8 +97,7 @@ class BinomesTab2State extends State<BinomesTab2> {
     }
 
     // Update to last information
-    if (BlocProvider.of<BinomePairBloc>(context).state
-        is BinomePairLoadSuccessfulState) {
+    if (BlocProvider.of<BinomePairBloc>(context).state is BinomePairLoadSuccessfulState) {
       BlocProvider.of<BinomePairBloc>(context).add(BinomePairRefreshEvent());
     } else {
       BlocProvider.of<BinomePairBloc>(context).add(BinomePairLoadEvent());
@@ -123,35 +120,34 @@ class BinomesTab2State extends State<BinomesTab2> {
         bottom: false,
         child: Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(builder:
-              (BuildContext context, MatchedBinomesState matchedBinomesState) {
+          child: BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(
+              builder: (BuildContext context, MatchedBinomesState matchedBinomesState) {
             if (!(matchedBinomesState is MatchedBinomesLoadSuccessState)) {
               return Center(child: CircularProgressIndicator());
             }
+
+            print(
+                "matchedBinomesState: ${(matchedBinomesState as MatchedBinomesLoadSuccessState).binomes}");
 
             // Get the 2 list out of all the matched binomes
             final List<BuildBinome> allBinomes =
                 (matchedBinomesState as MatchedBinomesLoadSuccessState).binomes;
             final List<BuildBinome> _binomesNotBinomes = allBinomes
-                .where((binome) =>
-                    binome.statusScolaire != BinomeStatus.binomeAccepted)
+                .where((binome) => binome.statusScolaire != BinomeStatus.binomeAccepted)
                 .toList();
             final List<BuildBinome> _binomes = allBinomes
-                .where((binome) =>
-                    binome.statusScolaire == BinomeStatus.binomeAccepted)
+                .where((binome) => binome.statusScolaire == BinomeStatus.binomeAccepted)
                 .toList();
 
             // Sort them
-            _binomesNotBinomes.sort(
-                (BuildBinome binomeA, BuildBinome binomeB) =>
-                    binomeA.name.compareTo(binomeB.name));
+            _binomesNotBinomes.sort((BuildBinome binomeA, BuildBinome binomeB) =>
+                binomeA.name.compareTo(binomeB.name));
             _binomes.sort((BuildBinome binomeA, BuildBinome binomeB) =>
                 binomeA.name.compareTo(binomeB.name));
 
-            return BlocBuilder<MatchedBinomePairMatchesBloc,
-                MatchedBinomePairMatchesState>(builder: (BuildContext
-                    context,
-                MatchedBinomePairMatchesState matchedBinomePairMatchesState) {
+            return BlocBuilder<MatchedBinomePairMatchesBloc, MatchedBinomePairMatchesState>(
+                builder: (BuildContext context,
+                    MatchedBinomePairMatchesState matchedBinomePairMatchesState) {
               if (!(matchedBinomePairMatchesState
                   is MatchedBinomePairMatchesLoadSuccessState)) {
                 return Center(child: CircularProgressIndicator());
@@ -159,8 +155,7 @@ class BinomesTab2State extends State<BinomesTab2> {
 
               // Get the 2 list out of all the matched binome pair matches
               final List<BuildBinomePairMatch> allBinomePairMatches =
-                  (matchedBinomePairMatchesState
-                          as MatchedBinomePairMatchesLoadSuccessState)
+                  (matchedBinomePairMatchesState as MatchedBinomePairMatchesLoadSuccessState)
                       .binomePairMatches;
               final List<BuildBinomePairMatch> _binomePairMatchesNotMatched =
                   allBinomePairMatches
@@ -168,41 +163,36 @@ class BinomesTab2State extends State<BinomesTab2> {
                           binomePairMatch.status !=
                           BinomePairMatchStatus.binomePairMatchAccepted)
                       .toList();
-              final List<BuildBinomePairMatch> _binomePairMatches =
-                  allBinomePairMatches
-                      .where((binomePairMatch) =>
-                          binomePairMatch.status ==
-                          BinomePairMatchStatus.binomePairMatchAccepted)
-                      .toList();
+              final List<BuildBinomePairMatch> _binomePairMatches = allBinomePairMatches
+                  .where((binomePairMatch) =>
+                      binomePairMatch.status == BinomePairMatchStatus.binomePairMatchAccepted)
+                  .toList();
 
               // Sort them
-              _binomePairMatchesNotMatched.sort(
-                  (BuildBinomePairMatch binomePairMatchA,
-                          BuildBinomePairMatch binomePairMatchB) =>
-                      binomePairMatchA.name.compareTo(binomePairMatchB.name));
+              _binomePairMatchesNotMatched.sort((BuildBinomePairMatch binomePairMatchA,
+                      BuildBinomePairMatch binomePairMatchB) =>
+                  binomePairMatchA.name.compareTo(binomePairMatchB.name));
               _binomePairMatches.sort((BuildBinomePairMatch binomePairMatchA,
                       BuildBinomePairMatch binomePairMatchB) =>
                   binomePairMatchA.name.compareTo(binomePairMatchB.name));
 
               // If the user doesn't have a binome
               if (_binomes.length == 0) {
-                widget.fractions['binomeSelectionMenu'] =
-                    (ModeScolaireOverlay.height +
+                widget.fractions['binomeSelectionMenu'] = (ModeScolaireOverlay.height +
+                        2 * widget.spacing +
+                        BinomeSelectionMenu.height +
+                        15.0) /
+                    MediaQuery.of(context).size.height;
+              } else {
+                widget.fractions['binomeSelectionMenu'] = ((ModeScolaireOverlay.height +
                             2 * widget.spacing +
                             BinomeSelectionMenu.height +
-                            15.0) /
-                        MediaQuery.of(context).size.height;
-              } else {
-                widget.fractions['binomeSelectionMenu'] =
-                    ((ModeScolaireOverlay.height +
-                                2 * widget.spacing +
-                                BinomeSelectionMenu.height +
-                                15.0) +
-                            ((_binomePairMatches.length != 0 ||
-                                    _binomePairMatchesNotMatched.length != 0)
-                                ? (widget.spacing + BinomeSelectionMenu.height)
-                                : 0)) /
-                        MediaQuery.of(context).size.height;
+                            15.0) +
+                        ((_binomePairMatches.length != 0 ||
+                                _binomePairMatchesNotMatched.length != 0)
+                            ? (widget.spacing + BinomeSelectionMenu.height)
+                            : 0)) /
+                    MediaQuery.of(context).size.height;
               }
 
               return Builder(
@@ -225,8 +215,7 @@ class BinomesTab2State extends State<BinomesTab2> {
                   }
 
                   return NotificationListener<ScrollEndNotification>(
-                    onNotification:
-                        (ScrollEndNotification scrollEndNotification) {
+                    onNotification: (ScrollEndNotification scrollEndNotification) {
                       _scrollPhysics = _controller.offset == 0
                           ? AlwaysScrollableScrollPhysics()
                           : SnapScrollSheetPhysics(
@@ -259,51 +248,66 @@ class BinomesTab2State extends State<BinomesTab2> {
                           child: BinomeSelectionMenu(
                             binomesNotBinomes: _binomesNotBinomes,
                             binomes: _binomes,
-                            binomePairMatchesNotMatched:
-                                _binomePairMatchesNotMatched,
+                            binomePairMatchesNotMatched: _binomePairMatchesNotMatched,
                             binomePairMatches: _binomePairMatches,
                           ),
                         ),
-                        (context.watch<SelectedScolaire2>().binomeLogin ==
-                                    null &&
-                                context
-                                        .watch<SelectedScolaire2>()
-                                        .binomePairId ==
-                                    null)
-                            ? noBinomeSelected(
-                                MediaQuery.of(context).size.height)
-                            : (context
-                                        .watch<SelectedScolaire2>()
-                                        .binomePairId ==
-                                    null)
-                                ? CompareViewBinome(
-                                    binome: allBinomes.firstWhere(
-                                      (BuildBinome binome) =>
-                                          binome.login ==
+                        (context.watch<SelectedScolaire2>().binomeLogin == null &&
+                                context.watch<SelectedScolaire2>().binomePairId == null)
+                            ? noBinomeSelected(MediaQuery.of(context).size.height)
+                            : (context.watch<SelectedScolaire2>().binomePairId == null)
+                                ? Builder(
+                                    builder: (context) {
+                                      BuildBinome selectedBinome;
+                                      try {
+                                        selectedBinome = allBinomes.firstWhere(
+                                          (BuildBinome binome) =>
+                                              binome.login ==
+                                              context.watch<SelectedScolaire2>().binomeLogin,
+                                        );
+                                      } on StateError {
+                                        // This is achieve when the selected has been
+                                        // removed from the list but binomeLogin has not been cleared
+                                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                                           context
-                                              .watch<SelectedScolaire2>()
-                                              .binomeLogin,
-                                    ),
-                                    appHeight:
-                                        MediaQuery.of(context).size.height,
-                                    topMenuScrolledFraction:
-                                        topMenuScrolledFraction,
-                                    onCompareTapped: onCompareTapped,
+                                              .read<SelectedScolaire2>()
+                                              .binomeLogin = null;
+                                        });
+                                        return Container();
+                                      }
+                                      return CompareViewBinome(
+                                        binome: selectedBinome,
+                                        appHeight: MediaQuery.of(context).size.height,
+                                        topMenuScrolledFraction: topMenuScrolledFraction,
+                                        onCompareTapped: onCompareTapped,
+                                      );
+                                    },
                                   )
-                                : CompareViewBinomePairMatch(
-                                    binomePairMatch:
-                                        allBinomePairMatches.firstWhere(
-                                      (BuildBinomePairMatch binomePairMatch) =>
-                                          binomePairMatch.binomePairId ==
-                                          context
-                                              .watch<SelectedScolaire2>()
-                                              .binomePairId,
-                                    ),
-                                    appHeight:
-                                        MediaQuery.of(context).size.height,
-                                    topMenuScrolledFraction:
-                                        topMenuScrolledFraction,
-                                    onCompareTapped: onCompareTapped,
+                                : Builder(
+                                    builder: (context) {
+                                      BuildBinomePairMatch selectedBinomePairMatch;
+                                      try {
+                                        selectedBinomePairMatch =
+                                            allBinomePairMatches.firstWhere(
+                                          (BuildBinomePairMatch binomePairMatch) =>
+                                              binomePairMatch.binomePairId ==
+                                              context.watch<SelectedScolaire2>().binomePairId,
+                                        );
+                                      } on StateError {
+                                        // This is achieve when the selected has been
+                                        // removed from the list but binomePairId has not been cleared
+                                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                                          context.read<SelectedScolaire2>().binomePairId = null;
+                                        });
+                                        return Container();
+                                      }
+                                      return CompareViewBinomePairMatch(
+                                        binomePairMatch: selectedBinomePairMatch,
+                                        appHeight: MediaQuery.of(context).size.height,
+                                        topMenuScrolledFraction: topMenuScrolledFraction,
+                                        onCompareTapped: onCompareTapped,
+                                      );
+                                    },
                                   ),
                       ],
                     ),
@@ -333,8 +337,7 @@ class BinomesTab2State extends State<BinomesTab2> {
       ),
       Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
         return BlocBuilder<MatchedBinomesBloc, MatchedBinomesState>(
-          buildWhen:
-              (MatchedBinomesState previousState, MatchedBinomesState state) {
+          buildWhen: (MatchedBinomesState previousState, MatchedBinomesState state) {
             if (previousState.runtimeType != state.runtimeType) {
               return true;
             }
@@ -352,12 +355,8 @@ class BinomesTab2State extends State<BinomesTab2> {
                 child: CircularProgressIndicator(),
               );
             }
-            return Consumer<TinterTheme>(
-                builder: (context, tinterTheme, child) {
-              return ((state as MatchedBinomesLoadSuccessState)
-                          .binomes
-                          .length ==
-                      0)
+            return Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+              return ((state as MatchedBinomesLoadSuccessState).binomes.length == 0)
                   ? Column(
                       children: [
                         Icon(
@@ -454,12 +453,9 @@ class CompareViewBinome extends StatelessWidget {
                     );
                   }
                   return userPicture(
-                      getProfilePicture: (
-                              {@required height, @required width}) =>
+                      getProfilePicture: ({@required height, @required width}) =>
                           getProfilePictureFromLocalPathOrLogin(
-                              login: (userState as UserLoadSuccessState)
-                                  .user
-                                  .login,
+                              login: (userState as UserLoadSuccessState).user.login,
                               localPath: (userState as UserLoadSuccessState)
                                   .user
                                   .profilePictureLocalPath,
@@ -508,8 +504,7 @@ class CompareViewBinome extends StatelessWidget {
 
   /// Displays either your face or your binome face
   Widget userPicture(
-      {Widget Function({@required double height, @required double width})
-          getProfilePicture}) {
+      {Widget Function({@required double height, @required double width}) getProfilePicture}) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -581,8 +576,7 @@ class CompareViewBinome extends StatelessWidget {
                   showGeneralDialog(
                     transitionDuration: Duration(milliseconds: 300),
                     context: context,
-                    pageBuilder: (BuildContext context, animation, _) =>
-                        Material(
+                    pageBuilder: (BuildContext context, animation, _) => Material(
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () => Navigator.of(context).pop(),
@@ -602,8 +596,7 @@ class CompareViewBinome extends StatelessWidget {
                                     child: Text(
                                       "Aide",
                                       textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
+                                      style: Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   Padding(
@@ -615,8 +608,7 @@ class CompareViewBinome extends StatelessWidget {
                                       "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
                                       " Il est basé sur les critères renseignés dans le profil.",
                                       textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
+                                      style: Theme.of(context).textTheme.headline5,
                                     ),
                                   ),
                                   Padding(
@@ -675,17 +667,13 @@ class CompareViewBinome extends StatelessWidget {
                     ? "Cette personne ne t'a pas encore liké.e."
                     : (_binome.statusScolaire == BinomeStatus.matched)
                         ? "Propose lui d'être son binôme !"
-                        : (_binome.statusScolaire ==
-                                BinomeStatus.youAskedBinome)
+                        : (_binome.statusScolaire == BinomeStatus.youAskedBinome)
                             ? "Demande de binôme envoyée !"
-                            : (_binome.statusScolaire ==
-                                    BinomeStatus.heAskedBinome)
+                            : (_binome.statusScolaire == BinomeStatus.heAskedBinome)
                                 ? "Cette personne veut être ton ou ta binôme !"
-                                : (_binome.statusScolaire ==
-                                        BinomeStatus.binomeAccepted)
+                                : (_binome.statusScolaire == BinomeStatus.binomeAccepted)
                                     ? "Tu es en binôme avec cette personne !"
-                                    : (_binome.statusScolaire ==
-                                            BinomeStatus.binomeHeRefused)
+                                    : (_binome.statusScolaire == BinomeStatus.binomeHeRefused)
                                         ? 'Cette personne a refusé ta demande de binôme.'
                                         : (_binome.statusScolaire ==
                                                 BinomeStatus.binomeYouRefused)
@@ -732,8 +720,8 @@ class CompareViewBinome extends StatelessWidget {
                           height: 50,
                           child: ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).indicatorColor),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Theme.of(context).indicatorColor),
                             ),
                             onPressed: () {
                               BlocProvider.of<MatchedBinomesBloc>(context)
@@ -741,10 +729,7 @@ class CompareViewBinome extends StatelessWidget {
                             },
                             child: Text(
                               'Envoyer une demande',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.headline5.copyWith(
                                     color: Colors.white,
                                   ),
                             ),
@@ -768,17 +753,12 @@ class CompareViewBinome extends StatelessWidget {
                                     flex: 1,
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        BlocProvider.of<MatchedBinomesBloc>(
-                                                context)
-                                            .add(AcceptBinomeEvent(
-                                                binome: _binome));
+                                        BlocProvider.of<MatchedBinomesBloc>(context)
+                                            .add(AcceptBinomeEvent(binome: _binome));
                                       },
                                       child: Text(
                                         'Accepter',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(
+                                        style: Theme.of(context).textTheme.headline5.copyWith(
                                               color: Colors.white,
                                             ),
                                       ),
@@ -791,23 +771,16 @@ class CompareViewBinome extends StatelessWidget {
                                     flex: 1,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Theme.of(context)
-                                                    .indicatorColor),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Theme.of(context).indicatorColor),
                                       ),
                                       onPressed: () {
-                                        BlocProvider.of<MatchedBinomesBloc>(
-                                                context)
-                                            .add(RefuseBinomeEvent(
-                                                binome: _binome));
+                                        BlocProvider.of<MatchedBinomesBloc>(context)
+                                            .add(RefuseBinomeEvent(binome: _binome));
                                       },
                                       child: Text(
                                         'Refuser',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(
+                                        style: Theme.of(context).textTheme.headline5.copyWith(
                                               color: Colors.white,
                                             ),
                                       ),
@@ -833,8 +806,7 @@ class CompareViewBinome extends StatelessWidget {
                   height: 50,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).errorColor),
+                      backgroundColor: MaterialStateProperty.all(Theme.of(context).errorColor),
                     ),
                     onPressed: () async {
                       await onCompareTapped(0);
@@ -860,10 +832,7 @@ class CompareViewBinome extends StatelessWidget {
   }
 
   Widget informationRectangle(
-      {@required Widget child,
-      double width,
-      double height,
-      EdgeInsetsGeometry padding}) {
+      {@required Widget child, double width, double height, EdgeInsetsGeometry padding}) {
     return Align(
       alignment: AlignmentDirectional.center,
       child: Consumer<TinterTheme>(
@@ -969,23 +938,20 @@ class CompareViewBinomePairMatch extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BlocBuilder<BinomePairBloc, BinomePairState>(builder:
-                    (BuildContext context, BinomePairState binomePairState) {
+                BlocBuilder<BinomePairBloc, BinomePairState>(
+                    builder: (BuildContext context, BinomePairState binomePairState) {
                   if (!(binomePairState is BinomePairLoadSuccessfulState)) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
                   }
                   return userPicture(
-                      getProfilePicture: (
-                              {@required height, @required width}) =>
+                      getProfilePicture: ({@required height, @required width}) =>
                           BinomePair.getProfilePictureFromBinomePairLogins(
-                            loginA: (binomePairState
-                                    as BinomePairLoadSuccessfulState)
+                            loginA: (binomePairState as BinomePairLoadSuccessfulState)
                                 .binomePair
                                 .login,
-                            loginB: (binomePairState
-                                    as BinomePairLoadSuccessfulState)
+                            loginB: (binomePairState as BinomePairLoadSuccessfulState)
                                 .binomePair
                                 .otherLogin,
                             height: height,
@@ -1039,8 +1005,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
 
   /// Displays either your face or your binome face
   Widget userPicture(
-      {Widget Function({@required double height, @required double width})
-          getProfilePicture}) {
+      {Widget Function({@required double height, @required double width}) getProfilePicture}) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -1107,8 +1072,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                   showGeneralDialog(
                     transitionDuration: Duration(milliseconds: 300),
                     context: context,
-                    pageBuilder: (BuildContext context, animation, _) =>
-                        Material(
+                    pageBuilder: (BuildContext context, animation, _) => Material(
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () => Navigator.of(context).pop(),
@@ -1128,8 +1092,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                                     child: Text(
                                       "Aide",
                                       textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
+                                      style: Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   Padding(
@@ -1141,8 +1104,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                                       "Le score est un indicateur sur 100 de l'affinité supposée entre deux étudiants."
                                       " Il est basé sur les critères renseignés dans le profil.",
                                       textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
+                                      style: Theme.of(context).textTheme.headline5,
                                     ),
                                   ),
                                   Padding(
@@ -1195,30 +1157,24 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                 horizontal: 10.0,
                 vertical: 15.0,
               ),
-              child:
-                  Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+              child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                 return AutoSizeText(
                   (_binomePairMatch.status == BinomePairMatchStatus.liked ||
-                          _binomePairMatch.status ==
-                              BinomePairMatchStatus.heIgnoredYou)
+                          _binomePairMatch.status == BinomePairMatchStatus.heIgnoredYou)
                       ? "Ce binôme ne vous a pas encore likés."
-                      : (_binomePairMatch.status ==
-                              BinomePairMatchStatus.matched)
+                      : (_binomePairMatch.status == BinomePairMatchStatus.matched)
                           ? "Propose leur de former un quadrinôme !"
                           : (_binomePairMatch.status ==
                                   BinomePairMatchStatus.youAskedBinomePairMatch)
                               ? "Demande de quadrinôme envoyée !"
                               : (_binomePairMatch.status ==
-                                      BinomePairMatchStatus
-                                          .heAskedBinomePairMatch)
+                                      BinomePairMatchStatus.heAskedBinomePairMatch)
                                   ? "Ce binôme souhaite former un quadrinôme avec toi !"
                                   : (_binomePairMatch.status ==
-                                          BinomePairMatchStatus
-                                              .binomePairMatchAccepted)
+                                          BinomePairMatchStatus.binomePairMatchAccepted)
                                       ? "Tu formes un quadrinôme avec eux !"
                                       : (_binomePairMatch.status ==
-                                              BinomePairMatchStatus
-                                                  .binomePairMatchHeRefused)
+                                              BinomePairMatchStatus.binomePairMatchHeRefused)
                                           ? 'Ce binôme a refusé votre demande de quadrinôme.'
                                           : (_binomePairMatch.status ==
                                                   BinomePairMatchStatus
@@ -1253,10 +1209,8 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                   ),
                 ),
               ),
-            if ([
-              BinomePairMatchStatus.matched,
-              BinomePairMatchStatus.heAskedBinomePairMatch
-            ].contains(_binomePairMatch.status)) ...[
+            if ([BinomePairMatchStatus.matched, BinomePairMatchStatus.heAskedBinomePairMatch]
+                .contains(_binomePairMatch.status)) ...[
               (_binomePairMatch.status == BinomePairMatchStatus.matched)
                   ? Padding(
                       padding: const EdgeInsets.only(
@@ -1268,21 +1222,16 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                           height: 50,
                           child: ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).indicatorColor),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Theme.of(context).indicatorColor),
                             ),
                             onPressed: () {
-                              BlocProvider.of<MatchedBinomePairMatchesBloc>(
-                                      context)
-                                  .add(AskBinomePairMatchEvent(
-                                      binomePairMatch: _binomePairMatch));
+                              BlocProvider.of<MatchedBinomePairMatchesBloc>(context).add(
+                                  AskBinomePairMatchEvent(binomePairMatch: _binomePairMatch));
                             },
                             child: Text(
                               'Envoyer une demande',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.headline5.copyWith(
                                     color: Colors.white,
                                   ),
                             ),
@@ -1290,8 +1239,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                         ),
                       ),
                     )
-                  : (_binomePairMatch.status ==
-                          BinomePairMatchStatus.heAskedBinomePairMatch)
+                  : (_binomePairMatch.status == BinomePairMatchStatus.heAskedBinomePairMatch)
                       ? Padding(
                           padding: const EdgeInsets.only(
                             bottom: 15.0,
@@ -1307,19 +1255,13 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                                     flex: 1,
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        BlocProvider.of<
-                                                    MatchedBinomePairMatchesBloc>(
-                                                context)
+                                        BlocProvider.of<MatchedBinomePairMatchesBloc>(context)
                                             .add(AcceptBinomePairMatchEvent(
-                                                binomePairMatch:
-                                                    _binomePairMatch));
+                                                binomePairMatch: _binomePairMatch));
                                       },
                                       child: Text(
                                         'Accepter',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(
+                                        style: Theme.of(context).textTheme.headline5.copyWith(
                                               color: Colors.white,
                                             ),
                                       ),
@@ -1332,25 +1274,17 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                                     flex: 1,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Theme.of(context)
-                                                    .indicatorColor),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Theme.of(context).indicatorColor),
                                       ),
                                       onPressed: () {
-                                        BlocProvider.of<
-                                                    MatchedBinomePairMatchesBloc>(
-                                                context)
+                                        BlocProvider.of<MatchedBinomePairMatchesBloc>(context)
                                             .add(RefuseBinomePairMatchEvent(
-                                                binomePairMatch:
-                                                    _binomePairMatch));
+                                                binomePairMatch: _binomePairMatch));
                                       },
                                       child: Text(
                                         'Refuser',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(
+                                        style: Theme.of(context).textTheme.headline5.copyWith(
                                               color: Colors.white,
                                             ),
                                       ),
@@ -1376,16 +1310,13 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                   height: 50,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).errorColor),
+                      backgroundColor: MaterialStateProperty.all(Theme.of(context).errorColor),
                     ),
                     onPressed: () async {
                       await onCompareTapped(0);
                       context.read<SelectedScolaire2>()._binomePairId = null;
-                      BlocProvider.of<MatchedBinomePairMatchesBloc>(context)
-                          .add(
-                        IgnoreBinomePairMatchEvent(
-                            binomePairMatch: _binomePairMatch),
+                      BlocProvider.of<MatchedBinomePairMatchesBloc>(context).add(
+                        IgnoreBinomePairMatchEvent(binomePairMatch: _binomePairMatch),
                       );
                     },
                     child: Text(
@@ -1461,8 +1392,7 @@ class ProfileInformation extends StatelessWidget {
         children: [
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Align(
@@ -1486,8 +1416,7 @@ class ProfileInformation extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Opacity(
-                            opacity:
-                                user.lieuDeVie != LieuDeVie.maisel ? 0.5 : 1,
+                            opacity: user.lieuDeVie != LieuDeVie.maisel ? 0.5 : 1,
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
@@ -1504,16 +1433,14 @@ class ProfileInformation extends StatelessWidget {
                                     'MAISEL',
                                     maxLines: 1,
                                     minFontSize: 10,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
+                                    style: Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                               ),
                             ),
                           ),
                           Opacity(
-                            opacity:
-                                user.lieuDeVie != LieuDeVie.other ? 0.5 : 1,
+                            opacity: user.lieuDeVie != LieuDeVie.other ? 0.5 : 1,
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
@@ -1529,8 +1456,7 @@ class ProfileInformation extends StatelessWidget {
                                   child: AutoSizeText(
                                     'Autre',
                                     maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
+                                    style: Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                               ),
@@ -1573,12 +1499,10 @@ class ProfileInformation extends StatelessWidget {
                       runSpacing: 10,
                       children: [
                         Opacity(
-                          opacity: user.horairesDeTravail
-                                  .contains(HoraireDeTravail.morning)
+                          opacity: user.horairesDeTravail.contains(HoraireDeTravail.morning)
                               ? 1
                               : 0.5,
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
+                          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                             return Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
@@ -1598,8 +1522,7 @@ class ProfileInformation extends StatelessWidget {
                                   child: Text(
                                     'Matin',
                                     maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
+                                    style: Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                               ),
@@ -1607,12 +1530,10 @@ class ProfileInformation extends StatelessWidget {
                           }),
                         ),
                         Opacity(
-                          opacity: user.horairesDeTravail
-                                  .contains(HoraireDeTravail.afternoon)
+                          opacity: user.horairesDeTravail.contains(HoraireDeTravail.afternoon)
                               ? 1
                               : 0.5,
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
+                          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                             return Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
@@ -1632,8 +1553,7 @@ class ProfileInformation extends StatelessWidget {
                                   child: Text(
                                     'Aprem',
                                     maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
+                                    style: Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                               ),
@@ -1641,12 +1561,10 @@ class ProfileInformation extends StatelessWidget {
                           }),
                         ),
                         Opacity(
-                          opacity: user.horairesDeTravail
-                                  .contains(HoraireDeTravail.evening)
+                          opacity: user.horairesDeTravail.contains(HoraireDeTravail.evening)
                               ? 1
                               : 0.5,
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
+                          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                             return Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
@@ -1666,8 +1584,7 @@ class ProfileInformation extends StatelessWidget {
                                   child: Text(
                                     'Soir',
                                     maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
+                                    style: Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                               ),
@@ -1675,12 +1592,10 @@ class ProfileInformation extends StatelessWidget {
                           }),
                         ),
                         Opacity(
-                          opacity: user.horairesDeTravail
-                                  .contains(HoraireDeTravail.night)
+                          opacity: user.horairesDeTravail.contains(HoraireDeTravail.night)
                               ? 1
                               : 0.5,
-                          child: Consumer<TinterTheme>(
-                              builder: (context, tinterTheme, child) {
+                          child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                             return Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
@@ -1700,8 +1615,7 @@ class ProfileInformation extends StatelessWidget {
                                   child: Text(
                                     'Nuit',
                                     maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
+                                    style: Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                               ),
@@ -1717,8 +1631,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -1746,8 +1659,7 @@ class ProfileInformation extends StatelessWidget {
                                       for (int index = 0;
                                           index < user.associations.length;
                                           index++) ...[
-                                        associationBubble(
-                                            context, user.associations[index]),
+                                        associationBubble(context, user.associations[index]),
                                         SizedBox(
                                           width: 5,
                                         )
@@ -1769,8 +1681,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Align(
@@ -1797,23 +1708,17 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                disabledInactiveTrackColor: Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: TweenAnimationBuilder(
-                            tween: Tween<double>(
-                                begin: 0.5, end: user.groupeOuSeul),
+                            tween: Tween<double>(begin: 0.5, end: user.groupeOuSeul),
                             duration: Duration(milliseconds: 300),
-                            builder:
-                                (BuildContext context, value, Widget child) {
+                            builder: (BuildContext context, value, Widget child) {
                               return Slider(
                                 value: value,
                                 onChanged: null,
@@ -1838,8 +1743,7 @@ class ProfileInformation extends StatelessWidget {
           ),
           Card(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0, bottom: 15.0),
               child: Column(
                 children: <Widget>[
                   Align(
@@ -1866,23 +1770,17 @@ class ProfileInformation extends StatelessWidget {
                       Expanded(
                         child: SliderTheme(
                           data: Theme.of(context).sliderTheme.copyWith(
-                                disabledActiveTrackColor:
-                                    Theme.of(context).primaryColor,
+                                disabledActiveTrackColor: Theme.of(context).primaryColor,
                                 disabledThumbColor: Color(0xffCECECE),
-                                overlayShape:
-                                    RoundSliderOverlayShape(overlayRadius: 0.0),
+                                overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
                                 trackHeight: 6.0,
-                                disabledInactiveTrackColor:
-                                    Theme.of(context).indicatorColor,
-                                thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 8.0),
+                                disabledInactiveTrackColor: Theme.of(context).indicatorColor,
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
                               ),
                           child: TweenAnimationBuilder(
-                            tween: Tween<double>(
-                                begin: 0.5, end: user.enligneOuNon),
+                            tween: Tween<double>(begin: 0.5, end: user.enligneOuNon),
                             duration: Duration(milliseconds: 300),
-                            builder:
-                                (BuildContext context, value, Widget child) {
+                            builder: (BuildContext context, value, Widget child) {
                               return Slider(
                                 value: value,
                                 onChanged: null,
@@ -1937,8 +1835,7 @@ class ProfileInformation extends StatelessWidget {
                               spacing: 8,
                               runSpacing: 8,
                               children: <Widget>[
-                                for (String matierePreferee
-                                    in user.matieresPreferees)
+                                for (String matierePreferee in user.matieresPreferees)
                                   Container(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 15.0,
@@ -2033,10 +1930,8 @@ class ProfileInformation extends StatelessWidget {
           children: <Widget>[
             SliderLabel(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
+                padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                   return Text(
                     leftLabel,
                     style: tinterTheme.textStyle.smallLabel,
@@ -2048,10 +1943,8 @@ class ProfileInformation extends StatelessWidget {
             ),
             SliderLabel(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-                child: Consumer<TinterTheme>(
-                    builder: (context, tinterTheme, child) {
+                padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
                   return Text(
                     rightLabel,
                     style: tinterTheme.textStyle.smallLabel,
@@ -2090,8 +1983,7 @@ class BinomeSelectionMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: binomes.length != 0 &&
-              ((binomePairMatchesNotMatched.length != 0) ||
-                  (binomePairMatches.length != 0))
+              ((binomePairMatchesNotMatched.length != 0) || (binomePairMatches.length != 0))
           ? 2 * height + 15.0
           : height,
       child: Column(
@@ -2114,15 +2006,13 @@ class BinomeSelectionMenu extends StatelessWidget {
                   ),
                 )
               : Container(),
-          ((binomePairMatchesNotMatched.length != 0 &&
-                      binomePairMatches.length == 0) ||
+          ((binomePairMatchesNotMatched.length != 0 && binomePairMatches.length == 0) ||
                   (binomePairMatches.length != 0))
               ? SizedBox(
                   height: 15.0,
                 )
               : Container(),
-          (binomePairMatchesNotMatched.length != 0 &&
-                  binomePairMatches.length == 0)
+          (binomePairMatchesNotMatched.length != 0 && binomePairMatches.length == 0)
               ? Expanded(
                   child: topMenuBinomePair(
                     context: context,
@@ -2186,9 +2076,8 @@ class BinomeSelectionMenu extends StatelessWidget {
                   children: [
                     for (BuildBinome binome in binomes)
                       GestureDetector(
-                        onTap: () => context
-                            .read<SelectedScolaire2>()
-                            .binomeLogin = binome.login,
+                        onTap: () =>
+                            context.read<SelectedScolaire2>().binomeLogin = binome.login,
                         child: Padding(
                           padding: const EdgeInsets.only(
                             right: 7.5,
@@ -2251,12 +2140,10 @@ class BinomeSelectionMenu extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    for (BuildBinomePairMatch binomePairMatch
-                        in binomePairMatches)
+                    for (BuildBinomePairMatch binomePairMatch in binomePairMatches)
                       GestureDetector(
-                        onTap: () => context
-                            .read<SelectedScolaire2>()
-                            .binomePairId = binomePairMatch.binomePairId,
+                        onTap: () => context.read<SelectedScolaire2>().binomePairId =
+                            binomePairMatch.binomePairId,
                         child: Padding(
                           padding: EdgeInsets.only(
                             right: 10.0,
@@ -2265,8 +2152,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                             ),
-                            child: BinomePair
-                                .getProfilePictureFromBinomePairLogins(
+                            child: BinomePair.getProfilePictureFromBinomePairLogins(
                               loginA: binomePairMatch.login,
                               loginB: binomePairMatch.otherLogin,
                               width: 74,

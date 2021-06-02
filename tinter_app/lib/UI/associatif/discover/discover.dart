@@ -404,8 +404,7 @@ class _MatchesFlockState extends State<MatchesFlock>
             return Container(
               height: constraints.maxHeight,
               child: Stack(
-                overflow: Overflow.visible,
-                alignment: AlignmentDirectional.topCenter,
+                clipBehavior: Clip.none, alignment: AlignmentDirectional.topCenter,
                 children: <Widget>[
                   if ((state as DiscoverMatchesLoadSuccessState)
                           .matches
