@@ -222,7 +222,7 @@ class BinomePairStudentSearch extends StatelessWidget {
               color: Colors.white,
             ),
             Text(
-              "rechercher une paire de binôme",
+              "rechercher une\npaire de binôme",
               style: Theme.of(context).textTheme.headline5.copyWith(
                 color: Colors.white,
                 height: 1.1,

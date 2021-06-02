@@ -685,23 +685,26 @@ class CompareViewBinome extends StatelessWidget {
               ),
             ),
             if (topMenuScrolledFraction != 1)
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15.0,
-                ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Container(
-                    height: 50.0 * (1.0 - topMenuScrolledFraction),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        onCompareTapped(appHeight);
-                      },
-                      child: Text(
-                        'Comparer vos profils',
-                        style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Colors.white,
-                            ),
+              Container(
+                height: 65 * (1.0 - topMenuScrolledFraction),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 15.0,
+                  ),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.8,
+                    child: Container(
+                      height: 50.0 * (1.0 - topMenuScrolledFraction),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          onCompareTapped(appHeight);
+                        },
+                        child: Text(
+                          'Comparer vos profils',
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                                color: Colors.white,
+                              ),
+                        ),
                       ),
                     ),
                   ),
@@ -1187,23 +1190,26 @@ class CompareViewBinomePairMatch extends StatelessWidget {
               }),
             ),
             if (topMenuScrolledFraction != 1)
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15.0,
-                ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Container(
-                    height: 50.0 * (1.0 - topMenuScrolledFraction),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        onCompareTapped(appHeight);
-                      },
-                      child: Text(
-                        'Comparer vos profils',
-                        style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Colors.white,
-                            ),
+              Container(
+                height: 65 * (1.0 - topMenuScrolledFraction),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 15.0,
+                  ),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.8,
+                    child: Container(
+                      height: 50.0 * (1.0 - topMenuScrolledFraction),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          onCompareTapped(appHeight);
+                        },
+                        child: Text(
+                          'Comparer vos profils',
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                                color: Colors.white,
+                              ),
+                        ),
                       ),
                     ),
                   ),
@@ -1650,7 +1656,7 @@ class ProfileInformation extends StatelessWidget {
                         user.associations.length >= 1
                             ? Container(
                                 width: double.infinity,
-                                height: 60,
+                                height: 50,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
@@ -1668,10 +1674,15 @@ class ProfileInformation extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            : Text(
-                                'Aucune association sélectionnée',
-                                style: Theme.of(context).textTheme.headline5,
+                            : Container(
+                              child: Center(
+                                child: Text(
+                                    'Aucune association sélectionnée',
+                                    style: Theme.of(context).textTheme.headline5,
+                                  ),
                               ),
+                          height: 50,
+                            ),
                       ],
                     ),
                   ),
@@ -1901,11 +1912,11 @@ class ProfileInformation extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(
               color: Theme.of(context).primaryColor,
-              width: 2.5,
+              width: 2.0,
             ),
           ),
-          height: 60,
-          width: 60,
+          height: 50,
+          width: 50,
           child: child,
         );
       },

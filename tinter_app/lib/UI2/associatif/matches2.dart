@@ -581,23 +581,26 @@ class CompareView extends StatelessWidget {
               ),
             ),
             if (topMenuScrolledFraction != 1)
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 15.0,
-                ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Container(
-                    height: 50.0 * (1.0 - topMenuScrolledFraction),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        onCompareTapped(appHeight);
-                      },
-                      child: Text(
-                        'Comparer vos profils',
-                        style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Colors.white,
-                            ),
+              Container(
+                height: 65 * (1.0 - topMenuScrolledFraction),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 15.0,
+                  ),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.8,
+                    child: Container(
+                      height: 50.0 * (1.0 - topMenuScrolledFraction),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          onCompareTapped(appHeight);
+                        },
+                        child: Text(
+                          'Comparer vos profils',
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                                color: Colors.white,
+                              ),
+                        ),
                       ),
                     ),
                   ),
@@ -1195,7 +1198,10 @@ class ProfileInformation extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Theme.of(context).primaryColor, width: 2.5),
+          border: Border.all(
+            color: Theme.of(context).primaryColor,
+            width: 2.0,
+          ),
         ),
         child: ClipOval(
           child: getLogoFromAssociation(associationName: association.name),
