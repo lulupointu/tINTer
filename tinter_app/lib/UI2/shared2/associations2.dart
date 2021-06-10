@@ -42,7 +42,6 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
   void initState() {
     super.initState();
     _panelController = PanelController();
-
   }
 
   @override
@@ -53,7 +52,7 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
   @override
   Widget build(BuildContext context) {
     return KeyboardVisibilityBuilder(
-      builder: (BuildContext , bool isKeyboardVisible) {
+      builder: (BuildContext, bool isKeyboardVisible) {
         if (!isKeyboardVisible) {
           FocusScope.of(context).unfocus();
           if (searchString == "") {
@@ -84,100 +83,96 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                   body: child,
                 );
               },
-              child: LayoutBuilder(
-                  builder: (context, BoxConstraints constraints) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        top: 0.0,
+              child: LayoutBuilder(builder: (context, BoxConstraints constraints) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    top: 0.0,
+                  ),
+                  child: Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
+                    return SlidingUpPanel(
+                      margin: EdgeInsets.only(
+                        left: 20.0,
+                        right: 20.0,
+                        top: 20.0,
                       ),
-                      child:
-                      Consumer<TinterTheme>(builder: (context, tinterTheme, child) {
-                        return SlidingUpPanel(
-                          margin: EdgeInsets.only(
-                            left: 20.0,
-                            right: 20.0,
-                            top: 20.0,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(5.0),
-                            topRight: Radius.circular(5.0),
-                          ),
-                          color: Colors.white,
-                          backdropEnabled: true,
-                          backdropOpacity: 1.0,
-                          backdropColor: Theme.of(context).scaffoldBackgroundColor,
-                          controller: _panelController,
-                          maxHeight: constraints.maxHeight,
-                          minHeight: constraints.maxHeight *
-                              (1 -
-                                  (AssociationsTab2.fractions['topSeparator'] +
-                                      AssociationsTab2.fractions['sheetSeparator'] +
-                                      AssociationsTab2.fractions['likedAssociations'] +
-                                      AssociationsTab2.fractions['titles'] +
-                                      AssociationsTab2.fractions['titlesSeparator'])) *
-                              1.175,
-                          body: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  right: 20.0,
-                                  top: 20.0,
-                                ),
-                                child: LikedAssociationsWidgetWithTitle(
-                                  titleHeight: constraints.maxHeight *
-                                      AssociationsTab2.fractions['titles'],
-                                  titleSeparatorHeight: constraints.maxHeight *
-                                      AssociationsTab2.fractions['titlesSeparator'],
-                                  likedAssociationsHeight: constraints.maxHeight *
-                                      AssociationsTab2.fractions['likedAssociations'],
-                                  width: constraints.maxWidth,
-                                  margin: constraints.maxHeight *
-                                      AssociationsTab2.fractions['horizontalMargin'],
-                                ),
-                              )
-                            ],
-                          ),
-                          panelBuilder: (ScrollController scrollController) {
-                            return AllAssociationsSheetBody(
-                              scrollController: scrollController,
-                              keyboardMargin:
-                              KeyboardVisibilityProvider.isKeyboardVisible(context)
-                                  ? MediaQuery.of(context).viewInsets.bottom
-                                  : 0,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5.0),
+                        topRight: Radius.circular(5.0),
+                      ),
+                      color: Colors.white,
+                      backdropEnabled: true,
+                      backdropOpacity: 1.0,
+                      backdropColor: Theme.of(context).scaffoldBackgroundColor,
+                      controller: _panelController,
+                      maxHeight: constraints.maxHeight,
+                      minHeight: constraints.maxHeight *
+                          (1 -
+                              (AssociationsTab2.fractions['topSeparator'] +
+                                  AssociationsTab2.fractions['sheetSeparator'] +
+                                  AssociationsTab2.fractions['likedAssociations'] +
+                                  AssociationsTab2.fractions['titles'] +
+                                  AssociationsTab2.fractions['titlesSeparator'])) *
+                          1.175,
+                      body: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                              top: 20.0,
+                            ),
+                            child: LikedAssociationsWidgetWithTitle(
+                              titleHeight:
+                                  constraints.maxHeight * AssociationsTab2.fractions['titles'],
+                              titleSeparatorHeight: constraints.maxHeight *
+                                  AssociationsTab2.fractions['titlesSeparator'],
+                              likedAssociationsHeight: constraints.maxHeight *
+                                  AssociationsTab2.fractions['likedAssociations'],
                               width: constraints.maxWidth,
                               margin: constraints.maxHeight *
                                   AssociationsTab2.fractions['horizontalMargin'],
-                              headerHeight: constraints.maxHeight *
-                                  AssociationsTab2.fractions['titles'],
-                              headerSpacing: constraints.maxHeight *
-                                  AssociationsTab2.fractions['headerSpacing'],
-                              searchString: searchString,
-                            );
-                          },
-                          header: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15.0,
-                              vertical: 15.0,
                             ),
-                            child: TitleAndSearchBarAllAssociations(
-                              height: constraints.maxHeight *
-                                  AssociationsTab2.fractions['titles'],
-                              width: constraints.maxWidth,
-                              margin: constraints.maxHeight *
-                                  AssociationsTab2.fractions['horizontalMargin'],
-                              headerSpacing: constraints.maxHeight *
-                                  AssociationsTab2.fractions['headerSpacing'],
-                              isSearching: isSearching,
-                              searchString: searchString,
-                              onSearch: onSearch,
-                              clearSearch: clearSearch,
-                            ),
-                          ),
+                          )
+                        ],
+                      ),
+                      panelBuilder: (ScrollController scrollController) {
+                        return AllAssociationsSheetBody(
+                          scrollController: scrollController,
+                          keyboardMargin: KeyboardVisibilityProvider.isKeyboardVisible(context)
+                              ? MediaQuery.of(context).viewInsets.bottom
+                              : 0,
+                          width: constraints.maxWidth,
+                          margin: constraints.maxHeight *
+                              AssociationsTab2.fractions['horizontalMargin'],
+                          headerHeight:
+                              constraints.maxHeight * AssociationsTab2.fractions['titles'],
+                          headerSpacing: constraints.maxHeight *
+                              AssociationsTab2.fractions['headerSpacing'],
+                          searchString: searchString,
                         );
-                      }),
+                      },
+                      header: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                          vertical: 15.0,
+                        ),
+                        child: TitleAndSearchBarAllAssociations(
+                          height: constraints.maxHeight * AssociationsTab2.fractions['titles'],
+                          width: constraints.maxWidth,
+                          margin: constraints.maxHeight *
+                              AssociationsTab2.fractions['horizontalMargin'],
+                          headerSpacing: constraints.maxHeight *
+                              AssociationsTab2.fractions['headerSpacing'],
+                          isSearching: isSearching,
+                          searchString: searchString,
+                          onSearch: onSearch,
+                          clearSearch: clearSearch,
+                        ),
+                      ),
                     );
                   }),
+                );
+              }),
             ),
           ),
         );
@@ -196,9 +191,11 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
   }
 
   void clearSearch() {
-    setState(() {
-      isSearching = false;
-      searchString = "";
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        isSearching = false;
+        searchString = "";
+      });
     });
   }
 }
@@ -258,8 +255,7 @@ class LikedAssociationsWidget extends StatefulWidget {
   });
 
   @override
-  _LikedAssociationsWidgetState createState() =>
-      _LikedAssociationsWidgetState();
+  _LikedAssociationsWidgetState createState() => _LikedAssociationsWidgetState();
 }
 
 class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
@@ -302,13 +298,8 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
             (state as UserLoadSuccessState).user.associations) {
           return false;
         }
-        if ((previousState as UserLoadSuccessState).user.associations.length !=
-            0) {
-          checkForChanges(
-              (previousState as UserLoadSuccessState)
-                  .user
-                  .associations
-                  .toList(),
+        if ((previousState as UserLoadSuccessState).user.associations.length != 0) {
+          checkForChanges((previousState as UserLoadSuccessState).user.associations.toList(),
               (state as UserLoadSuccessState).user.associations.toList());
         }
         return true;
@@ -321,36 +312,28 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
         if ((userState as UserLoadSuccessState).user.associations.length == 0)
           return NoLikedAssociationWidget();
         return AnimatedList(
-          physics:
-              (_selectedItem == null) ? null : NeverScrollableScrollPhysics(),
+          physics: (_selectedItem == null) ? null : NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
           key: _listKey,
-          initialItemCount:
-              (userState as UserLoadSuccessState).user.associations.length,
+          initialItemCount: (userState as UserLoadSuccessState).user.associations.length,
           controller: controller,
-          itemBuilder:
-              (BuildContext context, int index, Animation<double> animation) {
+          itemBuilder: (BuildContext context, int index, Animation<double> animation) {
             return LikedAssociationWidget(
               height: widget.height,
               maxWidth: widget.width,
               margin: widget.margin,
               addOrRemoveAnimation: animation,
-              association:
-                  (userState as UserLoadSuccessState).user.associations[index],
+              association: (userState as UserLoadSuccessState).user.associations[index],
               isFirst: index == 0,
               selected: _selectedItem ==
                   (userState as UserLoadSuccessState).user.associations[index],
-              onSelect: (AnimationController controller) => _onSelect(
-                  index,
-                  controller,
+              onSelect: (AnimationController controller) => _onSelect(index, controller,
                   (userState as UserLoadSuccessState).user.associations[index]),
               onDislike: () => BlocProvider.of<UserBloc>(context).add(
                 UserStateChangedEvent(
-                  newState: (userState as UserLoadSuccessState).user.rebuild(
-                      (u) => u.associations.remove(
-                          (userState as UserLoadSuccessState)
-                              .user
-                              .associations[index])),
+                  newState: (userState as UserLoadSuccessState).user.rebuild((u) => u
+                      .associations
+                      .remove((userState as UserLoadSuccessState).user.associations[index])),
                 ),
               ),
             );
@@ -360,8 +343,7 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
     );
   }
 
-  _onSelect(int index, AnimationController animationController,
-      Association association) {
+  _onSelect(int index, AnimationController animationController, Association association) {
     setState(() {
       _selectedItem = _selectedItem == association ? null : association;
     });
@@ -390,8 +372,7 @@ class _LikedAssociationsWidgetState extends State<LikedAssociationsWidget>
     super.dispose();
   }
 
-  void checkForChanges(
-      List<Association> oldAssociations, List<Association> associations) {
+  void checkForChanges(List<Association> oldAssociations, List<Association> associations) {
     for (Association association in oldAssociations) {
       if (!associations.contains(association)) {
         _removeAssociation(oldAssociations.indexOf(association), association);
@@ -492,8 +473,7 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
           child: TweenAnimationBuilder(
             duration: duration,
             tween: Tween<double>(begin: 0, end: widget.selected ? 1 : 0),
-            builder:
-                (BuildContext context, double selectedValue, Widget child) {
+            builder: (BuildContext context, double selectedValue, Widget child) {
               return Consumer<TinterTheme>(
                 builder: (context, tinterTheme, child) {
                   return Padding(
@@ -506,8 +486,7 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                               (widget.maxWidth -
                                   2 *
                                       widget.maxWidth *
-                                      AssociationsTab2
-                                          .fractions['horizontalMargin'] -
+                                      AssociationsTab2.fractions['horizontalMargin'] -
                                   widget.height),
                       height: widget.height,
                       decoration: BoxDecoration(
@@ -579,12 +558,10 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                               ),
                               onTap: () {
                                 showGeneralDialog(
-                                  transitionDuration:
-                                      Duration(milliseconds: 300),
+                                  transitionDuration: Duration(milliseconds: 300),
                                   context: context,
-                                  pageBuilder:
-                                      (BuildContext context, animation, _) =>
-                                          Material(
+                                  pageBuilder: (BuildContext context, animation, _) =>
+                                      Material(
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: () => Navigator.of(context).pop(),
@@ -598,44 +575,37 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
+                                                  padding: const EdgeInsets.only(
                                                     top: 10.0,
                                                   ),
                                                   child: Text(
                                                     "Description",
                                                     textAlign: TextAlign.center,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline4,
+                                                    style:
+                                                        Theme.of(context).textTheme.headline4,
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                     horizontal: 20.0,
                                                     vertical: 10.0,
                                                   ),
                                                   child: Text(
-                                                    widget.association
-                                                        .description,
+                                                    widget.association.description,
                                                     textAlign: TextAlign.center,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5,
+                                                    style:
+                                                        Theme.of(context).textTheme.headline5,
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                     vertical: 5.0,
                                                   ),
                                                   child: Container(
                                                     width: 200,
                                                     child: ElevatedButton(
                                                       onPressed: () {
-                                                        Navigator.pop(
-                                                            context, false);
+                                                        Navigator.pop(context, false);
                                                       },
                                                       child: Text(
                                                         "Continuer",
@@ -723,9 +693,7 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
                     borderRadius: BorderRadius.all(
                       Radius.circular(5.0),
                     ),
-                    color: isSearching
-                        ? Colors.white
-                        : Theme.of(context).primaryColor,
+                    color: isSearching ? Colors.white : Theme.of(context).primaryColor,
                     border: Border.all(
                       color: Theme.of(context).primaryColor,
                       width: !isSearching ? 0.0 : 2.0,
@@ -744,8 +712,7 @@ class TitleAndSearchBarAllAssociations extends StatelessWidget {
                           alignment: Alignment.center,
                           child: TextField(
                             textInputAction: TextInputAction.search,
-                            style: TextStyle(
-                                textBaseline: TextBaseline.alphabetic),
+                            style: TextStyle(textBaseline: TextBaseline.alphabetic),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.only(
                                 top: 5.0,
@@ -817,23 +784,20 @@ class AllAssociationsSheetBody extends StatelessWidget {
         },
         child: BlocBuilder<UserBloc, UserState>(
             builder: (BuildContext context, UserState userState) {
-          return BlocBuilder<AssociationsBloc, AssociationsState>(builder:
-              (BuildContext context, AssociationsState associationsState) {
+          return BlocBuilder<AssociationsBloc, AssociationsState>(
+              builder: (BuildContext context, AssociationsState associationsState) {
             if (!(associationsState is AssociationsLoadSuccessfulState)) {
               if (associationsState is AssociationsInitialState) {
-                BlocProvider.of<AssociationsBloc>(context)
-                    .add(AssociationsLoadEvent());
+                BlocProvider.of<AssociationsBloc>(context).add(AssociationsLoadEvent());
               }
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
             List<Association> _allAssociations =
-                (associationsState as AssociationsLoadSuccessfulState)
-                    .associations;
-            _allAssociations.sort(
-                (Association associationA, Association associationB) =>
-                    associationA.name.compareTo(associationB.name));
+                (associationsState as AssociationsLoadSuccessfulState).associations;
+            _allAssociations.sort((Association associationA, Association associationB) =>
+                associationA.name.compareTo(associationB.name));
             RegExp searchStringRegex = new RegExp(
               searchString,
               caseSensitive: false,
@@ -842,9 +806,8 @@ class AllAssociationsSheetBody extends StatelessWidget {
             final _associations = (searchString == null)
                 ? _allAssociations
                 : _allAssociations
-                    .where((Association association) =>
-                        searchStringRegex.hasMatch(
-                            association.name + ' ' + association.description))
+                    .where((Association association) => searchStringRegex
+                        .hasMatch(association.name + ' ' + association.description))
                     .toList();
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -883,8 +846,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
                             UserStateChangedEvent(
                               newState: (userState as UserLoadSuccessState)
                                   .user
-                                  .rebuild((u) => u.associations
-                                      .remove(_associations[index])),
+                                  .rebuild((u) => u.associations.remove(_associations[index])),
                             ),
                           );
                         } else {
@@ -892,8 +854,7 @@ class AllAssociationsSheetBody extends StatelessWidget {
                             UserStateChangedEvent(
                               newState: (userState as UserLoadSuccessState)
                                   .user
-                                  .rebuild((u) =>
-                                      u.associations.add(_associations[index])),
+                                  .rebuild((u) => u.associations.add(_associations[index])),
                             ),
                           );
                         }
