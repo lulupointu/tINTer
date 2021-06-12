@@ -1,3 +1,0 @@
-enum UserMode {
-  Associatif, Scolaire,
-}

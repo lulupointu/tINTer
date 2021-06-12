@@ -34,19 +34,19 @@ import 'package:tinterapp/Logic/repository/shared/notification_repository.dart';
 import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:http/http.dart' as http;
-import 'package:tinterapp/UI/shared/shared_element/const.dart';
-import 'package:tinterapp/UI/shared/splash_screen/splash_screen.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
+import 'package:tinterapp/UI/shared/const.dart';
+import 'package:tinterapp/UI/shared/profile_creation/profile_creation2.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
-import 'UI/shared/shared_element/homogenius_rounded_rectslider_trackshape.dart';
-import 'UI2/associatif/discover/discover2.dart';
-import 'UI2/associatif/matches2.dart';
-import 'UI2/scolaire/binomes2.dart';
-import 'UI2/scolaire/discover_scolaire_tab2.dart';
-import 'UI2/shared2/login2.dart';
-import 'UI2/shared2/tinter_bottom_navigation_bar4.dart';
-import 'UI2/shared2/user_profile/user_profile2.dart';
+import 'UI/shared/homogenius_rounded_rectslider_trackshape.dart';
+import 'UI/associatif/discover/discover2.dart';
+import 'UI/associatif/matches2.dart';
+import 'UI/scolaire/binomes2.dart';
+import 'UI/scolaire/discover_scolaire_tab2.dart';
+import 'UI/shared/login2.dart';
+import 'UI/shared/splash_screen.dart';
+import 'UI/shared/tinter_bottom_navigation_bar4.dart';
+import 'UI/shared/user_profile/user_profile2.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 

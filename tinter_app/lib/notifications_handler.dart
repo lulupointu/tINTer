@@ -13,10 +13,9 @@ import 'package:tinterapp/Logic/models/scolaire/relation_status_binome_pair.dart
 import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinterapp/Logic/models/shared/notification_relation_status_types/notification_relation_status_title.dart';
 import 'package:tinterapp/Logic/repository/shared/notification_repository.dart';
-import 'package:tinterapp/UI/shared/shared_element/const.dart';
-
-import 'UI2/associatif/matches2.dart';
-import 'UI2/scolaire/binomes2.dart';
+import 'package:tinterapp/UI/shared/const.dart';
+import 'UI/associatif/matches2.dart';
+import 'UI/scolaire/binomes2.dart';
 
 class NotificationHandler {
   FirebaseMessaging _firebaseMessaging;
