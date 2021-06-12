@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
-import 'package:tinterapp/UI/associatif/user_profile/gout_musicaux.dart';
-import 'package:tinterapp/UI/shared/shared_element/const.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 import 'package:tinterapp/UI2/shared2/user_criteria_panel2/gouts_musicaux2.dart';
 import 'package:tinterapp/UI2/shared2/user_profile/user_profile2.dart';
 
