@@ -1,17 +1,9 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
-import 'package:tinterapp/Logic/models/shared/user.dart';
-import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/sub_profile_creation/associative_to_scolaire2.dart';
-import 'package:tinterapp/UI2/shared2/profile_creation/user_criteria_list2/associative_criteria_list2.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/user_criteria_list2/scolaire_criteria_list2.dart';
 
 import 'associative_profile2.dart';
