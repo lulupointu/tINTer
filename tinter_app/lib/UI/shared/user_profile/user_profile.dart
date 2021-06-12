@@ -12,8 +12,8 @@ import 'package:tinterapp/UI/shared/profile_creation/sub_profile_creation/associ
 import 'package:tinterapp/UI/shared/user_profile/user_associatif_profile.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_scolaire_profile.dart';
 import '../../../main.dart';
-import '../associatif_to_scolaire_button2.dart';
-import '../associations2.dart';
+import '../ui_elements/associatif_to_scolaire_button.dart';
+import '../profile_creation/user_criteria_list/associations.dart';
 import '../const.dart';
 
 class UserTab3 extends StatefulWidget implements TinterTab {
@@ -214,7 +214,7 @@ class ExistingProfileHeader extends StatelessWidget {
                             padding: const EdgeInsets.only(
                               bottom: 10.0,
                             ),
-                            child: AssociatifToScolaireButton2(),
+                            child: AssociatifToScolaireButton(),
                           )
                         : null,
                   ),
@@ -359,7 +359,7 @@ class AssociationsRectangle extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AssociationsTab2()),
+          MaterialPageRoute(builder: (context) => AssociationsTab()),
         );
       },
       child: Stack(

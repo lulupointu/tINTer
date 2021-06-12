@@ -5,7 +5,7 @@ import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'const.dart';
+import '../const.dart';
 
 class SplashScreen extends StatelessWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
-import 'package:tinterapp/UI/shared/user_criteria_panel/gouts_musicaux.dart';
+import 'package:tinterapp/UI/shared/profile_creation/user_criteria_list/gouts_musicaux.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 
 import '../random_gender.dart';

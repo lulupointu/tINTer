@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'const.dart';
+import '../const.dart';
 
-class AssociatifToScolaireButton2 extends StatelessWidget {
-  const AssociatifToScolaireButton2({Key key}) : super(key: key);
+class AssociatifToScolaireButton extends StatelessWidget {
+  const AssociatifToScolaireButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -5,8 +5,8 @@ import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_associatif_profile.dart';
 
-import '../../associations2.dart';
-import '../../user_criteria_panel/gouts_musicaux.dart';
+import 'associations.dart';
+import 'gouts_musicaux.dart';
 
 class AssociativeCriteriaList extends StatelessWidget {
   final Widget separator;
@@ -129,7 +129,7 @@ class DefineAssociations extends StatelessWidget {
         onAssociationPressed();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AssociationsTab2()),
+          MaterialPageRoute(builder: (context) => AssociationsTab()),
         );
       },
       child: Card(

@@ -11,14 +11,14 @@ main() {
     MaterialApp(
       home: KeyboardVisibilityProvider(
         child: KeyboardDismissOnTap(
-          child: TinterAuthenticationTab3(),
+          child: TinterAuthenticationTab(),
         ),
       ),
     ),
   );
 }
 
-class TinterAuthenticationTab3 extends StatefulWidget {
+class TinterAuthenticationTab extends StatefulWidget {
   static final Map<String, double> fractions = {
     'top': 0.20,
     'verticalMargin': 0.05,
@@ -26,11 +26,11 @@ class TinterAuthenticationTab3 extends StatefulWidget {
   };
 
   @override
-  _TinterAuthenticationTab3State createState() =>
-      _TinterAuthenticationTab3State();
+  _TinterAuthenticationTabState createState() =>
+      _TinterAuthenticationTabState();
 }
 
-class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
+class _TinterAuthenticationTabState extends State<TinterAuthenticationTab> {
   final Duration duration = Duration(milliseconds: 150);
 
   bool isKeyboardVisible = false;

@@ -14,8 +14,8 @@ import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/UI/scolaire/discover_quadrinome/recherche_binome_pair.dart';
 import 'package:tinterapp/UI/shared/const.dart';
-import 'package:tinterapp/UI/shared/custom_flare_controller.dart';
-import 'package:tinterapp/UI/shared/slider_label.dart';
+import 'package:tinterapp/UI/shared/ui_elements/custom_flare_controller.dart';
+import 'package:tinterapp/UI/shared/ui_elements/slider_label.dart';
 
 import '../mode_scolaire_overlay.dart';
 

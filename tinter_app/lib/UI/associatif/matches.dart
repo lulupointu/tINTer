@@ -14,7 +14,7 @@ import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/const.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
 import 'package:tinterapp/UI/shared/random_gender.dart';
-import 'package:tinterapp/UI/shared/snap_scroll_sheet_physics.dart';
+import 'package:tinterapp/UI/shared/ui_elements/snap_scroll_sheet_physics.dart';
 import 'package:tinterapp/main.dart';
 
 import 'mode_associatif_overlay.dart';

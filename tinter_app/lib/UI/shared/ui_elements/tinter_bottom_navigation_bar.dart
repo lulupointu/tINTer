@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CustomBottomNavigationBar4 extends StatelessWidget {
+class CustomBottomNavigationBar extends StatelessWidget {
   final ValueChanged<int> onTap;
   final int selectedIndex;
   final List<CustomBottomNavigationBarItem> items;
 
-  CustomBottomNavigationBar4({
+  CustomBottomNavigationBar({
     Key key,
     @required this.onTap,
     @required this.selectedIndex,

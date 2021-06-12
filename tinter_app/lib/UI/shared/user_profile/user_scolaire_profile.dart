@@ -4,7 +4,7 @@ import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 
-import '../user_criteria_panel/matieres.dart';
+import '../profile_creation/user_criteria_list/matieres.dart';
 
 class UserScolaireProfile2 extends StatelessWidget {
   final Widget separator;

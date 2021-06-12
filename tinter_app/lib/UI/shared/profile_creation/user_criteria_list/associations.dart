@@ -9,14 +9,14 @@ import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 
-import 'const.dart';
-import 'custom_flare_controller.dart';
+import '../../const.dart';
+import '../../ui_elements/custom_flare_controller.dart';
 
 main() => runApp(MaterialApp(
-      home: AssociationsTab2(),
+      home: AssociationsTab(),
     ));
 
-class AssociationsTab2 extends StatefulWidget {
+class AssociationsTab extends StatefulWidget {
   static final Map<String, double> fractions = {
     'topSeparator': 0.08,
     'sheetSeparator': 0.1,
@@ -30,10 +30,10 @@ class AssociationsTab2 extends StatefulWidget {
   final Curve curve = Curves.easeIn;
 
   @override
-  _AssociationsTab2State createState() => _AssociationsTab2State();
+  _AssociationsTabState createState() => _AssociationsTabState();
 }
 
-class _AssociationsTab2State extends State<AssociationsTab2> {
+class _AssociationsTabState extends State<AssociationsTab> {
   int _keyboardVisibilitySubscriberId;
   bool isSearching = false;
   String searchString = "";
@@ -108,11 +108,11 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                       maxHeight: constraints.maxHeight,
                       minHeight: constraints.maxHeight *
                           (1 -
-                              (AssociationsTab2.fractions['topSeparator'] +
-                                  AssociationsTab2.fractions['sheetSeparator'] +
-                                  AssociationsTab2.fractions['likedAssociations'] +
-                                  AssociationsTab2.fractions['titles'] +
-                                  AssociationsTab2.fractions['titlesSeparator'])) *
+                              (AssociationsTab.fractions['topSeparator'] +
+                                  AssociationsTab.fractions['sheetSeparator'] +
+                                  AssociationsTab.fractions['likedAssociations'] +
+                                  AssociationsTab.fractions['titles'] +
+                                  AssociationsTab.fractions['titlesSeparator'])) *
                           1.175,
                       body: Column(
                         children: [
@@ -124,14 +124,14 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                             ),
                             child: LikedAssociationsWidgetWithTitle(
                               titleHeight:
-                                  constraints.maxHeight * AssociationsTab2.fractions['titles'],
+                                  constraints.maxHeight * AssociationsTab.fractions['titles'],
                               titleSeparatorHeight: constraints.maxHeight *
-                                  AssociationsTab2.fractions['titlesSeparator'],
+                                  AssociationsTab.fractions['titlesSeparator'],
                               likedAssociationsHeight: constraints.maxHeight *
-                                  AssociationsTab2.fractions['likedAssociations'],
+                                  AssociationsTab.fractions['likedAssociations'],
                               width: constraints.maxWidth,
                               margin: constraints.maxHeight *
-                                  AssociationsTab2.fractions['horizontalMargin'],
+                                  AssociationsTab.fractions['horizontalMargin'],
                             ),
                           )
                         ],
@@ -144,11 +144,11 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                               : 0,
                           width: constraints.maxWidth,
                           margin: constraints.maxHeight *
-                              AssociationsTab2.fractions['horizontalMargin'],
+                              AssociationsTab.fractions['horizontalMargin'],
                           headerHeight:
-                              constraints.maxHeight * AssociationsTab2.fractions['titles'],
+                              constraints.maxHeight * AssociationsTab.fractions['titles'],
                           headerSpacing: constraints.maxHeight *
-                              AssociationsTab2.fractions['headerSpacing'],
+                              AssociationsTab.fractions['headerSpacing'],
                           searchString: searchString,
                         );
                       },
@@ -158,12 +158,12 @@ class _AssociationsTab2State extends State<AssociationsTab2> {
                           vertical: 15.0,
                         ),
                         child: TitleAndSearchBarAllAssociations(
-                          height: constraints.maxHeight * AssociationsTab2.fractions['titles'],
+                          height: constraints.maxHeight * AssociationsTab.fractions['titles'],
                           width: constraints.maxWidth,
                           margin: constraints.maxHeight *
-                              AssociationsTab2.fractions['horizontalMargin'],
+                              AssociationsTab.fractions['horizontalMargin'],
                           headerSpacing: constraints.maxHeight *
-                              AssociationsTab2.fractions['headerSpacing'],
+                              AssociationsTab.fractions['headerSpacing'],
                           isSearching: isSearching,
                           searchString: searchString,
                           onSearch: onSearch,
@@ -487,7 +487,7 @@ class _LikedAssociationWidgetState extends State<LikedAssociationWidget>
                               (widget.maxWidth -
                                   2 *
                                       widget.maxWidth *
-                                      AssociationsTab2.fractions['horizontalMargin'] -
+                                      AssociationsTab.fractions['horizontalMargin'] -
                                   widget.height),
                       height: widget.height,
                       decoration: BoxDecoration(

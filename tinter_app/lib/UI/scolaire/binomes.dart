@@ -18,8 +18,8 @@ import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/UI/shared/const.dart';
-import 'package:tinterapp/UI/shared/slider_label.dart';
-import 'package:tinterapp/UI/shared/snap_scroll_sheet_physics.dart';
+import 'package:tinterapp/UI/shared/ui_elements/slider_label.dart';
+import 'package:tinterapp/UI/shared/ui_elements/snap_scroll_sheet_physics.dart';
 import 'package:tinterapp/main.dart';
 
 import 'mode_scolaire_overlay.dart';

@@ -38,14 +38,14 @@ import 'package:tinterapp/UI/shared/const.dart';
 import 'package:tinterapp/UI/shared/profile_creation/profile_creation.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
-import 'UI/shared/homogenius_rounded_rectslider_trackshape.dart';
+import 'UI/shared/ui_elements/homogenius_rounded_rectslider_trackshape.dart';
 import 'UI/associatif/discover/discover.dart';
 import 'UI/associatif/matches.dart';
 import 'UI/scolaire/binomes.dart';
 import 'UI/scolaire/discover_scolaire_tab.dart';
-import 'UI/shared/login2.dart';
-import 'UI/shared/splash_screen.dart';
-import 'UI/shared/tinter_bottom_navigation_bar4.dart';
+import 'UI/shared/login.dart';
+import 'UI/shared/ui_elements/splash_screen.dart';
+import 'UI/shared/ui_elements/tinter_bottom_navigation_bar.dart';
 import 'UI/shared/user_profile/user_profile.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -339,7 +339,7 @@ class Tinter extends StatelessWidget {
           }
           return SplashScreen();
         } else if (!(authenticationState is AuthenticationSuccessfulState)) {
-          return TinterAuthenticationTab3();
+          return TinterAuthenticationTab();
         }
 
         // next check on the user state
@@ -444,7 +444,7 @@ class _TinterHomeState extends State<TinterHome> {
               backgroundColor: tinterTheme.colors.background,
               body: child,
               extendBody: true,
-              bottomNavigationBar: CustomBottomNavigationBar4(
+              bottomNavigationBar: CustomBottomNavigationBar(
                 onTap: (int index) =>
                 Provider.of<TinterTabs>(context, listen: false).selectedTabIndex = index,
                 selectedIndex: tinterTabs.selectedTabIndex,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 
-import '../../associatif_to_scolaire_button2.dart';
+import '../../ui_elements/associatif_to_scolaire_button.dart';
 import '../profile_creation.dart';
 import 'associative_profile.dart';
 
@@ -151,7 +151,7 @@ class AssociativeToScolaireProfileHeader extends StatelessWidget {
               right: 40.0,
               bottom: 15.0,
             ),
-            child: AssociatifToScolaireButton2(),
+            child: AssociatifToScolaireButton(),
           ),
         ],
       ),
