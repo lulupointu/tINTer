@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tinterapp/UI/shared/profile_creation/sub_profile_creation/associative_to_scolaire2.dart';
-import 'package:tinterapp/UI/shared/profile_creation/sub_profile_creation/scolaire_profile2.dart';
+import 'package:tinterapp/UI/shared/profile_creation/sub_profile_creation/associative_to_scolaire.dart';
+import 'package:tinterapp/UI/shared/profile_creation/sub_profile_creation/scolaire_profile.dart';
 
-import 'sub_profile_creation/associative_profile2.dart';
+import 'sub_profile_creation/associative_profile.dart';
 
 enum AccountCreationMode {
   associatif,
@@ -10,14 +10,14 @@ enum AccountCreationMode {
   scolaire,
 }
 
-class ProfileCreation2 extends StatefulWidget {
-  const ProfileCreation2({Key key}) : super(key: key);
+class ProfileCreation extends StatefulWidget {
+  const ProfileCreation({Key key}) : super(key: key);
 
   @override
-  _ProfileCreation2State createState() => _ProfileCreation2State();
+  _ProfileCreationState createState() => _ProfileCreationState();
 }
 
-class _ProfileCreation2State extends State<ProfileCreation2> {
+class _ProfileCreationState extends State<ProfileCreation> {
   void onAccountCreationModeChanged(
       {@required AccountCreationMode accountCreationMode}) {
     setState(() {
@@ -33,21 +33,23 @@ class _ProfileCreation2State extends State<ProfileCreation2> {
 
     switch (accountCreationMode) {
       case AccountCreationMode.associatif:
-        child = AssociativeProfile2(
+        child = AssociativeProfile(
             onAccountCreationModeChanged: onAccountCreationModeChanged);
         break;
       case AccountCreationMode.associatifToScolaire:
-        child = AssociativeToScolaire2(
+        child = AssociativeToScolaire(
           onAccountCreationModeChanged: onAccountCreationModeChanged,
         );
         break;
       case AccountCreationMode.scolaire:
-        child = ScolaireProfile2();
+        child = ScolaireProfile();
         break;
     }
 
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 300),
+      duration: Duration(
+        milliseconds: 300,
+      ),
       child: child,
     );
   }

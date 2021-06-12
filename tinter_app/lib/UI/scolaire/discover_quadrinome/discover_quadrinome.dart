@@ -12,14 +12,14 @@ import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair_match.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
-import 'package:tinterapp/UI/scolaire/discover_quadrinome/recherche_binome_pair2.dart';
+import 'package:tinterapp/UI/scolaire/discover_quadrinome/recherche_binome_pair.dart';
 import 'package:tinterapp/UI/shared/const.dart';
 import 'package:tinterapp/UI/shared/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/slider_label.dart';
 
 import '../mode_scolaire_overlay.dart';
 
-class DiscoverBinomePairTab2 extends StatelessWidget {
+class DiscoverBinomePairTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Update to last information
@@ -185,7 +185,7 @@ class BinomePairStudentSearch extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SearchStudentBinomePairTab2(),
+            builder: (context) => SearchStudentBinomePairTab(),
           ),
         );
       },
@@ -1959,7 +1959,7 @@ class BinomePairWideStudentSearch extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SearchStudentBinomePairTab2()),
+              builder: (context) => SearchStudentBinomePairTab()),
         );
       },
       child: Container(

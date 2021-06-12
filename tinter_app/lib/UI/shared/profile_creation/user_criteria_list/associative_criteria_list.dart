@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_associatif_profile2.dart';
+import 'package:tinterapp/UI/shared/user_profile/user_associatif_profile.dart';
 
 import '../../associations2.dart';
-import '../../user_criteria_panel2/gouts_musicaux2.dart';
+import '../../user_criteria_panel/gouts_musicaux.dart';
 
-class AssociativeCriteriaList2 extends StatelessWidget {
+class AssociativeCriteriaList extends StatelessWidget {
   final Widget separator;
 
   final bool isAssociationPressed;
@@ -19,7 +19,7 @@ class AssociativeCriteriaList2 extends StatelessWidget {
 
   final void Function() onMusicTastePressed;
 
-  const AssociativeCriteriaList2({
+  const AssociativeCriteriaList({
     Key key,
     @required this.separator,
     @required this.isAssociationPressed,
@@ -33,20 +33,22 @@ class AssociativeCriteriaList2 extends StatelessWidget {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 30.0,
+          ),
           child: Column(
             children: [
               PrimoEntrantRectangle(),
               separator,
               YearRectangle(),
               separator,
-              AttiranceVieAssoRectangle2(),
+              AttiranceVieAssoRectangle(),
               separator,
-              FeteOuCoursRectangle2(),
+              FeteOuCoursRectangle(),
               separator,
-              AideOuSortirRectangle2(),
+              AideOuSortirRectangle(),
               separator,
-              OrganisationEvenementsRectangle2(),
+              OrganisationEvenementsRectangle(),
               separator,
               DefineAssociations(
                 isAssociationPressed: isAssociationPressed,
@@ -82,12 +84,15 @@ class DefineMusicTaste extends StatelessWidget {
         onMusicTastePressed();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => GoutsMusicauxTab2()),
+          MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
         );
       },
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 25.0,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -129,7 +134,10 @@ class DefineAssociations extends StatelessWidget {
       },
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 25.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 30.0,
+            vertical: 25.0,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -154,7 +162,10 @@ class PrimoEntrantRectangle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30.0,
+          vertical: 20.0,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -191,8 +202,9 @@ class PrimoEntrantRectangle extends StatelessWidget {
                                   ? 1
                                   : 0.4),
                           borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5.0),
-                              bottomLeft: Radius.circular(5.0)),
+                            topLeft: Radius.circular(5.0),
+                            bottomLeft: Radius.circular(5.0),
+                          ),
                         ),
                         child: Center(
                           child: Text(
@@ -227,8 +239,9 @@ class PrimoEntrantRectangle extends StatelessWidget {
                                   ? 0.4
                                   : 1),
                           borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(5.0),
-                              bottomRight: Radius.circular(5.0)),
+                            topRight: Radius.circular(5.0),
+                            bottomRight: Radius.circular(5.0),
+                          ),
                         ),
                         child: Center(
                           child: Text('Non',
@@ -261,7 +274,10 @@ class YearRectangle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 20.0,
+        ),
         child: Column(
           children: [
             Text(

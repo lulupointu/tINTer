@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_scolaire_profile2.dart';
+import 'package:tinterapp/UI/shared/user_profile/user_scolaire_profile.dart';
 
-class ScolaireCriteriaList2 extends StatelessWidget {
+class ScolaireCriteriaList extends StatelessWidget {
   final Widget separator;
 
   final bool isMatieresPressed;
 
   final void Function() onMatieresPressed;
 
-  const ScolaireCriteriaList2({
+  const ScolaireCriteriaList({
     Key key,
     @required this.separator,
     @required this.isMatieresPressed,
@@ -18,16 +18,18 @@ class ScolaireCriteriaList2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+      ),
       child: Column(
         children: <Widget>[
-          MaiselOuNonRectangle2(),
+          MaiselOuNonRectangle(),
           separator,
-          HoraireDeTravailRectangle2(),
+          HoraireDeTravailRectangle(),
           separator,
-          GroupeOuSeulRectangle2(),
+          GroupeOuSeulRectangle(),
           separator,
-          EnLigneOuPresentielRectangle2(),
+          EnLigneOuPresentielRectangle(),
           separator,
           MatieresRectangle2WithListener(
             isMatieresPressed: isMatieresPressed,

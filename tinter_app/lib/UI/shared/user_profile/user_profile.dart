@@ -7,10 +7,10 @@ import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
-import 'package:tinterapp/UI/shared/options_button/options2.dart';
-import 'package:tinterapp/UI/shared/profile_creation/sub_profile_creation/associative_profile2.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_associatif_profile2.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_scolaire_profile2.dart';
+import 'package:tinterapp/UI/shared/options_button/options.dart';
+import 'package:tinterapp/UI/shared/profile_creation/sub_profile_creation/associative_profile.dart';
+import 'package:tinterapp/UI/shared/user_profile/user_associatif_profile.dart';
+import 'package:tinterapp/UI/shared/user_profile/user_scolaire_profile.dart';
 import '../../../main.dart';
 import '../associatif_to_scolaire_button2.dart';
 import '../associations2.dart';
@@ -100,7 +100,7 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => OptionsTab2()),
+                                builder: (context) => OptionsTab()),
                           );
                         },
                         icon: Consumer<TinterTheme>(
@@ -131,7 +131,7 @@ class _UserTab3State extends State<UserTab3> with RouteAware {
                         );
                       },
                       child: tinterTheme.theme == MyTheme.dark
-                          ? UserAssociatifProfile2(
+                          ? UserAssociatifProfile(
                               separator: separator,
                             )
                           : UserScolaireProfile2(
@@ -350,8 +350,8 @@ class SaveModificationsOverlay extends StatelessWidget {
   }
 }
 
-class AssociationsRectangle2 extends StatelessWidget {
-  const AssociationsRectangle2({Key key}) : super(key: key);
+class AssociationsRectangle extends StatelessWidget {
+  const AssociationsRectangle({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

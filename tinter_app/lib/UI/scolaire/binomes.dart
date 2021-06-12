@@ -26,11 +26,11 @@ import 'mode_scolaire_overlay.dart';
 
 main() => runApp(MaterialApp(
       home: Material(
-        child: BinomesTab2(),
+        child: BinomesTab(),
       ),
     ));
 
-class SelectedScolaire2 extends ChangeNotifier {
+class SelectedScolaire extends ChangeNotifier {
   String _binomeLogin;
 
   String get binomeLogin => _binomeLogin;
@@ -60,7 +60,7 @@ class SelectedScolaire2 extends ChangeNotifier {
   }
 }
 
-class BinomesTab2 extends StatefulWidget implements TinterTab {
+class BinomesTab extends StatefulWidget implements TinterTab {
   final Map<String, double> fractions = {
     'binomeSelectionMenu': null,
   };
@@ -68,10 +68,10 @@ class BinomesTab2 extends StatefulWidget implements TinterTab {
   final spacing = 15.0;
 
   @override
-  BinomesTab2State createState() => BinomesTab2State();
+  BinomesTabState createState() => BinomesTabState();
 }
 
-class BinomesTab2State extends State<BinomesTab2> {
+class BinomesTabState extends State<BinomesTab> {
   ScrollController _controller = ScrollController();
   ScrollPhysics _scrollPhysics = AlwaysScrollableScrollPhysics();
   double topMenuScrolledFraction = 0;
@@ -252,10 +252,10 @@ class BinomesTab2State extends State<BinomesTab2> {
                             binomePairMatches: _binomePairMatches,
                           ),
                         ),
-                        (context.watch<SelectedScolaire2>().binomeLogin == null &&
-                                context.watch<SelectedScolaire2>().binomePairId == null)
+                        (context.watch<SelectedScolaire>().binomeLogin == null &&
+                                context.watch<SelectedScolaire>().binomePairId == null)
                             ? noBinomeSelected(MediaQuery.of(context).size.height)
-                            : (context.watch<SelectedScolaire2>().binomePairId == null)
+                            : (context.watch<SelectedScolaire>().binomePairId == null)
                                 ? Builder(
                                     builder: (context) {
                                       BuildBinome selectedBinome;
@@ -263,14 +263,14 @@ class BinomesTab2State extends State<BinomesTab2> {
                                         selectedBinome = allBinomes.firstWhere(
                                           (BuildBinome binome) =>
                                               binome.login ==
-                                              context.watch<SelectedScolaire2>().binomeLogin,
+                                              context.watch<SelectedScolaire>().binomeLogin,
                                         );
                                       } on StateError {
                                         // This is achieve when the selected has been
                                         // removed from the list but binomeLogin has not been cleared
                                         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                                           context
-                                              .read<SelectedScolaire2>()
+                                              .read<SelectedScolaire>()
                                               .binomeLogin = null;
                                         });
                                         return Container();
@@ -291,13 +291,13 @@ class BinomesTab2State extends State<BinomesTab2> {
                                             allBinomePairMatches.firstWhere(
                                           (BuildBinomePairMatch binomePairMatch) =>
                                               binomePairMatch.binomePairId ==
-                                              context.watch<SelectedScolaire2>().binomePairId,
+                                              context.watch<SelectedScolaire>().binomePairId,
                                         );
                                       } on StateError {
                                         // This is achieve when the selected has been
                                         // removed from the list but binomePairId has not been cleared
                                         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                                          context.read<SelectedScolaire2>().binomePairId = null;
+                                          context.read<SelectedScolaire>().binomePairId = null;
                                         });
                                         return Container();
                                       }
@@ -813,7 +813,7 @@ class CompareViewBinome extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await onCompareTapped(0);
-                      context.read<SelectedScolaire2>().binomeLogin = null;
+                      context.read<SelectedScolaire>().binomeLogin = null;
                       BlocProvider.of<MatchedBinomesBloc>(context).add(
                         IgnoreBinomeEvent(binome: _binome),
                       );
@@ -1320,7 +1320,7 @@ class CompareViewBinomePairMatch extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await onCompareTapped(0);
-                      context.read<SelectedScolaire2>()._binomePairId = null;
+                      context.read<SelectedScolaire>()._binomePairId = null;
                       BlocProvider.of<MatchedBinomePairMatchesBloc>(context).add(
                         IgnoreBinomePairMatchEvent(binomePairMatch: _binomePairMatch),
                       );
@@ -2088,7 +2088,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                     for (BuildBinome binome in binomes)
                       GestureDetector(
                         onTap: () =>
-                            context.read<SelectedScolaire2>().binomeLogin = binome.login,
+                            context.read<SelectedScolaire>().binomeLogin = binome.login,
                         child: Padding(
                           padding: const EdgeInsets.only(
                             right: 7.5,
@@ -2153,7 +2153,7 @@ class BinomeSelectionMenu extends StatelessWidget {
                   children: [
                     for (BuildBinomePairMatch binomePairMatch in binomePairMatches)
                       GestureDetector(
-                        onTap: () => context.read<SelectedScolaire2>().binomePairId =
+                        onTap: () => context.read<SelectedScolaire>().binomePairId =
                             binomePairMatch.binomePairId,
                         child: Padding(
                           padding: EdgeInsets.only(

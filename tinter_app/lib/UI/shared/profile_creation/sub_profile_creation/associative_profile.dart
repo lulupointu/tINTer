@@ -8,24 +8,24 @@ import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/UI/shared/profile_creation/user_criteria_list2/associative_criteria_list2.dart';
+import 'package:tinterapp/UI/shared/profile_creation/user_criteria_list/associative_criteria_list.dart';
 
 import '../../const.dart';
-import '../profile_creation2.dart';
+import '../profile_creation.dart';
 
-class AssociativeProfile2 extends StatefulWidget {
+class AssociativeProfile extends StatefulWidget {
   final void Function({@required AccountCreationMode accountCreationMode})
       onAccountCreationModeChanged;
 
-  const AssociativeProfile2(
+  const AssociativeProfile(
       {Key key, @required this.onAccountCreationModeChanged})
       : super(key: key);
 
   @override
-  _AssociativeProfile2State createState() => _AssociativeProfile2State();
+  _AssociativeProfileState createState() => _AssociativeProfileState();
 }
 
-class _AssociativeProfile2State extends State<AssociativeProfile2> {
+class _AssociativeProfileState extends State<AssociativeProfile> {
   Widget separator = SizedBox(
     height: 25,
   );
@@ -62,7 +62,7 @@ class _AssociativeProfile2State extends State<AssociativeProfile2> {
                 ProfileHeader(),
                 Padding(
                   padding: const EdgeInsets.only(top: 40.0),
-                  child: AssociativeCriteriaList2(
+                  child: AssociativeCriteriaList(
                     isAssociationPressed: isAssociationPressed,
                     isMusicTastePressed: isMusicTastePressed,
                     onAssociationPressed: onAssociationPressed,

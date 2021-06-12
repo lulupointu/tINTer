@@ -5,20 +5,20 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:tinterapp/Logic/blocs/scolaire/binome_pair_search/binome_pair_search_bloc.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome_pair.dart';
 import 'package:tinterapp/Logic/models/scolaire/searched_binome_pair.dart';
-import 'package:tinterapp/UI2/shared2/random_gender.dart';
+import 'package:tinterapp/UI/shared/random_gender.dart';
 
 main() => runApp(MaterialApp(
-      home: SearchStudentBinomePairTab2(),
+      home: SearchStudentBinomePairTab(),
     ));
 
-class SearchStudentBinomePairTab2 extends StatefulWidget {
+class SearchStudentBinomePairTab extends StatefulWidget {
   @override
-  _SearchStudentBinomePairTab2State createState() =>
-      _SearchStudentBinomePairTab2State();
+  _SearchStudentBinomePairTabState createState() =>
+      _SearchStudentBinomePairTabState();
 }
 
-class _SearchStudentBinomePairTab2State
-    extends State<SearchStudentBinomePairTab2> {
+class _SearchStudentBinomePairTabState
+    extends State<SearchStudentBinomePairTab> {
   final Map<String, double> fractions = {
     'top': 0.2,
     'separator': 0.05,

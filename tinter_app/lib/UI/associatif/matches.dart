@@ -21,11 +21,11 @@ import 'mode_associatif_overlay.dart';
 
 main() => runApp(MaterialApp(
       home: Material(
-        child: MatchsTab2(),
+        child: MatchsTab(),
       ),
     ));
 
-class SelectedAssociatif2 extends ChangeNotifier {
+class SelectedAssociatif extends ChangeNotifier {
   String _matchLogin;
 
   String get matchLogin => _matchLogin;
@@ -39,7 +39,7 @@ class SelectedAssociatif2 extends ChangeNotifier {
   }
 }
 
-class MatchsTab2 extends StatefulWidget implements TinterTab {
+class MatchsTab extends StatefulWidget implements TinterTab {
   final Map<String, double> fractions = {
     'matchSelectionMenu': null,
   };
@@ -47,10 +47,10 @@ class MatchsTab2 extends StatefulWidget implements TinterTab {
   final spacing = 15.0;
 
   @override
-  MatchsTab2State createState() => MatchsTab2State();
+  MatchsTabState createState() => MatchsTabState();
 }
 
-class MatchsTab2State extends State<MatchsTab2> {
+class MatchsTabState extends State<MatchsTab> {
   ScrollController _controller = ScrollController();
   ScrollPhysics _scrollPhysics = AlwaysScrollableScrollPhysics();
   double topMenuScrolledFraction = 0;
@@ -161,7 +161,7 @@ class MatchsTab2State extends State<MatchsTab2> {
                       matchesNotParrains: _matchesNotParrains,
                       parrains: _parrains,
                     ),
-                    (context.watch<SelectedAssociatif2>().matchLogin == null)
+                    (context.watch<SelectedAssociatif>().matchLogin == null)
                         ? noMatchSelected(MediaQuery.of(context).size.height)
                         : Builder(
                             builder: (context) {
@@ -169,12 +169,12 @@ class MatchsTab2State extends State<MatchsTab2> {
                               try {
                                 selectedMatch = allMatches.firstWhere((BuildMatch match) =>
                                     match.login ==
-                                    context.watch<SelectedAssociatif2>().matchLogin);
+                                    context.watch<SelectedAssociatif>().matchLogin);
                               } on StateError {
                                 // This is achieve when the selected has been
                                 // removed from the list but binomeLogin has not been cleared
                                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                                  context.watch<SelectedAssociatif2>().matchLogin = null;
+                                  context.watch<SelectedAssociatif>().matchLogin = null;
                                 });
                                 return Container();
                               }
@@ -702,7 +702,7 @@ class CompareView extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await onCompareTapped(0);
-                      context.read<SelectedAssociatif2>().matchLogin = null;
+                      context.read<SelectedAssociatif>().matchLogin = null;
                       BlocProvider.of<MatchedMatchesBloc>(context).add(
                         IgnoreMatchEvent(match: _match),
                       );
@@ -1250,7 +1250,7 @@ class MatchSelectionMenu extends StatelessWidget {
                       for (BuildMatch match in matches)
                         GestureDetector(
                           onTap: () =>
-                              context.read<SelectedAssociatif2>().matchLogin = match.login,
+                              context.read<SelectedAssociatif>().matchLogin = match.login,
                           child: Padding(
                             padding: const EdgeInsets.only(
                               right: 7.5,

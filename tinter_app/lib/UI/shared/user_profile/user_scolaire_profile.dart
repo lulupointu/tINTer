@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_profile2.dart';
+import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 
-import '../user_criteria_panel2/matieres2.dart';
+import '../user_criteria_panel/matieres.dart';
 
 class UserScolaireProfile2 extends StatelessWidget {
   final Widget separator;
@@ -18,15 +18,15 @@ class UserScolaireProfile2 extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Column(
         children: <Widget>[
-          MaiselOuNonRectangle2(),
+          MaiselOuNonRectangle(),
           separator,
-          HoraireDeTravailRectangle2(),
+          HoraireDeTravailRectangle(),
           separator,
-          AssociationsRectangle2(),
+          AssociationsRectangle(),
           separator,
-          GroupeOuSeulRectangle2(),
+          GroupeOuSeulRectangle(),
           separator,
-          EnLigneOuPresentielRectangle2(),
+          EnLigneOuPresentielRectangle(),
           separator,
           MatieresRectangle2WithoutListener(),
         ],
@@ -35,7 +35,7 @@ class UserScolaireProfile2 extends StatelessWidget {
   }
 }
 
-class MaiselOuNonRectangle2 extends StatelessWidget {
+class MaiselOuNonRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -152,7 +152,7 @@ class MaiselOuNonRectangle2 extends StatelessWidget {
   }
 }
 
-class HoraireDeTravailRectangle2 extends StatelessWidget {
+class HoraireDeTravailRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -392,7 +392,7 @@ class HoraireDeTravailRectangle2 extends StatelessWidget {
   }
 }
 
-class GroupeOuSeulRectangle2 extends StatelessWidget {
+class GroupeOuSeulRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -457,7 +457,7 @@ class GroupeOuSeulRectangle2 extends StatelessWidget {
   }
 }
 
-class EnLigneOuPresentielRectangle2 extends StatelessWidget {
+class EnLigneOuPresentielRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -539,7 +539,7 @@ class MatieresRectangle2WithListener extends StatelessWidget {
         onMatieresPressed();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MatieresTab2()),
+          MaterialPageRoute(builder: (context) => MatieresTab()),
         );
       },
       child: Card(
@@ -575,7 +575,7 @@ class MatieresRectangle2WithoutListener extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MatieresTab2()),
+          MaterialPageRoute(builder: (context) => MatieresTab()),
         );
       },
       child: Card(

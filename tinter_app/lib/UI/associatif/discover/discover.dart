@@ -11,7 +11,7 @@ import 'package:tinterapp/Logic/models/associatif/association.dart';
 import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
 import 'package:tinterapp/Logic/models/associatif/match.dart';
-import 'package:tinterapp/UI/associatif/discover/recherche_etudiant2.dart';
+import 'package:tinterapp/UI/associatif/discover/recherche_etudiant.dart';
 import 'package:tinterapp/UI/shared/const.dart';
 import 'package:tinterapp/UI/shared/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/random_gender.dart';
@@ -19,7 +19,7 @@ import 'package:tinterapp/UI/shared/slider_label.dart';
 
 import '../mode_associatif_overlay.dart';
 
-class DiscoverAssociatifTab2 extends StatelessWidget implements TinterTab {
+class DiscoverAssociatifTab extends StatelessWidget implements TinterTab {
   @override
   Widget build(BuildContext context) {
     // Update to last information
@@ -1637,7 +1637,7 @@ class AssociatifStudentSearch extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SearchStudentAssociatifTab2()),
+              builder: (context) => SearchStudentAssociatifTab()),
         );
       },
       child: Container(
@@ -1699,7 +1699,7 @@ class AssoWideStudentSearch extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SearchStudentAssociatifTab2()),
+              builder: (context) => SearchStudentAssociatifTab()),
         );
       },
       child: Container(

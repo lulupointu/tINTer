@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
-import 'package:tinterapp/UI/shared/user_criteria_panel2/gouts_musicaux2.dart';
-import 'package:tinterapp/UI/shared/user_profile/user_profile2.dart';
+import 'package:tinterapp/UI/shared/user_criteria_panel/gouts_musicaux.dart';
+import 'package:tinterapp/UI/shared/user_profile/user_profile.dart';
 
 import '../random_gender.dart';
 
-class UserAssociatifProfile2 extends StatelessWidget {
+class UserAssociatifProfile extends StatelessWidget {
   final Widget separator;
 
-  const UserAssociatifProfile2({Key key, @required this.separator})
+  const UserAssociatifProfile({Key key, @required this.separator})
       : super(key: key);
 
   @override
@@ -20,24 +20,24 @@ class UserAssociatifProfile2 extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          AssociationsRectangle2(),
+          AssociationsRectangle(),
           separator,
-          AttiranceVieAssoRectangle2(),
+          AttiranceVieAssoRectangle(),
           separator,
-          FeteOuCoursRectangle2(),
+          FeteOuCoursRectangle(),
           separator,
-          AideOuSortirRectangle2(),
+          AideOuSortirRectangle(),
           separator,
-          OrganisationEvenementsRectangle2(),
+          OrganisationEvenementsRectangle(),
           separator,
-          GoutsMusicauxRectangle2(),
+          GoutsMusicauxRectangle(),
         ],
       ),
     );
   }
 }
 
-class AttiranceVieAssoRectangle2 extends StatelessWidget {
+class AttiranceVieAssoRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -101,7 +101,7 @@ class AttiranceVieAssoRectangle2 extends StatelessWidget {
   }
 }
 
-class FeteOuCoursRectangle2 extends StatelessWidget {
+class FeteOuCoursRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -166,7 +166,7 @@ class FeteOuCoursRectangle2 extends StatelessWidget {
   }
 }
 
-class AideOuSortirRectangle2 extends StatelessWidget {
+class AideOuSortirRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -233,7 +233,7 @@ class AideOuSortirRectangle2 extends StatelessWidget {
   }
 }
 
-class OrganisationEvenementsRectangle2 extends StatelessWidget {
+class OrganisationEvenementsRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -293,8 +293,8 @@ class OrganisationEvenementsRectangle2 extends StatelessWidget {
   }
 }
 
-class GoutsMusicauxRectangle2 extends StatelessWidget {
-  const GoutsMusicauxRectangle2({
+class GoutsMusicauxRectangle extends StatelessWidget {
+  const GoutsMusicauxRectangle({
     Key key,
   }) : super(key: key);
 
@@ -304,7 +304,7 @@ class GoutsMusicauxRectangle2 extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => GoutsMusicauxTab2()),
+          MaterialPageRoute(builder: (context) => GoutsMusicauxTab()),
         );
       },
       child: Card(

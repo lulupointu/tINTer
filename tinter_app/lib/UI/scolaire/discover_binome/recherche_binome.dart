@@ -3,23 +3,22 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:tinterapp/Logic/blocs/associatif/user_associatif_search/user_associatif_search_bloc.dart';
-import 'package:tinterapp/Logic/models/associatif/searched_user_associatif.dart';
+import 'package:tinterapp/Logic/blocs/scolaire/user_scolaire_search/user_scolaire_search_bloc.dart';
+import 'package:tinterapp/Logic/models/scolaire/searched_user_scolaire.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/UI2/shared2/random_gender.dart';
+import 'package:tinterapp/UI/shared/random_gender.dart';
 
 main() => runApp(MaterialApp(
-      home: SearchStudentAssociatifTab2(),
+      home: SearchStudentScolaireTab(),
     ));
 
-class SearchStudentAssociatifTab2 extends StatefulWidget {
+class SearchStudentScolaireTab extends StatefulWidget {
   @override
-  _SearchStudentAssociatifTab2State createState() =>
-      _SearchStudentAssociatifTab2State();
+  _SearchStudentScolaireTabState createState() =>
+      _SearchStudentScolaireTabState();
 }
 
-class _SearchStudentAssociatifTab2State
-    extends State<SearchStudentAssociatifTab2> {
+class _SearchStudentScolaireTabState extends State<SearchStudentScolaireTab> {
   final Map<String, double> fractions = {
     'top': 0.2,
     'separator': 0.05,
@@ -32,13 +31,13 @@ class _SearchStudentAssociatifTab2State
 
   @protected
   void initState() {
-    if (BlocProvider.of<UserAssociatifSearchBloc>(context).state
-        is UserAssociatifSearchLoadSuccessfulState) {
-      BlocProvider.of<UserAssociatifSearchBloc>(context)
-          .add(UserAssociatifSearchRefreshEvent());
+    if (BlocProvider.of<UserScolaireSearchBloc>(context).state
+        is UserScolaireSearchLoadSuccessfulState) {
+      BlocProvider.of<UserScolaireSearchBloc>(context)
+          .add(UserScolaireSearchRefreshEvent());
     } else {
-      BlocProvider.of<UserAssociatifSearchBloc>(context)
-          .add(UserAssociatifSearchLoadEvent());
+      BlocProvider.of<UserScolaireSearchBloc>(context)
+          .add(UserScolaireSearchLoadEvent());
     }
 
     super.initState();
@@ -182,35 +181,35 @@ class _SearchStudentAssociatifTab2State
                               ?.unfocus();
                         },
                         child: SingleChildScrollView(
-                          child: BlocBuilder<UserAssociatifSearchBloc,
-                                  UserAssociatifSearchState>(
+                          child: BlocBuilder<UserScolaireSearchBloc,
+                                  UserScolaireSearchState>(
                               builder: (BuildContext context,
-                                  UserAssociatifSearchState userSearchState) {
+                                  UserScolaireSearchState userSearchState) {
                             if (!(userSearchState
-                                is UserAssociatifSearchLoadSuccessfulState))
+                                is UserScolaireSearchLoadSuccessfulState))
                               return Center(
                                 child: Center(
                                   child: CircularProgressIndicator(),
                                 ),
                               );
-                            List<SearchedUserAssociatif>
-                                _allSearchedUsersAssociatifs = (userSearchState
-                                        as UserAssociatifSearchLoadSuccessfulState)
+                            List<SearchedUserScolaire>
+                                _allSearchedUsersScolaires = (userSearchState
+                                        as UserScolaireSearchLoadSuccessfulState)
                                     .searchedUsers;
                             RegExp searchedStringRegex =
                                 RegExp(searchString, caseSensitive: false);
-                            List<SearchedUserAssociatif> _searchedUsers =
+                            List<SearchedUserScolaire> _searchedUsers =
                                 (searchString == '')
                                     ? []
-                                    : _allSearchedUsersAssociatifs
-                                        .where((SearchedUserAssociatif
+                                    : _allSearchedUsersScolaires
+                                        .where((SearchedUserScolaire
                                                 searchedUser) =>
                                             searchedStringRegex.hasMatch(
                                                 '${searchedUser.name} ${searchedUser.surname} ${searchedUser.name}'))
                                         .toList();
                             return Column(
                               children: [
-                                for (SearchedUserAssociatif searchedUser
+                                for (SearchedUserScolaire searchedUser
                                     in _searchedUsers)
                                   new UserResume(searchedUser),
                               ],
@@ -228,14 +227,18 @@ class _SearchStudentAssociatifTab2State
 }
 
 class UserResume extends StatelessWidget {
-  final SearchedUserAssociatif searchedUser;
+  final SearchedUserScolaire searchedUser;
 
   UserResume(this.searchedUser);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 15.0, left: 20.0, right: 20.0),
+      padding: const EdgeInsets.only(
+        bottom: 15.0,
+        left: 20.0,
+        right: 20.0,
+      ),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
@@ -298,14 +301,14 @@ class UserResume extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: () =>
-                                    BlocProvider.of<UserAssociatifSearchBloc>(
+                                    BlocProvider.of<UserScolaireSearchBloc>(
                                             context)
                                         .add(searchedUser.liked
-                                            ? UserAssociatifSearchIgnoreEvent(
-                                                ignoredSearchedUserAssociatif:
+                                            ? UserScolaireSearchIgnoreEvent(
+                                                ignoredSearchedUserScolaire:
                                                     searchedUser)
-                                            : UserAssociatifSearchLikeEvent(
-                                                likedSearchedUserAssociatif:
+                                            : UserScolaireSearchLikeEvent(
+                                                likedSearchedUserScolaire:
                                                     searchedUser)),
                                 child: AnimatedContainer(
                                   duration: Duration(
@@ -317,8 +320,9 @@ class UserResume extends StatelessWidget {
                                     color: searchedUser.liked
                                         ? Colors.white
                                         : Theme.of(context).indicatorColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15.0),
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey.withOpacity(0.2),

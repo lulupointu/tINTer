@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 
 main() => runApp(MaterialApp(
-      home: GoutsMusicauxTab2(),
+      home: GoutsMusicauxTab(),
     ));
 
 List<String> goutsMusicaux = [
@@ -33,7 +33,7 @@ List<String> goutsMusicaux = [
   'Opéra'
 ];
 
-class GoutsMusicauxTab2 extends StatelessWidget {
+class GoutsMusicauxTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
-import 'package:tinterapp/UI/shared/profile_creation/user_criteria_list2/scolaire_criteria_list2.dart';
+import 'package:tinterapp/UI/shared/profile_creation/user_criteria_list/scolaire_criteria_list.dart';
 
 import '../../const.dart';
-import 'associative_profile2.dart';
+import 'associative_profile.dart';
 
-class ScolaireProfile2 extends StatefulWidget {
+class ScolaireProfile extends StatefulWidget {
   @override
-  _ScolaireProfile2State createState() => _ScolaireProfile2State();
+  _ScolaireProfileState createState() => _ScolaireProfileState();
 }
 
-class _ScolaireProfile2State extends State<ScolaireProfile2> {
+class _ScolaireProfileState extends State<ScolaireProfile> {
   Widget separator = SizedBox(
     height: 25,
   );
@@ -21,7 +21,10 @@ class _ScolaireProfile2State extends State<ScolaireProfile2> {
   bool isMatieresPressed = false;
 
   void onMatieresPressed() {
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(
+        Duration(
+          milliseconds: 500,
+        ), () {
       setState(() {
         isMatieresPressed = true;
       });
@@ -39,8 +42,10 @@ class _ScolaireProfile2State extends State<ScolaireProfile2> {
               children: [
                 ProfileHeader(),
                 Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
-                  child: ScolaireCriteriaList2(
+                  padding: const EdgeInsets.only(
+                    top: 40.0,
+                  ),
+                  child: ScolaireCriteriaList(
                     separator: SizedBox(
                       height: 20.0,
                     ),

@@ -4,10 +4,10 @@ import 'package:tinterapp/Logic/blocs/scolaire/matieres/matieres_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 
 main() => runApp(MaterialApp(
-      home: MatieresTab2(),
+      home: MatieresTab(),
     ));
 
-class MatieresTab2 extends StatelessWidget {
+class MatieresTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MatieresBloc, MatieresState>(

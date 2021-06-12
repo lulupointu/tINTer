@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tinterapp/Logic/blocs/shared/authentication/authentication_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'legal_information2.dart';
+import 'legal_information.dart';
 
 main() => runApp(MaterialApp(
-      home: OptionsTab2(),
+      home: OptionsTab(),
     ));
 
-class OptionsTab2 extends StatefulWidget {
+class OptionsTab extends StatefulWidget {
   @override
-  _OptionsTab2State createState() => _OptionsTab2State();
+  _OptionsTabState createState() => _OptionsTabState();
 }
 
-class _OptionsTab2State extends State<OptionsTab2>
+class _OptionsTabState extends State<OptionsTab>
     with SingleTickerProviderStateMixin {
   final Map<String, double> fractions = {
     'top': 0.2,

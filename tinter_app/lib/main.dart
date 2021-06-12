@@ -35,18 +35,18 @@ import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:tinterapp/UI/shared/const.dart';
-import 'package:tinterapp/UI/shared/profile_creation/profile_creation2.dart';
+import 'package:tinterapp/UI/shared/profile_creation/profile_creation.dart';
 import 'package:tinterapp/notifications_handler.dart';
 
 import 'UI/shared/homogenius_rounded_rectslider_trackshape.dart';
-import 'UI/associatif/discover/discover2.dart';
-import 'UI/associatif/matches2.dart';
-import 'UI/scolaire/binomes2.dart';
-import 'UI/scolaire/discover_scolaire_tab2.dart';
+import 'UI/associatif/discover/discover.dart';
+import 'UI/associatif/matches.dart';
+import 'UI/scolaire/binomes.dart';
+import 'UI/scolaire/discover_scolaire_tab.dart';
 import 'UI/shared/login2.dart';
 import 'UI/shared/splash_screen.dart';
 import 'UI/shared/tinter_bottom_navigation_bar4.dart';
-import 'UI/shared/user_profile/user_profile2.dart';
+import 'UI/shared/user_profile/user_profile.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -238,10 +238,10 @@ main() {
                           create: (_) => TinterTheme()),
                       ChangeNotifierProvider<TinterTabs>(
                           create: (_) => TinterTabs()),
-                      ChangeNotifierProvider<SelectedScolaire2>(
-                          create: (_) => SelectedScolaire2()),
-                      ChangeNotifierProvider<SelectedAssociatif2>(
-                          create: (_) => SelectedAssociatif2()),
+                      ChangeNotifierProvider<SelectedScolaire>(
+                          create: (_) => SelectedScolaire()),
+                      ChangeNotifierProvider<SelectedAssociatif>(
+                          create: (_) => SelectedAssociatif()),
                     ],
                     child: MaterialApp(
                       debugShowCheckedModeBanner: false,
@@ -358,7 +358,7 @@ class Tinter extends StatelessWidget {
             } else if (userState is NewUserSavingState) {
               return SplashScreen();
             } else if (userState is NewUserState) {
-              return ProfileCreation2();
+              return ProfileCreation();
             } else if (userState is KnownUserState) {
               // If user if TSP 1A, check if he has a binome pair
               if (userState.user.year == TSPYear.TSP1A &&
@@ -404,13 +404,13 @@ class Tinter extends StatelessWidget {
 
 class TinterHome extends StatefulWidget {
   final List<TinterTab> tabsAssociatif = [
-    MatchsTab2(),
-    DiscoverAssociatifTab2(),
+    MatchsTab(),
+    DiscoverAssociatifTab(),
     UserTab3()
   ];
   final List<TinterTab> tabsScolaire = [
-    BinomesTab2(),
-    DiscoverScolaireTab2(),
+    BinomesTab(),
+    DiscoverScolaireTab(),
     UserTab3()
   ];
 

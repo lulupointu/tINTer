@@ -12,7 +12,7 @@ import 'package:tinterapp/Logic/models/associatif/association_logo.dart';
 import 'package:tinterapp/Logic/models/scolaire/binome.dart';
 import 'package:tinterapp/Logic/models/shared/user.dart';
 import 'package:tinterapp/Logic/models/shared/user_profile_picture.dart';
-import 'package:tinterapp/UI/scolaire/discover_binome/recherche_binome2.dart';
+import 'package:tinterapp/UI/scolaire/discover_binome/recherche_binome.dart';
 import 'package:tinterapp/UI/shared/const.dart';
 import 'package:tinterapp/UI/shared/custom_flare_controller.dart';
 import 'package:tinterapp/UI/shared/random_gender.dart';
@@ -20,7 +20,7 @@ import 'package:tinterapp/UI/shared/slider_label.dart';
 
 import '../mode_scolaire_overlay.dart';
 
-class DiscoverBinomeTab2 extends StatelessWidget {
+class DiscoverBinomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Update to last information
@@ -182,7 +182,7 @@ class ScolaireStudentSearch extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SearchStudentScolaireTab2(),
+            builder: (context) => SearchStudentScolaireTab(),
           ),
         );
       },
@@ -1894,7 +1894,7 @@ class ScolaireWideStudentSearch extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SearchStudentScolaireTab2()),
+          MaterialPageRoute(builder: (context) => SearchStudentScolaireTab()),
         );
       },
       child: Container(

@@ -14,8 +14,8 @@ import 'package:tinterapp/Logic/models/scolaire/relation_status_scolaire.dart';
 import 'package:tinterapp/Logic/models/shared/notification_relation_status_types/notification_relation_status_title.dart';
 import 'package:tinterapp/Logic/repository/shared/notification_repository.dart';
 import 'package:tinterapp/UI/shared/const.dart';
-import 'UI/associatif/matches2.dart';
-import 'UI/scolaire/binomes2.dart';
+import 'UI/associatif/matches.dart';
+import 'UI/scolaire/binomes.dart';
 
 class NotificationHandler {
   FirebaseMessaging _firebaseMessaging;
@@ -135,7 +135,7 @@ class NotificationHandler {
         id = relationStatus.login.hashCode;
 
         // Pass the selectedLogin to this tab
-        context.read<SelectedAssociatif2>().matchLogin = relationStatus.login;
+        context.read<SelectedAssociatif>().matchLogin = relationStatus.login;
 
         // Make sure the theme is the right one
         Provider.of<TinterTheme>(context, listen: false).theme = MyTheme.dark;
@@ -147,7 +147,7 @@ class NotificationHandler {
         id = relationStatus.login.hashCode;
 
         // Pass the selectedLogin to this tab
-        context.read<SelectedScolaire2>().binomeLogin = relationStatus.login;
+        context.read<SelectedScolaire>().binomeLogin = relationStatus.login;
 
         // Make sure the theme is the right one
         Provider.of<TinterTheme>(context, listen: false).theme = MyTheme.light;
@@ -159,7 +159,7 @@ class NotificationHandler {
         id = relationStatus.binomePairId.hashCode;
 
         // Pass the selectedLogin to this tab
-        context.read<SelectedScolaire2>().binomePairId = relationStatus.binomePairId;
+        context.read<SelectedScolaire>().binomePairId = relationStatus.binomePairId;
 
         // Make sure the theme is the right one
         Provider.of<TinterTheme>(context, listen: false).theme = MyTheme.light;
@@ -194,7 +194,7 @@ class NotificationHandler {
         // If we are looking at this person, do nothing
         if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
             Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.dark &&
-            context.read<SelectedAssociatif2>().matchLogin == relationStatus.login) return;
+            context.read<SelectedAssociatif>().matchLogin == relationStatus.login) return;
 
         id = relationStatus.login.hashCode;
         title = '${data['matchName']} ${data['matchSurname']}';
@@ -227,7 +227,7 @@ class NotificationHandler {
         // If we are looking at this person, do nothing
         if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
             Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.light &&
-            context.read<SelectedScolaire2>().binomeLogin == relationStatus.login) return;
+            context.read<SelectedScolaire>().binomeLogin == relationStatus.login) return;
 
         id = relationStatus.login.hashCode;
         title = '${data['binomeName']} ${data['binomeSurname']}';
@@ -259,7 +259,7 @@ class NotificationHandler {
         // If we are looking at this person, do nothing
         if (Provider.of<TinterTabs>(context, listen: false).selectedTabIndex == 0 &&
             Provider.of<TinterTheme>(context, listen: false).theme == MyTheme.light &&
-            context.read<SelectedScolaire2>().binomePairId == relationStatus.binomePairId)
+            context.read<SelectedScolaire>().binomePairId == relationStatus.binomePairId)
           return;
 
         id = relationStatus.binomePairId.hashCode;

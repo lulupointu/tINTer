@@ -4,28 +4,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinterapp/Logic/blocs/shared/user_shared/user_shared_bloc.dart';
 
 import '../../associatif_to_scolaire_button2.dart';
-import '../profile_creation2.dart';
-import 'associative_profile2.dart';
+import '../profile_creation.dart';
+import 'associative_profile.dart';
 
 main() => runApp(MaterialApp(
-      home: AssociativeToScolaire2(
+      home: AssociativeToScolaire(
         onAccountCreationModeChanged: null,
       ),
     ));
 
-class AssociativeToScolaire2 extends StatefulWidget {
+class AssociativeToScolaire extends StatefulWidget {
   final void Function({@required AccountCreationMode accountCreationMode})
       onAccountCreationModeChanged;
 
-  const AssociativeToScolaire2(
+  const AssociativeToScolaire(
       {Key key, @required this.onAccountCreationModeChanged})
       : super(key: key);
 
   @override
-  _AssociativeToScolaire2State createState() => _AssociativeToScolaire2State();
+  _AssociativeToScolaireState createState() => _AssociativeToScolaireState();
 }
 
-class _AssociativeToScolaire2State extends State<AssociativeToScolaire2> {
+class _AssociativeToScolaireState extends State<AssociativeToScolaire> {
   @override
   Widget build(BuildContext context) {
     return Container(
