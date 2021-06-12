@@ -34,7 +34,6 @@ import 'package:tinterapp/Logic/repository/shared/notification_repository.dart';
 import 'package:tinterapp/Logic/repository/shared/user_repository.dart';
 import 'package:tinterapp/Network/tinter_api_client.dart';
 import 'package:http/http.dart' as http;
-import 'package:tinterapp/UI/scolaire/binomes/binomes.dart';
 import 'package:tinterapp/UI/shared/shared_element/const.dart';
 import 'package:tinterapp/UI/shared/splash_screen/splash_screen.dart';
 import 'package:tinterapp/UI2/shared2/profile_creation/profile_creation2.dart';
