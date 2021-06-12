@@ -43,24 +43,29 @@ class _TinterAuthenticationTab3State extends State<TinterAuthenticationTab3> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Column(children: [
-        Flexible(
-          flex: KeyboardVisibilityProvider.isKeyboardVisible(context) ? 1 : 0,
-          child: SingleChildScrollView(
-            reverse: true,
-            child: Column(
-              children: [
-                LogoHome(),
-                LoginFormAndLogo(),
-              ],
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: Column(children: [
+            Flexible(
+              flex: KeyboardVisibilityProvider.isKeyboardVisible(context) ? 1 : 0,
+              child: SingleChildScrollView(
+                reverse: true,
+                child: Column(
+                  children: [
+                    LogoHome(),
+                    LoginFormAndLogo(),
+                  ],
+                ),
+              ),
             ),
-          ),
+            if (!KeyboardVisibilityProvider.isKeyboardVisible(context))
+              Expanded(child: ProblemOrQuestion()),
+          ]),
         ),
-        if (!KeyboardVisibilityProvider.isKeyboardVisible(context))
-          Expanded(child: ProblemOrQuestion()),
-      ]),
+      ),
     );
 
   }
