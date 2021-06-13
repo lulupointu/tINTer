@@ -55,7 +55,7 @@ Future<void> loginWithCAS(HttpRequest req, String ticket) async {
 
     req.response
       ..headers.add('Content-Type', 'text/html; charset=UTF-8')
-      ..write(successfulHTML(cookie: 'ABS'))
+      ..write(successfulHTML(cookie: _newToken))
       ..close();
   } on EmptyResponseToDatabaseQuery {
     _logger.info(
@@ -82,7 +82,7 @@ Future<void> loginWithCAS(HttpRequest req, String ticket) async {
 
     req.response
       ..headers.add('Content-Type', 'text/html; charset=UTF-8')
-      ..write(successfulHTML(cookie: 'ABS'))
+      ..write(successfulHTML(cookie: _newToken))
       ..close();
   }
 }
