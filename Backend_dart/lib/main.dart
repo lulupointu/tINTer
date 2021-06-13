@@ -56,8 +56,7 @@ Future<void> main() async {
           final xmlResponse = xml.XmlDocument.parse(response.body);
           print('xmlResponse.children: ${xmlResponse.children}');
 
-          final xmlUserAttributes = xmlResponse.children.first.children.first.children.first; // serviceResponse/authenticationSuccess/user/attributes
-          _serverLogger.info('xmlUserAttributes.text: ${xmlUserAttributes.text}, xmlUserAttributes.innerText: ${xmlUserAttributes.innerText}');
+          final xmlUserAttributes = xmlResponse.getAttributeNode('serviceResponse').getAttributeNode('authenticationSuccess').getAttributeNode('user').getAttributeNode('attributes'); // serviceResponse/authenticationSuccess/user/attributes
           final username = xmlUserAttributes.getAttribute('uid');
           _serverLogger.info('username: ${username}');
           // final email = ;
