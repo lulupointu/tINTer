@@ -68,7 +68,7 @@ Future<void> main() async {
             break;
           default:
             _serverLogger
-                .warning('Get request with uri ${req.uri}, but this uri is not handled');
+                .warning('Got request with uri ${req.uri}, but this uri is not handled');
         }
         req.response.close();
       } catch (e) {

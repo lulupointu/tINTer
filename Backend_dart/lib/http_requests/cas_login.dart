@@ -24,5 +24,6 @@ Future<void> loginWithCAS(HttpRequest req, String ticket) async {
   _logger.info('Authenticated user $username with CAS');
 
   req.response.cookies.add(Cookie('SESSIONCOOKIE', 'ABC'));
+  req.response.write('COUCOU');
   req.response.close();
 }
