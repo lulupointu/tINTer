@@ -12,6 +12,7 @@ dependencies:
   image:
   built_value: ^8.0.5
   logging: ^1.0.1
+  xml: ^5.1.2
 
   fcm_api:
     path: ../../fcm_api

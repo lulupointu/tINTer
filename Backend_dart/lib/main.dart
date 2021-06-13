@@ -5,6 +5,8 @@ import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:http/http.dart' as http;
+import 'package:xml/xml.dart' as xml;
+
 
 
 TinterDatabase tinterDatabase = TinterDatabase();
@@ -50,7 +52,14 @@ Future<void> main() async {
         if (req.uri.path == '/' && req.uri.queryParameters.containsKey('ticket')) {
           _serverLogger.info('New authentication request from CAS');
           final response = await http.get(Uri.parse('https://cas.imtbs-tsp.eu/cas/serviceValidate?service=http%3A%2F%2Fdfvps.telecom-sudparis.eu%3A443&ticket=${req.uri.queryParameters['ticket']}'));
-          _serverLogger.info('REPONSE FROM CAS. body: ${response.body}');
+
+          final xmlResponse = xml.XmlDocument.parse(response.body);
+          final xmlUserAttributes = xmlResponse.children.first.children.first.children.first.children.first; // serviceResponse/authenticationSuccess/user/attributes
+          final username = xmlUserAttributes.getAttribute('uid');
+          _serverLogger.info('REPONSE FROM CAS. username: ${username}');
+          // final email = ;
+          // final firstName ;
+          // final lastName ;
         } else {
           await authenticationCheckThenRoute(req);
         }

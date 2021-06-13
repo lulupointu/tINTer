@@ -411,7 +411,7 @@
     },
     {
       "name": "xml",
-      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/xml-5.1.0",
+      "rootUri": "file:///home/lulupointu/.pub-cache/hosted/pub.dartlang.org/xml-5.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -428,7 +428,7 @@
       "languageVersion": "2.10"
     }
   ],
-  "generated": "2021-05-29T09:05:15.938564Z",
+  "generated": "2021-06-13T10:19:02.241494Z",
   "generator": "pub",
-  "generatorVersion": "2.12.4"
+  "generatorVersion": "2.13.1"
 }
