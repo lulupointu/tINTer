@@ -54,7 +54,7 @@ Future<void> main() async {
           final response = await http.get(Uri.parse('https://cas.imtbs-tsp.eu/cas/serviceValidate?service=http%3A%2F%2Fdfvps.telecom-sudparis.eu%3A443&ticket=${req.uri.queryParameters['ticket']}'));
           _serverLogger.info('REPONSE FROM CAS. body: ${response.body}');
           final xmlResponse = xml.XmlDocument.parse(response.body);
-          final username = xmlResponse.findAllElements('uid').first.text;
+          final username = xmlResponse.findAllElements('cas:uid').first.text;
           _serverLogger.info('username: ${username}');
           // final email = ;
           // final firstName ;
