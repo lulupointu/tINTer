@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
+import 'package:meta/meta.dart';
 import 'package:xml/xml.dart' as xml;
 
 Logger _logger = Logger('loginWithCAS');
@@ -23,7 +24,38 @@ Future<void> loginWithCAS(HttpRequest req, String ticket) async {
 
   _logger.info('Authenticated user $username with CAS');
 
-  req.response.cookies.add(Cookie('SESSIONCOOKIE', 'ABC'));
+  req.response.cookies.add(SecureCookie('SESSION_COOKIE', 'ABC'));
   req.response.write('COUCOU');
   req.response.close();
+}
+
+class SecureCookie implements Cookie {
+  @override
+  String domain;
+
+  @override
+  DateTime expires;
+
+  @override
+  bool httpOnly;
+
+  @override
+  int maxAge;
+
+  @override
+  String name;
+
+  @override
+  String path;
+
+  @override
+  bool secure = true;
+
+  @override
+  String value;
+
+  SecureCookie(
+    this.name,
+    this.value,
+  );
 }

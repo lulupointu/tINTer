@@ -49,10 +49,10 @@ Future<void> main() async {
         // The first element is an empty string, remove it
         if (segments.length > 0) segments.removeAt(0);
 
-        final rootSegment = segments.first;
-
         _serverLogger.info(
             'New http request. uri: ${req.uri}, path: ${req.uri.path}, header: ${req.headers}, cookies: ${req.cookies}');
+
+        final rootSegment = segments.first;
         switch (rootSegment) {
           case 'cas':
             if (!req.uri.queryParameters.containsKey('ticket'))
@@ -62,10 +62,12 @@ Future<void> main() async {
             _serverLogger.info('New authentication request from CAS');
             await loginWithCAS(req, req.uri.queryParameters['ticket']);
             break;
+
           case 'tinter_mobile_app':
             _serverLogger.info('New https request from tinter_mobile_app');
             await authenticationCheckThenRoute(req, segments);
             break;
+
           default:
             _serverLogger
                 .warning('Got request with uri ${req.uri}, but this uri is not handled');
