@@ -60,7 +60,7 @@ Future<void> main() async {
                 "A CAS https request should contain the 'ticket' query parameter",
               );
             _serverLogger.info('New authentication request from CAS');
-            loginWithCAS(req, req.uri.queryParameters['ticket']);
+            await loginWithCAS(req, req.uri.queryParameters['ticket']);
             break;
           case 'tinter_mobile_app':
             _serverLogger.info('New https request from tinter_mobile_app');
