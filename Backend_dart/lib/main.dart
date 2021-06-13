@@ -54,6 +54,8 @@ Future<void> main() async {
           final response = await http.get(Uri.parse('https://cas.imtbs-tsp.eu/cas/serviceValidate?service=http%3A%2F%2Fdfvps.telecom-sudparis.eu%3A443&ticket=${req.uri.queryParameters['ticket']}'));
           _serverLogger.info('REPONSE FROM CAS. body: ${response.body}');
           final xmlResponse = xml.XmlDocument.parse(response.body);
+          print('xmlResponse.children: ${xmlResponse.children}');
+
           final xmlUserAttributes = xmlResponse.children.first.children.first.children.first; // serviceResponse/authenticationSuccess/user/attributes
           _serverLogger.info('xmlUserAttributes.text: ${xmlUserAttributes.text}, xmlUserAttributes.innerText: ${xmlUserAttributes.innerText}');
           final username = xmlUserAttributes.getAttribute('uid');
