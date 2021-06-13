@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 import 'package:xml/xml.dart' as xml;
 
 Logger _logger = Logger('loginWithCAS');
@@ -23,9 +22,7 @@ Future<void> loginWithCAS(HttpRequest req, String ticket) async {
   final lastName = xmlResponse.findAllElements('cas:sn').first.text;
 
   _logger.info('Authenticated user $username with CAS');
-
-  req.response.cookies.add(SecureCookie('SESSION_COOKIE', 'ABC'));
-  req.response.write('COUCOU');
+  req.response.write("<cookie hidden="">COUCOU</cookie>");
   req.response.close();
 }
 
