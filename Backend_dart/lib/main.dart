@@ -4,8 +4,7 @@ import 'package:fcm_api/fcm_api.dart';
 import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
-import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart' as xml;
+import 'package:tinter_backend/http_requests/cas_login.dart';
 
 TinterDatabase tinterDatabase = TinterDatabase();
 
@@ -61,18 +60,7 @@ Future<void> main() async {
                 "A CAS https request should contain the 'ticket' query parameter",
               );
             _serverLogger.info('New authentication request from CAS');
-            final response = await http.get(Uri.parse(
-                'https://cas.imtbs-tsp.eu/cas/serviceValidate?service=http%3A%2F%2Fdfvps.telecom-sudparis.eu%3A443%2Fcas&ticket=${req.uri.queryParameters['ticket']}'));
-            _serverLogger.info('REPONSE FROM CAS. body: ${response.body}');
-            final xmlResponse = xml.XmlDocument.parse(response.body);
-            final username = xmlResponse.findAllElements('cas:uid').first.text;
-            final email = xmlResponse.findAllElements('cas:mail').first.text;
-            final firstName = xmlResponse.findAllElements('cas:givenName').first.text;
-            final lastName = xmlResponse.findAllElements('cas:sn').first.text;
-            _serverLogger.info('username: ${username}');
-            _serverLogger.info('email: ${email}');
-            _serverLogger.info('firstName: ${firstName}');
-            _serverLogger.info('lastName: ${lastName}');
+            loginWithCAS(req, req.uri.queryParameters['ticket']);
             break;
           case 'tinter_mobile_app':
             _serverLogger.info('New https request from tinter_mobile_app');
