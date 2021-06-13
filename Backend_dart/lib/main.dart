@@ -43,8 +43,13 @@ Future<void> main() async {
   try {
     await for (HttpRequest req in server) {
       try {
-        _serverLogger.info('New http request. uri: ${req.uri}, header: ${req.headers}, cookies: ${req.cookies}');
-        await authenticationCheckThenRoute(req);
+        _serverLogger.info('New http request. uri: ${req.uri}, path: ${req.uri.path}, header: ${req.headers}, cookies: ${req.cookies}');
+        if (req.uri.path == '/' && req.uri.queryParameters.containsKey('ticket')) {
+          _serverLogger.info('New authentication request from CAS');
+
+        } else {
+          await authenticationCheckThenRoute(req);
+        }
         req.response.close();
       } catch (e) {
         _serverLogger.shout('Error crashed the server: $e');
