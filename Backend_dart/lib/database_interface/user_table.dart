@@ -14,7 +14,6 @@ class UsersTable {
 
   UsersTable({@required this.database});
 
-
   Future<void> create() async {
     _logger.info('Executing function create.');
 
@@ -98,24 +97,20 @@ class UsersTable {
     return Future.wait(queries);
   }
 
-  Future<void> addBasicInfo({@required Map<String, dynamic> userJson}) async {
-    _logger.info('Executing function addBasicInfo with args: userJson=${userJson}');
-
-    assert(userJson.containsKey('login'));
-
-    // Remove any useless input
-    userJson.removeWhere((String key, dynamic value) => value == null || value is List);
+  Future<void> addBasicInfo({@required BasicUserInfo basicUserInfo}) async {
+    _logger.info('Executing function addBasicInfo with args: userJson=${basicUserInfo}');
 
     var queries = <Future>[
       database.query(
           "INSERT INTO $name "
-                  "(" +
-              [for (String key in userJson.keys) '\"$key\"'].join(', ') +
-              ") "
-                  "VALUES (" +
-              [for (String key in userJson.keys) '@$key'].join(', ') +
-              ");",
-          substitutionValues: userJson),
+          "(login, name, surname, email) "
+          "VALUES (@login, @name, @surname, @email);",
+          substitutionValues: {
+            'login': basicUserInfo.username,
+            'name': basicUserInfo.lastName,
+            'surname': basicUserInfo.firstName,
+            'email': basicUserInfo.email,
+          }),
     ];
 
     return Future.wait(queries);
@@ -234,4 +229,18 @@ class UsersTable {
 
     return database.query(query);
   }
+}
+
+class BasicUserInfo {
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String username;
+
+  BasicUserInfo({
+    @required this.firstName,
+    @required this.lastName,
+    @required this.email,
+    @required this.username,
+  });
 }

@@ -70,7 +70,14 @@ class UsersManagementTable {
   Future<void> add({@required BuildUser user}) async {
     _logger.info('Executing function add with args: user=${user}');
 
-    await usersTable.addBasicInfo(userJson: user.toJson());
+    await usersTable.addBasicInfo(
+      basicUserInfo: BasicUserInfo(
+        firstName: user.surname,
+        lastName: user.name,
+        email: user.email,
+        username: user.login,
+      ),
+    );
 
     final List<Future> queries = [
       usersTable.update(user: user),
@@ -89,7 +96,6 @@ class UsersManagementTable {
 
   Future<void> update({@required BuildUser user}) async {
     _logger.info('Executing function update with args: user=${user}');
-
 
     final List<Future> queries = [
       usersTable.update(user: user),
@@ -136,11 +142,12 @@ class UsersManagementTable {
 
   Future<Map<String, BuildUser>> getAll(
       {bool primoEntrant, TSPYear year, School school}) async {
-    _logger.info('Executing function getAll with args: primoEntrant=${primoEntrant}, year=${year}, school=${school}');
+    _logger.info(
+        'Executing function getAll with args: primoEntrant=${primoEntrant}, year=${year}, school=${school}');
 
     final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
         "SELECT * FROM ${UsersTable.name} "
-            "WHERE \"isAccountCreationFinished\"='t' " +
+                "WHERE \"isAccountCreationFinished\"='t' " +
             ((primoEntrant != null) ? "AND \"primoEntrant\"<>@primoEntrant " : "") +
             ((year != null) ? "AND \"year\"=@year " : "") +
             ((school != null) ? "AND \"school\"=@school " : "") +
@@ -153,7 +160,7 @@ class UsersManagementTable {
       return {
         for (int index = 0; index < queriesResults.length; index++)
           queriesResults[index][UsersTable.name]['login']: queriesResults[index]
-          [UsersTable.name]
+              [UsersTable.name]
       };
     });
 
@@ -171,7 +178,7 @@ class UsersManagementTable {
         login: BuildUser.fromJson({
           ...otherUsersJson[login],
           'associations':
-          queriesResults[0][login].map((Association association) => association.toJson()),
+              queriesResults[0][login].map((Association association) => association.toJson()),
           'goutsMusicaux': queriesResults[1][login],
           'matieresPreferees': queriesResults[2][login],
           'horairesDeTravail': queriesResults[3][login],
@@ -179,14 +186,14 @@ class UsersManagementTable {
     };
   }
 
-
   Future<Map<String, BuildUser>> getAllExceptOneFromLogin(
       {@required String login, bool primoEntrant, TSPYear year, School school}) async {
-    _logger.info('Executing function getAllExceptOneFromLogin with args: login=${login}, primoEntrant=${primoEntrant}, year=${year}, school=${school}');
+    _logger.info(
+        'Executing function getAllExceptOneFromLogin with args: login=${login}, primoEntrant=${primoEntrant}, year=${year}, school=${school}');
 
     final Map<String, Map<String, dynamic>> otherUsersJson = await database.mappedResultsQuery(
         "SELECT * FROM ${UsersTable.name} "
-            "WHERE login<>@login AND \"isAccountCreationFinished\"='t' " +
+                "WHERE login<>@login AND \"isAccountCreationFinished\"='t' " +
             ((primoEntrant != null) ? "AND \"primoEntrant\"<>@primoEntrant " : "") +
             ((year != null) ? "AND \"year\"=@year " : "") +
             ((school != null) ? "AND \"school\"=@school " : "") +
@@ -200,7 +207,7 @@ class UsersManagementTable {
       return {
         for (int index = 0; index < queriesResults.length; index++)
           queriesResults[index][UsersTable.name]['login']: queriesResults[index]
-          [UsersTable.name]
+              [UsersTable.name]
       };
     });
 
@@ -218,7 +225,7 @@ class UsersManagementTable {
         login: BuildUser.fromJson({
           ...otherUsersJson[login],
           'associations':
-          queriesResults[0][login].map((Association association) => association.toJson()),
+              queriesResults[0][login].map((Association association) => association.toJson()),
           'goutsMusicaux': queriesResults[1][login],
           'matieresPreferees': queriesResults[2][login],
           'horairesDeTravail': queriesResults[3][login],
@@ -226,8 +233,7 @@ class UsersManagementTable {
     };
   }
 
-  Future<Map<String, BuildUser>> getMultipleFromLogins(
-      {@required List<String> logins}) async {
+  Future<Map<String, BuildUser>> getMultipleFromLogins({@required List<String> logins}) async {
     _logger.info('Executing function getMultipleFromLogins with args: logins=${logins}');
 
     if (logins.length == 0) return {};
@@ -247,7 +253,7 @@ class UsersManagementTable {
         login: BuildUser.fromJson({
           ...queriesResults[0][login],
           'associations':
-          queriesResults[1][login].map((Association association) => association.toJson()),
+              queriesResults[1][login].map((Association association) => association.toJson()),
           'goutsMusicaux': queriesResults[2][login],
           'matieresPreferees': queriesResults[3][login],
           'horairesDeTravail': queriesResults[4][login],

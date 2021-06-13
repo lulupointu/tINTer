@@ -13,30 +13,34 @@ import 'package:tinter_backend/models/shared/http_errors.dart';
 import 'package:tinter_backend/models/shared/session.dart';
 import 'package:meta/meta.dart';
 
+String printReceivedSegments(String login, String functionName, List<String> segments) {
+  return '$login ($functionName): Recieved segment: $segments';
+}
+
 Logger _authenticationLogger = Logger('authenticationCheckThenRoute');
 
 Future<void> authenticationCheckThenRoute(HttpRequest req, List<String> segments) async {
   // if login then use ldap to check for credentials
-  if (segments[0] == 'login') {
-    try {
-      await tryLogin(httpRequest: req);
-    } on HttpError catch (error) {
-      _authenticationLogger.fine("", error);
-      if (error.shouldSend)
-        await req.response
-          ..statusCode = error.errorCode ?? HttpStatus.badRequest
-          ..write(error)
-          ..close();
-      return;
-    } catch (error) {
-      _authenticationLogger.warning("Unexpected error caught (${error.runtimeType}):", error);
-      await req.response
-        ..statusCode = HttpStatus.badRequest
-        ..close();
-      return;
-    }
-    return;
-  }
+  // if (segments[0] == 'login') {
+  //   try {
+  //     await tryLogin(httpRequest: req);
+  //   } on HttpError catch (error) {
+  //     _authenticationLogger.fine("", error);
+  //     if (error.shouldSend)
+  //       await req.response
+  //         ..statusCode = error.errorCode ?? HttpStatus.badRequest
+  //         ..write(error)
+  //         ..close();
+  //     return;
+  //   } catch (error) {
+  //     _authenticationLogger.warning("Unexpected error caught (${error.runtimeType}):", error);
+  //     await req.response
+  //       ..statusCode = HttpStatus.badRequest
+  //       ..close();
+  //     return;
+  //   }
+  //   return;
+  // }
 
   // Else this means that the student is already authenticated and that
   // a session token is attached to the request.
@@ -188,76 +192,73 @@ Future<String> checkSessionTokenAndGetLogin({@required HttpRequest httpRequest})
   }
 }
 
-Logger _tryLoginLogger = Logger('tryLogin');
-
-Future<void> tryLogin({@required HttpRequest httpRequest}) async {
-  // TinterDatabase tinterDatabase = TinterDatabase();
-  // await tinterDatabase.open();
-
-  UsersTable usersTable = UsersTable(
-    database: tinterDatabase.connection,
-  );
-  SessionsTable sessionsTable = SessionsTable(
-    database: tinterDatabase.connection,
-  );
-
-  _tryLoginLogger.info('Get login and password from request header');
-  final String _loginPassword = utf8
-      .decode(base64Url.decode(httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader)));
-
-  final int splitIndex = _loginPassword.indexOf(':');
-  if (splitIndex == -1) {
-    throw InvalidCredentialsFormatException(
-        'Login or password format is incorrect.\nPlease write in the form login:password',
-        true);
-  }
-  final String _login = _loginPassword.substring(0, splitIndex);
-  final String _password = _loginPassword.substring(splitIndex + 1);
-
-  Map<String, String> userBasicInfoJson;
-  try {
-    _tryLoginLogger.info('Try authenticating with LDAP');
-
-    _tryLoginLogger.info(
-        'Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised');
-    userBasicInfoJson = await ldap.getUserInfoFromLDAP(login: _login, password: _password);
-
-    _tryLoginLogger.info(
-        'Get static student info from database, If unknown EmptyResponseToDatabaseQuery is raised');
-    await usersTable.getFromLogin(login: _login);
-
-    _tryLoginLogger.info('Generate a new token, store it, and send it in the header');
-    String _newToken = generateNewToken();
-    await sessionsTable.add(
-        session: Session(
-      (b) => b
-        ..token = _newToken
-        ..login = _login
-        ..creationDate = DateTime.now().toUtc()
-        ..isValid = true,
-    ));
-    httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
-  } on InvalidCredentialsException catch (error) {
-    throw error;
-  } on EmptyResponseToDatabaseQuery {
-    _tryLoginLogger.info(
-        'This means that it is the first authentication, therefore we save the static profile');
-    await usersTable.addBasicInfo(userJson: userBasicInfoJson);
-
-    _tryLoginLogger.info('Generate a new token, store it, and send it in the header');
-    String _newToken = generateNewToken();
-    await sessionsTable.add(
-        session: Session(
-      (b) => b
-        ..token = _newToken
-        ..login = _login
-        ..creationDate = DateTime.now().toUtc()
-        ..isValid = true,
-    ));
-    httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
-  }
-}
-
-String printReceivedSegments(String login, String functionName, List<String> segments) {
-  return '$login ($functionName): Recieved segment: $segments';
-}
+// Logger _tryLoginLogger = Logger('tryLogin');
+//
+// Future<void> tryLogin({@required HttpRequest httpRequest}) async {
+//   // TinterDatabase tinterDatabase = TinterDatabase();
+//   // await tinterDatabase.open();
+//
+//   UsersTable usersTable = UsersTable(
+//     database: tinterDatabase.connection,
+//   );
+//   SessionsTable sessionsTable = SessionsTable(
+//     database: tinterDatabase.connection,
+//   );
+//
+//   _tryLoginLogger.info('Get login and password from request header');
+//   final String _loginPassword = utf8
+//       .decode(base64Url.decode(httpRequest.headers.value(HttpHeaders.wwwAuthenticateHeader)));
+//
+//   final int splitIndex = _loginPassword.indexOf(':');
+//   if (splitIndex == -1) {
+//     throw InvalidCredentialsFormatException(
+//         'Login or password format is incorrect.\nPlease write in the form login:password',
+//         true);
+//   }
+//   final String _login = _loginPassword.substring(0, splitIndex);
+//   final String _password = _loginPassword.substring(splitIndex + 1);
+//
+//   Map<String, String> userBasicInfoJson;
+//   try {
+//     _tryLoginLogger.info('Try authenticating with LDAP');
+//
+//     _tryLoginLogger.info(
+//         'Get static student info from ldap. If authentication failed, InvalidCredentialsException is raised');
+//     userBasicInfoJson = await ldap.getUserInfoFromLDAP(login: _login, password: _password);
+//
+//     _tryLoginLogger.info(
+//         'Get static student info from database, If unknown EmptyResponseToDatabaseQuery is raised');
+//     await usersTable.getFromLogin(login: _login);
+//
+//     _tryLoginLogger.info('Generate a new token, store it, and send it in the header');
+//     String _newToken = generateNewToken();
+//     await sessionsTable.add(
+//         session: Session(
+//       (b) => b
+//         ..token = _newToken
+//         ..login = _login
+//         ..creationDate = DateTime.now().toUtc()
+//         ..isValid = true,
+//     ));
+//     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
+//   } on InvalidCredentialsException catch (error) {
+//     throw error;
+//   } on EmptyResponseToDatabaseQuery {
+//     _tryLoginLogger.info(
+//         'This means that it is the first authentication, therefore we save the static profile');
+//     await usersTable.addBasicInfo(basicUserInfo: BasicUserInfo(firstName: firstName, lastName: lastName, email: email, username: username));
+//
+//     _tryLoginLogger.info('Generate a new token, store it, and send it in the header');
+//     String _newToken = generateNewToken();
+//     await sessionsTable.add(
+//         session: Session(
+//       (b) => b
+//         ..token = _newToken
+//         ..login = _login
+//         ..creationDate = DateTime.now().toUtc()
+//         ..isValid = true,
+//     ));
+//     httpRequest.response.headers.add(HttpHeaders.wwwAuthenticateHeader, _newToken);
+//   }
+// }
+//
