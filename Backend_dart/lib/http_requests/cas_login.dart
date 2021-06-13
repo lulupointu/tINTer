@@ -23,6 +23,7 @@ Future<void> loginWithCAS(HttpRequest req, String ticket) async {
 
   _logger.info('Authenticated user $username with CAS');
   req.response
+    ..headers.add('Content-Type', 'text/html; charset=UTF-8')
     ..write("<cookie hidden=\" \">COUCOU</cookie>")
     ..close();
 }
