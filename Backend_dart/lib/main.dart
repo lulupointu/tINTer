@@ -43,6 +43,7 @@ Future<void> main() async {
   try {
     await for (HttpRequest req in server) {
       try {
+        _serverLogger.info('New http request. uri: ${req.uri}');
         await authenticationCheckThenRoute(req);
         req.response.close();
       } catch (e) {
