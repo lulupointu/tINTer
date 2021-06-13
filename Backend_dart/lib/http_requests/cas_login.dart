@@ -22,8 +22,9 @@ Future<void> loginWithCAS(HttpRequest req, String ticket) async {
   final lastName = xmlResponse.findAllElements('cas:sn').first.text;
 
   _logger.info('Authenticated user $username with CAS');
-  req.response.write("<cookie hidden="">COUCOU</cookie>");
-  req.response.close();
+  req.response
+    ..write("<cookie hidden=\" \">COUCOU</cookie>")
+    ..close();
 }
 
 class SecureCookie implements Cookie {
