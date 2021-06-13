@@ -4,6 +4,8 @@ import 'package:fcm_api/fcm_api.dart';
 import 'package:logging/logging.dart';
 import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
+import 'package:http/http.dart' as http;
+
 
 TinterDatabase tinterDatabase = TinterDatabase();
 
@@ -20,7 +22,7 @@ Future<void> main() async {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     _logFileSink.writeln(
-        '[${record.loggerName}] | ${record.level.name} | ${record.time} : ${record.message} | ${record.error ?? ''} | ${record.stackTrace ?? ''}');
+        '[${record.loggerName}] | ${record.level.name} | ${record.time} : ${record.message} ${(record.error == null) ? '' : ' | ${record.error ?? ''} | ${record.stackTrace ?? ''}'}');
   });
 
   try {
@@ -43,10 +45,12 @@ Future<void> main() async {
   try {
     await for (HttpRequest req in server) {
       try {
-        _serverLogger.info('New http request. uri: ${req.uri}, path: ${req.uri.path}, header: ${req.headers}, cookies: ${req.cookies}');
+        _serverLogger.info(
+            'New http request. uri: ${req.uri}, path: ${req.uri.path}, header: ${req.headers}, cookies: ${req.cookies}');
         if (req.uri.path == '/' && req.uri.queryParameters.containsKey('ticket')) {
           _serverLogger.info('New authentication request from CAS');
-
+          final response = await http.get(Uri.parse('https://cas.imtbs-tsp.eu/cas/serviceValidate?service=http%3A%2F%2Fdfvps.telecom-sudparis.eu%3A443&ticket=${req.uri.queryParameters['ticket']}'));
+          _serverLogger.info('REPONSE FROM CAS. body: ${response.body}');
         } else {
           await authenticationCheckThenRoute(req);
         }
