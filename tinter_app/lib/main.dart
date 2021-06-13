@@ -52,6 +52,8 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 NotificationHandler notificationHandler;
 
+final String CAS_URL = "https://cas.imtbs-tsp.eu/cas/login?service=http%3A%2F%2Fdfvps.telecom-sudparis.eu%3A443%2Fcas";
+
 main() {
 //  Bloc.observer = AllBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
