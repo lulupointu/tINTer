@@ -15,12 +15,7 @@ import 'package:meta/meta.dart';
 
 Logger _authenticationLogger = Logger('authenticationCheckThenRoute');
 
-Future<void> authenticationCheckThenRoute(HttpRequest req) async {
-  // The segment are the different part of the uri
-  List<String> segments = req.uri.path.split('/');
-  // The first element is an empty string, remove it
-  if (segments.length > 0) segments.removeAt(0);
-
+Future<void> authenticationCheckThenRoute(HttpRequest req, List<String> segments) async {
   // if login then use ldap to check for credentials
   if (segments[0] == 'login') {
     try {
