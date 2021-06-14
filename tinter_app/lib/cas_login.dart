@@ -71,6 +71,14 @@ class _WebViewExampleState extends State<WebViewExample> {
           controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontFamily = \"Open Sans\";");
           controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontSize = \"20px\";");
           controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontWeight = \"500\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.padding = \"30px 20px\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.borderRadius = \"5px\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.border = \"thick solid #79BFC9\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.width = \"60%\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.margin = \"10px 0px 0px 0px\";");
+          controller.evaluateJavascript("document.getElementById(\"username\").style.borderRadius = \"5px\";");
+          controller.evaluateJavascript("document.getElementById(\"username\").style.border = \"thick solid #79BFC9\";");
+          controller.evaluateJavascript("document.getElementById(\"username\").style.width = \"60%\";");
         },
         gestureNavigationEnabled: true,
       )
