@@ -1,0 +1,99 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+void main() => runApp(MaterialApp(home: WebViewExample()));
+
+class WebViewExample extends StatefulWidget {
+  @override
+  _WebViewExampleState createState() => _WebViewExampleState();
+}
+
+class _WebViewExampleState extends State<WebViewExample> {
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
+
+  bool showWebView = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('CAS Example'),
+        actions: <Widget>[
+          DeleteCookiesIcon(_controller.future),
+        ],
+      ),
+      body: showWebView
+          ? WebView(
+        initialUrl:
+        'https://cas.imtbs-tsp.eu/cas/login?service=http://dfvps.telecom-sudparis.eu:443/cas',
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          _controller.complete(webViewController);
+        },
+        onPageStarted: (String url) async {
+          final controller = await _controller.future;
+          final cookie = await controller.evaluateJavascript(
+              "document.getElementsByTagName('cookie')[0].textContent");
+
+          if (cookie != 'null') {
+            // TODO: Store the cookie with shared preferences
+            print('onPageStarted COOKIE: $cookie');
+
+            setState(() {
+              showWebView = false;
+            });
+          }
+        },
+        onPageFinished: (String url) async {
+          final controller = await _controller.future;
+          controller.evaluateJavascript("document.getElementById(\"footer\").remove();");
+        },
+        gestureNavigationEnabled: true,
+      )
+          : Center(
+        child: Text('Welcome on tINTer'),
+      ),
+    );
+  }
+}
+
+class DeleteCookiesIcon extends StatelessWidget {
+  DeleteCookiesIcon(this.controller);
+
+  final Future<WebViewController> controller;
+  final CookieManager cookieManager = CookieManager();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<WebViewController>(
+      future: controller,
+      builder: (BuildContext context, AsyncSnapshot<WebViewController> controller) {
+        return IconButton(
+          onPressed: () => _onClearCookies(context, controller.data),
+          icon: Icon(Icons.delete),
+        );
+      },
+    );
+  }
+
+  void _onClearCookies(BuildContext context, WebViewController controller) async {
+    final bool hadCookies = await cookieManager.clearCookies();
+    controller.loadUrl(
+        "https://cas.imtbs-tsp.eu/cas/login?service=http://dfvps.telecom-sudparis.eu:443/cas");
+    String message = 'There were cookies. Now, they are gone!';
+    if (!hadCookies) {
+      message = 'There are no cookies.';
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+}

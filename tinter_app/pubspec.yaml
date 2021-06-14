@@ -50,6 +50,7 @@ dependencies:
   analyzer: ^1.7.1
 #  syncfusion_flutter_core: ^19.1.65
   url_launcher: ^6.0.4
+  webview_flutter: ^2.0.8
 
 #dependency_overrides:
 #  analyzer: '0.39.14'
