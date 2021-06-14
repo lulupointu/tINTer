@@ -25,7 +25,18 @@ class _WebViewExampleState extends State<WebViewExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CAS Example'),
+        backgroundColor: Color(0xff79BFC9),
+        leading: new IconButton(
+          icon: new Icon(
+            Icons.arrow_back_ios_rounded,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          'Authentification CAS',
+          style: TextStyle(color: Colors.white),
+        ),
         actions: <Widget>[
           DeleteCookiesIcon(_controller.future),
         ],
@@ -55,6 +66,11 @@ class _WebViewExampleState extends State<WebViewExample> {
         onPageFinished: (String url) async {
           final controller = await _controller.future;
           controller.evaluateJavascript("document.getElementById(\"footer\").remove();");
+          controller.evaluateJavascript("document.body.style.backgroundColor = \"#F4F4F8\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.color = \"#210000\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontFamily = \"Open Sans\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontSize = \"20px\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontWeight = \"500\";");
         },
         gestureNavigationEnabled: true,
       )
