@@ -24,7 +24,7 @@ Future<void> loginWithCAS(HttpRequest req, String ticket) async {
   // Get information from the CAS
   final response = await http.get(
     Uri.parse(
-      'https://cas.imtbs-tsp.eu/cas/serviceValidate?service=http%3A%2F%2Fdfvps.telecom-sudparis.eu%3A443%2Fcas&ticket=${ticket}',
+      'https://cas.imtbs-tsp.eu/cas/serviceValidate?service=https%3A%2F%2Fdfvps.telecom-sudparis.eu%3A443%2Fcas&ticket=${ticket}',
     ),
   );
 
