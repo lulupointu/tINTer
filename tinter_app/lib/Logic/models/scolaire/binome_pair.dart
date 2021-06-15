@@ -65,7 +65,7 @@ abstract class BinomePair extends Object {
                       alignment: Alignment.centerRight,
                       child: ClipOval(
                         child: Image.network(
-                          Uri.http(TinterAPIClient.baseUrl, '/shared/user/profilePicture',
+                          Uri.https(TinterAPIClient.baseUrl, '/shared/user/profilePicture',
                               {'login': loginB}).toString(),
                           headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
                         ),
@@ -75,7 +75,7 @@ abstract class BinomePair extends Object {
                       alignment: Alignment.centerLeft,
                       child: ClipOval(
                         child: Image.network(
-                          Uri.http(TinterAPIClient.baseUrl, '/shared/user/profilePicture',
+                          Uri.https(TinterAPIClient.baseUrl, '/shared/user/profilePicture',
                               {'login': loginA}).toString(),
                           headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
                         ),

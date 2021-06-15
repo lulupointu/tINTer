@@ -10,7 +10,7 @@ Widget getLogoFromAssociation({String associationName}) {
     future: AuthenticationRepository.getAuthenticationToken(),
     builder: (BuildContext context, AsyncSnapshot<Token> snapshot) {
       return (!snapshot.hasData) ? Center(child: CircularProgressIndicator(),) : Image.network(
-        Uri.http(TinterAPIClient.baseUrl, '/shared/associations/associationLogo', {'associationName': associationName}).toString(),
+        Uri.https(TinterAPIClient.baseUrl, '/shared/associations/associationLogo', {'associationName': associationName}).toString(),
         headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
         fit: BoxFit.contain,
       );

@@ -25,7 +25,7 @@ class TinterAPIClient {
 
   Future<TinterApiResponse<void>> logIn(
       {@required String login, @required String password}) async {
-    http.Response response = await httpClient.post(Uri.http(baseUrl, '/login'), headers: {
+    http.Response response = await httpClient.post(Uri.https(baseUrl, '/login'), headers: {
       HttpHeaders.wwwAuthenticateHeader: base64Encode(utf8.encode('$login:$password'))
     });
 
@@ -51,7 +51,7 @@ class TinterAPIClient {
 
   Future<TinterApiResponse<void>> authenticateWithToken({@required Token token}) async {
     http.Response response = await httpClient.post(
-        Uri.http(baseUrl, '/authenticate', {'shouldRefresh': 'true'}),
+        Uri.https(baseUrl, '/authenticate', {'shouldRefresh': 'true'}),
         headers: {HttpHeaders.wwwAuthenticateHeader: token.token});
 
     Token newToken;
@@ -80,7 +80,7 @@ class TinterAPIClient {
     userJson.remove('profilePictureLocalPath');
 
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/shared/create', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/shared/create', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(userJson),
     );
@@ -104,7 +104,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<void>> updateUser(
       {@required BuildUser user, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/shared/update', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/shared/update', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(user.toJson()),
     );
@@ -128,7 +128,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<void>> updateUserProfilePicture(
       {@required String profilePictureLocalPath, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/shared/updateProfilePicture', {'shouldRefresh': 'false'}),
+      Uri.https(baseUrl, '/shared/updateProfilePicture', {'shouldRefresh': 'false'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: File(profilePictureLocalPath).readAsBytesSync(),
     );
@@ -152,7 +152,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<void>> updateMatchRelationStatus(
       {@required RelationStatusAssociatif relationStatus, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/associatif/matchUpdateRelationStatusAssociatif',
+      Uri.https(baseUrl, '/associatif/matchUpdateRelationStatusAssociatif',
           {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(relationStatus.toJson()),
@@ -177,7 +177,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<void>> updateBinomeRelationStatus(
       {@required RelationStatusScolaire relationStatus, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/scolaire/binomeUpdateRelationStatus', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/scolaire/binomeUpdateRelationStatus', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(relationStatus.toJson()),
     );
@@ -201,7 +201,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<void>> updateBinomePairMatchRelationStatus(
       {@required RelationStatusBinomePair relationStatus, @required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(
+      Uri.https(
           baseUrl, '/scolaire/binomePairMatchUpdateRelationStatus', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
       body: json.encode(relationStatus.toJson()),
@@ -225,7 +225,7 @@ class TinterAPIClient {
 
   Future<TinterApiResponse<BuildUser>> getUser({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/shared/user/info', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/shared/user/info', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -255,7 +255,7 @@ class TinterAPIClient {
 
   Future<TinterApiResponse<BuildBinomePair>> getBinomePair({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/binomePair', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/scolaire/binomePair', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -286,7 +286,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<SearchedUserAssociatif>>> getAllSearchedUsersAssociatifs(
       {@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/associatif/searchUsers', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/associatif/searchUsers', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -321,7 +321,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<SearchedUserScolaire>>> getAllSearchedUsersScolaires(
       {@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/searchUsers', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/scolaire/searchUsers', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -356,7 +356,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<SearchedBinomePair>>> getAllSearchedBinomePaired(
       {@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/searchBinomePair', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/scolaire/searchBinomePair', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -389,7 +389,7 @@ class TinterAPIClient {
 
   Future<TinterApiResponse<bool>> isKnownUser({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/isKnown', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/isKnown', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -418,7 +418,7 @@ class TinterAPIClient {
 
   Future<TinterApiResponse<bool>> hasBinomePair({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/hasBinomePair', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/scolaire/hasBinomePair', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -448,7 +448,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<BuildMatch>>> getMatchedMatches(
       {@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/associatif/matchedMatches', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/associatif/matchedMatches', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -481,7 +481,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<BuildMatch>>> getDiscoverMatches(
       {@required Token token, @required int limit, @required int offset}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/associatif/discoverMatches',
+      Uri.https(baseUrl, '/associatif/discoverMatches',
           {'limit': limit.toString(), 'offset': offset.toString(), 'shouldRefresh': 'true'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
@@ -517,7 +517,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<BuildBinome>>> getMatchedBinomes(
       {@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/matchedBinomes', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/scolaire/matchedBinomes', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -550,7 +550,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<BuildBinome>>> getDiscoverBinomes(
       {@required Token token, @required int limit, @required int offset}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/discoverBinomes',
+      Uri.https(baseUrl, '/scolaire/discoverBinomes',
           {'limit': limit.toString(), 'offset': offset.toString(), 'shouldRefresh': 'true'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
@@ -586,7 +586,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<BuildBinomePairMatch>>> getMatchedBinomePairsMatches(
       {@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/matchedBinomesPairMatches', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/scolaire/matchedBinomesPairMatches', {'shouldRefresh': 'true'}),
       headers: {HttpHeaders.wwwAuthenticateHeader: token.token},
     );
 
@@ -620,7 +620,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<BuildBinomePairMatch>>> getDiscoverBinomePairsMatches(
       {@required Token token, @required int limit, @required int offset}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/discoverBinomesPairMatches',
+      Uri.https(baseUrl, '/scolaire/discoverBinomesPairMatches',
           {'limit': limit.toString(), 'offset': offset.toString(), 'shouldRefresh': 'true'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
@@ -657,7 +657,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<List<Association>>> getAllAssociations(
       {@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/shared/associations/allAssociations', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/shared/associations/allAssociations', {'shouldRefresh': 'true'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
       },
@@ -691,7 +691,7 @@ class TinterAPIClient {
 
   Future<TinterApiResponse<List<String>>> getAllMatieres({@required Token token}) async {
     http.Response response = await httpClient.get(
-      Uri.http(baseUrl, '/scolaire/matieres/allMatieres', {'shouldRefresh': 'true'}),
+      Uri.https(baseUrl, '/scolaire/matieres/allMatieres', {'shouldRefresh': 'true'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
       },
@@ -726,7 +726,7 @@ class TinterAPIClient {
   Future<TinterApiResponse<void>> sendNotificationToken(
       {@required Token token, @required String notificationToken}) async {
     http.Response response = await httpClient.post(
-        Uri.http(
+        Uri.https(
             baseUrl, '/shared/setNotificationToken', {'shouldRefresh': 'true'}),
         headers: {
           HttpHeaders.wwwAuthenticateHeader: token.token,
@@ -753,7 +753,7 @@ class TinterAPIClient {
 
   Future<TinterApiResponse<void>> deleteUserAccount({@required Token token}) async {
     http.Response response = await httpClient.post(
-      Uri.http(baseUrl, '/shared/delete', {'shouldRefresh': 'false'}),
+      Uri.https(baseUrl, '/shared/delete', {'shouldRefresh': 'false'}),
       headers: {
         HttpHeaders.wwwAuthenticateHeader: token.token,
       },

@@ -90,7 +90,7 @@ abstract class SearchedUserAssociatif implements Built<SearchedUserAssociatif, S
 //          return (!snapshot.hasData)
 //              ? Center(child: CircularProgressIndicator())
 //              : Image.network(
-//            Uri.http(TinterAPIClient.baseUrl, '/user/profilePicture', {'login': login}).toString(),
+//            Uri.https(TinterAPIClient.baseUrl, '/user/profilePicture', {'login': login}).toString(),
 //            headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
 //            height: height,
 //            width: width,

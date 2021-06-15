@@ -43,7 +43,7 @@ abstract class Association implements Built<Association, AssociationBuilder> {
 //      future: AuthenticationRepository.getAuthenticationToken(),
 //      builder: (BuildContext context, AsyncSnapshot<Token> snapshot) {
 //        return (!snapshot.hasData) ? Center(child: CircularProgressIndicator(),) : Image.network(
-//          Uri.http(TinterAPIClient.baseUrl, '/associations/associationLogo', {'associationName': name}).toString(),
+//          Uri.https(TinterAPIClient.baseUrl, '/associations/associationLogo', {'associationName': name}).toString(),
 //          headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
 //          fit: BoxFit.contain,
 //        );

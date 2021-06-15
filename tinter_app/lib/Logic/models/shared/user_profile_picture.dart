@@ -40,7 +40,7 @@ Widget getProfilePictureFromLogin({
         return (!snapshot.hasData)
             ? Center(child: Container())
             : Image.network(
-                Uri.http(TinterAPIClient.baseUrl, '/shared/user/profilePicture', {'login': login})
+                Uri.https(TinterAPIClient.baseUrl, '/shared/user/profilePicture', {'login': login})
                     .toString(),
                 headers: {HttpHeaders.wwwAuthenticateHeader: snapshot.data.token},
                 height: height,

@@ -24,8 +24,15 @@ Future<void> main() async {
         '[${record.loggerName}] | ${record.level.name} | ${record.time} : ${record.message} ${(record.error == null) ? '' : ' | ${record.error ?? ''} | ${record.stackTrace ?? ''}'}');
   });
 
+  // Setup https
+  SecurityContext context = new SecurityContext();
+  var chain = Platform.script.resolve('/home/df/certificates/STG-df_telecom-sudparis_eu_interm.cer').toFilePath();
+  var key = Platform.script.resolve('/home/df/certificates/STG-df.telecom-sudparis.eu-nop.key').toFilePath();
+  context.useCertificateChain(chain);
+  context.usePrivateKey(key);
+
   try {
-    server = await HttpServer.bind(InternetAddress.anyIPv4, 443);
+    server = await HttpServer.bindSecure(InternetAddress.anyIPv6, 443, context);
   } catch (e) {
     _serverLogger.log(Level.SHOUT, "Couldn't bind to port 443: $e", e);
     await _logFileSink.close();
