@@ -26,8 +26,12 @@ Future<void> main() async {
 
   // Setup https
   SecurityContext context = new SecurityContext();
-  var chain = Platform.script.resolve('/home/df/certificates/STG-df_telecom-sudparis_eu_cert.cer').toFilePath();
-  var key = Platform.script.resolve('/home/df/certificates/STG-df.telecom-sudparis.eu-nop.key').toFilePath();
+  var chain = Platform.script
+      .resolve('/home/df/certificates/STG-df_telecom-sudparis_eu_cert.cer')
+      .toFilePath();
+  var key = Platform.script
+      .resolve('/home/df/certificates/STG-df.telecom-sudparis.eu-nop.key')
+      .toFilePath();
   context.useCertificateChain(chain);
   context.usePrivateKey(key);
 
@@ -48,8 +52,9 @@ Future<void> main() async {
   fcmAPI.initializeApp(
       secret: jsonDecode(File('/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
           .readAsStringSync()));
-  try {
-    await for (HttpRequest req in server) {
+
+  await for (HttpRequest req in server) {
+    try {
       try {
         // The segment are the different part of the uri
         List<String> segments = req.uri.path.split('/');
@@ -83,15 +88,15 @@ Future<void> main() async {
       } catch (e) {
         _serverLogger.shout('Error crashed the server: $e');
       }
+    } catch (e) {
+      _serverLogger.shout('Error could have crashed the server: $e');
     }
-  } catch (e) {
-    _serverLogger.shout('Error crashed the server: $e');
-  } finally {
-    _serverLogger.info('Closing database connexion');
-    tinterDatabase.close();
-    _serverLogger.info('Closing FCM connexion');
-    fcmAPI.close();
   }
+
+  _serverLogger.info('Closing database connexion');
+  tinterDatabase.close();
+  _serverLogger.info('Closing FCM connexion');
+  fcmAPI.close();
 
   await _logFileSink.close();
 }
