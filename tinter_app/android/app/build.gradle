@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId "imtbstelecomsudparis.tinterapp"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

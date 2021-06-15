@@ -25,7 +25,18 @@ class _WebViewExampleState extends State<WebViewExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CAS Example'),
+        backgroundColor: Color(0xff79BFC9),
+        leading: new IconButton(
+          icon: new Icon(
+            Icons.arrow_back_ios_rounded,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          'Authentification CAS',
+          style: TextStyle(color: Colors.white),
+        ),
         actions: <Widget>[
           DeleteCookiesIcon(_controller.future),
         ],
@@ -55,6 +66,23 @@ class _WebViewExampleState extends State<WebViewExample> {
         onPageFinished: (String url) async {
           final controller = await _controller.future;
           controller.evaluateJavascript("document.getElementById(\"footer\").remove();");
+          controller.evaluateJavascript("document.body.style.backgroundColor = \"#F4F4F8\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.color = \"#210000\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontFamily = \"Open Sans\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontSize = \"20px\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.fontWeight = \"500\";");
+          controller.evaluateJavascript("document.getElementById(\"app-name\").style.padding = \"30px 20px\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.borderRadius = \"5px\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.border = \"thick solid #79BFC9\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.width = \"60%\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.fontSize = \"15px\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.padding = \"10px 10px\";");
+          controller.evaluateJavascript("document.getElementById(\"password\").style.margin = \"10px 0px 0px 0px\";");
+          controller.evaluateJavascript("document.getElementById(\"username\").style.borderRadius = \"5px\";");
+          controller.evaluateJavascript("document.getElementById(\"username\").style.border = \"thick solid #79BFC9\";");
+          controller.evaluateJavascript("document.getElementById(\"username\").style.width = \"60%\";");
+          controller.evaluateJavascript("document.getElementById(\"username\").style.fontSize = \"15px\";");
+          controller.evaluateJavascript("document.getElementById(\"username\").style.padding = \"10px 10px\";");
         },
         gestureNavigationEnabled: true,
       )
