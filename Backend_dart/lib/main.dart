@@ -60,9 +60,6 @@ Future<void> main() async {
       // The first element is an empty string, remove it
       if (segments.length > 0) segments.removeAt(0);
 
-      _serverLogger.info(
-          'New http request. uri: ${req.uri}, path: ${req.uri.path}, header: ${req.headers}, cookies: ${req.cookies}');
-
       final rootSegment = segments.first;
       switch (rootSegment) {
         case 'cas':
@@ -83,9 +80,10 @@ Future<void> main() async {
           _serverLogger
               .warning('Got request with uri ${req.uri}, but this uri is not handled');
       }
-      req.response.close();
     } catch (e) {
       _serverLogger.shout('Error could have crashed the server: $e');
+    } finally {
+      req.response.close();
     }
   }
 
