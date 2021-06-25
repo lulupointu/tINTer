@@ -55,39 +55,35 @@ Future<void> main() async {
 
   await for (HttpRequest req in server) {
     try {
-      try {
-        // The segment are the different part of the uri
-        List<String> segments = req.uri.path.split('/');
-        // The first element is an empty string, remove it
-        if (segments.length > 0) segments.removeAt(0);
+      // The segment are the different part of the uri
+      List<String> segments = req.uri.path.split('/');
+      // The first element is an empty string, remove it
+      if (segments.length > 0) segments.removeAt(0);
 
-        _serverLogger.info(
-            'New http request. uri: ${req.uri}, path: ${req.uri.path}, header: ${req.headers}, cookies: ${req.cookies}');
+      _serverLogger.info(
+          'New http request. uri: ${req.uri}, path: ${req.uri.path}, header: ${req.headers}, cookies: ${req.cookies}');
 
-        final rootSegment = segments.first;
-        switch (rootSegment) {
-          case 'cas':
-            if (!req.uri.queryParameters.containsKey('ticket'))
-              throw Exception(
-                "A CAS https request should contain the 'ticket' query parameter",
-              );
-            _serverLogger.info('New authentication request from CAS');
-            await loginWithCAS(req, req.uri.queryParameters['ticket']);
-            break;
+      final rootSegment = segments.first;
+      switch (rootSegment) {
+        case 'cas':
+          if (!req.uri.queryParameters.containsKey('ticket'))
+            throw Exception(
+              "A CAS https request should contain the 'ticket' query parameter",
+            );
+          _serverLogger.info('New authentication request from CAS');
+          await loginWithCAS(req, req.uri.queryParameters['ticket']);
+          break;
 
-          case 'tinter_mobile_app':
-            _serverLogger.info('New https request from tinter_mobile_app');
-            await authenticationCheckThenRoute(req, segments);
-            break;
+        case 'tinter_mobile_app':
+          _serverLogger.info('New https request from tinter_mobile_app');
+          await authenticationCheckThenRoute(req, segments);
+          break;
 
-          default:
-            _serverLogger
-                .warning('Got request with uri ${req.uri}, but this uri is not handled');
-        }
-        req.response.close();
-      } catch (e) {
-        _serverLogger.shout('Error crashed the server: $e');
+        default:
+          _serverLogger
+              .warning('Got request with uri ${req.uri}, but this uri is not handled');
       }
+      req.response.close();
     } catch (e) {
       _serverLogger.shout('Error could have crashed the server: $e');
     }
