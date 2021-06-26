@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:fcm_api/fcm_api.dart';
@@ -54,37 +55,38 @@ Future<void> main() async {
           .readAsStringSync()));
 
   await for (HttpRequest req in server) {
-    try {
-      // The segment are the different part of the uri
-      List<String> segments = req.uri.path.split('/');
-      // The first element is an empty string, remove it
-      if (segments.length > 0) segments.removeAt(0);
+    runZonedGuarded(
+      () async {
+        // The segment are the different part of the uri
+        List<String> segments = req.uri.path.split('/');
+        // The first element is an empty string, remove it
+        if (segments.length > 0) segments.removeAt(0);
 
-      final rootSegment = segments.first;
-      switch (rootSegment) {
-        case 'cas':
-          if (!req.uri.queryParameters.containsKey('ticket'))
-            throw Exception(
-              "A CAS https request should contain the 'ticket' query parameter",
-            );
-          _serverLogger.info('New authentication request from CAS');
-          await loginWithCAS(req, req.uri.queryParameters['ticket']);
-          break;
+        final rootSegment = segments.first;
+        switch (rootSegment) {
+          case 'cas':
+            if (!req.uri.queryParameters.containsKey('ticket'))
+              throw Exception(
+                "A CAS https request should contain the 'ticket' query parameter",
+              );
+            _serverLogger.info('New authentication request from CAS');
+            await loginWithCAS(req, req.uri.queryParameters['ticket']);
+            break;
 
-        case 'tinter_mobile_app':
-          _serverLogger.info('New https request from tinter_mobile_app');
-          await authenticationCheckThenRoute(req, segments);
-          break;
+          case 'tinter_mobile_app':
+            _serverLogger.info('New https request from tinter_mobile_app');
+            await authenticationCheckThenRoute(req, segments);
+            break;
 
-        default:
-          _serverLogger
-              .warning('Got request with uri ${req.uri}, but this uri is not handled');
-      }
-    } catch (e) {
-      _serverLogger.shout('Error could have crashed the server: $e');
-    } finally {
-      req.response.close();
-    }
+          default:
+            _serverLogger
+                .warning('Got request with uri ${req.uri}, but this uri is not handled');
+        }
+      },
+      (e, stacktrace) => _serverLogger.shout(
+        'Error could have crashed the server: $e. Stacktrace: $stacktrace',
+      ),
+    );
   }
 
   _serverLogger.info('Closing database connexion');
