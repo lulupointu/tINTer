@@ -82,6 +82,8 @@ Future<void> main() async {
             _serverLogger
                 .warning('Got request with uri ${req.uri}, but this uri is not handled');
         }
+
+        req.response.close();
       },
       (e, stacktrace) => _serverLogger.shout(
         'Error could have crashed the server: $e. Stacktrace: $stacktrace',
