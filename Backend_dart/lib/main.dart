@@ -37,8 +37,8 @@ Future<void> main() async {
   context.usePrivateKey(key);
 
   try {
-    // server = await HttpServer.bindSecure(InternetAddress.anyIPv6, 443, context);
-    server = await HttpServer.bind(InternetAddress.anyIPv4, 443);
+    server = await HttpServer.bindSecure(InternetAddress.anyIPv4, 443, context);
+    // server = await HttpServer.bind(InternetAddress.anyIPv4, 443);
   } catch (e) {
     _serverLogger.log(Level.SHOUT, "Couldn't bind to port 443: $e", e);
     await _logFileSink.close();
