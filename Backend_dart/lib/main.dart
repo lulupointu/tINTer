@@ -93,7 +93,7 @@ Future<void> main() async {
           },
               (e, stacktrace) =>
               _serverLogger.shout(
-                'Error could have crashed the server: $e. Stacktrace: $stacktrace',
+                'Request error could have crashed the server: $e. \nStacktrace:\n$stacktrace',
               ),
         );
       }
@@ -106,7 +106,7 @@ Future<void> main() async {
       await _logFileSink.close();
     } catch (e, stacktrace) {
       _serverLogger.shout(
-        'Error could have crashed the server: $e. Stacktrace: $stacktrace',
+        'Unknown error could have crashed the server: $e.\nStacktrace:\n$stacktrace',
       );
     }
   }
