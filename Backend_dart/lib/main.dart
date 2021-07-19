@@ -100,8 +100,9 @@ Future<void> main() async {
 
       _serverLogger.info('Closing database connexion');
       await tinterDatabase.close();
-      _serverLogger.info('Closing FCM connexion');
+      // _serverLogger.info('Closing FCM connexion');
       // fcmAPI.close();
+      _serverLogger.info('Closing HttpServer');
       server.close();
 
       await _logFileSink.close();
@@ -112,8 +113,9 @@ Future<void> main() async {
 
       _serverLogger.info('Closing database connexion');
       await tinterDatabase.close();
-      _serverLogger.info('Closing FCM connexion');
+      // _serverLogger.info('Closing FCM connexion');
       // fcmAPI.close();
+      _serverLogger.info('Closing HttpServer');
       await server.close();
 
     }
