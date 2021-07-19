@@ -54,10 +54,10 @@ Future<void> main() async {
       _serverLogger.info('Binded successfully on port 433');
 
       _serverLogger.info('Opening database connexion');
-      tinterDatabase.open();
+      await tinterDatabase.open();
 
       _serverLogger.info('Connecting to notification server (Firebase Cloud messaging)');
-      fcmAPI.initializeApp(
+      await fcmAPI.initializeApp(
           secret: jsonDecode(
               File('/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
                   .readAsStringSync()));
@@ -65,7 +65,7 @@ Future<void> main() async {
       i++;
       if (i < 5) throw 'SOME RANDOM ARTIFICIAL ERROR';
       await for (HttpRequest req in server) {
-        runZonedGuarded(
+        await runZonedGuarded(
               () async {
             // The segment are the different part of the uri
             List<String> segments = req.uri.path.split('/');
