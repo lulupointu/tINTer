@@ -7,7 +7,7 @@ import 'package:tinter_backend/database_interface/database_interface.dart';
 import 'package:tinter_backend/http_requests/authentication_check.dart';
 import 'package:tinter_backend/http_requests/cas_login.dart';
 
-TinterDatabase tinterDatabase = TinterDatabase();
+TinterDatabase tinterDatabase;
 
 FcmAPI fcmAPI = FcmAPI();
 
@@ -17,6 +17,7 @@ int i = 0;
 
 Future<void> main() async {
   while (true) {
+    tinterDatabase = TinterDatabase();
     HttpServer server;
     try {
       File _logFile = File('/home/df/logs');
