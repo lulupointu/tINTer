@@ -9,7 +9,7 @@ import 'package:tinter_backend/http_requests/cas_login.dart';
 
 TinterDatabase tinterDatabase = TinterDatabase();
 
-FcmAPI fcmAPI = FcmAPI();
+// FcmAPI fcmAPI = FcmAPI();
 
 Logger _serverLogger = Logger('Server');
 
@@ -54,10 +54,10 @@ Future<void> main() async {
       await tinterDatabase.open();
 
       _serverLogger.info('Connecting to notification server (Firebase Cloud messaging)');
-      await fcmAPI.initializeApp(
-          secret: jsonDecode(
-              File('/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
-                  .readAsStringSync()));
+      // await fcmAPI.initializeApp(
+      //     secret: jsonDecode(
+      //         File('/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
+      //             .readAsStringSync()));
 
       i++;
       if (i < 5) throw 'SOME RANDOM ARTIFICIAL ERROR';
@@ -101,7 +101,7 @@ Future<void> main() async {
       _serverLogger.info('Closing database connexion');
       await tinterDatabase.close();
       _serverLogger.info('Closing FCM connexion');
-      fcmAPI.close();
+      // fcmAPI.close();
       server.close();
 
       await _logFileSink.close();
@@ -109,7 +109,7 @@ Future<void> main() async {
       _serverLogger.info('Closing database connexion');
       await tinterDatabase.close();
       _serverLogger.info('Closing FCM connexion');
-      fcmAPI.close();
+      // fcmAPI.close();
       server.close();
 
       _serverLogger.shout(
