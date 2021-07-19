@@ -114,7 +114,7 @@ Future<void> main() async {
       await tinterDatabase.close();
       _serverLogger.info('Closing FCM connexion');
       // fcmAPI.close();
-      server.close();
+      await server.close();
 
     }
   }
