@@ -13,6 +13,8 @@ FcmAPI fcmAPI = FcmAPI();
 
 Logger _serverLogger = Logger('Server');
 
+int i = 0;
+
 Future<void> main() async {
   while (true) {
     try {
@@ -60,6 +62,8 @@ Future<void> main() async {
               File('/home/df/tinter-2c20c-firebase-adminsdk-miqgz-8935722edb.json')
                   .readAsStringSync()));
 
+      i++;
+      if (i < 5) throw 'SOME RANDOM ARTIFICIAL ERROR';
       await for (HttpRequest req in server) {
         runZonedGuarded(
               () async {
