@@ -109,6 +109,12 @@ Future<void> main() async {
 
       await _logFileSink.close();
     } catch (e, stacktrace) {
+
+      _serverLogger.info('Closing database connexion');
+      await tinterDatabase.close();
+      _serverLogger.info('Closing FCM connexion');
+      fcmAPI.close();
+
       _serverLogger.shout(
         'Unknown error could have crashed the server: $e.\nStacktrace:\n$stacktrace',
       );
