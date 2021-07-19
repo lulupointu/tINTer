@@ -17,18 +17,15 @@ int i = 0;
 
 Future<void> main() async {
   while (true) {
+    HttpServer server;
     try {
-      Stream<HttpRequest> server;
-
       File _logFile = File('/home/df/logs');
       IOSink _logFileSink = _logFile.openWrite(mode: FileMode.append);
 
       Logger.root.level = Level.ALL; // defaults to Level.INFO
       Logger.root.onRecord.listen((record) {
         _logFileSink.writeln(
-            '[${record.loggerName}] | ${record.level.name} | ${record.time} : ${record
-                .message} ${(record.error == null) ? '' : ' | ${record.error ?? ''} | ${record
-                .stackTrace ?? ''}'}');
+            '[${record.loggerName}] | ${record.level.name} | ${record.time} : ${record.message} ${(record.error == null) ? '' : ' | ${record.error ?? ''} | ${record.stackTrace ?? ''}'}');
       });
 
       // Setup https
@@ -66,7 +63,7 @@ Future<void> main() async {
       if (i < 5) throw 'SOME RANDOM ARTIFICIAL ERROR';
       await for (HttpRequest req in server) {
         await runZonedGuarded(
-              () async {
+          () async {
             // The segment are the different part of the uri
             List<String> segments = req.uri.path.split('/');
             // The first element is an empty string, remove it
@@ -95,10 +92,9 @@ Future<void> main() async {
 
             req.response.close();
           },
-              (e, stacktrace) =>
-              _serverLogger.shout(
-                'Request error could have crashed the server: $e. \nStacktrace:\n$stacktrace',
-              ),
+          (e, stacktrace) => _serverLogger.shout(
+            'Request error could have crashed the server: $e. \nStacktrace:\n$stacktrace',
+          ),
         );
       }
 
@@ -106,14 +102,15 @@ Future<void> main() async {
       await tinterDatabase.close();
       _serverLogger.info('Closing FCM connexion');
       fcmAPI.close();
+      server.close();
 
       await _logFileSink.close();
     } catch (e, stacktrace) {
-
       _serverLogger.info('Closing database connexion');
       await tinterDatabase.close();
       _serverLogger.info('Closing FCM connexion');
       fcmAPI.close();
+      server.close();
 
       _serverLogger.shout(
         'Unknown error could have crashed the server: $e.\nStacktrace:\n$stacktrace',
